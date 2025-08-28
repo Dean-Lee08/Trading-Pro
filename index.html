@@ -100,18 +100,21 @@
         }
 
         .main-content {
-            flex: 1;
-            margin-left: 260px;
-            min-height: 100vh;
-            transition: margin-left 0.3s ease;
-        }
+    flex: 1;
+    margin-left: 260px;
+    height: 100vh;
+    overflow-y: auto;
+    transition: margin-left 0.3s ease;
+}
 
-        .page {
-            display: none;
-            padding: 24px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+.page {
+    display: none;
+    padding: 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+    height: calc(100vh - 48px);
+    overflow-y: auto;
+}
 
         .page.active {
             display: block;
