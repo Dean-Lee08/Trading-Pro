@@ -179,6 +179,32 @@
             border-radius: 6px;
         }
 
+        /* Date range selector styles */
+        .date-range-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: #e4e4e7;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .date-range-input {
+            background: transparent;
+            border: none;
+            color: #e4e4e7;
+            font-size: 13px;
+            width: 110px;
+        }
+
+        .date-range-input:focus {
+            outline: none;
+        }
+
         .stats-overview {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -313,7 +339,7 @@
             letter-spacing: 0.3px;
         }
         
-        .form-group input {
+        .form-group input, .form-group textarea {
             width: 100%;
             background: #0f172a;
             border: 1px solid #334155;
@@ -324,8 +350,13 @@
             transition: border-color 0.2s ease;
             height: 32px;
         }
+
+        .form-group textarea {
+            height: 60px;
+            resize: vertical;
+        }
         
-        .form-group input:focus {
+        .form-group input:focus, .form-group textarea:focus {
             outline: none;
             border-color: #3b82f6;
         }
@@ -431,6 +462,34 @@
         .sidebar-stat-value {
             font-size: 14px;
             font-weight: 600;
+        }
+
+        /* Daily fees section */
+        .daily-fees-section {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+
+        .daily-fees-title {
+            color: #f8fafc;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .daily-fees-input {
+            width: 100%;
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: #e4e4e7;
+            padding: 8px 10px;
+            font-size: 14px;
+            border-radius: 6px;
+            text-align: center;
         }
 
         .trades-section {
@@ -1039,6 +1098,91 @@
             letter-spacing: 0.5px;
         }
 
+        /* Price range analysis */
+        .price-range-analysis {
+            margin-top: 16px;
+        }
+
+        .price-range-item {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 8px;
+        }
+
+        .price-range-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .price-range-label {
+            font-weight: 600;
+            color: #e4e4e7;
+            font-size: 13px;
+        }
+
+        .price-range-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            font-size: 11px;
+        }
+
+        .price-range-stat {
+            text-align: center;
+        }
+
+        .price-range-stat-label {
+            color: #64748b;
+            margin-bottom: 2px;
+        }
+
+        .price-range-stat-value {
+            font-weight: 600;
+        }
+
+        /* Edit trade modal */
+        .edit-trade-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .edit-trade-content {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .edit-trade-title {
+            color: #f8fafc;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .edit-trade-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
         /* Settings styles */
         .settings-section {
             background: #1e293b;
@@ -1253,6 +1397,50 @@
             </div>
         </div>
     </div>
+
+    <!-- Edit trade modal -->
+    <div class="edit-trade-modal" id="editTradeModal">
+        <div class="edit-trade-content">
+            <div class="edit-trade-title">Edit Trade</div>
+            <form id="editTradeForm">
+                <input type="hidden" id="editTradeId">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Symbol</label>
+                        <input type="text" id="editSymbol" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Amount ($)</label>
+                        <input type="number" id="editAmount" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Buy Price</label>
+                        <input type="number" id="editBuyPrice" step="0.0001" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Sell Price</label>
+                        <input type="number" id="editSellPrice" step="0.0001" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Entry Time</label>
+                        <input type="time" id="editEntryTime">
+                    </div>
+                    <div class="form-group">
+                        <label>Exit Time</label>
+                        <input type="time" id="editExitTime">
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Notes</label>
+                        <textarea id="editNotes" placeholder="Add trade notes..."></textarea>
+                    </div>
+                </div>
+                <div class="edit-trade-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeEditTradeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Trade</button>
+                </div>
+            </form>
+        </div>
+    </div>
     
     <div class="app-container">
         <!-- Sidebar -->
@@ -1298,6 +1486,12 @@
                         <p class="page-subtitle" data-lang="dashboard-subtitle">Track your trades and performance</p>
                     </div>
                     <div class="page-header-info">
+                        <div class="date-range-selector">
+                            <input type="date" id="dashboardStartDate" class="date-range-input">
+                            <span style="color: #64748b;">to</span>
+                            <input type="date" id="dashboardEndDate" class="date-range-input">
+                            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="clearDashboardRange()">Clear</button>
+                        </div>
                         <div class="current-date-display" id="currentDateDisplay" onclick="openDatePicker()"></div>
                         <div class="language-selector">
                             <label data-lang="language">Language:</label>
@@ -1374,6 +1568,10 @@
                                     <label data-lang="holding-time">Holding Time</label>
                                     <input type="text" id="holdingTimeDisplay" readonly style="background: #0f172a; color: #64748b;">
                                 </div>
+                                <div class="form-group">
+                                    <label>Notes</label>
+                                    <textarea id="tradeNotes" placeholder="Add trade notes..."></textarea>
+                                </div>
                             </div>
                             <div class="form-actions">
                                 <button type="button" class="btn btn-secondary" onclick="resetForm()" data-lang="reset">Reset</button>
@@ -1382,31 +1580,38 @@
                         </form>
                     </div>
 
-                    <div class="stats-sidebar">
-                        <div class="sidebar-title-stats" data-lang="performance">Performance</div>
-                        <div class="sidebar-stat">
-                            <span class="sidebar-stat-label" data-lang="best-trade">Best Trade</span>
-                            <span class="sidebar-stat-value positive" id="bestTrade">$0.00</span>
+                    <div>
+                        <div class="stats-sidebar">
+                            <div class="sidebar-title-stats" data-lang="performance">Performance</div>
+                            <div class="sidebar-stat">
+                                <span class="sidebar-stat-label" data-lang="best-trade">Best Trade</span>
+                                <span class="sidebar-stat-value positive" id="bestTrade">$0.00</span>
+                            </div>
+                            <div class="sidebar-stat">
+                                <span class="sidebar-stat-label" data-lang="worst-trade">Worst Trade</span>
+                                <span class="sidebar-stat-value negative" id="worstTrade">$0.00</span>
+                            </div>
+                            <div class="sidebar-stat">
+                                <span class="sidebar-stat-label" data-lang="avg-win">Avg Win</span>
+                                <span class="sidebar-stat-value positive" id="avgWin">$0.00</span>
+                            </div>
+                            <div class="sidebar-stat">
+                                <span class="sidebar-stat-label" data-lang="avg-loss">Avg Loss</span>
+                                <span class="sidebar-stat-value negative" id="avgLoss">$0.00</span>
+                            </div>
+                            <div class="sidebar-stat">
+                                <span class="sidebar-stat-label" data-lang="total-invested">Total Invested</span>
+                                <span class="sidebar-stat-value neutral" id="totalVolume">$0.00</span>
+                            </div>
+                            <div class="sidebar-stat">
+                                <span class="sidebar-stat-label" data-lang="profit-factor">Profit Factor</span>
+                                <span class="sidebar-stat-value" id="profitFactorSidebar">0.00</span>
+                            </div>
                         </div>
-                        <div class="sidebar-stat">
-                            <span class="sidebar-stat-label" data-lang="worst-trade">Worst Trade</span>
-                            <span class="sidebar-stat-value negative" id="worstTrade">$0.00</span>
-                        </div>
-                        <div class="sidebar-stat">
-                            <span class="sidebar-stat-label" data-lang="avg-win">Avg Win</span>
-                            <span class="sidebar-stat-value positive" id="avgWin">$0.00</span>
-                        </div>
-                        <div class="sidebar-stat">
-                            <span class="sidebar-stat-label" data-lang="avg-loss">Avg Loss</span>
-                            <span class="sidebar-stat-value negative" id="avgLoss">$0.00</span>
-                        </div>
-                        <div class="sidebar-stat">
-                            <span class="sidebar-stat-label" data-lang="total-invested">Total Invested</span>
-                            <span class="sidebar-stat-value neutral" id="totalVolume">$0.00</span>
-                        </div>
-                        <div class="sidebar-stat">
-                            <span class="sidebar-stat-label" data-lang="profit-factor">Profit Factor</span>
-                            <span class="sidebar-stat-value" id="profitFactorSidebar">0.00</span>
+
+                        <div class="daily-fees-section">
+                            <div class="daily-fees-title" data-lang="daily-fees">Daily Fees</div>
+                            <input type="number" id="dailyFees" class="daily-fees-input" placeholder="0.00" step="0.01" onchange="saveDailyFees()">
                         </div>
                     </div>
                 </div>
@@ -1427,12 +1632,13 @@
                                 <th data-lang="time">Time</th>
                                 <th data-lang="pnl">P&L</th>
                                 <th data-lang="return-pct">Return %</th>
+                                <th>Notes</th>
                                 <th data-lang="actions">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="tradesTableBody">
                             <tr>
-                                <td colspan="9">
+                                <td colspan="10">
                                     <div class="empty-state">
                                         <div class="empty-state-icon">📊</div>
                                         <div data-lang="no-trades">No trades recorded yet</div>
@@ -1527,7 +1733,7 @@
                 </div>
             </div>
 
-            <!-- Enhanced Analytics page with reorganized Tradervue-style features -->
+            <!-- Enhanced Analytics page -->
             <div id="analysis" class="page">
                 <div class="analytics-header">
                     <div class="analytics-title-section">
@@ -1535,8 +1741,13 @@
                         <p class="page-subtitle" data-lang="analytics-subtitle">Comprehensive performance analysis and insights</p>
                     </div>
                     
-                    <!-- Moved filter controls to top right -->
                     <div class="filter-controls">
+                        <div class="date-range-selector">
+                            <input type="date" id="analyticsStartDate" class="date-range-input">
+                            <span style="color: #64748b;">to</span>
+                            <input type="date" id="analyticsEndDate" class="date-range-input">
+                            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="clearAnalyticsRange()">Clear</button>
+                        </div>
                         <button class="filter-btn active" onclick="setAnalyticsPeriod('all')" data-lang="all-time">All Time</button>
                         <button class="filter-btn" onclick="setAnalyticsPeriod('month')" data-lang="this-month">This Month</button>
                         <button class="filter-btn" onclick="setAnalyticsPeriod('week')" data-lang="this-week">This Week</button>
@@ -1545,7 +1756,7 @@
                 </div>
                 
                 <div class="analytics-container">
-                    <!-- Core Performance Summary (Tradervue-style) -->
+                    <!-- Core Performance Summary -->
                     <div class="analytics-card" style="margin-bottom: 24px;">
                         <h3><span class="analytics-icon">🎯</span><span data-lang="performance-summary">Performance Summary</span></h3>
                         <div class="performance-breakdown">
@@ -1576,7 +1787,7 @@
                         </div>
                     </div>
 
-                    <!-- Main Analytics Grid (Simplified Tradervue-style) -->
+                    <!-- Main Analytics Grid -->
                     <div class="analytics-grid">
                         <!-- Win/Loss Analysis -->
                         <div class="analytics-card">
@@ -1620,7 +1831,7 @@
                             </div>
                             <div class="metric-row">
                                 <span class="metric-label" data-lang="total-volume">Total Volume</span>
-                                <span class="metric-value neutral" id="totalVolume">$0</span>
+                                <span class="metric-value neutral" id="totalVolumeAnalytics">$0</span>
                             </div>
                             <div class="metric-row">
                                 <span class="metric-label" data-lang="avg-position-size">Avg Position Size</span>
@@ -1707,6 +1918,54 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Price Range Analysis -->
+                        <div class="analytics-card">
+                            <h3><span class="analytics-icon">💰</span>Price Range Analysis</h3>
+                            <div id="priceRangeAnalysis">
+                                <div class="empty-state" style="padding: 20px;">
+                                    <div style="color: #64748b; font-size: 13px;">No price range data available</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Drawdown Analysis -->
+                        <div class="analytics-card">
+                            <h3><span class="analytics-icon">📉</span>Drawdown Analysis</h3>
+                            <div class="metric-row">
+                                <span class="metric-label">Max Drawdown</span>
+                                <span class="metric-value negative" id="maxDrawdown">$0.00</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label">Current Drawdown</span>
+                                <span class="metric-value" id="currentDrawdown">$0.00</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label">Recovery Time</span>
+                                <span class="metric-value neutral" id="recoveryTime">0 days</span>
+                            </div>
+                            <div class="drawdown-chart" id="drawdownChart">
+                                <div style="padding: 40px; text-align: center; color: #64748b;">Drawdown visualization</div>
+                            </div>
+                        </div>
+
+                        <!-- Total Gains vs Losses -->
+                        <div class="analytics-card">
+                            <h3><span class="analytics-icon">⚖️</span>Total Gains vs Losses</h3>
+                            <div class="performance-breakdown">
+                                <div class="breakdown-item">
+                                    <div class="breakdown-value positive" id="totalGains">$0.00</div>
+                                    <div class="breakdown-label">Total Gains</div>
+                                </div>
+                                <div class="breakdown-item">
+                                    <div class="breakdown-value negative" id="totalLosses">$0.00</div>
+                                    <div class="breakdown-label">Total Losses</div>
+                                </div>
+                            </div>
+                            <div class="chart-container" id="gainsVsLossesChart">
+                                <div style="padding: 20px; text-align: center; color: #64748b;">Gains vs Losses visualization</div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Advanced Visualizations -->
@@ -1763,6 +2022,12 @@
                         <h1 class="page-title" data-lang="tradelist-title">Trade List</h1>
                         <p class="page-subtitle" data-lang="tradelist-subtitle">Complete list of all your trades</p>
                     </div>
+                    <div class="date-range-selector">
+                        <input type="date" id="tradesStartDate" class="date-range-input">
+                        <span style="color: #64748b;">to</span>
+                        <input type="date" id="tradesEndDate" class="date-range-input">
+                        <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="clearTradesRange()">Clear</button>
+                    </div>
                 </div>
                 
                 <div class="trades-section">
@@ -1781,12 +2046,13 @@
                                 <th data-lang="time">Time</th>
                                 <th data-lang="pnl">P&L</th>
                                 <th data-lang="return-pct">Return %</th>
+                                <th>Notes</th>
                                 <th data-lang="actions">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="allTradesTableBody">
                             <tr>
-                                <td colspan="9">
+                                <td colspan="10">
                                     <div class="empty-state">
                                         <div class="empty-state-icon">📊</div>
                                         <div data-lang="no-trades">No trades recorded yet</div>
@@ -1836,6 +2102,7 @@
     <script>
         // Global variables
         let trades = [];
+        let dailyFees = {};
         let currentTradingDate = new Date();
         let calendarDate = new Date();
         let calendarStartDate = null;
@@ -1845,25 +2112,26 @@
         let selectedCalendarDay = null;
         let currentLanguage = 'en';
         let analyticsPeriod = 'all';
+        let dashboardStartDate = null;
+        let dashboardEndDate = null;
+        let analyticsStartDate = null;
+        let analyticsEndDate = null;
+        let tradesStartDate = null;
+        let tradesEndDate = null;
 
-        // Function to get US trading date (adjusts for Korean timezone)
-        function getUSTradingDate(date = new Date()) {
-            const koreanDate = new Date(date);
-            const koreanHour = koreanDate.getHours();
-            
-            if (koreanHour < 5) {
-                koreanDate.setDate(koreanDate.getDate() - 1);
-            }
-            
-            return koreanDate;
+        // Function to get EST trading date
+        function getESTTradingDate(date = new Date()) {
+            // Convert to EST timezone
+            const estDate = new Date(date.toLocaleString("en-US", {timeZone: "America/New_York"}));
+            return estDate;
         }
 
-        // Function to format date for storage (US trading date)
+        // Function to format date for storage (EST trading date)
         function formatTradingDate(date) {
-            const usDate = getUSTradingDate(date);
-            return usDate.getFullYear() + '-' + 
-                String(usDate.getMonth() + 1).padStart(2, '0') + '-' + 
-                String(usDate.getDate()).padStart(2, '0');
+            const estDate = getESTTradingDate(date);
+            return estDate.getFullYear() + '-' + 
+                String(estDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                String(estDate.getDate()).padStart(2, '0');
         }
 
         // Language translations (enhanced with new terms)
@@ -1972,7 +2240,8 @@
                 'pl-distribution': 'P/L Distribution',
                 'cumulative-pl': 'Cumulative P/L',
                 'monthly-performance': 'Monthly Performance',
-                'no-symbol-data': 'No symbol data available'
+                'no-symbol-data': 'No symbol data available',
+                'daily-fees': 'Daily Fees'
             },
             ko: {
                 'dashboard': '대시보드',
@@ -2078,7 +2347,8 @@
                 'pl-distribution': '손익 분포',
                 'cumulative-pl': '누적 손익',
                 'monthly-performance': '월별 성과',
-                'no-symbol-data': '심볼 데이터가 없습니다'
+                'no-symbol-data': '심볼 데이터가 없습니다',
+                'daily-fees': '일일 수수료'
             }
         };
 
@@ -2107,6 +2377,7 @@
             currentLanguage = select.value;
             document.getElementById('settingsLanguageSelect').value = currentLanguage;
             updateLanguage();
+            updateStats();
             updateAnalytics();
             localStorage.setItem('tradingPlatformLanguage', currentLanguage);
         }
@@ -2116,29 +2387,30 @@
             currentLanguage = select.value;
             document.getElementById('languageSelect').value = currentLanguage;
             updateLanguage();
+            updateStats();
             updateAnalytics();
             localStorage.setItem('tradingPlatformLanguage', currentLanguage);
         }
 
         // Date management functions
         function updateCurrentDateDisplay() {
-            const usTradingDate = getUSTradingDate(currentTradingDate);
-            const dateStr = usTradingDate.toLocaleDateString(currentLanguage === 'ko' ? 'ko-KR' : 'en-US', {
+            const estTradingDate = getESTTradingDate(currentTradingDate);
+            const dateStr = estTradingDate.toLocaleDateString(currentLanguage === 'ko' ? 'ko-KR' : 'en-US', {
                 year: 'numeric',
                 month: 'short',
                 day: 'numeric'
             });
-            document.getElementById('currentDateDisplay').textContent = dateStr + ' (US)';
+            document.getElementById('currentDateDisplay').textContent = dateStr + ' (EST)';
         }
 
         function openDatePicker() {
             const modal = document.getElementById('datePickerModal');
             const input = document.getElementById('datePickerInput');
             
-            const usTradingDate = getUSTradingDate(currentTradingDate);
-            const dateString = usTradingDate.getFullYear() + '-' + 
-                String(usTradingDate.getMonth() + 1).padStart(2, '0') + '-' + 
-                String(usTradingDate.getDate()).padStart(2, '0');
+            const estTradingDate = getESTTradingDate(currentTradingDate);
+            const dateString = estTradingDate.getFullYear() + '-' + 
+                String(estTradingDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                String(estTradingDate.getDate()).padStart(2, '0');
             
             input.value = dateString;
             modal.style.display = 'flex';
@@ -2153,7 +2425,87 @@
             if (input.value) {
                 currentTradingDate = new Date(input.value + 'T12:00:00');
                 updateCurrentDateDisplay();
+                updateStats();
+                loadDailyFees();
                 closeDatePicker();
+            }
+        }
+
+        // Dashboard date range functions
+        function clearDashboardRange() {
+            dashboardStartDate = null;
+            dashboardEndDate = null;
+            document.getElementById('dashboardStartDate').value = '';
+            document.getElementById('dashboardEndDate').value = '';
+            updateStats();
+            updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
+        }
+
+        function getFilteredDashboardTrades() {
+            let filteredTrades = trades;
+            const currentDate = formatTradingDate(currentTradingDate);
+            
+            if (dashboardStartDate || dashboardEndDate) {
+                filteredTrades = trades.filter(trade => {
+                    const tradeDate = trade.date;
+                    if (dashboardStartDate && tradeDate < dashboardStartDate) return false;
+                    if (dashboardEndDate && tradeDate > dashboardEndDate) return false;
+                    return true;
+                });
+            } else {
+                // Show only current day trades by default
+                filteredTrades = trades.filter(trade => trade.date === currentDate);
+            }
+            
+            return filteredTrades;
+        }
+
+        // Analytics date range functions
+        function clearAnalyticsRange() {
+            analyticsStartDate = null;
+            analyticsEndDate = null;
+            document.getElementById('analyticsStartDate').value = '';
+            document.getElementById('analyticsEndDate').value = '';
+            updateAnalytics();
+        }
+
+        // Trades page date range functions
+        function clearTradesRange() {
+            tradesStartDate = null;
+            tradesEndDate = null;
+            document.getElementById('tradesStartDate').value = '';
+            document.getElementById('tradesEndDate').value = '';
+            updateAllTradesList();
+        }
+
+        function getFilteredTradesList() {
+            if (tradesStartDate || tradesEndDate) {
+                return trades.filter(trade => {
+                    const tradeDate = trade.date;
+                    if (tradesStartDate && tradeDate < tradesStartDate) return false;
+                    if (tradesEndDate && tradeDate > tradesEndDate) return false;
+                    return true;
+                });
+            }
+            return trades;
+        }
+
+        // Daily fees functions
+        function saveDailyFees() {
+            const currentDate = formatTradingDate(currentTradingDate);
+            const feesValue = parseFloat(document.getElementById('dailyFees').value) || 0;
+            dailyFees[currentDate] = feesValue;
+            localStorage.setItem('tradingPlatformDailyFees', JSON.stringify(dailyFees));
+            showToast('Daily fees saved');
+        }
+
+        function loadDailyFees() {
+            const currentDate = formatTradingDate(currentTradingDate);
+            const feesInput = document.getElementById('dailyFees');
+            if (dailyFees[currentDate]) {
+                feesInput.value = dailyFees[currentDate];
+            } else {
+                feesInput.value = '';
             }
         }
 
@@ -2177,7 +2529,13 @@
                 document.getElementById('settingsLanguageSelect').value = currentLanguage;
             }
             
-            currentTradingDate = getUSTradingDate(new Date());
+            // Load daily fees
+            const savedFees = localStorage.getItem('tradingPlatformDailyFees');
+            if (savedFees) {
+                dailyFees = JSON.parse(savedFees);
+            }
+            
+            currentTradingDate = getESTTradingDate(new Date());
             updateCurrentDateDisplay();
             updateLanguage();
             
@@ -2187,14 +2545,57 @@
             updateAllTradesList();
             updateAnalytics();
             calculateHoldingTime();
+            loadDailyFees();
             
             document.getElementById('tradeForm').addEventListener('submit', handleTradeSubmit);
+            document.getElementById('editTradeForm').addEventListener('submit', handleEditTradeSubmit);
             document.getElementById('entryTime').addEventListener('change', calculateHoldingTime);
             document.getElementById('exitTime').addEventListener('change', calculateHoldingTime);
+            
+            // Dashboard date range listeners
+            document.getElementById('dashboardStartDate').addEventListener('change', function() {
+                dashboardStartDate = this.value;
+                updateStats();
+                updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
+            });
+            
+            document.getElementById('dashboardEndDate').addEventListener('change', function() {
+                dashboardEndDate = this.value;
+                updateStats();
+                updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
+            });
+
+            // Analytics date range listeners
+            document.getElementById('analyticsStartDate').addEventListener('change', function() {
+                analyticsStartDate = this.value;
+                updateAnalytics();
+            });
+            
+            document.getElementById('analyticsEndDate').addEventListener('change', function() {
+                analyticsEndDate = this.value;
+                updateAnalytics();
+            });
+
+            // Trades page date range listeners
+            document.getElementById('tradesStartDate').addEventListener('change', function() {
+                tradesStartDate = this.value;
+                updateAllTradesList();
+            });
+            
+            document.getElementById('tradesEndDate').addEventListener('change', function() {
+                tradesEndDate = this.value;
+                updateAllTradesList();
+            });
             
             document.getElementById('datePickerModal').addEventListener('click', function(e) {
                 if (e.target === this) {
                     closeDatePicker();
+                }
+            });
+
+            document.getElementById('editTradeModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeEditTradeModal();
                 }
             });
         });
@@ -2337,7 +2738,8 @@
                 date: tradingDateString,
                 entryTime: document.getElementById('entryTime').value,
                 exitTime: document.getElementById('exitTime').value,
-                holdingTime: document.getElementById('holdingTimeDisplay').value
+                holdingTime: document.getElementById('holdingTimeDisplay').value,
+                notes: document.getElementById('tradeNotes').value
             };
             
             const shares = formData.amount / formData.buyPrice;
@@ -2363,6 +2765,7 @@
             document.getElementById('pnlDisplay').value = '';
             document.getElementById('returnPct').value = '';
             document.getElementById('holdingTimeDisplay').value = '';
+            document.getElementById('tradeNotes').value = '';
             
             if (timeEditMode) {
                 toggleTimeEdit();
@@ -2385,6 +2788,77 @@
             }
         }
 
+        function editTrade(tradeId) {
+            const trade = trades.find(t => t.id === tradeId);
+            if (!trade) return;
+            
+            document.getElementById('editTradeId').value = trade.id;
+            document.getElementById('editSymbol').value = trade.symbol;
+            document.getElementById('editAmount').value = trade.amount;
+            document.getElementById('editBuyPrice').value = trade.buyPrice;
+            document.getElementById('editSellPrice').value = trade.sellPrice;
+            document.getElementById('editEntryTime').value = trade.entryTime || '';
+            document.getElementById('editExitTime').value = trade.exitTime || '';
+            document.getElementById('editNotes').value = trade.notes || '';
+            
+            document.getElementById('editTradeModal').style.display = 'flex';
+        }
+
+        function closeEditTradeModal() {
+            document.getElementById('editTradeModal').style.display = 'none';
+        }
+
+        function handleEditTradeSubmit(event) {
+            event.preventDefault();
+            
+            const tradeId = parseInt(document.getElementById('editTradeId').value);
+            const tradeIndex = trades.findIndex(t => t.id === tradeId);
+            
+            if (tradeIndex === -1) return;
+            
+            const updatedTrade = {
+                ...trades[tradeIndex],
+                symbol: document.getElementById('editSymbol').value.toUpperCase(),
+                amount: parseFloat(document.getElementById('editAmount').value),
+                buyPrice: parseFloat(document.getElementById('editBuyPrice').value),
+                sellPrice: parseFloat(document.getElementById('editSellPrice').value),
+                entryTime: document.getElementById('editEntryTime').value,
+                exitTime: document.getElementById('editExitTime').value,
+                notes: document.getElementById('editNotes').value
+            };
+            
+            // Recalculate P&L and return percentage
+            const shares = updatedTrade.amount / updatedTrade.buyPrice;
+            updatedTrade.pnl = shares * (updatedTrade.sellPrice - updatedTrade.buyPrice);
+            updatedTrade.returnPct = ((updatedTrade.sellPrice - updatedTrade.buyPrice) / updatedTrade.buyPrice) * 100;
+            
+            // Calculate holding time
+            if (updatedTrade.entryTime && updatedTrade.exitTime) {
+                const [entryHour, entryMin] = updatedTrade.entryTime.split(':').map(Number);
+                const [exitHour, exitMin] = updatedTrade.exitTime.split(':').map(Number);
+                
+                let entryMinutes = entryHour * 60 + entryMin;
+                let exitMinutes = exitHour * 60 + exitMin;
+                
+                if (exitMinutes < entryMinutes) {
+                    exitMinutes += 24 * 60;
+                }
+                
+                const diffMinutes = exitMinutes - entryMinutes;
+                updatedTrade.holdingTime = `${diffMinutes}m`;
+            }
+            
+            trades[tradeIndex] = updatedTrade;
+            saveTrades();
+            updateStats();
+            renderCalendar();
+            updateAllTradesList();
+            updateAnalytics();
+            closeEditTradeModal();
+            
+            showToast(`${updatedTrade.symbol} updated`);
+        }
+
         // Data save/load functions
         function saveTrades() {
             try {
@@ -2400,6 +2874,11 @@
                 const saved = localStorage.getItem('tradingPlatformTrades');
                 if (saved) {
                     trades = JSON.parse(saved);
+                    // Ensure all trades have notes property
+                    trades = trades.map(trade => ({
+                        ...trade,
+                        notes: trade.notes || ''
+                    }));
                 } else {
                     trades = [];
                 }
@@ -2412,7 +2891,9 @@
 
         // Statistics update function
         function updateStats() {
-            if (trades.length === 0) {
+            const filteredTrades = getFilteredDashboardTrades();
+            
+            if (filteredTrades.length === 0) {
                 document.getElementById('totalPL').textContent = '$0.00';
                 document.getElementById('totalTrades').textContent = '0';
                 document.getElementById('winRate').textContent = '0%';
@@ -2426,38 +2907,38 @@
                 return;
             }
 
-            const totalPL = trades.reduce((sum, trade) => sum + trade.pnl, 0);
-            const wins = trades.filter(trade => trade.pnl > 0);
-            const losses = trades.filter(trade => trade.pnl < 0);
-            const winRate = trades.length > 0 ? (wins.length / trades.length) * 100 : 0;
+            const totalPL = filteredTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+            const wins = filteredTrades.filter(trade => trade.pnl > 0);
+            const losses = filteredTrades.filter(trade => trade.pnl < 0);
+            const winRate = filteredTrades.length > 0 ? (wins.length / filteredTrades.length) * 100 : 0;
             
-            const pnls = trades.map(trade => trade.pnl);
+            const pnls = filteredTrades.map(trade => trade.pnl);
             const bestTrade = Math.max(...pnls);
             const worstTrade = Math.min(...pnls);
             
             const avgWin = wins.length > 0 ? wins.reduce((sum, trade) => sum + trade.pnl, 0) / wins.length : 0;
             const avgLoss = losses.length > 0 ? losses.reduce((sum, trade) => sum + trade.pnl, 0) / losses.length : 0;
-            const totalVolume = trades.reduce((sum, trade) => sum + trade.amount, 0);
+            const totalVolume = filteredTrades.reduce((sum, trade) => sum + trade.amount, 0);
             
             const totalWins = wins.reduce((sum, trade) => sum + trade.pnl, 0);
             const totalLosses = Math.abs(losses.reduce((sum, trade) => sum + trade.pnl, 0));
             const profitFactor = totalLosses > 0 ? totalWins / totalLosses : 0;
 
-            document.getElementById('totalPL').textContent = `${totalPL.toFixed(2)}`;
+            document.getElementById('totalPL').textContent = `$${totalPL.toFixed(2)}`;
             document.getElementById('totalPL').className = `stat-value ${totalPL >= 0 ? 'positive' : 'negative'}`;
             
-            document.getElementById('totalTrades').textContent = trades.length.toString();
+            document.getElementById('totalTrades').textContent = filteredTrades.length.toString();
             document.getElementById('winRate').textContent = `${winRate.toFixed(1)}%`;
             document.getElementById('winRate').className = `stat-value ${winRate >= 50 ? 'positive' : 'negative'}`;
             
             document.getElementById('winLossCount').textContent = `${wins.length}W / ${losses.length}L`;
             
-            document.getElementById('bestTrade').textContent = `${bestTrade.toFixed(2)}`;
-            document.getElementById('worstTrade').textContent = `${worstTrade.toFixed(2)}`;
+            document.getElementById('bestTrade').textContent = `$${bestTrade.toFixed(2)}`;
+            document.getElementById('worstTrade').textContent = `$${worstTrade.toFixed(2)}`;
             
-            document.getElementById('avgWin').textContent = `${avgWin.toFixed(2)}`;
-            document.getElementById('avgLoss').textContent = `${avgLoss.toFixed(2)}`;
-            document.getElementById('totalVolume').textContent = `${totalVolume.toFixed(2)}`;
+            document.getElementById('avgWin').textContent = `$${avgWin.toFixed(2)}`;
+            document.getElementById('avgLoss').textContent = `$${avgLoss.toFixed(2)}`;
+            document.getElementById('totalVolume').textContent = `$${totalVolume.toFixed(2)}`;
             
             document.getElementById('profitFactorSidebar').textContent = profitFactor.toFixed(2);
             document.getElementById('profitFactorSidebar').className = `sidebar-stat-value ${profitFactor >= 1 ? 'positive' : 'negative'}`;
@@ -2467,7 +2948,7 @@
             const tableBody = document.getElementById(tableBodyId);
             
             if (tradesToShow.length === 0) {
-                const colspan = '9';
+                const colspan = tableBodyId === 'tradesTableBody' ? '10' : '10';
                 tableBody.innerHTML = `
                     <tr>
                         <td colspan="${colspan}">
@@ -2499,11 +2980,13 @@
                     <td><strong>${trade.symbol}</strong></td>
                     <td>${trade.buyPrice.toFixed(4)}</td>
                     <td>${trade.sellPrice.toFixed(4)}</td>
-                    <td>${trade.amount.toFixed(2)}</td>
+                    <td>$${trade.amount.toFixed(2)}</td>
                     <td>${trade.holdingTime || 'N/A'}</td>
-                    <td class="${trade.pnl >= 0 ? 'positive' : 'negative'}">${trade.pnl.toFixed(2)}</td>
+                    <td class="${trade.pnl >= 0 ? 'positive' : 'negative'}">$${trade.pnl.toFixed(2)}</td>
                     <td class="${trade.returnPct >= 0 ? 'positive' : 'negative'}">${trade.returnPct.toFixed(2)}%</td>
+                    <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${trade.notes || ''}">${trade.notes || '-'}</td>
                     <td>
+                        <button class="action-btn" onclick="editTrade(${trade.id})" title="Edit trade">✏️</button>
                         <button class="action-btn" onclick="deleteTrade(${trade.id})" title="Delete trade">🗑️</button>
                     </td>
                 </tr>
@@ -2511,17 +2994,21 @@
         }
 
         function updateAllTradesList() {
-            updateTradesTable(trades, 'allTradesTableBody');
+            const filteredTrades = getFilteredTradesList();
+            updateTradesTable(filteredTrades, 'allTradesTableBody');
             const tradesText = currentLanguage === 'ko' ? '거래' : 'trades';
-            document.getElementById('allTradesSummary').textContent = `${trades.length} ${tradesText}`;
-            updateTradesTable(trades, 'tradesTableBody');
-            document.getElementById('periodSummary').textContent = `${trades.length} ${tradesText}`;
+            document.getElementById('allTradesSummary').textContent = `${filteredTrades.length} ${tradesText}`;
+            
+            // Update dashboard table as well
+            updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
+            const dashboardTrades = getFilteredDashboardTrades();
+            document.getElementById('periodSummary').textContent = `${dashboardTrades.length} ${tradesText}`;
         }
 
         // Enhanced Analytics functions
         function setAnalyticsPeriod(period) {
             analyticsPeriod = period;
-            document.querySelectorAll('.filter-btn').forEach(btn => {
+            document.querySelectorAll('.filter-controls .filter-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             
@@ -2530,32 +3017,44 @@
         }
 
         function getFilteredTradesForAnalytics() {
-            const now = new Date();
-            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            let filteredTrades = trades;
             
-            switch (analyticsPeriod) {
-                case 'day':
-                    return trades.filter(trade => {
-                        const tradeDate = new Date(trade.date);
-                        return tradeDate >= today;
-                    });
-                case 'week':
-                    const weekAgo = new Date(today);
-                    weekAgo.setDate(weekAgo.getDate() - 7);
-                    return trades.filter(trade => {
-                        const tradeDate = new Date(trade.date);
-                        return tradeDate >= weekAgo;
-                    });
-                case 'month':
-                    const monthAgo = new Date(today);
-                    monthAgo.setMonth(monthAgo.getMonth() - 1);
-                    return trades.filter(trade => {
-                        const tradeDate = new Date(trade.date);
-                        return tradeDate >= monthAgo;
-                    });
-                default:
-                    return trades;
+            // Apply custom date range if set
+            if (analyticsStartDate || analyticsEndDate) {
+                filteredTrades = trades.filter(trade => {
+                    const tradeDate = trade.date;
+                    if (analyticsStartDate && tradeDate < analyticsStartDate) return false;
+                    if (analyticsEndDate && tradeDate > analyticsEndDate) return false;
+                    return true;
+                });
+            } else {
+                // Apply period filter
+                const now = new Date();
+                const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                
+                switch (analyticsPeriod) {
+                    case 'day':
+                        const todayStr = formatTradingDate(today);
+                        filteredTrades = trades.filter(trade => trade.date === todayStr);
+                        break;
+                    case 'week':
+                        const weekAgo = new Date(today);
+                        weekAgo.setDate(weekAgo.getDate() - 7);
+                        const weekAgoStr = formatTradingDate(weekAgo);
+                        filteredTrades = trades.filter(trade => trade.date >= weekAgoStr);
+                        break;
+                    case 'month':
+                        const monthAgo = new Date(today);
+                        monthAgo.setMonth(monthAgo.getMonth() - 1);
+                        const monthAgoStr = formatTradingDate(monthAgo);
+                        filteredTrades = trades.filter(trade => trade.date >= monthAgoStr);
+                        break;
+                    default:
+                        filteredTrades = trades;
+                }
             }
+            
+            return filteredTrades;
         }
 
         function updateAnalytics() {
@@ -2581,28 +3080,28 @@
             const profitFactor = totalLosses > 0 ? totalWins / totalLosses : 0;
             
             // Update Performance Summary
-            document.getElementById('summaryNetProfit').textContent = `${totalPL.toFixed(2)}`;
+            document.getElementById('summaryNetProfit').textContent = `$${totalPL.toFixed(2)}`;
             document.getElementById('summaryNetProfit').className = `breakdown-value ${totalPL >= 0 ? 'positive' : 'negative'}`;
             document.getElementById('summaryTotalTrades').textContent = filteredTrades.length;
             document.getElementById('summaryWinRate').textContent = `${winRate.toFixed(1)}%`;
             document.getElementById('summaryWinRate').className = `breakdown-value ${winRate >= 50 ? 'positive' : 'negative'}`;
             document.getElementById('summaryProfitFactor').textContent = profitFactor.toFixed(2);
             document.getElementById('summaryProfitFactor').className = `breakdown-value ${profitFactor >= 1 ? 'positive' : 'negative'}`;
-            document.getElementById('summaryLargestWin').textContent = `${largestWin.toFixed(2)}`;
+            document.getElementById('summaryLargestWin').textContent = `$${largestWin.toFixed(2)}`;
             document.getElementById('summaryLargestWin').className = `breakdown-value positive`;
-            document.getElementById('summaryLargestLoss').textContent = `${largestLoss.toFixed(2)}`;
+            document.getElementById('summaryLargestLoss').textContent = `$${largestLoss.toFixed(2)}`;
             document.getElementById('summaryLargestLoss').className = `breakdown-value negative`;
             
             // Win/Loss Analysis
             const avgWinningTrade = wins.length > 0 ? totalWins / wins.length : 0;
             const avgLosingTrade = losses.length > 0 ? totalLosses / losses.length : 0;
             
-            document.getElementById('grossProfit').textContent = `${totalWins.toFixed(2)}`;
-            document.getElementById('grossLoss').textContent = `${totalLosses.toFixed(2)}`;
+            document.getElementById('grossProfit').textContent = `$${totalWins.toFixed(2)}`;
+            document.getElementById('grossLoss').textContent = `$${totalLosses.toFixed(2)}`;
             document.getElementById('winningTrades').textContent = `${wins.length} (${winRate.toFixed(1)}%)`;
             document.getElementById('losingTrades').textContent = `${losses.length} (${(100 - winRate).toFixed(1)}%)`;
-            document.getElementById('avgWinningTrade').textContent = `${avgWinningTrade.toFixed(2)}`;
-            document.getElementById('avgLosingTrade').textContent = `${avgLosingTrade.toFixed(2)}`;
+            document.getElementById('avgWinningTrade').textContent = `$${avgWinningTrade.toFixed(2)}`;
+            document.getElementById('avgLosingTrade').textContent = `$${avgLosingTrade.toFixed(2)}`;
             
             // Trading Activity
             const uniqueDates = [...new Set(filteredTrades.map(trade => trade.date))];
@@ -2610,7 +3109,7 @@
             const avgTradesPerDay = tradingDays > 0 ? filteredTrades.length / tradingDays : 0;
             const totalVolume = filteredTrades.reduce((sum, trade) => sum + trade.amount, 0);
             const avgPositionSize = filteredTrades.length > 0 ? totalVolume / filteredTrades.length : 0;
-            const largestPosition = Math.max(...filteredTrades.map(trade => trade.amount));
+            const largestPosition = filteredTrades.length > 0 ? Math.max(...filteredTrades.map(trade => trade.amount)) : 0;
             
             // Calculate average hold time
             const holdTimes = filteredTrades
@@ -2621,27 +3120,20 @@
             
             document.getElementById('tradingDays').textContent = tradingDays;
             document.getElementById('avgTradesPerDay').textContent = avgTradesPerDay.toFixed(2);
-            document.getElementById('totalVolume').textContent = `${totalVolume.toFixed(0)}`;
-            document.getElementById('avgPositionSize').textContent = `${avgPositionSize.toFixed(0)}`;
-            document.getElementById('largestPosition').textContent = `${largestPosition.toFixed(0)}`;
+            document.getElementById('totalVolumeAnalytics').textContent = `$${totalVolume.toFixed(0)}`;
+            document.getElementById('avgPositionSize').textContent = `$${avgPositionSize.toFixed(0)}`;
+            document.getElementById('largestPosition').textContent = `$${largestPosition.toFixed(0)}`;
             document.getElementById('avgHoldTime').textContent = `${avgHoldTime.toFixed(0)}m`;
             
-            // Performance Streaks
+            // Update all other analytics sections
             updateStreakAnalysis(filteredTrades);
-            
-            // Best/Worst Performance
             updateBestWorstPerformance(filteredTrades);
-            
-            // Time Analysis
             updateTimeAnalysis(filteredTrades);
-            
-            // Symbol Performance
             updateSymbolPerformance(filteredTrades);
-            
-            // Trading Heatmap
+            updatePriceRangeAnalysis(filteredTrades);
+            updateDrawdownAnalysis(filteredTrades);
+            updateTotalGainsLosses(filteredTrades);
             updateTradingHeatmap(filteredTrades);
-            
-            // P/L Distribution
             updatePLDistribution(filteredTrades);
         }
 
@@ -2659,12 +3151,13 @@
             document.getElementById('summaryLargestLoss').textContent = '$0.00';
             document.getElementById('summaryLargestLoss').className = 'breakdown-value';
             
-            // Reset other analytics
+            // Reset other analytics elements
             const elements = [
                 'grossProfit', 'grossLoss', 'winningTrades', 'losingTrades', 'avgWinningTrade', 'avgLosingTrade',
-                'tradingDays', 'avgTradesPerDay', 'totalVolume', 'avgPositionSize', 'largestPosition', 'avgHoldTime',
+                'tradingDays', 'avgTradesPerDay', 'totalVolumeAnalytics', 'avgPositionSize', 'largestPosition', 'avgHoldTime',
                 'currentStreak', 'maxWinStreak', 'maxLossStreak', 'bestTradingDay', 'worstTradingDay',
-                'mostProfitableSymbol', 'leastProfitableSymbol', 'bestHour', 'worstHour', 'bestDayOfWeek', 'worstDayOfWeek'
+                'mostProfitableSymbol', 'leastProfitableSymbol', 'bestHour', 'worstHour', 'bestDayOfWeek', 'worstDayOfWeek',
+                'maxDrawdown', 'currentDrawdown', 'recoveryTime', 'totalGains', 'totalLosses'
             ];
             
             elements.forEach(id => {
@@ -2674,8 +3167,10 @@
                         element.textContent = '-';
                     } else if (id.includes('Trades') && id !== 'tradingDays') {
                         element.textContent = '0 (0%)';
-                    } else if (id.includes('Volume') || id.includes('Position') || id.includes('Day')) {
-                        element.textContent = '$0';
+                    } else if (id.includes('Volume') || id.includes('Position') || id.includes('Day') || id.includes('Gains') || id.includes('Losses') || id.includes('Drawdown')) {
+                        element.textContent = '$0.00';
+                    } else if (id === 'recoveryTime') {
+                        element.textContent = '0 days';
                     } else {
                         element.textContent = '0';
                     }
@@ -2687,6 +3182,12 @@
             document.getElementById('symbolPerformanceList').innerHTML = `
                 <div class="empty-state" style="padding: 20px;">
                     <div style="color: #64748b; font-size: 13px;" data-lang="no-symbol-data">${translations[currentLanguage]['no-symbol-data'] || 'No symbol data available'}</div>
+                </div>
+            `;
+            
+            document.getElementById('priceRangeAnalysis').innerHTML = `
+                <div class="empty-state" style="padding: 20px;">
+                    <div style="color: #64748b; font-size: 13px;">No price range data available</div>
                 </div>
             `;
             
@@ -2732,7 +3233,7 @@
             const recentTrades = sortedTrades.slice(-20);
             streakIndicator.innerHTML = recentTrades.map(trade => {
                 const width = Math.max(4, Math.abs(trade.pnl) / 100 * 20);
-                return `<div class="streak-bar ${trade.pnl >= 0 ? 'win' : 'loss'}" style="width: ${width}px;" title="${trade.symbol}: ${trade.pnl.toFixed(2)}"></div>`;
+                return `<div class="streak-bar ${trade.pnl >= 0 ? 'win' : 'loss'}" style="width: ${width}px;" title="${trade.symbol}: $${trade.pnl.toFixed(2)}"></div>`;
             }).join('');
         }
 
@@ -2750,8 +3251,8 @@
             const bestTradingDay = dailyPLs.length > 0 ? Math.max(...dailyPLs) : 0;
             const worstTradingDay = dailyPLs.length > 0 ? Math.min(...dailyPLs) : 0;
             
-            document.getElementById('bestTradingDay').textContent = `${bestTradingDay.toFixed(2)}`;
-            document.getElementById('worstTradingDay').textContent = `${worstTradingDay.toFixed(2)}`;
+            document.getElementById('bestTradingDay').textContent = `$${bestTradingDay.toFixed(2)}`;
+            document.getElementById('worstTradingDay').textContent = `$${worstTradingDay.toFixed(2)}`;
             
             // Symbol performance for best/worst
             const symbolStats = {};
@@ -2770,9 +3271,9 @@
                 const leastProfitable = sortedSymbols[sortedSymbols.length - 1];
                 
                 document.getElementById('mostProfitableSymbol').textContent = 
-                    `${mostProfitable[0]} (${mostProfitable[1].totalPL.toFixed(2)})`;
+                    `${mostProfitable[0]} ($${mostProfitable[1].totalPL.toFixed(2)})`;
                 document.getElementById('leastProfitableSymbol').textContent = 
-                    `${leastProfitable[0]} (${leastProfitable[1].totalPL.toFixed(2)})`;
+                    `${leastProfitable[0]} ($${leastProfitable[1].totalPL.toFixed(2)})`;
             } else {
                 document.getElementById('mostProfitableSymbol').textContent = '-';
                 document.getElementById('leastProfitableSymbol').textContent = '-';
@@ -2799,9 +3300,9 @@
                 .sort((a, b) => a[1].totalPL - b[1].totalPL)[0];
             
             document.getElementById('bestHour').textContent = bestHour ? 
-                `${bestHour[0]}:00 (${bestHour[1].totalPL.toFixed(2)})` : '-';
+                `${bestHour[0]}:00 ($${bestHour[1].totalPL.toFixed(2)})` : '-';
             document.getElementById('worstHour').textContent = worstHour ? 
-                `${worstHour[0]}:00 (${worstHour[1].totalPL.toFixed(2)})` : '-';
+                `${worstHour[0]}:00 ($${worstHour[1].totalPL.toFixed(2)})` : '-';
             
             // Day of week analysis
             const dayStats = {};
@@ -2853,7 +3354,7 @@
                         <div class="metric-row">
                             <span class="metric-label">${symbol} (${stats.count})</span>
                             <span class="metric-value ${stats.totalPL >= 0 ? 'positive' : 'negative'}">
-                                ${stats.totalPL.toFixed(2)} (${symbolWinRate.toFixed(0)}%)
+                                $${stats.totalPL.toFixed(2)} (${symbolWinRate.toFixed(0)}%)
                             </span>
                         </div>
                     `;
@@ -2864,6 +3365,113 @@
                     <div style="color: #64748b; font-size: 13px;" data-lang="no-symbol-data">${translations[currentLanguage]['no-symbol-data'] || 'No symbol data available'}</div>
                 </div>
             `;
+        }
+
+        function updatePriceRangeAnalysis(filteredTrades) {
+            const priceRanges = [
+                { min: 0, max: 1, label: '$0-$1' },
+                { min: 1, max: 5, label: '$1-$5' },
+                { min: 5, max: 10, label: '$5-$10' },
+                { min: 10, max: 50, label: '$10-$50' },
+                { min: 50, max: 100, label: '$50-$100' },
+                { min: 100, max: 500, label: '$100-$500' },
+                { min: 500, max: Infinity, label: '$500+' }
+            ];
+
+            const rangeStats = priceRanges.map(range => {
+                const rangetrades = filteredTrades.filter(trade => 
+                    trade.buyPrice >= range.min && trade.buyPrice < range.max
+                );
+                
+                const totalPL = rangeTradesSummer(rangesTrades.reduce((sum, trade) => sum + trade.pnl, 0));
+                const wins = rangesTrades.filter(trade => trade.pnl > 0).length;
+                const winRate = rangesTrades.length > 0 ? (wins / rangesTrades.length) * 100 : 0;
+                
+                return {
+                    ...range,
+                    count: rangesTrades.length,
+                    totalPL,
+                    winRate
+                };
+            }).filter(range => range.count > 0);
+
+            const rangeHtml = rangeStats.map(range => `
+                <div class="price-range-item">
+                    <div class="price-range-header">
+                        <span class="price-range-label">${range.label}</span>
+                        <span class="${range.totalPL >= 0 ? 'positive' : 'negative'}">$${range.totalPL.toFixed(2)}</span>
+                    </div>
+                    <div class="price-range-stats">
+                        <div class="price-range-stat">
+                            <div class="price-range-stat-label">Trades</div>
+                            <div class="price-range-stat-value">${range.count}</div>
+                        </div>
+                        <div class="price-range-stat">
+                            <div class="price-range-stat-label">Win Rate</div>
+                            <div class="price-range-stat-value ${range.winRate >= 50 ? 'positive' : 'negative'}">${range.winRate.toFixed(0)}%</div>
+                        </div>
+                        <div class="price-range-stat">
+                            <div class="price-range-stat-label">Avg P/L</div>
+                            <div class="price-range-stat-value ${range.totalPL >= 0 ? 'positive' : 'negative'}">$${(range.totalPL / range.count).toFixed(2)}</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('priceRangeAnalysis').innerHTML = rangeHtml || `
+                <div class="empty-state" style="padding: 20px;">
+                    <div style="color: #64748b; font-size: 13px;">No price range data available</div>
+                </div>
+            `;
+        }
+
+        function updateDrawdownAnalysis(filteredTrades) {
+            const sortedTrades = [...filteredTrades].sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            let cumulativePL = 0;
+            let peak = 0;
+            let maxDrawdown = 0;
+            let currentDrawdown = 0;
+            let recoveryDays = 0;
+            let drawdownStart = null;
+            
+            sortedTrades.forEach((trade, index) => {
+                cumulativePL += trade.pnl;
+                
+                if (cumulativePL > peak) {
+                    peak = cumulativePL;
+                    if (drawdownStart) {
+                        recoveryDays = Math.max(recoveryDays, index - drawdownStart);
+                        drawdownStart = null;
+                    }
+                }
+                
+                const drawdown = peak - cumulativePL;
+                if (drawdown > maxDrawdown) {
+                    maxDrawdown = drawdown;
+                }
+                
+                if (index === sortedTrades.length - 1) {
+                    currentDrawdown = drawdown;
+                }
+                
+                if (drawdown > 0 && !drawdownStart) {
+                    drawdownStart = index;
+                }
+            });
+            
+            document.getElementById('maxDrawdown').textContent = `$${maxDrawdown.toFixed(2)}`;
+            document.getElementById('currentDrawdown').textContent = `$${currentDrawdown.toFixed(2)}`;
+            document.getElementById('currentDrawdown').className = `metric-value ${currentDrawdown === 0 ? 'positive' : 'negative'}`;
+            document.getElementById('recoveryTime').textContent = `${recoveryDays} days`;
+        }
+
+        function updateTotalGainsLosses(filteredTrades) {
+            const totalGains = filteredTrades.filter(trade => trade.pnl > 0).reduce((sum, trade) => sum + trade.pnl, 0);
+            const totalLosses = Math.abs(filteredTrades.filter(trade => trade.pnl < 0).reduce((sum, trade) => sum + trade.pnl, 0));
+            
+            document.getElementById('totalGains').textContent = `$${totalGains.toFixed(2)}`;
+            document.getElementById('totalLosses').textContent = `$${totalLosses.toFixed(2)}`;
         }
 
         function updateTradingHeatmap(filteredTrades) {
@@ -2901,7 +3509,7 @@
                     } else {
                         cell.style.backgroundColor = `rgba(239, 68, 68, ${0.2 + (1 - intensity) * 0.8})`;
                     }
-                    cell.title = `${hour}:00 - ${data.count} trades, ${data.totalPL.toFixed(2)} P/L`;
+                    cell.title = `${hour}:00 - ${data.count} trades, $${data.totalPL.toFixed(2)} P/L`;
                 }
                 
                 heatmapContainer.appendChild(cell);
@@ -2934,11 +3542,11 @@
                 const height = maxCount > 0 ? (count / maxCount) * 100 : 0;
                 const binStart = min + index * binSize;
                 const isNegative = binStart < 0;
-                return `<div class="distribution-bar ${isNegative ? 'negative' : ''}" style="height: ${height}%" title="Bin: ${binStart.toFixed(0)} to ${(binStart + binSize).toFixed(0)}, Count: ${count}"></div>`;
+                return `<div class="distribution-bar ${isNegative ? 'negative' : ''}" style="height: ${height}%" title="Bin: $${binStart.toFixed(0)} to $${(binStart + binSize).toFixed(0)}, Count: ${count}"></div>`;
             }).join('');
         }
 
-        // Calendar related functions (keeping all existing calendar functionality)
+        // Calendar related functions
         function renderCalendar() {
             const grid = document.getElementById('calendarGrid');
             const year = calendarDate.getFullYear();
@@ -2966,11 +3574,14 @@
                 
                 const dayElement = document.createElement('div');
                 dayElement.className = 'calendar-day';
-                dayElement.dataset.date = currentDate.toISOString().split('T')[0];
+                
+                // Use EST date for calendar display
+                const estDate = getESTTradingDate(currentDate);
+                const dateString = formatTradingDate(estDate);
+                dayElement.dataset.date = dateString;
                 
                 const isCurrentMonth = currentDate.getMonth() === month;
                 const isToday = currentDate.toDateString() === new Date().toDateString();
-                const dateString = currentDate.toISOString().split('T')[0];
                 
                 if (!isCurrentMonth) {
                     dayElement.classList.add('other-month');
@@ -2982,7 +3593,7 @@
                 
                 const dayNumber = document.createElement('div');
                 dayNumber.className = 'calendar-day-number';
-                dayNumber.textContent = currentDate.getDate();
+                dayNumber.textContent = estDate.getDate();
                 dayElement.appendChild(dayNumber);
                 
                 const dayTrades = trades.filter(trade => trade.date === dateString);
@@ -2992,7 +3603,7 @@
                     
                     const pnlElement = document.createElement('div');
                     pnlElement.className = `calendar-day-pnl ${totalPnL > 0 ? 'positive' : totalPnL < 0 ? 'negative' : 'neutral'}`;
-                    pnlElement.textContent = `${totalPnL.toFixed(0)}`;
+                    pnlElement.textContent = `$${totalPnL.toFixed(0)}`;
                     dayElement.appendChild(pnlElement);
                     
                     const tradesElement = document.createElement('div');
@@ -3076,11 +3687,12 @@
                     <div class="day-trade-item">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
                             <span class="trade-symbol">${trade.symbol}</span>
-                            <span class="trade-pnl ${trade.pnl >= 0 ? 'positive' : 'negative'}">${trade.pnl.toFixed(2)}</span>
+                            <span class="trade-pnl ${trade.pnl >= 0 ? 'positive' : 'negative'}">$${trade.pnl.toFixed(2)}</span>
                         </div>
                         <div style="font-size: 11px; color: #64748b;">
-                            ${trade.buyPrice.toFixed(4)} → ${trade.sellPrice.toFixed(4)} | ${trade.holdingTime || 'N/A'}
+                            $${trade.buyPrice.toFixed(4)} → $${trade.sellPrice.toFixed(4)} | ${trade.holdingTime || 'N/A'}
                         </div>
+                        ${trade.notes ? `<div style="font-size: 10px; color: #94a3b8; margin-top: 4px;">${trade.notes}</div>` : ''}
                     </div>
                 `).join('');
             }
@@ -3157,7 +3769,7 @@
                     <div class="weekly-item">
                         <span class="weekly-label">${weekLabel}</span>
                         <span class="weekly-value ${totalPL >= 0 ? 'positive' : 'negative'}">
-                            ${totalPL.toFixed(2)} (${tradeCount})
+                            $${totalPL.toFixed(2)} (${tradeCount})
                         </span>
                     </div>
                 `;
@@ -3251,19 +3863,23 @@
             document.getElementById('calendarPeriodLabel').textContent = periodLabel;
             document.getElementById('calendarTotalTrades').textContent = totalTrades;
             
-            document.getElementById('calendarTotalPL').textContent = `${totalPL.toFixed(2)}`;
+            document.getElementById('calendarTotalPL').textContent = `$${totalPL.toFixed(2)}`;
             document.getElementById('calendarTotalPL').className = `calendar-stat-value ${totalPL >= 0 ? 'positive' : 'negative'}`;
             
-            document.getElementById('calendarAvgDaily').textContent = `${avgDaily.toFixed(2)}`;
+            document.getElementById('calendarAvgDaily').textContent = `$${avgDaily.toFixed(2)}`;
             document.getElementById('calendarAvgDaily').className = `calendar-stat-value ${avgDaily >= 0 ? 'positive' : 'negative'}`;
             
-            document.getElementById('calendarBestDay').textContent = `${bestDay.toFixed(2)}`;
-            document.getElementById('calendarWorstDay').textContent = `${worstDay.toFixed(2)}`;
+            document.getElementById('calendarBestDay').textContent = `$${bestDay.toFixed(2)}`;
+            document.getElementById('calendarWorstDay').textContent = `$${worstDay.toFixed(2)}`;
         }
 
         // Settings functions
         function exportData() {
-            const dataStr = JSON.stringify(trades, null, 2);
+            const exportData = {
+                trades: trades,
+                dailyFees: dailyFees
+            };
+            const dataStr = JSON.stringify(exportData, null, 2);
             const dataBlob = new Blob([dataStr], {type: 'application/json'});
             
             const link = document.createElement('a');
@@ -3284,14 +3900,22 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     try {
-                        const importedTrades = JSON.parse(e.target.result);
-                        if (Array.isArray(importedTrades)) {
-                            trades = importedTrades;
+                        const importedData = JSON.parse(e.target.result);
+                        if (importedData.trades && Array.isArray(importedData.trades)) {
+                            trades = importedData.trades.map(trade => ({
+                                ...trade,
+                                notes: trade.notes || ''
+                            }));
+                            if (importedData.dailyFees) {
+                                dailyFees = importedData.dailyFees;
+                            }
                             saveTrades();
+                            localStorage.setItem('tradingPlatformDailyFees', JSON.stringify(dailyFees));
                             updateStats();
                             renderCalendar();
                             updateAllTradesList();
                             updateAnalytics();
+                            loadDailyFees();
                             showToast(currentLanguage === 'ko' ? '데이터가 가져와졌습니다' : 'Data imported');
                         } else {
                             throw new Error('Invalid data format');
@@ -3311,14 +3935,76 @@
             
             if (confirm(confirmMessage)) {
                 trades = [];
+                dailyFees = {};
                 saveTrades();
+                localStorage.setItem('tradingPlatformDailyFees', JSON.stringify(dailyFees));
                 updateStats();
                 renderCalendar();
                 updateAllTradesList();
                 updateAnalytics();
                 clearCalendarRange();
+                loadDailyFees();
                 showToast(currentLanguage === 'ko' ? '모든 데이터가 삭제됨' : 'All data cleared');
             }
+        }
+
+        // Fix the price range analysis function
+        function updatePriceRangeAnalysis(filteredTrades) {
+            const priceRanges = [
+                { min: 0, max: 1, label: '$0-$1' },
+                { min: 1, max: 5, label: '$1-$5' },
+                { min: 5, max: 10, label: '$5-$10' },
+                { min: 10, max: 50, label: '$10-$50' },
+                { min: 50, max: 100, label: '$50-$100' },
+                { min: 100, max: 500, label: '$100-$500' },
+                { min: 500, max: Infinity, label: '$500+' }
+            ];
+
+            const rangeStats = priceRanges.map(range => {
+                const rangeTrades = filteredTrades.filter(trade => 
+                    trade.buyPrice >= range.min && trade.buyPrice < range.max
+                );
+                
+                const totalPL = rangeTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+                const wins = rangeTrades.filter(trade => trade.pnl > 0).length;
+                const winRate = rangeTrades.length > 0 ? (wins / rangeTrades.length) * 100 : 0;
+                
+                return {
+                    ...range,
+                    count: rangeTrades.length,
+                    totalPL,
+                    winRate
+                };
+            }).filter(range => range.count > 0);
+
+            const rangeHtml = rangeStats.map(range => `
+                <div class="price-range-item">
+                    <div class="price-range-header">
+                        <span class="price-range-label">${range.label}</span>
+                        <span class="${range.totalPL >= 0 ? 'positive' : 'negative'}">$${range.totalPL.toFixed(2)}</span>
+                    </div>
+                    <div class="price-range-stats">
+                        <div class="price-range-stat">
+                            <div class="price-range-stat-label">Trades</div>
+                            <div class="price-range-stat-value">${range.count}</div>
+                        </div>
+                        <div class="price-range-stat">
+                            <div class="price-range-stat-label">Win Rate</div>
+                            <div class="price-range-stat-value ${range.winRate >= 50 ? 'positive' : 'negative'}">${range.winRate.toFixed(0)}%</div>
+                        </div>
+                        <div class="price-range-stat">
+                            <div class="price-range-stat-label">Avg P/L</div>
+                            <div class="price-range-stat-value ${range.totalPL >= 0 ? 'positive' : 'negative'}">$${(range.totalPL / range.count).toFixed(2)}</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('priceRangeAnalysis').innerHTML = rangeHtml || `
+                <div class="empty-state" style="padding: 20px;">
+                    <div style="color: #64748b; font-size: 13px;">No price range data available</div>
+                </div>
+            `;
         }
     </script>
 </body>
