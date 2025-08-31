@@ -2155,20 +2155,17 @@
         let tradesEndDate = null;
 
         // Function to get EST trading date
-        function getESTTradingDate(date = new Date()) {
-            // Convert to EST timezone
-            const estDate = new Date(date.toLocaleString("en-US", {timeZone: "America/New_York"}));
-            return estDate;
+      function getESTTradingDate(date = new Date()) {
+            // Simply return the date as-is for dashboard display
+            return new Date(date);
         }
 
         // Function to format date for storage (EST trading date)
-        function formatTradingDate(date) {
-            const estDate = getESTTradingDate(date);
-            return estDate.getFullYear() + '-' + 
-                String(estDate.getMonth() + 1).padStart(2, '0') + '-' + 
-                String(estDate.getDate()).padStart(2, '0');
+      function formatTradingDate(date) {
+            return date.getFullYear() + '-' + 
+                String(date.getMonth() + 1).padStart(2, '0') + '-' + 
+                String(date.getDate()).padStart(2, '0');
         }
-
         // Language translations (enhanced with new terms)
         const translations = {
             en: {
@@ -2429,13 +2426,12 @@
 
         // Date management functions
         function updateCurrentDateDisplay() {
-            const estTradingDate = getESTTradingDate(currentTradingDate);
-            const dateStr = estTradingDate.toLocaleDateString(currentLanguage === 'ko' ? 'ko-KR' : 'en-US', {
+            const dateStr = currentTradingDate.toLocaleDateString(currentLanguage === 'ko' ? 'ko-KR' : 'en-US', {
                 year: 'numeric',
                 month: 'short',
                 day: 'numeric'
             });
-            document.getElementById('currentDateDisplay').textContent = dateStr + ' (EST)';
+            document.getElementById('currentDateDisplay').textContent = dateStr;
         }
 
         function openDatePicker() {
@@ -2952,6 +2948,9 @@ function changeTradingDate(direction) {
             }
 
             const totalPL = filteredTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+            const currentDate = formatTradingDate(currentTradingDate);
+            const dailyFee = dailyFees[currentDate] || 0;
+            const netPL = totalPL - dailyFee;
             const wins = filteredTrades.filter(trade => trade.pnl > 0);
             const losses = filteredTrades.filter(trade => trade.pnl < 0);
             const winRate = filteredTrades.length > 0 ? (wins.length / filteredTrades.length) * 100 : 0;
@@ -2968,8 +2967,8 @@ function changeTradingDate(direction) {
             const totalLosses = Math.abs(losses.reduce((sum, trade) => sum + trade.pnl, 0));
             const profitFactor = totalLosses > 0 ? totalWins / totalLosses : 0;
 
-            document.getElementById('totalPL').textContent = `$${totalPL.toFixed(2)}`;
-            document.getElementById('totalPL').className = `stat-value ${totalPL >= 0 ? 'positive' : 'negative'}`;
+            document.getElementById('totalPL').textContent = `$${netPL.toFixed(2)}`;
+            document.getElementById('totalPL').className = `stat-value ${netPL >= 0 ? 'positive' : 'negative'}`;
             
             document.getElementById('totalTrades').textContent = filteredTrades.length.toString();
             document.getElementById('winRate').textContent = `${winRate.toFixed(1)}%`;
@@ -3111,6 +3110,13 @@ function changeTradingDate(direction) {
             
             // Performance Summary
             const totalPL = filteredTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+            // Apply daily fees
+            let totalDailyFees = 0;
+            const uniqueDatesForFees = [...new Set(filteredTrades.map(trade => trade.date))];
+            uniqueDatesForFees.forEach(date => {
+                totalDailyFees += dailyFees[date] || 0;
+            });
+            const netTotalPL = totalPL - totalDailyFees;
             const wins = filteredTrades.filter(trade => trade.pnl > 0);
             const losses = filteredTrades.filter(trade => trade.pnl < 0);
             const winRate = filteredTrades.length > 0 ? (wins.length / filteredTrades.length) * 100 : 0;
@@ -3124,8 +3130,8 @@ function changeTradingDate(direction) {
             const profitFactor = totalLosses > 0 ? totalWins / totalLosses : 0;
             
             // Update Performance Summary
-            document.getElementById('summaryNetProfit').textContent = `$${totalPL.toFixed(2)}`;
-            document.getElementById('summaryNetProfit').className = `breakdown-value ${totalPL >= 0 ? 'positive' : 'negative'}`;
+            document.getElementById('summaryNetProfit').textContent = `$${netTotalPL.toFixed(2)}`;
+            document.getElementById('summaryNetProfit').className = `breakdown-value ${netTotalPL >= 0 ? 'positive' : 'negative'}`;
             document.getElementById('summaryTotalTrades').textContent = filteredTrades.length;
             document.getElementById('summaryWinRate').textContent = `${winRate.toFixed(1)}%`;
             document.getElementById('summaryWinRate').className = `breakdown-value ${winRate >= 50 ? 'positive' : 'negative'}`;
