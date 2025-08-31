@@ -142,6 +142,32 @@
             gap: 20px;
         }
 
+        .date-navigation {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 4px;
+        }
+
+        .date-nav-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .date-nav-btn:hover {
+            background: #334155;
+            color: #e4e4e7;
+        }
+
         .current-date-display {
             background: #1e293b;
             border: 1px solid #334155;
@@ -152,6 +178,8 @@
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
+            min-width: 140px;
+            text-align: center;
         }
 
         .current-date-display:hover {
@@ -177,6 +205,42 @@
             padding: 8px 12px;
             font-size: 13px;
             border-radius: 6px;
+        }
+
+        /* Daily Commission Input */
+        .daily-commission {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .commission-label {
+            color: #94a3b8;
+            font-size: 13px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .commission-input {
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: #e4e4e7;
+            padding: 6px 10px;
+            font-size: 13px;
+            border-radius: 4px;
+            width: 100px;
+            text-align: right;
+        }
+
+        .commission-input:focus {
+            outline: none;
+            border-color: #3b82f6;
         }
 
         .stats-overview {
@@ -302,6 +366,10 @@
         .form-group {
             margin-bottom: 0;
         }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
         
         .form-group label {
             display: block;
@@ -313,7 +381,7 @@
             letter-spacing: 0.3px;
         }
         
-        .form-group input {
+        .form-group input, .form-group textarea {
             width: 100%;
             background: #0f172a;
             border: 1px solid #334155;
@@ -324,8 +392,14 @@
             transition: border-color 0.2s ease;
             height: 32px;
         }
+
+        .form-group textarea {
+            height: 60px;
+            resize: vertical;
+            font-family: inherit;
+        }
         
-        .form-group input:focus {
+        .form-group input:focus, .form-group textarea:focus {
             outline: none;
             border-color: #3b82f6;
         }
@@ -461,6 +535,32 @@
             color: #94a3b8;
             font-size: 14px;
         }
+
+        /* Date Range Selector */
+        .date-range-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            padding: 4px 8px;
+        }
+
+        .date-range-input {
+            background: none;
+            border: none;
+            color: #e4e4e7;
+            font-size: 12px;
+            padding: 4px;
+            width: 90px;
+        }
+
+        .date-range-input:focus {
+            outline: none;
+            background: #334155;
+            border-radius: 3px;
+        }
         
         .trades-table {
             width: 100%;
@@ -503,6 +603,53 @@
         .action-btn:hover {
             background: #334155;
             color: #e4e4e7;
+        }
+
+        .action-btn.edit {
+            color: #3b82f6;
+        }
+
+        .action-btn.delete {
+            color: #ef4444;
+        }
+
+        /* Edit Trade Modal */
+        .edit-trade-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .edit-trade-content {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .edit-trade-title {
+            color: #f8fafc;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .edit-form-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
         }
 
         /* Calendar Styles */
@@ -1039,6 +1186,84 @@
             letter-spacing: 0.5px;
         }
 
+        /* Drawdown specific styles */
+        .drawdown-section {
+            margin-top: 20px;
+            padding: 16px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+        }
+
+        .drawdown-title {
+            color: #f8fafc;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .drawdown-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .drawdown-stat {
+            text-align: center;
+            padding: 8px;
+            background: #1e293b;
+            border-radius: 6px;
+        }
+
+        .drawdown-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ef4444;
+            margin-bottom: 4px;
+        }
+
+        .drawdown-label {
+            font-size: 11px;
+            color: #64748b;
+            text-transform: uppercase;
+        }
+
+        /* Price Analysis styles */
+        .price-analysis {
+            margin-top: 16px;
+        }
+
+        .price-range {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #334155;
+        }
+
+        .price-range:last-child {
+            border-bottom: none;
+        }
+
+        .price-label {
+            color: #94a3b8;
+            font-size: 12px;
+        }
+
+        .price-stats {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+        }
+
+        .price-win-rate {
+            color: #10b981;
+        }
+
+        .price-total {
+            color: #64748b;
+        }
+
         /* Settings styles */
         .settings-section {
             background: #1e293b;
@@ -1235,6 +1460,10 @@
             .filter-controls {
                 justify-content: center;
             }
+
+            .date-navigation {
+                flex-wrap: wrap;
+            }
         }
     </style>
 </head>
@@ -1251,6 +1480,49 @@
                 <button class="btn btn-secondary" onclick="closeDatePicker()">Cancel</button>
                 <button class="btn btn-primary" onclick="applySelectedDate()">Apply</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Edit Trade Modal -->
+    <div class="edit-trade-modal" id="editTradeModal">
+        <div class="edit-trade-content">
+            <div class="edit-trade-title">Edit Trade</div>
+            <form id="editTradeForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Symbol</label>
+                        <input type="text" id="editSymbol" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Amount ($)</label>
+                        <input type="number" id="editAmount" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Buy Price</label>
+                        <input type="number" id="editBuyPrice" step="0.0001" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Sell Price</label>
+                        <input type="number" id="editSellPrice" step="0.0001" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Entry Time</label>
+                        <input type="time" id="editEntryTime">
+                    </div>
+                    <div class="form-group">
+                        <label>Exit Time</label>
+                        <input type="time" id="editExitTime">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Notes</label>
+                        <textarea id="editNotes" placeholder="Add trading notes..."></textarea>
+                    </div>
+                </div>
+                <div class="edit-form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Trade</button>
+                </div>
+            </form>
         </div>
     </div>
     
@@ -1298,7 +1570,11 @@
                         <p class="page-subtitle" data-lang="dashboard-subtitle">Track your trades and performance</p>
                     </div>
                     <div class="page-header-info">
-                        <div class="current-date-display" id="currentDateDisplay" onclick="openDatePicker()"></div>
+                        <div class="date-navigation">
+                            <button class="date-nav-btn" onclick="changeTradingDate(-1)">← Prev</button>
+                            <div class="current-date-display" id="currentDateDisplay" onclick="openDatePicker()"></div>
+                            <button class="date-nav-btn" onclick="changeTradingDate(1)">Next →</button>
+                        </div>
                         <div class="language-selector">
                             <label data-lang="language">Language:</label>
                             <select id="languageSelect" onchange="changeLanguage()">
@@ -1307,6 +1583,12 @@
                             </select>
                         </div>
                     </div>
+                </div>
+
+                <!-- Daily Commission Input -->
+                <div class="daily-commission">
+                    <label class="commission-label" data-lang="daily-commission">Daily Commission:</label>
+                    <input type="number" id="dailyCommission" class="commission-input" step="0.01" placeholder="0.00" onchange="saveDailyCommission()">
                 </div>
 
                 <div class="stats-overview">
@@ -1374,6 +1656,10 @@
                                     <label data-lang="holding-time">Holding Time</label>
                                     <input type="text" id="holdingTimeDisplay" readonly style="background: #0f172a; color: #64748b;">
                                 </div>
+                                <div class="form-group full-width">
+                                    <label data-lang="notes">Notes</label>
+                                    <textarea id="tradeNotes" placeholder="Add trading notes..."></textarea>
+                                </div>
                             </div>
                             <div class="form-actions">
                                 <button type="button" class="btn btn-secondary" onclick="resetForm()" data-lang="reset">Reset</button>
@@ -1427,12 +1713,13 @@
                                 <th data-lang="time">Time</th>
                                 <th data-lang="pnl">P&L</th>
                                 <th data-lang="return-pct">Return %</th>
+                                <th data-lang="notes">Notes</th>
                                 <th data-lang="actions">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="tradesTableBody">
                             <tr>
-                                <td colspan="9">
+                                <td colspan="10">
                                     <div class="empty-state">
                                         <div class="empty-state-icon">📊</div>
                                         <div data-lang="no-trades">No trades recorded yet</div>
@@ -1527,7 +1814,7 @@
                 </div>
             </div>
 
-            <!-- Enhanced Analytics page with reorganized Tradervue-style features -->
+            <!-- Enhanced Analytics page -->
             <div id="analysis" class="page">
                 <div class="analytics-header">
                     <div class="analytics-title-section">
@@ -1535,8 +1822,13 @@
                         <p class="page-subtitle" data-lang="analytics-subtitle">Comprehensive performance analysis and insights</p>
                     </div>
                     
-                    <!-- Moved filter controls to top right -->
                     <div class="filter-controls">
+                        <div class="date-range-selector">
+                            <input type="date" id="analyticsStartDate" class="date-range-input" onchange="updateAnalyticsDateRange()">
+                            <span style="color: #64748b;">to</span>
+                            <input type="date" id="analyticsEndDate" class="date-range-input" onchange="updateAnalyticsDateRange()">
+                            <button class="filter-btn" onclick="clearAnalyticsDateRange()">Clear</button>
+                        </div>
                         <button class="filter-btn active" onclick="setAnalyticsPeriod('all')" data-lang="all-time">All Time</button>
                         <button class="filter-btn" onclick="setAnalyticsPeriod('month')" data-lang="this-month">This Month</button>
                         <button class="filter-btn" onclick="setAnalyticsPeriod('week')" data-lang="this-week">This Week</button>
@@ -1545,7 +1837,7 @@
                 </div>
                 
                 <div class="analytics-container">
-                    <!-- Core Performance Summary (Tradervue-style) -->
+                    <!-- Core Performance Summary -->
                     <div class="analytics-card" style="margin-bottom: 24px;">
                         <h3><span class="analytics-icon">🎯</span><span data-lang="performance-summary">Performance Summary</span></h3>
                         <div class="performance-breakdown">
@@ -1576,7 +1868,7 @@
                         </div>
                     </div>
 
-                    <!-- Main Analytics Grid (Simplified Tradervue-style) -->
+                    <!-- Main Analytics Grid -->
                     <div class="analytics-grid">
                         <!-- Win/Loss Analysis -->
                         <div class="analytics-card">
@@ -1604,6 +1896,86 @@
                             <div class="metric-row">
                                 <span class="metric-label" data-lang="avg-losing-trade">Avg Losing Trade</span>
                                 <span class="metric-value negative" id="avgLosingTrade">$0.00</span>
+                            </div>
+                        </div>
+
+                        <!-- Drawdown Analysis -->
+                        <div class="analytics-card">
+                            <h3><span class="analytics-icon">📉</span><span data-lang="drawdown-analysis">Drawdown Analysis</span></h3>
+                            <div class="metric-row">
+                                <span class="metric-label" data-lang="max-drawdown">Max Drawdown</span>
+                                <span class="metric-value negative" id="maxDrawdown">$0.00</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label" data-lang="current-drawdown">Current Drawdown</span>
+                                <span class="metric-value" id="currentDrawdown">$0.00</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label" data-lang="drawdown-duration">Max DD Duration</span>
+                                <span class="metric-value" id="drawdownDuration">0 days</span>
+                            </div>
+                            <div class="drawdown-chart" id="drawdownChart">
+                                <div style="padding: 40px; text-align: center; color: #64748b;">Drawdown visualization</div>
+                            </div>
+                        </div>
+
+                        <!-- Price Level Analysis -->
+                        <div class="analytics-card">
+                            <h3><span class="analytics-icon">💰</span><span data-lang="price-analysis">Price Level Analysis</span></h3>
+                            <div class="price-analysis" id="priceAnalysis">
+                                <div class="price-range">
+                                    <span class="price-label">$0-50</span>
+                                    <div class="price-stats">
+                                        <span class="price-win-rate">0%</span>
+                                        <span class="price-total">(0)</span>
+                                    </div>
+                                </div>
+                                <div class="price-range">
+                                    <span class="price-label">$50-100</span>
+                                    <div class="price-stats">
+                                        <span class="price-win-rate">0%</span>
+                                        <span class="price-total">(0)</span>
+                                    </div>
+                                </div>
+                                <div class="price-range">
+                                    <span class="price-label">$100-200</span>
+                                    <div class="price-stats">
+                                        <span class="price-win-rate">0%</span>
+                                        <span class="price-total">(0)</span>
+                                    </div>
+                                </div>
+                                <div class="price-range">
+                                    <span class="price-label">$200+</span>
+                                    <div class="price-stats">
+                                        <span class="price-win-rate">0%</span>
+                                        <span class="price-total">(0)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ratios & Metrics -->
+                        <div class="analytics-card">
+                            <h3><span class="analytics-icon">📐</span><span data-lang="ratios-metrics">Ratios & Metrics</span></h3>
+                            <div class="metric-row">
+                                <span class="metric-label" data-lang="sharpe-ratio">Sharpe Ratio</span>
+                                <span class="metric-value" id="sharpeRatio">0.00</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label" data-lang="calmar-ratio">Calmar Ratio</span>
+                                <span class="metric-value" id="calmarRatio">0.00</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label" data-lang="recovery-factor">Recovery Factor</span>
+                                <span class="metric-value" id="recoveryFactor">0.00</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label" data-lang="payoff-ratio">Payoff Ratio</span>
+                                <span class="metric-value" id="payoffRatio">0.00</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label" data-lang="risk-reward">Risk/Reward</span>
+                                <span class="metric-value" id="riskReward">0.00</span>
                             </div>
                         </div>
 
@@ -1763,6 +2135,12 @@
                         <h1 class="page-title" data-lang="tradelist-title">Trade List</h1>
                         <p class="page-subtitle" data-lang="tradelist-subtitle">Complete list of all your trades</p>
                     </div>
+                    <div class="date-range-selector">
+                        <input type="date" id="tradesStartDate" class="date-range-input" onchange="updateTradesDateRange()">
+                        <span style="color: #64748b;">to</span>
+                        <input type="date" id="tradesEndDate" class="date-range-input" onchange="updateTradesDateRange()">
+                        <button class="filter-btn" onclick="clearTradesDateRange()">Clear</button>
+                    </div>
                 </div>
                 
                 <div class="trades-section">
@@ -1781,12 +2159,13 @@
                                 <th data-lang="time">Time</th>
                                 <th data-lang="pnl">P&L</th>
                                 <th data-lang="return-pct">Return %</th>
+                                <th data-lang="notes">Notes</th>
                                 <th data-lang="actions">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="allTradesTableBody">
                             <tr>
-                                <td colspan="9">
+                                <td colspan="10">
                                     <div class="empty-state">
                                         <div class="empty-state-icon">📊</div>
                                         <div data-lang="no-trades">No trades recorded yet</div>
@@ -1836,6 +2215,7 @@
     <script>
         // Global variables
         let trades = [];
+        let dailyCommissions = {};
         let currentTradingDate = new Date();
         let calendarDate = new Date();
         let calendarStartDate = null;
@@ -1845,25 +2225,27 @@
         let selectedCalendarDay = null;
         let currentLanguage = 'en';
         let analyticsPeriod = 'all';
+        let analyticsDateRange = { start: null, end: null };
+        let tradesDateRange = { start: null, end: null };
+        let editingTradeId = null;
 
-        // Function to get US trading date (adjusts for Korean timezone)
-        function getUSTradingDate(date = new Date()) {
-            const koreanDate = new Date(date);
-            const koreanHour = koreanDate.getHours();
+        // Function to convert Korean time to EST
+        function convertToEST(date = new Date()) {
+            const koreaOffset = 9 * 60; // Korea is UTC+9
+            const estOffset = -5 * 60; // EST is UTC-5 (or UTC-4 in EDT)
             
-            if (koreanHour < 5) {
-                koreanDate.setDate(koreanDate.getDate() - 1);
-            }
+            const koreaTime = new Date(date.getTime() + (koreaOffset * 60 * 1000));
+            const estTime = new Date(koreaTime.getTime() - ((koreaOffset - estOffset) * 60 * 1000));
             
-            return koreanDate;
+            return estTime;
         }
 
-        // Function to format date for storage (US trading date)
-        function formatTradingDate(date) {
-            const usDate = getUSTradingDate(date);
-            return usDate.getFullYear() + '-' + 
-                String(usDate.getMonth() + 1).padStart(2, '0') + '-' + 
-                String(usDate.getDate()).padStart(2, '0');
+        // Function to format date for EST trading date
+        function formatTradingDateEST(date) {
+            const estDate = convertToEST(date);
+            return estDate.getFullYear() + '-' + 
+                String(estDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                String(estDate.getDate()).padStart(2, '0');
         }
 
         // Language translations (enhanced with new terms)
@@ -1877,6 +2259,7 @@
                 'dashboard-title': 'Trading Dashboard',
                 'dashboard-subtitle': 'Track your trades and performance',
                 'language': 'Language:',
+                'daily-commission': 'Daily Commission',
                 'total-pl': 'Total P/L',
                 'net-result': 'Net Result',
                 'trades': 'Trades',
@@ -1892,6 +2275,7 @@
                 'entry-time': 'Entry Time',
                 'exit-time': 'Exit Time',
                 'holding-time': 'Holding Time',
+                'notes': 'Notes',
                 'edit': 'Edit',
                 'auto': 'Auto',
                 'reset': 'Reset',
@@ -1946,6 +2330,17 @@
                 'losing-trades': 'Losing Trades',
                 'avg-winning-trade': 'Avg Winning Trade',
                 'avg-losing-trade': 'Avg Losing Trade',
+                'drawdown-analysis': 'Drawdown Analysis',
+                'max-drawdown': 'Max Drawdown',
+                'current-drawdown': 'Current Drawdown',
+                'drawdown-duration': 'Max DD Duration',
+                'price-analysis': 'Price Level Analysis',
+                'ratios-metrics': 'Ratios & Metrics',
+                'sharpe-ratio': 'Sharpe Ratio',
+                'calmar-ratio': 'Calmar Ratio',
+                'recovery-factor': 'Recovery Factor',
+                'payoff-ratio': 'Payoff Ratio',
+                'risk-reward': 'Risk/Reward',
                 'trading-activity': 'Trading Activity',
                 'trading-days': 'Trading Days',
                 'avg-trades-per-day': 'Avg Trades per Day',
@@ -1983,6 +2378,7 @@
                 'dashboard-title': '트레이딩 대시보드',
                 'dashboard-subtitle': '거래와 성과를 추적하세요',
                 'language': '언어:',
+                'daily-commission': '일일 수수료',
                 'total-pl': '총 손익',
                 'net-result': '순 결과',
                 'trades': '거래',
@@ -1998,6 +2394,7 @@
                 'entry-time': '진입 시간',
                 'exit-time': '청산 시간',
                 'holding-time': '보유 시간',
+                'notes': '노트',
                 'edit': '편집',
                 'auto': '자동',
                 'reset': '초기화',
@@ -2052,6 +2449,17 @@
                 'losing-trades': '손실 거래',
                 'avg-winning-trade': '평균 수익 거래',
                 'avg-losing-trade': '평균 손실 거래',
+                'drawdown-analysis': '드로우다운 분석',
+                'max-drawdown': '최대 드로우다운',
+                'current-drawdown': '현재 드로우다운',
+                'drawdown-duration': '최대 DD 지속기간',
+                'price-analysis': '가격대별 분석',
+                'ratios-metrics': '비율 및 지표',
+                'sharpe-ratio': '샤프 비율',
+                'calmar-ratio': '칼마 비율',
+                'recovery-factor': '회복 팩터',
+                'payoff-ratio': '페이오프 비율',
+                'risk-reward': '위험/보상',
                 'trading-activity': '거래 활동',
                 'trading-days': '거래일수',
                 'avg-trades-per-day': '일평균 거래수',
@@ -2090,16 +2498,6 @@
                     element.textContent = translations[currentLanguage][key];
                 }
             });
-            
-            const symbolInput = document.getElementById('symbol');
-            if (symbolInput) {
-                symbolInput.placeholder = currentLanguage === 'ko' ? 'AAPL' : 'AAPL';
-            }
-            
-            const amountInput = document.getElementById('amount');
-            if (amountInput) {
-                amountInput.placeholder = currentLanguage === 'ko' ? '5000' : '5000';
-            }
         }
 
         function changeLanguage() {
@@ -2122,23 +2520,39 @@
 
         // Date management functions
         function updateCurrentDateDisplay() {
-            const usTradingDate = getUSTradingDate(currentTradingDate);
-            const dateStr = usTradingDate.toLocaleDateString(currentLanguage === 'ko' ? 'ko-KR' : 'en-US', {
+            const estDate = convertToEST(currentTradingDate);
+            const dateStr = estDate.toLocaleDateString(currentLanguage === 'ko' ? 'ko-KR' : 'en-US', {
                 year: 'numeric',
                 month: 'short',
                 day: 'numeric'
             });
-            document.getElementById('currentDateDisplay').textContent = dateStr + ' (US)';
+            document.getElementById('currentDateDisplay').textContent = dateStr + ' (EST)';
+        }
+
+        function changeTradingDate(direction) {
+            currentTradingDate.setDate(currentTradingDate.getDate() + direction);
+            updateCurrentDateDisplay();
+            loadDailyCommission();
+            updateDashboardForDate();
+        }
+
+        function updateDashboardForDate() {
+            updateStats();
+            updateTradesTable(getTradesForDate(formatTradingDateEST(currentTradingDate)), 'tradesTableBody');
+        }
+
+        function getTradesForDate(dateString) {
+            return trades.filter(trade => trade.date === dateString);
         }
 
         function openDatePicker() {
             const modal = document.getElementById('datePickerModal');
             const input = document.getElementById('datePickerInput');
             
-            const usTradingDate = getUSTradingDate(currentTradingDate);
-            const dateString = usTradingDate.getFullYear() + '-' + 
-                String(usTradingDate.getMonth() + 1).padStart(2, '0') + '-' + 
-                String(usTradingDate.getDate()).padStart(2, '0');
+            const estDate = convertToEST(currentTradingDate);
+            const dateString = estDate.getFullYear() + '-' + 
+                String(estDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                String(estDate.getDate()).padStart(2, '0');
             
             input.value = dateString;
             modal.style.display = 'flex';
@@ -2153,8 +2567,24 @@
             if (input.value) {
                 currentTradingDate = new Date(input.value + 'T12:00:00');
                 updateCurrentDateDisplay();
+                loadDailyCommission();
+                updateDashboardForDate();
                 closeDatePicker();
             }
+        }
+
+        // Daily commission functions
+        function loadDailyCommission() {
+            const dateString = formatTradingDateEST(currentTradingDate);
+            const commission = dailyCommissions[dateString] || 0;
+            document.getElementById('dailyCommission').value = commission;
+        }
+
+        function saveDailyCommission() {
+            const dateString = formatTradingDateEST(currentTradingDate);
+            const commission = parseFloat(document.getElementById('dailyCommission').value) || 0;
+            dailyCommissions[dateString] = commission;
+            localStorage.setItem('tradingPlatformCommissions', JSON.stringify(dailyCommissions));
         }
 
         // Toast notification
@@ -2168,6 +2598,142 @@
             }, 2000);
         }
 
+        // Edit Trade Functions
+        function openEditModal(tradeId) {
+            const trade = trades.find(t => t.id === tradeId);
+            if (!trade) return;
+
+            editingTradeId = tradeId;
+            
+            document.getElementById('editSymbol').value = trade.symbol;
+            document.getElementById('editAmount').value = trade.amount;
+            document.getElementById('editBuyPrice').value = trade.buyPrice;
+            document.getElementById('editSellPrice').value = trade.sellPrice;
+            document.getElementById('editEntryTime').value = trade.entryTime || '';
+            document.getElementById('editExitTime').value = trade.exitTime || '';
+            document.getElementById('editNotes').value = trade.notes || '';
+            
+            document.getElementById('editTradeModal').style.display = 'flex';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editTradeModal').style.display = 'none';
+            editingTradeId = null;
+        }
+
+        function handleEditTradeSubmit(event) {
+            event.preventDefault();
+            
+            const tradeIndex = trades.findIndex(t => t.id === editingTradeId);
+            if (tradeIndex === -1) return;
+
+            const updatedTrade = {
+                ...trades[tradeIndex],
+                symbol: document.getElementById('editSymbol').value.toUpperCase(),
+                amount: parseFloat(document.getElementById('editAmount').value),
+                buyPrice: parseFloat(document.getElementById('editBuyPrice').value),
+                sellPrice: parseFloat(document.getElementById('editSellPrice').value),
+                entryTime: document.getElementById('editEntryTime').value,
+                exitTime: document.getElementById('editExitTime').value,
+                notes: document.getElementById('editNotes').value
+            };
+
+            // Recalculate P/L and return percentage
+            const shares = updatedTrade.amount / updatedTrade.buyPrice;
+            updatedTrade.pnl = shares * (updatedTrade.sellPrice - updatedTrade.buyPrice);
+            updatedTrade.returnPct = ((updatedTrade.sellPrice - updatedTrade.buyPrice) / updatedTrade.buyPrice) * 100;
+
+            // Calculate holding time
+            if (updatedTrade.entryTime && updatedTrade.exitTime) {
+                const [entryHour, entryMin] = updatedTrade.entryTime.split(':').map(Number);
+                const [exitHour, exitMin] = updatedTrade.exitTime.split(':').map(Number);
+                
+                let entryMinutes = entryHour * 60 + entryMin;
+                let exitMinutes = exitHour * 60 + exitMin;
+                
+                if (exitMinutes < entryMinutes) {
+                    exitMinutes += 24 * 60;
+                }
+                
+                const diffMinutes = exitMinutes - entryMinutes;
+                updatedTrade.holdingTime = `${diffMinutes}m`;
+            }
+
+            trades[tradeIndex] = updatedTrade;
+            saveTrades();
+            updateStats();
+            renderCalendar();
+            updateAllTradesList();
+            updateAnalytics();
+            closeEditModal();
+            
+            showToast(`${updatedTrade.symbol} updated`);
+        }
+
+        // Date range functions for analytics
+        function updateAnalyticsDateRange() {
+            const startDate = document.getElementById('analyticsStartDate').value;
+            const endDate = document.getElementById('analyticsEndDate').value;
+            
+            analyticsDateRange.start = startDate;
+            analyticsDateRange.end = endDate;
+            
+            // Clear active filter button
+            document.querySelectorAll('.filter-controls .filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            updateAnalytics();
+        }
+
+        function clearAnalyticsDateRange() {
+            document.getElementById('analyticsStartDate').value = '';
+            document.getElementById('analyticsEndDate').value = '';
+            analyticsDateRange.start = null;
+            analyticsDateRange.end = null;
+            
+            // Reset to all time
+            analyticsPeriod = 'all';
+            document.querySelectorAll('.filter-controls .filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector('.filter-btn[onclick="setAnalyticsPeriod(\'all\')"]').classList.add('active');
+            
+            updateAnalytics();
+        }
+
+        // Date range functions for trades list
+        function updateTradesDateRange() {
+            const startDate = document.getElementById('tradesStartDate').value;
+            const endDate = document.getElementById('tradesEndDate').value;
+            
+            tradesDateRange.start = startDate;
+            tradesDateRange.end = endDate;
+            updateFilteredTradesList();
+        }
+
+        function clearTradesDateRange() {
+            document.getElementById('tradesStartDate').value = '';
+            document.getElementById('tradesEndDate').value = '';
+            tradesDateRange.start = null;
+            tradesDateRange.end = null;
+            updateFilteredTradesList();
+        }
+
+        function updateFilteredTradesList() {
+            let filteredTrades = trades;
+            
+            if (tradesDateRange.start && tradesDateRange.end) {
+                filteredTrades = trades.filter(trade => {
+                    return trade.date >= tradesDateRange.start && trade.date <= tradesDateRange.end;
+                });
+            }
+            
+            updateTradesTable(filteredTrades, 'allTradesTableBody');
+            const tradesText = currentLanguage === 'ko' ? '거래' : 'trades';
+            document.getElementById('allTradesSummary').textContent = `${filteredTrades.length} ${tradesText}`;
+        }
+
         // Page initialization
         document.addEventListener('DOMContentLoaded', function() {
             const savedLanguage = localStorage.getItem('tradingPlatformLanguage');
@@ -2177,11 +2743,13 @@
                 document.getElementById('settingsLanguageSelect').value = currentLanguage;
             }
             
-            currentTradingDate = getUSTradingDate(new Date());
+            currentTradingDate = convertToEST(new Date());
             updateCurrentDateDisplay();
             updateLanguage();
             
             loadTrades();
+            loadDailyCommissions();
+            loadDailyCommission();
             updateStats();
             renderCalendar();
             updateAllTradesList();
@@ -2189,12 +2757,20 @@
             calculateHoldingTime();
             
             document.getElementById('tradeForm').addEventListener('submit', handleTradeSubmit);
+            document.getElementById('editTradeForm').addEventListener('submit', handleEditTradeSubmit);
             document.getElementById('entryTime').addEventListener('change', calculateHoldingTime);
             document.getElementById('exitTime').addEventListener('change', calculateHoldingTime);
             
+            // Modal click outside handlers
             document.getElementById('datePickerModal').addEventListener('click', function(e) {
                 if (e.target === this) {
                     closeDatePicker();
+                }
+            });
+            
+            document.getElementById('editTradeModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeEditModal();
                 }
             });
         });
@@ -2243,7 +2819,7 @@
                 editBtn.textContent = translations[currentLanguage]['edit'] || 'Edit';
                 editBtn.classList.remove('active');
                 
-                const now = new Date();
+                const now = convertToEST(new Date());
                 const currentTime = now.toTimeString().substr(0, 5);
                 if (document.getElementById('buyPrice').value) {
                     entryTime.value = currentTime;
@@ -2309,7 +2885,7 @@
             }
             
             if (!timeEditMode) {
-                const now = new Date();
+                const now = convertToEST(new Date());
                 const currentTime = now.toTimeString().substr(0, 5);
                 
                 if (buyPrice && !document.getElementById('entryTime').value) {
@@ -2326,7 +2902,7 @@
         function handleTradeSubmit(event) {
             event.preventDefault();
             
-            const tradingDateString = formatTradingDate(currentTradingDate);
+            const tradingDateString = formatTradingDateEST(currentTradingDate);
             
             const formData = {
                 id: Date.now(),
@@ -2337,7 +2913,8 @@
                 date: tradingDateString,
                 entryTime: document.getElementById('entryTime').value,
                 exitTime: document.getElementById('exitTime').value,
-                holdingTime: document.getElementById('holdingTimeDisplay').value
+                holdingTime: document.getElementById('holdingTimeDisplay').value,
+                notes: document.getElementById('tradeNotes').value || ''
             };
             
             const shares = formData.amount / formData.buyPrice;
@@ -2410,9 +2987,25 @@
             }
         }
 
+        function loadDailyCommissions() {
+            try {
+                const saved = localStorage.getItem('tradingPlatformCommissions');
+                if (saved) {
+                    dailyCommissions = JSON.parse(saved);
+                } else {
+                    dailyCommissions = {};
+                }
+            } catch (error) {
+                console.error('Error loading commissions:', error);
+                dailyCommissions = {};
+            }
+        }
+
         // Statistics update function
         function updateStats() {
-            if (trades.length === 0) {
+            const currentDateTrades = getTradesForDate(formatTradingDateEST(currentTradingDate));
+            
+            if (currentDateTrades.length === 0) {
                 document.getElementById('totalPL').textContent = '$0.00';
                 document.getElementById('totalTrades').textContent = '0';
                 document.getElementById('winRate').textContent = '0%';
@@ -2423,21 +3016,23 @@
                 document.getElementById('avgLoss').textContent = '$0.00';
                 document.getElementById('totalVolume').textContent = '$0.00';
                 document.getElementById('profitFactorSidebar').textContent = '0.00';
+                
+                document.getElementById('periodSummary').textContent = '0 trades';
                 return;
             }
 
-            const totalPL = trades.reduce((sum, trade) => sum + trade.pnl, 0);
-            const wins = trades.filter(trade => trade.pnl > 0);
-            const losses = trades.filter(trade => trade.pnl < 0);
-            const winRate = trades.length > 0 ? (wins.length / trades.length) * 100 : 0;
+            const totalPL = currentDateTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+            const wins = currentDateTrades.filter(trade => trade.pnl > 0);
+            const losses = currentDateTrades.filter(trade => trade.pnl < 0);
+            const winRate = currentDateTrades.length > 0 ? (wins.length / currentDateTrades.length) * 100 : 0;
             
-            const pnls = trades.map(trade => trade.pnl);
+            const pnls = currentDateTrades.map(trade => trade.pnl);
             const bestTrade = Math.max(...pnls);
             const worstTrade = Math.min(...pnls);
             
             const avgWin = wins.length > 0 ? wins.reduce((sum, trade) => sum + trade.pnl, 0) / wins.length : 0;
             const avgLoss = losses.length > 0 ? losses.reduce((sum, trade) => sum + trade.pnl, 0) / losses.length : 0;
-            const totalVolume = trades.reduce((sum, trade) => sum + trade.amount, 0);
+            const totalVolume = currentDateTrades.reduce((sum, trade) => sum + trade.amount, 0);
             
             const totalWins = wins.reduce((sum, trade) => sum + trade.pnl, 0);
             const totalLosses = Math.abs(losses.reduce((sum, trade) => sum + trade.pnl, 0));
@@ -2446,7 +3041,7 @@
             document.getElementById('totalPL').textContent = `${totalPL.toFixed(2)}`;
             document.getElementById('totalPL').className = `stat-value ${totalPL >= 0 ? 'positive' : 'negative'}`;
             
-            document.getElementById('totalTrades').textContent = trades.length.toString();
+            document.getElementById('totalTrades').textContent = currentDateTrades.length.toString();
             document.getElementById('winRate').textContent = `${winRate.toFixed(1)}%`;
             document.getElementById('winRate').className = `stat-value ${winRate >= 50 ? 'positive' : 'negative'}`;
             
@@ -2461,13 +3056,16 @@
             
             document.getElementById('profitFactorSidebar').textContent = profitFactor.toFixed(2);
             document.getElementById('profitFactorSidebar').className = `sidebar-stat-value ${profitFactor >= 1 ? 'positive' : 'negative'}`;
+            
+            const tradesText = currentLanguage === 'ko' ? '거래' : 'trades';
+            document.getElementById('periodSummary').textContent = `${currentDateTrades.length} ${tradesText}`;
         }
 
         function updateTradesTable(tradesToShow, tableBodyId) {
             const tableBody = document.getElementById(tableBodyId);
             
             if (tradesToShow.length === 0) {
-                const colspan = '9';
+                const colspan = tableBodyId === 'tradesTableBody' ? '10' : '10';
                 tableBody.innerHTML = `
                     <tr>
                         <td colspan="${colspan}">
@@ -2503,25 +3101,31 @@
                     <td>${trade.holdingTime || 'N/A'}</td>
                     <td class="${trade.pnl >= 0 ? 'positive' : 'negative'}">${trade.pnl.toFixed(2)}</td>
                     <td class="${trade.returnPct >= 0 ? 'positive' : 'negative'}">${trade.returnPct.toFixed(2)}%</td>
+                    <td style="max-width: 100px; overflow: hidden; text-overflow: ellipsis;" title="${trade.notes || ''}">${(trade.notes || '').substring(0, 20)}${(trade.notes || '').length > 20 ? '...' : ''}</td>
                     <td>
-                        <button class="action-btn" onclick="deleteTrade(${trade.id})" title="Delete trade">🗑️</button>
+                        <button class="action-btn edit" onclick="openEditModal(${trade.id})" title="Edit trade">✏️</button>
+                        <button class="action-btn delete" onclick="deleteTrade(${trade.id})" title="Delete trade">🗑️</button>
                     </td>
                 </tr>
             `).join('');
         }
 
         function updateAllTradesList() {
-            updateTradesTable(trades, 'allTradesTableBody');
-            const tradesText = currentLanguage === 'ko' ? '거래' : 'trades';
-            document.getElementById('allTradesSummary').textContent = `${trades.length} ${tradesText}`;
-            updateTradesTable(trades, 'tradesTableBody');
-            document.getElementById('periodSummary').textContent = `${trades.length} ${tradesText}`;
+            updateFilteredTradesList();
+            updateTradesTable(getTradesForDate(formatTradingDateEST(currentTradingDate)), 'tradesTableBody');
         }
 
-        // Enhanced Analytics functions
+        // Enhanced Analytics functions with new features
         function setAnalyticsPeriod(period) {
             analyticsPeriod = period;
-            document.querySelectorAll('.filter-btn').forEach(btn => {
+            
+            // Clear date range
+            analyticsDateRange.start = null;
+            analyticsDateRange.end = null;
+            document.getElementById('analyticsStartDate').value = '';
+            document.getElementById('analyticsEndDate').value = '';
+            
+            document.querySelectorAll('.filter-controls .filter-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             
@@ -2530,7 +3134,16 @@
         }
 
         function getFilteredTradesForAnalytics() {
-            const now = new Date();
+            let filteredTrades = trades;
+            
+            // Apply date range if set
+            if (analyticsDateRange.start && analyticsDateRange.end) {
+                return trades.filter(trade => {
+                    return trade.date >= analyticsDateRange.start && trade.date <= analyticsDateRange.end;
+                });
+            }
+            
+            const now = convertToEST(new Date());
             const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
             
             switch (analyticsPeriod) {
@@ -2555,7 +3168,7 @@
                     });
                 default:
                     return trades;
-            }
+                    }
         }
 
         function updateAnalytics() {
@@ -2604,6 +3217,15 @@
             document.getElementById('avgWinningTrade').textContent = `${avgWinningTrade.toFixed(2)}`;
             document.getElementById('avgLosingTrade').textContent = `${avgLosingTrade.toFixed(2)}`;
             
+            // Drawdown Analysis
+            updateDrawdownAnalysis(filteredTrades);
+            
+            // Price Level Analysis
+            updatePriceLevelAnalysis(filteredTrades);
+            
+            // Ratios & Metrics
+            updateRatiosAndMetrics(filteredTrades);
+            
             // Trading Activity
             const uniqueDates = [...new Set(filteredTrades.map(trade => trade.date))];
             const tradingDays = uniqueDates.length;
@@ -2645,6 +3267,178 @@
             updatePLDistribution(filteredTrades);
         }
 
+        function updateDrawdownAnalysis(filteredTrades) {
+            if (filteredTrades.length === 0) return;
+            
+            // Sort trades by date
+            const sortedTrades = [...filteredTrades].sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            let runningTotal = 0;
+            let maxPeak = 0;
+            let maxDrawdown = 0;
+            let currentDrawdown = 0;
+            let drawdownDays = 0;
+            let maxDrawdownDuration = 0;
+            let inDrawdown = false;
+            let drawdownStart = 0;
+            
+            sortedTrades.forEach((trade, index) => {
+                runningTotal += trade.pnl;
+                
+                if (runningTotal > maxPeak) {
+                    maxPeak = runningTotal;
+                    if (inDrawdown) {
+                        drawdownDays = index - drawdownStart;
+                        maxDrawdownDuration = Math.max(maxDrawdownDuration, drawdownDays);
+                        inDrawdown = false;
+                    }
+                }
+                
+                const drawdown = maxPeak - runningTotal;
+                if (drawdown > maxDrawdown) {
+                    maxDrawdown = drawdown;
+                }
+                
+                if (drawdown > 0 && !inDrawdown) {
+                    inDrawdown = true;
+                    drawdownStart = index;
+                }
+                
+                if (index === sortedTrades.length - 1) {
+                    currentDrawdown = drawdown;
+                }
+            });
+            
+            document.getElementById('maxDrawdown').textContent = `${maxDrawdown.toFixed(2)}`;
+            document.getElementById('currentDrawdown').textContent = `${currentDrawdown.toFixed(2)}`;
+            document.getElementById('currentDrawdown').className = `metric-value ${currentDrawdown === 0 ? 'neutral' : 'negative'}`;
+            document.getElementById('drawdownDuration').textContent = `${maxDrawdownDuration} days`;
+        }
+
+        function updatePriceLevelAnalysis(filteredTrades) {
+            const priceRanges = [
+                { min: 0, max: 50, label: '$0-50' },
+                { min: 50, max: 100, label: '$50-100' },
+                { min: 100, max: 200, label: '$100-200' },
+                { min: 200, max: Infinity, label: '$200+' }
+            ];
+            
+            const analysisContainer = document.getElementById('priceAnalysis');
+            
+            analysisContainer.innerHTML = priceRanges.map(range => {
+                const rangetrades = filteredTrades.filter(trade => 
+                    trade.buyPrice >= range.min && trade.buyPrice < range.max
+                );
+                
+                const wins = rangetrades.filter(trade => trade.pnl > 0);
+                const winRate = rangetrades.length > 0 ? (wins.length / rangetrades.length) * 100 : 0;
+                
+                return `
+                    <div class="price-range">
+                        <span class="price-label">${range.label}</span>
+                        <div class="price-stats">
+                            <span class="price-win-rate">${winRate.toFixed(1)}%</span>
+                            <span class="price-total">(${rangetrades.length})</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateRatiosAndMetrics(filteredTrades) {
+            if (filteredTrades.length === 0) return;
+            
+            const wins = filteredTrades.filter(trade => trade.pnl > 0);
+            const losses = filteredTrades.filter(trade => trade.pnl < 0);
+            const totalWins = wins.reduce((sum, trade) => sum + trade.pnl, 0);
+            const totalLosses = Math.abs(losses.reduce((sum, trade) => sum + trade.pnl, 0));
+            const totalPL = filteredTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+            
+            const avgWin = wins.length > 0 ? totalWins / wins.length : 0;
+            const avgLoss = losses.length > 0 ? totalLosses / losses.length : 0;
+            
+            // Calculate metrics
+            const payoffRatio = avgLoss > 0 ? avgWin / avgLoss : 0;
+            const sharpeRatio = calculateSharpeRatio(filteredTrades);
+            const calmarRatio = calculateCalmarRatio(filteredTrades);
+            const recoveryFactor = calculateRecoveryFactor(filteredTrades);
+            const riskReward = avgWin > 0 && avgLoss > 0 ? avgLoss / avgWin : 0;
+            
+            document.getElementById('payoffRatio').textContent = payoffRatio.toFixed(2);
+            document.getElementById('payoffRatio').className = `metric-value ${payoffRatio >= 1 ? 'positive' : 'negative'}`;
+            document.getElementById('sharpeRatio').textContent = sharpeRatio.toFixed(2);
+            document.getElementById('sharpeRatio').className = `metric-value ${sharpeRatio >= 1 ? 'positive' : 'negative'}`;
+            document.getElementById('calmarRatio').textContent = calmarRatio.toFixed(2);
+            document.getElementById('calmarRatio').className = `metric-value ${calmarRatio >= 1 ? 'positive' : 'negative'}`;
+            document.getElementById('recoveryFactor').textContent = recoveryFactor.toFixed(2);
+            document.getElementById('recoveryFactor').className = `metric-value ${recoveryFactor >= 1 ? 'positive' : 'negative'}`;
+            document.getElementById('riskReward').textContent = `1:${riskReward.toFixed(2)}`;
+        }
+
+        function calculateSharpeRatio(trades) {
+            if (trades.length === 0) return 0;
+            
+            const returns = trades.map(trade => trade.returnPct);
+            const avgReturn = returns.reduce((sum, ret) => sum + ret, 0) / returns.length;
+            const variance = returns.reduce((sum, ret) => sum + Math.pow(ret - avgReturn, 2), 0) / returns.length;
+            const stdDev = Math.sqrt(variance);
+            
+            return stdDev > 0 ? avgReturn / stdDev : 0;
+        }
+
+        function calculateCalmarRatio(trades) {
+            if (trades.length === 0) return 0;
+            
+            const totalReturn = trades.reduce((sum, trade) => sum + trade.returnPct, 0);
+            const maxDrawdown = calculateMaxDrawdownPercent(trades);
+            
+            return maxDrawdown > 0 ? totalReturn / maxDrawdown : 0;
+        }
+
+        function calculateRecoveryFactor(trades) {
+            if (trades.length === 0) return 0;
+            
+            const totalProfit = trades.reduce((sum, trade) => sum + trade.pnl, 0);
+            const maxDrawdown = calculateMaxDrawdown(trades);
+            
+            return maxDrawdown > 0 ? totalProfit / maxDrawdown : 0;
+        }
+
+        function calculateMaxDrawdown(trades) {
+            const sortedTrades = [...trades].sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            let runningTotal = 0;
+            let maxPeak = 0;
+            let maxDrawdown = 0;
+            
+            sortedTrades.forEach(trade => {
+                runningTotal += trade.pnl;
+                maxPeak = Math.max(maxPeak, runningTotal);
+                maxDrawdown = Math.max(maxDrawdown, maxPeak - runningTotal);
+            });
+            
+            return maxDrawdown;
+        }
+
+        function calculateMaxDrawdownPercent(trades) {
+            const sortedTrades = [...trades].sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            let runningTotal = 0;
+            let maxPeak = 0;
+            let maxDrawdownPercent = 0;
+            
+            sortedTrades.forEach(trade => {
+                runningTotal += trade.returnPct;
+                maxPeak = Math.max(maxPeak, runningTotal);
+                if (maxPeak > 0) {
+                    const drawdownPercent = (maxPeak - runningTotal) / maxPeak * 100;
+                    maxDrawdownPercent = Math.max(maxDrawdownPercent, drawdownPercent);
+                }
+            });
+            
+            return maxDrawdownPercent;
+        }
+
         function resetAnalyticsDisplay() {
             // Reset performance summary
             document.getElementById('summaryNetProfit').textContent = '$0.00';
@@ -2662,6 +3456,7 @@
             // Reset other analytics
             const elements = [
                 'grossProfit', 'grossLoss', 'winningTrades', 'losingTrades', 'avgWinningTrade', 'avgLosingTrade',
+                'maxDrawdown', 'currentDrawdown', 'drawdownDuration', 'payoffRatio', 'sharpeRatio', 'calmarRatio', 'recoveryFactor', 'riskReward',
                 'tradingDays', 'avgTradesPerDay', 'totalVolume', 'avgPositionSize', 'largestPosition', 'avgHoldTime',
                 'currentStreak', 'maxWinStreak', 'maxLossStreak', 'bestTradingDay', 'worstTradingDay',
                 'mostProfitableSymbol', 'leastProfitableSymbol', 'bestHour', 'worstHour', 'bestDayOfWeek', 'worstDayOfWeek'
@@ -2676,6 +3471,8 @@
                         element.textContent = '0 (0%)';
                     } else if (id.includes('Volume') || id.includes('Position') || id.includes('Day')) {
                         element.textContent = '$0';
+                    } else if (id === 'drawdownDuration') {
+                        element.textContent = '0 days';
                     } else {
                         element.textContent = '0';
                     }
@@ -2693,6 +3490,7 @@
             document.getElementById('streakIndicator').innerHTML = '';
             document.getElementById('tradingHeatmap').innerHTML = '';
             document.getElementById('plDistribution').innerHTML = '';
+            document.getElementById('priceAnalysis').innerHTML = '';
         }
 
         function updateStreakAnalysis(filteredTrades) {
@@ -2938,7 +3736,7 @@
             }).join('');
         }
 
-        // Calendar related functions (keeping all existing calendar functionality)
+        // Calendar related functions (keeping all existing calendar functionality with EST fixes)
         function renderCalendar() {
             const grid = document.getElementById('calendarGrid');
             const year = calendarDate.getFullYear();
@@ -2969,7 +3767,7 @@
                 dayElement.dataset.date = currentDate.toISOString().split('T')[0];
                 
                 const isCurrentMonth = currentDate.getMonth() === month;
-                const isToday = currentDate.toDateString() === new Date().toDateString();
+                const isToday = currentDate.toDateString() === convertToEST(new Date()).toDateString();
                 const dateString = currentDate.toISOString().split('T')[0];
                 
                 if (!isCurrentMonth) {
@@ -3081,6 +3879,7 @@
                         <div style="font-size: 11px; color: #64748b;">
                             ${trade.buyPrice.toFixed(4)} → ${trade.sellPrice.toFixed(4)} | ${trade.holdingTime || 'N/A'}
                         </div>
+                        ${trade.notes ? `<div style="font-size: 10px; color: #94a3b8; margin-top: 2px;">${trade.notes.substring(0, 50)}${trade.notes.length > 50 ? '...' : ''}</div>` : ''}
                     </div>
                 `).join('');
             }
@@ -3263,7 +4062,13 @@
 
         // Settings functions
         function exportData() {
-            const dataStr = JSON.stringify(trades, null, 2);
+            const exportData = {
+                trades: trades,
+                dailyCommissions: dailyCommissions,
+                version: '1.0'
+            };
+            
+            const dataStr = JSON.stringify(exportData, null, 2);
             const dataBlob = new Blob([dataStr], {type: 'application/json'});
             
             const link = document.createElement('a');
@@ -3284,18 +4089,29 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     try {
-                        const importedTrades = JSON.parse(e.target.result);
-                        if (Array.isArray(importedTrades)) {
-                            trades = importedTrades;
-                            saveTrades();
-                            updateStats();
-                            renderCalendar();
-                            updateAllTradesList();
-                            updateAnalytics();
-                            showToast(currentLanguage === 'ko' ? '데이터가 가져와졌습니다' : 'Data imported');
+                        const importedData = JSON.parse(e.target.result);
+                        
+                        // Handle both old format (just trades array) and new format (object with trades and commissions)
+                        if (Array.isArray(importedData)) {
+                            trades = importedData;
+                            dailyCommissions = {};
+                        } else if (importedData.trades && Array.isArray(importedData.trades)) {
+                            trades = importedData.trades;
+                            dailyCommissions = importedData.dailyCommissions || {};
                         } else {
                             throw new Error('Invalid data format');
                         }
+                        
+                        saveTrades();
+                        localStorage.setItem('tradingPlatformCommissions', JSON.stringify(dailyCommissions));
+                        
+                        updateStats();
+                        renderCalendar();
+                        updateAllTradesList();
+                        updateAnalytics();
+                        loadDailyCommission();
+                        
+                        showToast(currentLanguage === 'ko' ? '데이터가 가져와졌습니다' : 'Data imported');
                     } catch (error) {
                         alert(currentLanguage === 'ko' ? '잘못된 파일 형식' : 'Invalid file format');
                     }
@@ -3311,12 +4127,17 @@
             
             if (confirm(confirmMessage)) {
                 trades = [];
+                dailyCommissions = {};
                 saveTrades();
+                localStorage.setItem('tradingPlatformCommissions', JSON.stringify(dailyCommissions));
+                
                 updateStats();
                 renderCalendar();
                 updateAllTradesList();
                 updateAnalytics();
                 clearCalendarRange();
+                loadDailyCommission();
+                
                 showToast(currentLanguage === 'ko' ? '모든 데이터가 삭제됨' : 'All data cleared');
             }
         }
