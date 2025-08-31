@@ -1411,52 +1411,6 @@
         .date-nav-btn:active {
             transform: translateY(0);
         }
-        /* Performance Summary Card Styles */
-        .performance-summary-card {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-        }
-
-        .summary-section {
-            margin-bottom: 20px;
-        }
-
-        .summary-section:last-child {
-            margin-bottom: 0;
-        }
-
-        .summary-label {
-            color: #60a5fa;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .summary-metrics {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
-        }
-
-        .summary-metric {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 0;
-        }
-
-        .metric-name {
-            color: #94a3b8;
-            font-size: 13px;
-            font-weight: 500;
-        }
-
-        .summary-divider {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, #334155, transparent);
-            margin: 16px 0;
-        }
     </style>
 </head>
 <body>
@@ -1838,57 +1792,32 @@
                 
                 <div class="analytics-container">
                     <!-- Core Performance Summary -->
-                    <!-- Core Performance Summary -->
-                    <div class="analytics-card performance-summary-card" style="margin-bottom: 24px;">
+                    <div class="analytics-card" style="margin-bottom: 24px;">
                         <h3><span class="analytics-icon">🎯</span><span data-lang="performance-summary">Performance Summary</span></h3>
-                        
-                        <div class="summary-section">
-                            <div class="summary-label" data-lang="profit-loss">Profit & Loss</div>
-                            <div class="summary-metrics">
-                                <div class="summary-metric">
-                                    <span class="metric-name" data-lang="gross-profit">Gross Profit:</span>
-                                    <span class="metric-value" id="summaryGrossProfit">$0.00</span>
-                                </div>
-                                <div class="summary-metric">
-                                    <span class="metric-name" data-lang="net-profit">Net Profit:</span>
-                                    <span class="metric-value" id="summaryNetProfit">$0.00</span>
-                                </div>
+                        <div class="performance-breakdown">
+                            <div class="breakdown-item">
+                                <div class="breakdown-value" id="summaryNetProfit">$0.00</div>
+                                <div class="breakdown-label" data-lang="net-profit">Net Profit</div>
                             </div>
-                        </div>
-
-                        <div class="summary-divider"></div>
-
-                        <div class="summary-section">
-                            <div class="summary-label" data-lang="trading-stats">Trading Statistics</div>
-                            <div class="summary-metrics">
-                                <div class="summary-metric">
-                                    <span class="metric-name" data-lang="total-trades">Total Trades:</span>
-                                    <span class="metric-value neutral" id="summaryTotalTrades">0</span>
-                                </div>
-                                <div class="summary-metric">
-                                    <span class="metric-name" data-lang="win-rate">Win Rate:</span>
-                                    <span class="metric-value" id="summaryWinRate">0%</span>
-                                </div>
-                                <div class="summary-metric">
-                                    <span class="metric-name" data-lang="profit-factor">Profit Factor:</span>
-                                    <span class="metric-value" id="summaryProfitFactor">0.00</span>
-                                </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-value neutral" id="summaryTotalTrades">0</div>
+                                <div class="breakdown-label" data-lang="total-trades">Total Trades</div>
                             </div>
-                        </div>
-
-                        <div class="summary-divider"></div>
-
-                        <div class="summary-section">
-                            <div class="summary-label" data-lang="best-worst">Best & Worst</div>
-                            <div class="summary-metrics">
-                                <div class="summary-metric">
-                                    <span class="metric-name" data-lang="largest-win">Largest Win:</span>
-                                    <span class="metric-value positive" id="summaryLargestWin">$0.00</span>
-                                </div>
-                                <div class="summary-metric">
-                                    <span class="metric-name" data-lang="largest-loss">Largest Loss:</span>
-                                    <span class="metric-value negative" id="summaryLargestLoss">$0.00</span>
-                                </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-value" id="summaryWinRate">0%</div>
+                                <div class="breakdown-label" data-lang="win-rate">Win Rate</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-value" id="summaryProfitFactor">0.00</div>
+                                <div class="breakdown-label" data-lang="profit-factor">Profit Factor</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-value" id="summaryLargestWin">$0.00</div>
+                                <div class="breakdown-label" data-lang="largest-win">Largest Win</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-value" id="summaryLargestLoss">$0.00</div>
+                                <div class="breakdown-label" data-lang="largest-loss">Largest Loss</div>
                             </div>
                         </div>
                     </div>
@@ -2025,8 +1954,9 @@
                             </div>
                         </div>
 
+                        <!-- Price Range Analysis -->
                         <div class="analytics-card">
-                            <h3><span class="analytics-icon">💰</span><span data-lang="price-range-analysis">Price Range Analysis</span></h3>
+                            <h3><span class="analytics-icon">💰</span>Price Range Analysis</h3>
                             <div id="priceRangeAnalysis">
                                 <div class="empty-state" style="padding: 20px;">
                                     <div style="color: #64748b; font-size: 13px;">No price range data available</div>
@@ -2036,7 +1966,7 @@
 
                         <!-- Drawdown Analysis -->
                         <div class="analytics-card">
-                            <h3><span class="analytics-icon">📉</span><span data-lang="drawdown-analysis">Drawdown Analysis</span></h3>
+                            <h3><span class="analytics-icon">📉</span>Drawdown Analysis</h3>
                             <div class="metric-row">
                                 <span class="metric-label">Max Drawdown</span>
                                 <span class="metric-value negative" id="maxDrawdown">$0.00</span>
@@ -2056,7 +1986,7 @@
 
                         <!-- Total Gains vs Losses -->
                         <div class="analytics-card">
-                            <h3><span class="analytics-icon">⚖️</span><span data-lang="total-gains-losses">Total Gains vs Losses</span></h3>
+                            <h3><span class="analytics-icon">⚖️</span>Total Gains vs Losses</h3>
                             <div class="performance-breakdown">
                                 <div class="breakdown-item">
                                     <div class="breakdown-value positive" id="totalGains">$0.00</div>
@@ -2225,17 +2155,20 @@
         let tradesEndDate = null;
 
         // Function to get EST trading date
-      function getESTTradingDate(date = new Date()) {
-            // Simply return the date as-is for dashboard display
-            return new Date(date);
+        function getESTTradingDate(date = new Date()) {
+            // Convert to EST timezone
+            const estDate = new Date(date.toLocaleString("en-US", {timeZone: "America/New_York"}));
+            return estDate;
         }
 
         // Function to format date for storage (EST trading date)
-      function formatTradingDate(date) {
-            return date.getFullYear() + '-' + 
-                String(date.getMonth() + 1).padStart(2, '0') + '-' + 
-                String(date.getDate()).padStart(2, '0');
+        function formatTradingDate(date) {
+            const estDate = getESTTradingDate(date);
+            return estDate.getFullYear() + '-' + 
+                String(estDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                String(estDate.getDate()).padStart(2, '0');
         }
+
         // Language translations (enhanced with new terms)
         const translations = {
             en: {
@@ -2344,14 +2277,6 @@
                 'monthly-performance': 'Monthly Performance',
                 'no-symbol-data': 'No symbol data available',
                 'daily-fees': 'Daily Fees'
-                'price-range-analysis': 'Price Range Analysis',
-                'drawdown-analysis': 'Drawdown Analysis', 
-                'total-gains-losses': 'Total Gains vs Losses',
-                'max-drawdown': 'Max Drawdown',
-                'current-drawdown': 'Current Drawdown',
-                'recovery-time': 'Recovery Time',
-                'total-gains': 'Total Gains',
-                'total-losses': 'Total Losses',
             },
             ko: {
                 'dashboard': '대시보드',
@@ -2459,14 +2384,6 @@
                 'monthly-performance': '월별 성과',
                 'no-symbol-data': '심볼 데이터가 없습니다',
                 'daily-fees': '일일 수수료'
-                'price-range-analysis': '가격대별 분석',
-                'drawdown-analysis': '드로우다운 분석',
-                'total-gains-losses': '총 수익 대 손실',
-                'max-drawdown': '최대 드로우다운',
-                'current-drawdown': '현재 드로우다운',
-                'recovery-time': '회복 시간',
-                'total-gains': '총 수익',
-                'total-losses': '총 손실',
             }
         };
 
@@ -2512,12 +2429,13 @@
 
         // Date management functions
         function updateCurrentDateDisplay() {
-            const dateStr = currentTradingDate.toLocaleDateString(currentLanguage === 'ko' ? 'ko-KR' : 'en-US', {
+            const estTradingDate = getESTTradingDate(currentTradingDate);
+            const dateStr = estTradingDate.toLocaleDateString(currentLanguage === 'ko' ? 'ko-KR' : 'en-US', {
                 year: 'numeric',
                 month: 'short',
                 day: 'numeric'
             });
-            document.getElementById('currentDateDisplay').textContent = dateStr;
+            document.getElementById('currentDateDisplay').textContent = dateStr + ' (EST)';
         }
 
         function openDatePicker() {
@@ -3034,16 +2952,6 @@ function changeTradingDate(direction) {
             }
 
             const totalPL = filteredTrades.reduce((sum, trade) => sum + trade.pnl, 0);
-                // Apply daily fees for calendar
-            let totalDailyFees = 0;
-            const uniqueDatesForCalendar = [...new Set(filteredTrades.map(trade => trade.date))];
-            uniqueDatesForCalendar.forEach(date => {
-                totalDailyFees += dailyFees[date] || 0;
-            });
-            const netTotalPL = totalPL - totalDailyFees;
-            const currentDate = formatTradingDate(currentTradingDate);
-            const dailyFee = dailyFees[currentDate] || 0;
-            const netPL = totalPL - dailyFee;
             const wins = filteredTrades.filter(trade => trade.pnl > 0);
             const losses = filteredTrades.filter(trade => trade.pnl < 0);
             const winRate = filteredTrades.length > 0 ? (wins.length / filteredTrades.length) * 100 : 0;
@@ -3060,8 +2968,8 @@ function changeTradingDate(direction) {
             const totalLosses = Math.abs(losses.reduce((sum, trade) => sum + trade.pnl, 0));
             const profitFactor = totalLosses > 0 ? totalWins / totalLosses : 0;
 
-            document.getElementById('totalPL').textContent = `$${netPL.toFixed(2)}`;
-            document.getElementById('totalPL').className = `stat-value ${netPL >= 0 ? 'positive' : 'negative'}`;
+            document.getElementById('totalPL').textContent = `$${totalPL.toFixed(2)}`;
+            document.getElementById('totalPL').className = `stat-value ${totalPL >= 0 ? 'positive' : 'negative'}`;
             
             document.getElementById('totalTrades').textContent = filteredTrades.length.toString();
             document.getElementById('winRate').textContent = `${winRate.toFixed(1)}%`;
@@ -3203,13 +3111,6 @@ function changeTradingDate(direction) {
             
             // Performance Summary
             const totalPL = filteredTrades.reduce((sum, trade) => sum + trade.pnl, 0);
-            // Apply daily fees
-            let totalDailyFees = 0;
-            const uniqueDatesForFees = [...new Set(filteredTrades.map(trade => trade.date))];
-            uniqueDatesForFees.forEach(date => {
-                totalDailyFees += dailyFees[date] || 0;
-            });
-            const netTotalPL = totalPL - totalDailyFees;
             const wins = filteredTrades.filter(trade => trade.pnl > 0);
             const losses = filteredTrades.filter(trade => trade.pnl < 0);
             const winRate = filteredTrades.length > 0 ? (wins.length / filteredTrades.length) * 100 : 0;
@@ -3223,14 +3124,8 @@ function changeTradingDate(direction) {
             const profitFactor = totalLosses > 0 ? totalWins / totalLosses : 0;
             
             // Update Performance Summary
-            document.getElementById('summaryNetProfit').textContent = `$${netTotalPL.toFixed(2)}`;
-            document.getElementById('summaryNetProfit').className = `breakdown-value ${netTotalPL >= 0 ? 'positive' : 'negative'}`;
-            // Update gross profit (without fees) in a separate element if it exists
-            const grossProfitElement = document.getElementById('summaryGrossProfit');
-            if (grossProfitElement) {
-                grossProfitElement.textContent = `$${totalPL.toFixed(2)}`;
-                grossProfitElement.className = `breakdown-value ${totalPL >= 0 ? 'positive' : 'negative'}`;
-            }
+            document.getElementById('summaryNetProfit').textContent = `$${totalPL.toFixed(2)}`;
+            document.getElementById('summaryNetProfit').className = `breakdown-value ${totalPL >= 0 ? 'positive' : 'negative'}`;
             document.getElementById('summaryTotalTrades').textContent = filteredTrades.length;
             document.getElementById('summaryWinRate').textContent = `${winRate.toFixed(1)}%`;
             document.getElementById('summaryWinRate').className = `breakdown-value ${winRate >= 50 ? 'positive' : 'negative'}`;
@@ -3724,7 +3619,9 @@ function changeTradingDate(direction) {
                 const dayElement = document.createElement('div');
                 dayElement.className = 'calendar-day';
                 
-               const dateString = formatTradingDate(currentDate);
+                // Use EST date for calendar display
+                const estDate = getESTTradingDate(currentDate);
+                const dateString = formatTradingDate(estDate);
                 dayElement.dataset.date = dateString;
                 
                 const isCurrentMonth = currentDate.getMonth() === month;
@@ -3740,19 +3637,17 @@ function changeTradingDate(direction) {
                 
                 const dayNumber = document.createElement('div');
                 dayNumber.className = 'calendar-day-number';
-                dayNumber.textContent = currentDate.getDate();
+                dayNumber.textContent = estDate.getDate();
                 dayElement.appendChild(dayNumber);
                 
                 const dayTrades = trades.filter(trade => trade.date === dateString);
                 
                 if (dayTrades.length > 0) {
                     const totalPnL = dayTrades.reduce((sum, trade) => sum + trade.pnl, 0);
-                    const dayFee = dailyFees[dateString] || 0;
-                    const netPnL = totalPnL - dayFee;
                     
                     const pnlElement = document.createElement('div');
-                    pnlElement.className = `calendar-day-pnl ${netPnL > 0 ? 'positive' : netPnL < 0 ? 'negative' : 'neutral'}`;
-                    pnlElement.textContent = `$${netPnL.toFixed(0)}`;
+                    pnlElement.className = `calendar-day-pnl ${totalPnL > 0 ? 'positive' : totalPnL < 0 ? 'negative' : 'neutral'}`;
+                    pnlElement.textContent = `$${totalPnL.toFixed(0)}`;
                     dayElement.appendChild(pnlElement);
                     
                     const tradesElement = document.createElement('div');
@@ -4012,8 +3907,8 @@ function changeTradingDate(direction) {
             document.getElementById('calendarPeriodLabel').textContent = periodLabel;
             document.getElementById('calendarTotalTrades').textContent = totalTrades;
             
-            document.getElementById('calendarTotalPL').textContent = `$${netTotalPL.toFixed(2)}`;
-            document.getElementById('calendarTotalPL').className = `calendar-stat-value ${netTotalPL >= 0 ? 'positive' : 'negative'}`;
+            document.getElementById('calendarTotalPL').textContent = `$${totalPL.toFixed(2)}`;
+            document.getElementById('calendarTotalPL').className = `calendar-stat-value ${totalPL >= 0 ? 'positive' : 'negative'}`;
             
             document.getElementById('calendarAvgDaily').textContent = `$${avgDaily.toFixed(2)}`;
             document.getElementById('calendarAvgDaily').className = `calendar-stat-value ${avgDaily >= 0 ? 'positive' : 'negative'}`;
