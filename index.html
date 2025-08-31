@@ -1379,6 +1379,37 @@
             .filter-controls {
                 justify-content: center;
             }
+        }/* Date navigation styles */
+        .date-navigation {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .date-nav-btn {
+            background: #334155;
+            border: 1px solid #475569;
+            color: #e4e4e7;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            min-width: 40px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .date-nav-btn:hover {
+            background: #475569;
+            transform: translateY(-1px);
+        }
+
+        .date-nav-btn:active {
+            transform: translateY(0);
         }
     </style>
 </head>
@@ -1485,22 +1516,26 @@
                         <h1 class="page-title" data-lang="dashboard-title">Trading Dashboard</h1>
                         <p class="page-subtitle" data-lang="dashboard-subtitle">Track your trades and performance</p>
                     </div>
-                    <div class="page-header-info">
-                        <div class="date-range-selector">
-                            <input type="date" id="dashboardStartDate" class="date-range-input">
-                            <span style="color: #64748b;">to</span>
-                            <input type="date" id="dashboardEndDate" class="date-range-input">
-                            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="clearDashboardRange()">Clear</button>
-                        </div>
-                        <div class="current-date-display" id="currentDateDisplay" onclick="openDatePicker()"></div>
-                        <div class="language-selector">
-                            <label data-lang="language">Language:</label>
-                            <select id="languageSelect" onchange="changeLanguage()">
-                                <option value="en">English</option>
-                                <option value="ko">한국어</option>
-                            </select>
-                        </div>
-                    </div>
+                <div class="page-header-info">
+    <div class="date-range-selector">
+        <input type="date" id="dashboardStartDate" class="date-range-input">
+        <span style="color: #64748b;">to</span>
+        <input type="date" id="dashboardEndDate" class="date-range-input">
+        <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="clearDashboardRange()">Clear</button>
+    </div>
+    <div class="date-navigation">
+        <button class="date-nav-btn" onclick="changeTradingDate(-1)" title="Previous day">←</button>
+        <div class="current-date-display" id="currentDateDisplay" onclick="openDatePicker()"></div>
+        <button class="date-nav-btn" onclick="changeTradingDate(1)" title="Next day">→</button>
+    </div>
+    <div class="language-selector">
+        <label data-lang="language">Language:</label>
+        <select id="languageSelect" onchange="changeLanguage()">
+            <option value="en">English</option>
+            <option value="ko">한국어</option>
+        </select>
+    </div>
+</div>
                 </div>
 
                 <div class="stats-overview">
@@ -2430,7 +2465,16 @@
                 closeDatePicker();
             }
         }
-
+function changeTradingDate(direction) {
+            const newDate = new Date(currentTradingDate);
+            newDate.setDate(newDate.getDate() + direction);
+            currentTradingDate = newDate;
+            updateCurrentDateDisplay();
+            updateStats();
+            updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
+            loadDailyFees();
+            showToast(direction > 0 ? 'Next day' : 'Previous day');
+        }
         // Dashboard date range functions
         function clearDashboardRange() {
             dashboardStartDate = null;
