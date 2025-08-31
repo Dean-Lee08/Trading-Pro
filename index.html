@@ -1411,6 +1411,52 @@
         .date-nav-btn:active {
             transform: translateY(0);
         }
+        /* Performance Summary Card Styles */
+        .performance-summary-card {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        }
+
+        .summary-section {
+            margin-bottom: 20px;
+        }
+
+        .summary-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .summary-label {
+            color: #60a5fa;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .summary-metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+        }
+
+        .metric-name {
+            color: #94a3b8;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .summary-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #334155, transparent);
+            margin: 16px 0;
+        }
     </style>
 </head>
 <body>
@@ -1792,36 +1838,57 @@
                 
                 <div class="analytics-container">
                     <!-- Core Performance Summary -->
-                    <div class="analytics-card" style="margin-bottom: 24px;">
+                    <!-- Core Performance Summary -->
+                    <div class="analytics-card performance-summary-card" style="margin-bottom: 24px;">
                         <h3><span class="analytics-icon">🎯</span><span data-lang="performance-summary">Performance Summary</span></h3>
-                       <div class="performance-breakdown">
-                            <div class="breakdown-item">
-                                <div class="breakdown-value" id="summaryGrossProfit">$0.00</div>
-                                <div class="breakdown-label">Gross Profit</div>
+                        
+                        <div class="summary-section">
+                            <div class="summary-label" data-lang="profit-loss">Profit & Loss</div>
+                            <div class="summary-metrics">
+                                <div class="summary-metric">
+                                    <span class="metric-name" data-lang="gross-profit">Gross Profit:</span>
+                                    <span class="metric-value" id="summaryGrossProfit">$0.00</span>
+                                </div>
+                                <div class="summary-metric">
+                                    <span class="metric-name" data-lang="net-profit">Net Profit:</span>
+                                    <span class="metric-value" id="summaryNetProfit">$0.00</span>
+                                </div>
                             </div>
-                            <div class="breakdown-item">
-                                <div class="breakdown-value" id="summaryNetProfit">$0.00</div>
-                                <div class="breakdown-label" data-lang="net-profit">Net Profit</div>
+                        </div>
+
+                        <div class="summary-divider"></div>
+
+                        <div class="summary-section">
+                            <div class="summary-label" data-lang="trading-stats">Trading Statistics</div>
+                            <div class="summary-metrics">
+                                <div class="summary-metric">
+                                    <span class="metric-name" data-lang="total-trades">Total Trades:</span>
+                                    <span class="metric-value neutral" id="summaryTotalTrades">0</span>
+                                </div>
+                                <div class="summary-metric">
+                                    <span class="metric-name" data-lang="win-rate">Win Rate:</span>
+                                    <span class="metric-value" id="summaryWinRate">0%</span>
+                                </div>
+                                <div class="summary-metric">
+                                    <span class="metric-name" data-lang="profit-factor">Profit Factor:</span>
+                                    <span class="metric-value" id="summaryProfitFactor">0.00</span>
+                                </div>
                             </div>
-                            <div class="breakdown-item">
-                                <div class="breakdown-value neutral" id="summaryTotalTrades">0</div>
-                                <div class="breakdown-label" data-lang="total-trades">Total Trades</div>
-                            </div>
-                            <div class="breakdown-item">
-                                <div class="breakdown-value" id="summaryWinRate">0%</div>
-                                <div class="breakdown-label" data-lang="win-rate">Win Rate</div>
-                            </div>
-                            <div class="breakdown-item">
-                                <div class="breakdown-value" id="summaryProfitFactor">0.00</div>
-                                <div class="breakdown-label" data-lang="profit-factor">Profit Factor</div>
-                            </div>
-                            <div class="breakdown-item">
-                                <div class="breakdown-value" id="summaryLargestWin">$0.00</div>
-                                <div class="breakdown-label" data-lang="largest-win">Largest Win</div>
-                            </div>
-                            <div class="breakdown-item">
-                                <div class="breakdown-value" id="summaryLargestLoss">$0.00</div>
-                                <div class="breakdown-label" data-lang="largest-loss">Largest Loss</div>
+                        </div>
+
+                        <div class="summary-divider"></div>
+
+                        <div class="summary-section">
+                            <div class="summary-label" data-lang="best-worst">Best & Worst</div>
+                            <div class="summary-metrics">
+                                <div class="summary-metric">
+                                    <span class="metric-name" data-lang="largest-win">Largest Win:</span>
+                                    <span class="metric-value positive" id="summaryLargestWin">$0.00</span>
+                                </div>
+                                <div class="summary-metric">
+                                    <span class="metric-name" data-lang="largest-loss">Largest Loss:</span>
+                                    <span class="metric-value negative" id="summaryLargestLoss">$0.00</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1958,9 +2025,8 @@
                             </div>
                         </div>
 
-                        <!-- Price Range Analysis -->
                         <div class="analytics-card">
-                            <h3><span class="analytics-icon">💰</span>Price Range Analysis</h3>
+                            <h3><span class="analytics-icon">💰</span><span data-lang="price-range-analysis">Price Range Analysis</span></h3>
                             <div id="priceRangeAnalysis">
                                 <div class="empty-state" style="padding: 20px;">
                                     <div style="color: #64748b; font-size: 13px;">No price range data available</div>
@@ -1970,7 +2036,7 @@
 
                         <!-- Drawdown Analysis -->
                         <div class="analytics-card">
-                            <h3><span class="analytics-icon">📉</span>Drawdown Analysis</h3>
+                            <h3><span class="analytics-icon">📉</span><span data-lang="drawdown-analysis">Drawdown Analysis</span></h3>
                             <div class="metric-row">
                                 <span class="metric-label">Max Drawdown</span>
                                 <span class="metric-value negative" id="maxDrawdown">$0.00</span>
@@ -1990,7 +2056,7 @@
 
                         <!-- Total Gains vs Losses -->
                         <div class="analytics-card">
-                            <h3><span class="analytics-icon">⚖️</span>Total Gains vs Losses</h3>
+                            <h3><span class="analytics-icon">⚖️</span><span data-lang="total-gains-losses">Total Gains vs Losses</span></h3>
                             <div class="performance-breakdown">
                                 <div class="breakdown-item">
                                     <div class="breakdown-value positive" id="totalGains">$0.00</div>
@@ -2278,6 +2344,14 @@
                 'monthly-performance': 'Monthly Performance',
                 'no-symbol-data': 'No symbol data available',
                 'daily-fees': 'Daily Fees'
+                'price-range-analysis': 'Price Range Analysis',
+                'drawdown-analysis': 'Drawdown Analysis', 
+                'total-gains-losses': 'Total Gains vs Losses',
+                'max-drawdown': 'Max Drawdown',
+                'current-drawdown': 'Current Drawdown',
+                'recovery-time': 'Recovery Time',
+                'total-gains': 'Total Gains',
+                'total-losses': 'Total Losses',
             },
             ko: {
                 'dashboard': '대시보드',
@@ -2385,6 +2459,14 @@
                 'monthly-performance': '월별 성과',
                 'no-symbol-data': '심볼 데이터가 없습니다',
                 'daily-fees': '일일 수수료'
+                'price-range-analysis': '가격대별 분석',
+                'drawdown-analysis': '드로우다운 분석',
+                'total-gains-losses': '총 수익 대 손실',
+                'max-drawdown': '최대 드로우다운',
+                'current-drawdown': '현재 드로우다운',
+                'recovery-time': '회복 시간',
+                'total-gains': '총 수익',
+                'total-losses': '총 손실',
             }
         };
 
@@ -3642,9 +3724,7 @@ function changeTradingDate(direction) {
                 const dayElement = document.createElement('div');
                 dayElement.className = 'calendar-day';
                 
-                // Use EST date for calendar display
-                const estDate = getESTTradingDate(currentDate);
-                const dateString = formatTradingDate(estDate);
+               const dateString = formatTradingDate(currentDate);
                 dayElement.dataset.date = dateString;
                 
                 const isCurrentMonth = currentDate.getMonth() === month;
@@ -3660,7 +3740,7 @@ function changeTradingDate(direction) {
                 
                 const dayNumber = document.createElement('div');
                 dayNumber.className = 'calendar-day-number';
-                dayNumber.textContent = estDate.getDate();
+                dayNumber.textContent = currentDate.getDate();
                 dayElement.appendChild(dayNumber);
                 
                 const dayTrades = trades.filter(trade => trade.date === dateString);
