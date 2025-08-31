@@ -1794,7 +1794,11 @@
                     <!-- Core Performance Summary -->
                     <div class="analytics-card" style="margin-bottom: 24px;">
                         <h3><span class="analytics-icon">🎯</span><span data-lang="performance-summary">Performance Summary</span></h3>
-                        <div class="performance-breakdown">
+                       <div class="performance-breakdown">
+                            <div class="breakdown-item">
+                                <div class="breakdown-value" id="summaryGrossProfit">$0.00</div>
+                                <div class="breakdown-label">Gross Profit</div>
+                            </div>
                             <div class="breakdown-item">
                                 <div class="breakdown-value" id="summaryNetProfit">$0.00</div>
                                 <div class="breakdown-label" data-lang="net-profit">Net Profit</div>
@@ -2948,6 +2952,13 @@ function changeTradingDate(direction) {
             }
 
             const totalPL = filteredTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+                // Apply daily fees for calendar
+            let totalDailyFees = 0;
+            const uniqueDatesForCalendar = [...new Set(filteredTrades.map(trade => trade.date))];
+            uniqueDatesForCalendar.forEach(date => {
+                totalDailyFees += dailyFees[date] || 0;
+            });
+            const netTotalPL = totalPL - totalDailyFees;
             const currentDate = formatTradingDate(currentTradingDate);
             const dailyFee = dailyFees[currentDate] || 0;
             const netPL = totalPL - dailyFee;
@@ -3132,6 +3143,12 @@ function changeTradingDate(direction) {
             // Update Performance Summary
             document.getElementById('summaryNetProfit').textContent = `$${netTotalPL.toFixed(2)}`;
             document.getElementById('summaryNetProfit').className = `breakdown-value ${netTotalPL >= 0 ? 'positive' : 'negative'}`;
+            // Update gross profit (without fees) in a separate element if it exists
+            const grossProfitElement = document.getElementById('summaryGrossProfit');
+            if (grossProfitElement) {
+                grossProfitElement.textContent = `$${totalPL.toFixed(2)}`;
+                grossProfitElement.className = `breakdown-value ${totalPL >= 0 ? 'positive' : 'negative'}`;
+            }
             document.getElementById('summaryTotalTrades').textContent = filteredTrades.length;
             document.getElementById('summaryWinRate').textContent = `${winRate.toFixed(1)}%`;
             document.getElementById('summaryWinRate').className = `breakdown-value ${winRate >= 50 ? 'positive' : 'negative'}`;
@@ -3650,10 +3667,12 @@ function changeTradingDate(direction) {
                 
                 if (dayTrades.length > 0) {
                     const totalPnL = dayTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+                    const dayFee = dailyFees[dateString] || 0;
+                    const netPnL = totalPnL - dayFee;
                     
                     const pnlElement = document.createElement('div');
-                    pnlElement.className = `calendar-day-pnl ${totalPnL > 0 ? 'positive' : totalPnL < 0 ? 'negative' : 'neutral'}`;
-                    pnlElement.textContent = `$${totalPnL.toFixed(0)}`;
+                    pnlElement.className = `calendar-day-pnl ${netPnL > 0 ? 'positive' : netPnL < 0 ? 'negative' : 'neutral'}`;
+                    pnlElement.textContent = `$${netPnL.toFixed(0)}`;
                     dayElement.appendChild(pnlElement);
                     
                     const tradesElement = document.createElement('div');
@@ -3913,8 +3932,8 @@ function changeTradingDate(direction) {
             document.getElementById('calendarPeriodLabel').textContent = periodLabel;
             document.getElementById('calendarTotalTrades').textContent = totalTrades;
             
-            document.getElementById('calendarTotalPL').textContent = `$${totalPL.toFixed(2)}`;
-            document.getElementById('calendarTotalPL').className = `calendar-stat-value ${totalPL >= 0 ? 'positive' : 'negative'}`;
+            document.getElementById('calendarTotalPL').textContent = `$${netTotalPL.toFixed(2)}`;
+            document.getElementById('calendarTotalPL').className = `calendar-stat-value ${netTotalPL >= 0 ? 'positive' : 'negative'}`;
             
             document.getElementById('calendarAvgDaily').textContent = `$${avgDaily.toFixed(2)}`;
             document.getElementById('calendarAvgDaily').className = `calendar-stat-value ${avgDaily >= 0 ? 'positive' : 'negative'}`;
