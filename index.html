@@ -853,7 +853,7 @@
             opacity: 0.6;
         }
 
-        /* Enhanced Analytics Styles */
+        /* Tradervue-style Analytics */
         .analytics-container {
             display: grid;
             gap: 24px;
@@ -897,26 +897,58 @@
             color: white;
         }
 
-        .analytics-grid {
+        /* Tradervue-style summary cards */
+        .tradervue-summary {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
         }
 
-        .analytics-card {
+        .tradervue-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .tradervue-card-title {
+            color: #94a3b8;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .tradervue-card-value {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .tradervue-card-subtitle {
+            color: #64748b;
+            font-size: 11px;
+        }
+
+        /* Tradervue-style performance breakdown */
+        .performance-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .performance-section {
             background: #1e293b;
             border: 1px solid #334155;
             border-radius: 12px;
             padding: 20px;
-            transition: all 0.3s ease;
         }
 
-        .analytics-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-        }
-
-        .analytics-card h3 {
+        .performance-section h3 {
             color: #f8fafc;
             font-size: 16px;
             font-weight: 600;
@@ -926,42 +958,56 @@
             gap: 8px;
         }
 
-        .analytics-icon {
-            font-size: 18px;
-        }
-
-        .metric-row {
+        .performance-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 0;
+            padding: 10px 0;
             border-bottom: 1px solid #334155;
         }
 
-        .metric-row:last-child {
+        .performance-row:last-child {
             border-bottom: none;
         }
 
-        .metric-label {
+        .performance-label {
             color: #94a3b8;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            font-size: 14px;
+            font-weight: 500;
         }
 
-        .metric-value {
+        .performance-value {
             font-size: 14px;
             font-weight: 600;
-            color: #e4e4e7;
         }
 
-        .chart-container {
+        /* Tradervue-style charts and visualizations */
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .chart-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .chart-title {
+            color: #f8fafc;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .chart-placeholder {
             background: #0f172a;
             border: 1px solid #334155;
             border-radius: 8px;
-            padding: 16px;
-            margin-top: 12px;
             height: 200px;
             display: flex;
             align-items: center;
@@ -970,178 +1016,462 @@
             font-size: 14px;
         }
 
-        /* Advanced Analytics Features */
-        .advanced-analytics-grid {
+        /* Tradervue-style symbol analysis */
+        .symbol-analysis-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+        }
+
+        .symbol-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .symbol-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .symbol-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #e4e4e7;
+        }
+
+        .symbol-pnl {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .symbol-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .symbol-stat {
+            text-align: center;
+            padding: 8px;
+            background: #0f172a;
+            border-radius: 4px;
+        }
+
+        .symbol-stat-label {
+            color: #94a3b8;
+            margin-bottom: 4px;
+        }
+
+        .symbol-stat-value {
+            font-weight: 600;
+        }
+
+        /* Notes page styles */
+        .notes-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .notes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .add-note-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .add-note-btn:hover {
+            background: #2563eb;
+        }
+
+        .notes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
+        }
+
+        .note-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .note-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .note-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .note-title {
+            color: #f8fafc;
+            font-size: 16px;
+            font-weight: 600;
+            flex: 1;
+            margin-right: 12px;
+        }
+
+        .note-date {
+            color: #64748b;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .note-content {
+            color: #e4e4e7;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 12px;
+            word-wrap: break-word;
+        }
+
+        .note-type {
+            display: inline-block;
+            background: #374151;
+            color: #e4e4e7;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .note-type.strategy {
+            background: #3b82f6;
+        }
+
+        .note-type.review {
+            background: #10b981;
+        }
+
+        .note-type.analysis {
+            background: #f59e0b;
+        }
+
+        .note-type.general {
+            background: #6b7280;
+        }
+
+        .note-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .note-action-btn {
+            background: #374151;
+            border: 1px solid #4b5563;
+            color: #e4e4e7;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .note-action-btn:hover {
+            background: #4b5563;
+        }
+
+        .note-action-btn.danger {
+            background: #dc2626;
+            border-color: #dc2626;
+        }
+
+        .note-action-btn.danger:hover {
+            background: #b91c1c;
+        }
+
+        /* Note modal styles */
+        .note-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .note-modal-content {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .note-modal-title {
+            color: #f8fafc;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .note-form-group {
+            margin-bottom: 16px;
+        }
+
+        .note-form-group label {
+            display: block;
+            color: #94a3b8;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        .note-form-group input,
+        .note-form-group textarea,
+        .note-form-group select {
+            width: 100%;
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: #e4e4e7;
+            padding: 10px 12px;
+            font-size: 14px;
+            border-radius: 6px;
+            transition: border-color 0.2s ease;
+        }
+
+        .note-form-group textarea {
+            height: 150px;
+            resize: vertical;
+        }
+
+        .note-form-group input:focus,
+        .note-form-group textarea:focus,
+        .note-form-group select:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        .note-modal-actions {
+            display: flex;
+            gap: 12px;
             margin-top: 20px;
         }
 
-        .heat-map-container {
+        /* Enhanced Tradervue-style analytics */
+        .tradervue-analytics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .win-loss-breakdown {
             background: #1e293b;
             border: 1px solid #334155;
             border-radius: 12px;
             padding: 20px;
         }
 
-        .heat-map-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 2px;
-            margin-top: 12px;
-        }
-
-        .heat-map-cell {
-            aspect-ratio: 1;
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 4px;
+        .win-loss-visual {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .heat-map-cell:hover {
-            transform: scale(1.05);
-        }
-
-        .heat-map-legend {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 12px;
-            font-size: 11px;
-            color: #64748b;
-        }
-
-        .drawdown-chart {
-            height: 120px;
-            background: #0f172a;
-            border: 1px solid #334155;
+            height: 100px;
+            margin: 16px 0;
             border-radius: 8px;
-            margin-top: 12px;
-            position: relative;
             overflow: hidden;
         }
 
-        .distribution-bars {
-            display: flex;
-            align-items: end;
-            height: 80px;
-            gap: 2px;
-            margin-top: 12px;
-            padding: 0 12px;
-        }
-
-        .distribution-bar {
-            flex: 1;
-            background: linear-gradient(to top, #3b82f6, #60a5fa);
-            min-height: 2px;
-            border-radius: 2px 2px 0 0;
-            position: relative;
-        }
-
-        .distribution-bar.negative {
-            background: linear-gradient(to top, #ef4444, #f87171);
-        }
-
-        .streak-indicator {
+        .win-bar {
+            background: linear-gradient(to right, #10b981, #34d399);
             display: flex;
             align-items: center;
-            gap: 4px;
-            margin-top: 8px;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
         }
 
-        .streak-bar {
-            height: 6px;
-            border-radius: 3px;
-            min-width: 4px;
+        .loss-bar {
+            background: linear-gradient(to right, #ef4444, #f87171);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
         }
 
-        .streak-bar.win {
-            background: #10b981;
+        .expectancy-section {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 20px;
         }
 
-        .streak-bar.loss {
-            background: #ef4444;
+        .expectancy-value {
+            font-size: 32px;
+            font-weight: 700;
+            text-align: center;
+            margin: 16px 0;
         }
 
-        .performance-breakdown {
+        .expectancy-breakdown {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
             margin-top: 16px;
         }
 
-        .breakdown-item {
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 8px;
-            padding: 12px;
-            text-align: center;
-        }
-
-        .breakdown-value {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .breakdown-label {
-            font-size: 11px;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        /* Price range analysis */
-        .price-range-analysis {
-            margin-top: 16px;
-        }
-
-        .price-range-item {
+        .expectancy-item {
             background: #0f172a;
             border: 1px solid #334155;
             border-radius: 6px;
             padding: 12px;
-            margin-bottom: 8px;
-        }
-
-        .price-range-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .price-range-label {
-            font-weight: 600;
-            color: #e4e4e7;
-            font-size: 13px;
-        }
-
-        .price-range-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            font-size: 11px;
-        }
-
-        .price-range-stat {
             text-align: center;
         }
 
-        .price-range-stat-label {
-            color: #64748b;
-            margin-bottom: 2px;
+        .expectancy-item-value {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
         }
 
-        .price-range-stat-value {
+        .expectancy-item-label {
+            color: #94a3b8;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        /* Day of week performance */
+        .dow-performance {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .dow-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .dow-day {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            padding: 12px 8px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .dow-day:hover {
+            background: #1e293b;
+        }
+
+        .dow-day-name {
+            color: #94a3b8;
+            font-size: 11px;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        .dow-day-pnl {
+            font-size: 14px;
             font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .dow-day-count {
+            color: #64748b;
+            font-size: 10px;
+        }
+
+        /* Performance by time */
+        .time-performance {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .time-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 4px;
+            margin-top: 16px;
+        }
+
+        .time-block {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 4px;
+            padding: 8px 4px;
+            text-align: center;
+            font-size: 11px;
+            transition: all 0.2s ease;
+        }
+
+        .time-block:hover {
+            background: #1e293b;
+        }
+
+        .time-block-hour {
+            color: #94a3b8;
+            margin-bottom: 4px;
+        }
+
+        .time-block-pnl {
+            font-weight: 600;
+        }
+
+        /* Win/Loss visual bars */
+        .win-loss-bars {
+            display: flex;
+            height: 60px;
+            margin: 16px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #0f172a;
+        }
+
+        .bar-segment {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .bar-segment:hover {
+            filter: brightness(1.2);
         }
 
         /* Edit trade modal */
@@ -1366,20 +1696,24 @@
                 padding: 16px;
             }
 
-            .analytics-grid {
+            .tradervue-summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .performance-grid {
                 grid-template-columns: 1fr;
             }
 
-            .analytics-header {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 16px;
+            .chart-grid {
+                grid-template-columns: 1fr;
             }
 
-            .filter-controls {
-                justify-content: center;
+            .notes-grid {
+                grid-template-columns: 1fr;
             }
-        }/* Date navigation styles */
+        }
+
+        /* Date navigation styles */
         .date-navigation {
             display: flex;
             align-items: center;
@@ -1472,6 +1806,37 @@
             </form>
         </div>
     </div>
+
+    <!-- Note modal -->
+    <div class="note-modal" id="noteModal">
+        <div class="note-modal-content">
+            <div class="note-modal-title" id="noteModalTitle">Add New Note</div>
+            <form id="noteForm">
+                <input type="hidden" id="noteId">
+                <div class="note-form-group">
+                    <label>Title</label>
+                    <input type="text" id="noteTitle" placeholder="Enter note title" required>
+                </div>
+                <div class="note-form-group">
+                    <label>Type</label>
+                    <select id="noteType" required>
+                        <option value="strategy">Strategy</option>
+                        <option value="review">Review</option>
+                        <option value="analysis">Analysis</option>
+                        <option value="general">General</option>
+                    </select>
+                </div>
+                <div class="note-form-group">
+                    <label>Content</label>
+                    <textarea id="noteContent" placeholder="Write your note here..." required></textarea>
+                </div>
+                <div class="note-modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeNoteModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="noteSubmitBtn">Add Note</button>
+                </div>
+            </form>
+        </div>
+    </div>
     
     <div class="app-container">
         <!-- Sidebar -->
@@ -1500,6 +1865,10 @@
                     <span class="nav-item-icon">📋</span>
                     <span data-lang="tradelist">Trade List</span>
                 </button>
+                <button class="nav-item" onclick="showPage('notes')">
+                    <span class="nav-item-icon">📝</span>
+                    <span data-lang="notes">Notes</span>
+                </button>
                 <button class="nav-item" onclick="showPage('settings')">
                     <span class="nav-item-icon">⚙️</span>
                     <span data-lang="settings">Settings</span>
@@ -1516,26 +1885,26 @@
                         <h1 class="page-title" data-lang="dashboard-title">Trading Dashboard</h1>
                         <p class="page-subtitle" data-lang="dashboard-subtitle">Track your trades and performance</p>
                     </div>
-                <div class="page-header-info">
-    <div class="date-range-selector">
-        <input type="date" id="dashboardStartDate" class="date-range-input">
-        <span style="color: #64748b;">to</span>
-        <input type="date" id="dashboardEndDate" class="date-range-input">
-        <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="clearDashboardRange()">Clear</button>
-    </div>
-    <div class="date-navigation">
-        <button class="date-nav-btn" onclick="changeTradingDate(-1)" title="Previous day">←</button>
-        <div class="current-date-display" id="currentDateDisplay" onclick="openDatePicker()"></div>
-        <button class="date-nav-btn" onclick="changeTradingDate(1)" title="Next day">→</button>
-    </div>
-    <div class="language-selector">
-        <label data-lang="language">Language:</label>
-        <select id="languageSelect" onchange="changeLanguage()">
-            <option value="en">English</option>
-            <option value="ko">한국어</option>
-        </select>
-    </div>
-</div>
+                    <div class="page-header-info">
+                        <div class="date-range-selector">
+                            <input type="date" id="dashboardStartDate" class="date-range-input">
+                            <span style="color: #64748b;">to</span>
+                            <input type="date" id="dashboardEndDate" class="date-range-input">
+                            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="clearDashboardRange()">Clear</button>
+                        </div>
+                        <div class="date-navigation">
+                            <button class="date-nav-btn" onclick="changeTradingDate(-1)" title="Previous day">←</button>
+                            <div class="current-date-display" id="currentDateDisplay" onclick="openDatePicker()"></div>
+                            <button class="date-nav-btn" onclick="changeTradingDate(1)" title="Next day">→</button>
+                        </div>
+                        <div class="language-selector">
+                            <label data-lang="language">Language:</label>
+                            <select id="languageSelect" onchange="changeLanguage()">
+                                <option value="en">English</option>
+                                <option value="ko">한국어</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="stats-overview">
@@ -1768,7 +2137,7 @@
                 </div>
             </div>
 
-            <!-- Enhanced Analytics page -->
+            <!-- Enhanced Analytics page - Tradervue style -->
             <div id="analysis" class="page">
                 <div class="analytics-header">
                     <div class="analytics-title-section">
@@ -1789,262 +2158,190 @@
                         <button class="filter-btn" onclick="setAnalyticsPeriod('day')" data-lang="today">Today</button>
                     </div>
                 </div>
-                
-                <div class="analytics-container">
-                    <!-- Core Performance Summary -->
-                    <div class="analytics-card" style="margin-bottom: 24px;">
-                        <h3><span class="analytics-icon">🎯</span><span data-lang="performance-summary">Performance Summary</span></h3>
-                        <div class="performance-breakdown">
-                            <div class="breakdown-item">
-                                <div class="breakdown-value" id="summaryNetProfit">$0.00</div>
-                                <div class="breakdown-label" data-lang="net-profit">Net Profit</div>
+
+                <!-- Tradervue-style Summary Cards -->
+                <div class="tradervue-summary">
+                    <div class="tradervue-card">
+                        <div class="tradervue-card-title" data-lang="net-pl">Net P/L</div>
+                        <div class="tradervue-card-value" id="tradervueNetPL">$0.00</div>
+                        <div class="tradervue-card-subtitle" data-lang="after-fees">After Fees</div>
+                    </div>
+                    <div class="tradervue-card">
+                        <div class="tradervue-card-title" data-lang="total-trades">Total Trades</div>
+                        <div class="tradervue-card-value neutral" id="tradervueTotalTrades">0</div>
+                        <div class="tradervue-card-subtitle" data-lang="executed">Executed</div>
+                    </div>
+                    <div class="tradervue-card">
+                        <div class="tradervue-card-title" data-lang="percent-profitable">% Profitable</div>
+                        <div class="tradervue-card-value" id="tradervueWinRate">0%</div>
+                        <div class="tradervue-card-subtitle" id="tradervueWinLoss">0W / 0L</div>
+                    </div>
+                    <div class="tradervue-card">
+                        <div class="tradervue-card-title" data-lang="profit-factor">Profit Factor</div>
+                        <div class="tradervue-card-value" id="tradervueProfitFactor">0.00</div>
+                        <div class="tradervue-card-subtitle" data-lang="gross-profit-loss-ratio">Gross Profit/Loss Ratio</div>
+                    </div>
+                    <div class="tradervue-card">
+                        <div class="tradervue-card-title" data-lang="avg-win">Avg Win</div>
+                        <div class="tradervue-card-value positive" id="tradervueAvgWin">$0.00</div>
+                        <div class="tradervue-card-subtitle" data-lang="per-winning-trade">Per Winning Trade</div>
+                    </div>
+                    <div class="tradervue-card">
+                        <div class="tradervue-card-title" data-lang="avg-loss">Avg Loss</div>
+                        <div class="tradervue-card-value negative" id="tradervueAvgLoss">$0.00</div>
+                        <div class="tradervue-card-subtitle" data-lang="per-losing-trade">Per Losing Trade</div>
+                    </div>
+                </div>
+
+                <!-- Tradervue-style Performance Breakdown -->
+                <div class="performance-grid">
+                    <div class="performance-section">
+                        <h3>
+                            <span>📊</span>
+                            <span data-lang="win-loss-analysis">Win/Loss Analysis</span>
+                        </h3>
+                        <div class="performance-row">
+                            <span class="performance-label" data-lang="gross-profit">Gross Profit</span>
+                            <span class="performance-value positive" id="tradervueGrossProfit">$0.00</span>
+                        </div>
+                        <div class="performance-row">
+                            <span class="performance-label" data-lang="gross-loss">Gross Loss</span>
+                            <span class="performance-value negative" id="tradervueGrossLoss">$0.00</span>
+                        </div>
+                        <div class="performance-row">
+                            <span class="performance-label" data-lang="commission-fees">Commission & Fees</span>
+                            <span class="performance-value negative" id="tradervueTotalFees">$0.00</span>
+                        </div>
+                        <div class="performance-row">
+                            <span class="performance-label" data-lang="largest-winner">Largest Winner</span>
+                            <span class="performance-value positive" id="tradervueLargestWin">$0.00</span>
+                        </div>
+                        <div class="performance-row">
+                            <span class="performance-label" data-lang="largest-loser">Largest Loser</span>
+                            <span class="performance-value negative" id="tradervueLargestLoss">$0.00</span>
+                        </div>
+
+                        <!-- Win/Loss Visual Bar -->
+                        <div class="win-loss-bars" id="winLossBars">
+                            <div class="bar-segment win-bar" id="winBar" style="width: 50%;">
+                                <span>50% Wins</span>
                             </div>
-                            <div class="breakdown-item">
-                                <div class="breakdown-value neutral" id="summaryTotalTrades">0</div>
-                                <div class="breakdown-label" data-lang="total-trades">Total Trades</div>
-                            </div>
-                            <div class="breakdown-item">
-                                <div class="breakdown-value" id="summaryWinRate">0%</div>
-                                <div class="breakdown-label" data-lang="win-rate">Win Rate</div>
-                            </div>
-                            <div class="breakdown-item">
-                                <div class="breakdown-value" id="summaryProfitFactor">0.00</div>
-                                <div class="breakdown-label" data-lang="profit-factor">Profit Factor</div>
-                            </div>
-                            <div class="breakdown-item">
-                                <div class="breakdown-value" id="summaryLargestWin">$0.00</div>
-                                <div class="breakdown-label" data-lang="largest-win">Largest Win</div>
-                            </div>
-                            <div class="breakdown-item">
-                                <div class="breakdown-value" id="summaryLargestLoss">$0.00</div>
-                                <div class="breakdown-label" data-lang="largest-loss">Largest Loss</div>
+                            <div class="bar-segment loss-bar" id="lossBar" style="width: 50%;">
+                                <span>50% Losses</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Main Analytics Grid -->
-                    <div class="analytics-grid">
-                        <!-- Win/Loss Analysis -->
-                        <div class="analytics-card">
-                            <h3><span class="analytics-icon">📊</span><span data-lang="win-loss-analysis">Win/Loss Analysis</span></h3>
-                            <div class="metric-row">
-                                <span class="metric-label" data-lang="gross-profit">Gross Profit</span>
-                                <span class="metric-value positive" id="grossProfit">$0.00</span>
+                    <div class="performance-section">
+                        <h3>
+                            <span>🎯</span>
+                            <span data-lang="expectancy-kelly">Expectancy & Kelly %</span>
+                        </h3>
+                        <div class="expectancy-value" id="expectancyValue">$0.00</div>
+                        
+                        <div class="expectancy-breakdown">
+                            <div class="expectancy-item">
+                                <div class="expectancy-item-value" id="kellyPercent">0%</div>
+                                <div class="expectancy-item-label" data-lang="kelly-criterion">Kelly Criterion</div>
                             </div>
-                            <div class="metric-row">
-                                <span class="metric-label" data-lang="gross-loss">Gross Loss</span>
-                                <span class="metric-value negative" id="grossLoss">$0.00</span>
+                            <div class="expectancy-item">
+                                <div class="expectancy-item-value" id="sharpeRatio">0.00</div>
+                                <div class="expectancy-item-label" data-lang="sharpe-ratio">Sharpe Ratio</div>
                             </div>
-                            <div class="metric-row">
-                                <span class="metric-label" data-lang="winning-trades">Winning Trades</span>
-                                <span class="metric-value positive" id="winningTrades">0 (0%)</span>
+                            <div class="expectancy-item">
+                                <div class="expectancy-item-value" id="riskRewardRatio">0.00</div>
+                                <div class="expectancy-item-label" data-lang="risk-reward">Risk/Reward</div>
                             </div>
-                            <div class="metric-row">
-                                <span class="metric-label" data-lang="losing-trades">Losing Trades</span>
-                                <span class="metric-value negative" id="losingTrades">0 (0%)</span>
-                            </div>
-                            <div class="metric-row">
-                                <span class="metric-label" data-lang="avg-winning-trade">Avg Winning Trade</span>
-                                <span class="metric-value positive" id="avgWinningTrade">$0.00</span>
-                            </div>
-                            <div class="metric-row">
-                                <span class="metric-label" data-lang="avg-losing-trade">Avg Losing Trade</span>
-                                <span class="metric-value negative" id="avgLosingTrade">$0.00</span>
+                            <div class="expectancy-item">
+                                <div class="expectancy-item-value" id="maxConsecutiveLosses">0</div>
+                                <div class="expectancy-item-label" data-lang="max-consecutive-losses">Max Consecutive Losses</div>
                             </div>
                         </div>
+                    </div>
+                </div>
 
-                        <!-- Trading Activity -->
-                        <div class="analytics-card">
-                            <h3><span class="analytics-icon">📅</span><span data-lang="trading-activity">Trading Activity</span></h3>
-                            <div class="metric-row">
-                                <span class="metric-label" data-lang="trading-days">Trading Days</span>
-                                <span class="metric-value neutral" id="tradingDays">0</span>
-                            </div>
-                            <div class="metric-row">
-                                <span class="metric-label" data-lang="avg-trades-per-day">Avg Trades per Day</span>
-                                <span class="metric-value neutral" id="avgTradesPerDay">0.00</span>
-                            </div>
-                            <div class="metric-row">
-                                <span class="metric-label" data-lang="total-volume">Total Volume</span>
-                                <span class="metric-value neutral" id="totalVolumeAnalytics">$0</span>
-                            </div>
-                            <div class="metric-row">
-                                <span class="metric-label" data-lang="avg-position-size">Avg Position Size</span>
-                                <span class="metric-value neutral" id="avgPositionSize">$0</span>
-                            </div>
-                            <div class="metric-row">
-                                <span class="metric-label" data-lang="largest-position">Largest Position</span>
-                                <span class="metric-value neutral" id="largestPosition">$0</span>
-                            </div>
-                            <div class="metric-row">
-                                <span class="metric-label" data-lang="avg-hold-time">Avg Hold Time</span>
-                                <span class="metric-value neutral" id="avgHoldTime">0m</span>
-                            </div>
-                        </div>
-
-                        <!-- Performance Streaks -->
-                        <div class="analytics-card">
-                            <h3><span class="analytics-icon">🔥</span><span data-lang="performance-streaks">Performance Streaks</span></h3>
-                            <div class="metric-row">
-                                <span class="metric-label" data-lang="current-streak">Current Streak</span>
-                                <span class="metric-value" id="currentStreak">0</span>
-                            </div>
-                            <div class="metric-row">
-                                <span class="metric-label" data-lang="max-win-streak">Max Win Streak</span>
-                                <span class="metric-value positive" id="maxWinStreak">0</span>
-                            </div>
-                            <div class="metric-row">
-                                <span class="metric-label" data-lang="max-loss-streak">Max Loss Streak</span>
-                                <span class="metric-value negative" id="maxLossStreak">0</span>
-                            </div>
-                            <div class="streak-indicator" id="streakIndicator">
-                                <!-- Streak visualization will be added here -->
-                            </div>
-                        </div>
-
-                        <!-- Best/Worst Performance -->
-                        <div class="analytics-card">
-                            <h3><span class="analytics-icon">⭐</span><span data-lang="best-worst-performance">Best/Worst Performance</span></h3>
-                            <div class="metric-row">
-                                <span class="metric-label" data-lang="best-trading-day">Best Trading Day</span>
-                                <span class="metric-value positive" id="bestTradingDay">$0.00</span>
-                            </div>
-                            <div class="metric-row">
-                                <span class="metric-label" data-lang="worst-trading-day">Worst Trading Day</span>
-                                <span class="metric-value negative" id="worstTradingDay">$0.00</span>
-                            </div>
-                            <div class="metric-row">
-                                <span class="metric-label" data-lang="most-profitable-symbol">Most Profitable Symbol</span>
-                                <span class="metric-value" id="mostProfitableSymbol">-</span>
-                            </div>
-                            <div class="metric-row">
-                                <span class="metric-label" data-lang="least-profitable-symbol">Least Profitable Symbol</span>
-                                <span class="metric-value" id="leastProfitableSymbol">-</span>
-                            </div>
-                        </div>
-
-                        <!-- Time Analysis -->
-                        <div class="analytics-card">
-                            <h3><span class="analytics-icon">⏰</span><span data-lang="time-analysis">Time Analysis</span></h3>
-                            <div class="metric-row">
-                                <span class="metric-label" data-lang="best-hour">Best Trading Hour</span>
-                                <span class="metric-value" id="bestHour">-</span>
-                            </div>
-                            <div class="metric-row">
-                                <span class="metric-label" data-lang="worst-hour">Worst Trading Hour</span>
-                                <span class="metric-value" id="worstHour">-</span>
-                            </div>
-                            <div class="metric-row">
-                                <span class="metric-label" data-lang="best-day-week">Best Day of Week</span>
-                                <span class="metric-value" id="bestDayOfWeek">-</span>
-                            </div>
-                            <div class="metric-row">
-                                <span class="metric-label" data-lang="worst-day-week">Worst Day of Week</span>
-                                <span class="metric-value" id="worstDayOfWeek">-</span>
-                            </div>
-                        </div>
-
-                        <!-- Symbol Performance -->
-                        <div class="analytics-card">
-                            <h3><span class="analytics-icon">🎲</span><span data-lang="symbol-performance">Symbol Performance</span></h3>
-                            <div id="symbolPerformanceList">
-                                <div class="empty-state" style="padding: 20px;">
-                                    <div style="color: #64748b; font-size: 13px;" data-lang="no-symbol-data">No symbol data available</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Price Range Analysis -->
-                        <div class="analytics-card">
-                            <h3><span class="analytics-icon">💰</span>Price Range Analysis</h3>
-                            <div id="priceRangeAnalysis">
-                                <div class="empty-state" style="padding: 20px;">
-                                    <div style="color: #64748b; font-size: 13px;">No price range data available</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Drawdown Analysis -->
-                        <div class="analytics-card">
-                            <h3><span class="analytics-icon">📉</span>Drawdown Analysis</h3>
-                            <div class="metric-row">
-                                <span class="metric-label">Max Drawdown</span>
-                                <span class="metric-value negative" id="maxDrawdown">$0.00</span>
-                            </div>
-                            <div class="metric-row">
-                                <span class="metric-label">Current Drawdown</span>
-                                <span class="metric-value" id="currentDrawdown">$0.00</span>
-                            </div>
-                            <div class="metric-row">
-                                <span class="metric-label">Recovery Time</span>
-                                <span class="metric-value neutral" id="recoveryTime">0 days</span>
-                            </div>
-                            <div class="drawdown-chart" id="drawdownChart">
-                                <div style="padding: 40px; text-align: center; color: #64748b;">Drawdown visualization</div>
-                            </div>
-                        </div>
-
-                        <!-- Total Gains vs Losses -->
-                        <div class="analytics-card">
-                            <h3><span class="analytics-icon">⚖️</span>Total Gains vs Losses</h3>
-                            <div class="performance-breakdown">
-                                <div class="breakdown-item">
-                                    <div class="breakdown-value positive" id="totalGains">$0.00</div>
-                                    <div class="breakdown-label">Total Gains</div>
-                                </div>
-                                <div class="breakdown-item">
-                                    <div class="breakdown-value negative" id="totalLosses">$0.00</div>
-                                    <div class="breakdown-label">Total Losses</div>
-                                </div>
-                            </div>
-                            <div class="chart-container" id="gainsVsLossesChart">
-                                <div style="padding: 20px; text-align: center; color: #64748b;">Gains vs Losses visualization</div>
+                <!-- Day of Week Performance -->
+                <div class="chart-grid">
+                    <div class="chart-card">
+                        <div class="chart-title" data-lang="performance-by-day">Performance by Day of Week</div>
+                        <div class="dow-performance">
+                            <div class="dow-grid" id="dowGrid">
+                                <!-- Day of week performance will be generated here -->
                             </div>
                         </div>
                     </div>
 
-                    <!-- Advanced Visualizations -->
-                    <div class="advanced-analytics-grid">
-                        <!-- Trading Heatmap -->
-                        <div class="analytics-card">
-                            <h3><span class="analytics-icon">🗓️</span><span data-lang="trading-heatmap">Trading Heatmap (24h)</span></h3>
-                            <div class="heat-map-container">
-                                <div class="heat-map-grid" id="tradingHeatmap">
-                                    <!-- Heatmap cells will be generated here -->
-                                </div>
-                                <div class="heat-map-legend">
-                                    <span>Worst</span>
-                                    <span>Best</span>
-                                </div>
+                    <div class="chart-card">
+                        <div class="chart-title" data-lang="performance-by-time">Performance by Time of Day</div>
+                        <div class="time-performance">
+                            <div class="time-grid" id="timeGrid">
+                                <!-- Time performance will be generated here -->
                             </div>
                         </div>
+                    </div>
+                </div>
 
-                        <!-- P/L Distribution -->
-                        <div class="analytics-card">
-                            <h3><span class="analytics-icon">📊</span><span data-lang="pl-distribution">P/L Distribution</span></h3>
-                            <div class="distribution-bars" id="plDistribution">
-                                <!-- Distribution bars will be generated here -->
-                            </div>
-                            <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 11px; color: #64748b;">
-                                <span>Losses</span>
-                                <span>Wins</span>
-                            </div>
+                <!-- Symbol Performance Analysis -->
+                <div class="chart-card" style="margin-bottom: 24px;">
+                    <div class="chart-title" data-lang="symbol-performance">Symbol Performance</div>
+                    <div class="symbol-analysis-grid" id="symbolAnalysisGrid">
+                        <!-- Symbol cards will be generated here -->
+                    </div>
+                </div>
+
+                <!-- Additional Tradervue-style metrics -->
+                <div class="performance-grid">
+                    <div class="performance-section">
+                        <h3>
+                            <span>📈</span>
+                            <span data-lang="trading-statistics">Trading Statistics</span>
+                        </h3>
+                        <div class="performance-row">
+                            <span class="performance-label" data-lang="total-volume">Total Volume</span>
+                            <span class="performance-value neutral" id="tradervueTotalVolume">$0</span>
                         </div>
-
-                        <!-- Cumulative P/L Chart -->
-                        <div class="analytics-card">
-                            <h3><span class="analytics-icon">📈</span><span data-lang="cumulative-pl">Cumulative P/L</span></h3>
-                            <div class="chart-container">
-                                <div style="padding: 40px; text-align: center; color: #64748b;">Cumulative P/L visualization</div>
-                            </div>
+                        <div class="performance-row">
+                            <span class="performance-label" data-lang="avg-position-size">Average Position Size</span>
+                            <span class="performance-value neutral" id="tradervueAvgPosition">$0</span>
                         </div>
+                        <div class="performance-row">
+                            <span class="performance-label" data-lang="largest-position">Largest Position</span>
+                            <span class="performance-value neutral" id="tradervueLargestPosition">$0</span>
+                        </div>
+                        <div class="performance-row">
+                            <span class="performance-label" data-lang="avg-holding-time">Avg Holding Time</span>
+                            <span class="performance-value neutral" id="tradervueAvgHoldTime">0m</span>
+                        </div>
+                        <div class="performance-row">
+                            <span class="performance-label" data-lang="trading-days">Trading Days</span>
+                            <span class="performance-value neutral" id="tradervueTradingDays">0</span>
+                        </div>
+                    </div>
 
-                        <!-- Monthly Performance -->
-                        <div class="analytics-card">
-                            <h3><span class="analytics-icon">📅</span><span data-lang="monthly-performance">Monthly Performance</span></h3>
-                            <div class="chart-container">
-                                <div style="padding: 40px; text-align: center; color: #64748b;">Monthly performance chart</div>
-                            </div>
+                    <div class="performance-section">
+                        <h3>
+                            <span>🔥</span>
+                            <span data-lang="streaks-drawdown">Streaks & Drawdown</span>
+                        </h3>
+                        <div class="performance-row">
+                            <span class="performance-label" data-lang="current-streak">Current Streak</span>
+                            <span class="performance-value" id="tradervueCurrentStreak">0</span>
+                        </div>
+                        <div class="performance-row">
+                            <span class="performance-label" data-lang="longest-win-streak">Longest Win Streak</span>
+                            <span class="performance-value positive" id="tradervueMaxWinStreak">0</span>
+                        </div>
+                        <div class="performance-row">
+                            <span class="performance-label" data-lang="longest-loss-streak">Longest Loss Streak</span>
+                            <span class="performance-value negative" id="tradervueMaxLossStreak">0</span>
+                        </div>
+                        <div class="performance-row">
+                            <span class="performance-label" data-lang="max-drawdown">Max Drawdown</span>
+                            <span class="performance-value negative" id="tradervueMaxDrawdown">$0.00</span>
+                        </div>
+                        <div class="performance-row">
+                            <span class="performance-label" data-lang="current-drawdown">Current Drawdown</span>
+                            <span class="performance-value" id="tradervueCurrentDrawdown">$0.00</span>
                         </div>
                     </div>
                 </div>
@@ -2099,6 +2396,26 @@
                 </div>
             </div>
 
+            <!-- Notes page -->
+            <div id="notes" class="page">
+                <div class="notes-container">
+                    <div class="notes-header">
+                        <div>
+                            <h1 class="page-title" data-lang="notes-title">Trading Notes</h1>
+                            <p class="page-subtitle" data-lang="notes-subtitle">Document your trading strategies, reviews, and insights</p>
+                        </div>
+                        <button class="add-note-btn" onclick="openNoteModal()" data-lang="add-note">Add Note</button>
+                    </div>
+
+                    <div class="notes-grid" id="notesGrid">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📝</div>
+                            <div data-lang="no-notes">No notes created yet</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Settings page -->
             <div id="settings" class="page">
                 <div class="page-header">
@@ -2137,6 +2454,7 @@
     <script>
         // Global variables
         let trades = [];
+        let notes = [];
         let dailyFees = {};
         let currentTradingDate = new Date();
         let calendarDate = new Date();
@@ -2155,24 +2473,25 @@
         let tradesEndDate = null;
 
         // Function to get EST trading date
-      function getESTTradingDate(date = new Date()) {
-            // Simply return the date as-is for dashboard display
+        function getESTTradingDate(date = new Date()) {
             return new Date(date);
         }
 
         // Function to format date for storage (EST trading date)
-      function formatTradingDate(date) {
+        function formatTradingDate(date) {
             return date.getFullYear() + '-' + 
                 String(date.getMonth() + 1).padStart(2, '0') + '-' + 
                 String(date.getDate()).padStart(2, '0');
         }
-        // Language translations (enhanced with new terms)
+
+        // Enhanced Language translations
         const translations = {
             en: {
                 'dashboard': 'Dashboard',
                 'calendar': 'Calendar View',
                 'analytics': 'Analytics',
                 'tradelist': 'Trade List',
+                'notes': 'Notes',
                 'settings': 'Settings',
                 'dashboard-title': 'Trading Dashboard',
                 'dashboard-subtitle': 'Track your trades and performance',
@@ -2235,51 +2554,60 @@
                 'this-month': 'This Month',
                 'this-week': 'This Week',
                 'today': 'Today',
-                'performance-summary': 'Performance Summary',
-                'net-profit': 'Net Profit',
-                'largest-win': 'Largest Win',
-                'largest-loss': 'Largest Loss',
+                'daily-fees': 'Daily Fees',
+                // New Tradervue-style translations
+                'net-pl': 'Net P/L',
+                'after-fees': 'After Fees',
+                'executed': 'Executed',
+                'percent-profitable': '% Profitable',
+                'gross-profit-loss-ratio': 'Gross Profit/Loss Ratio',
+                'per-winning-trade': 'Per Winning Trade',
+                'per-losing-trade': 'Per Losing Trade',
                 'win-loss-analysis': 'Win/Loss Analysis',
                 'gross-profit': 'Gross Profit',
                 'gross-loss': 'Gross Loss',
-                'winning-trades': 'Winning Trades',
-                'losing-trades': 'Losing Trades',
-                'avg-winning-trade': 'Avg Winning Trade',
-                'avg-losing-trade': 'Avg Losing Trade',
-                'trading-activity': 'Trading Activity',
-                'trading-days': 'Trading Days',
-                'avg-trades-per-day': 'Avg Trades per Day',
-                'total-volume': 'Total Volume',
-                'avg-position-size': 'Avg Position Size',
-                'largest-position': 'Largest Position',
-                'avg-hold-time': 'Avg Hold Time',
-                'performance-streaks': 'Performance Streaks',
-                'current-streak': 'Current Streak',
-                'max-win-streak': 'Max Win Streak',
-                'max-loss-streak': 'Max Loss Streak',
-                'best-worst-performance': 'Best/Worst Performance',
-                'best-trading-day': 'Best Trading Day',
-                'worst-trading-day': 'Worst Trading Day',
-                'most-profitable-symbol': 'Most Profitable Symbol',
-                'least-profitable-symbol': 'Least Profitable Symbol',
-                'time-analysis': 'Time Analysis',
-                'best-hour': 'Best Trading Hour',
-                'worst-hour': 'Worst Trading Hour',
-                'best-day-week': 'Best Day of Week',
-                'worst-day-week': 'Worst Day of Week',
+                'commission-fees': 'Commission & Fees',
+                'largest-winner': 'Largest Winner',
+                'largest-loser': 'Largest Loser',
+                'expectancy-kelly': 'Expectancy & Kelly %',
+                'kelly-criterion': 'Kelly Criterion',
+                'sharpe-ratio': 'Sharpe Ratio',
+                'risk-reward': 'Risk/Reward',
+                'max-consecutive-losses': 'Max Consecutive Losses',
+                'performance-by-day': 'Performance by Day of Week',
+                'performance-by-time': 'Performance by Time of Day',
                 'symbol-performance': 'Symbol Performance',
-                'trading-heatmap': 'Trading Heatmap (24h)',
-                'pl-distribution': 'P/L Distribution',
-                'cumulative-pl': 'Cumulative P/L',
-                'monthly-performance': 'Monthly Performance',
-                'no-symbol-data': 'No symbol data available',
-                'daily-fees': 'Daily Fees'
+                'trading-statistics': 'Trading Statistics',
+                'total-volume': 'Total Volume',
+                'avg-position-size': 'Average Position Size',
+                'largest-position': 'Largest Position',
+                'avg-holding-time': 'Avg Holding Time',
+                'trading-days': 'Trading Days',
+                'streaks-drawdown': 'Streaks & Drawdown',
+                'current-streak': 'Current Streak',
+                'longest-win-streak': 'Longest Win Streak',
+                'longest-loss-streak': 'Longest Loss Streak',
+                'max-drawdown': 'Max Drawdown',
+                'current-drawdown': 'Current Drawdown',
+                // Notes translations
+                'notes-title': 'Trading Notes',
+                'notes-subtitle': 'Document your trading strategies, reviews, and insights',
+                'add-note': 'Add Note',
+                'no-notes': 'No notes created yet',
+                'note-title': 'Title',
+                'note-type': 'Type',
+                'note-content': 'Content',
+                'strategy': 'Strategy',
+                'review': 'Review',
+                'analysis': 'Analysis',
+                'general': 'General'
             },
             ko: {
                 'dashboard': '대시보드',
                 'calendar': '캘린더 뷰',
                 'analytics': '분석',
                 'tradelist': '거래 목록',
+                'notes': '노트',
                 'settings': '설정',
                 'dashboard-title': '트레이딩 대시보드',
                 'dashboard-subtitle': '거래와 성과를 추적하세요',
@@ -2318,7 +2646,7 @@
                 'calendar-title': '캘린더 뷰',
                 'calendar-subtitle': '시간에 따른 거래 성과를 시각화하세요',
                 'clear-selection': '선택 해제',
-                'calendar-help': '캘린더에서 클릭 및 드래그로 날짜 범위를 선택하거나, 하루를 클릭하여 세부정보를 확인하세요.',
+                'calendar-help': '캘린더에서 클릭 및 드래그로 날짜 범위를 선택하거나, 하루를 클릭하여 세부정보를 확인하세요',
                 'selected-period': '선택된 기간',
                 'total-trades': '총 거래',
                 'avg-daily-pl': '일일 평균 손익',
@@ -2342,45 +2670,53 @@
                 'this-month': '이번 달',
                 'this-week': '이번 주',
                 'today': '오늘',
-                'performance-summary': '성과 요약',
-                'net-profit': '순이익',
-                'largest-win': '최대 수익',
-                'largest-loss': '최대 손실',
+                'daily-fees': '일일 수수료',
+                // New Tradervue-style translations
+                'net-pl': '순 손익',
+                'after-fees': '수수료 차감 후',
+                'executed': '체결됨',
+                'percent-profitable': '수익률 %',
+                'gross-profit-loss-ratio': '총수익/총손실 비율',
+                'per-winning-trade': '수익 거래당',
+                'per-losing-trade': '손실 거래당',
                 'win-loss-analysis': '승패 분석',
                 'gross-profit': '총 수익',
                 'gross-loss': '총 손실',
-                'winning-trades': '수익 거래',
-                'losing-trades': '손실 거래',
-                'avg-winning-trade': '평균 수익 거래',
-                'avg-losing-trade': '평균 손실 거래',
-                'trading-activity': '거래 활동',
-                'trading-days': '거래일수',
-                'avg-trades-per-day': '일평균 거래수',
+                'commission-fees': '수수료 및 비용',
+                'largest-winner': '최대 수익',
+                'largest-loser': '최대 손실',
+                'expectancy-kelly': '기댓값 & 켈리 %',
+                'kelly-criterion': '켈리 기준',
+                'sharpe-ratio': '샤프 비율',
+                'risk-reward': '위험/보상',
+                'max-consecutive-losses': '최대 연속 손실',
+                'performance-by-day': '요일별 성과',
+                'performance-by-time': '시간별 성과',
+                'symbol-performance': '심볼별 성과',
+                'trading-statistics': '거래 통계',
                 'total-volume': '총 거래량',
                 'avg-position-size': '평균 포지션 크기',
                 'largest-position': '최대 포지션',
-                'avg-hold-time': '평균 보유시간',
-                'performance-streaks': '성과 연속성',
+                'avg-holding-time': '평균 보유시간',
+                'trading-days': '거래일수',
+                'streaks-drawdown': '연속성 & 드로우다운',
                 'current-streak': '현재 연속',
-                'max-win-streak': '최대 연승',
-                'max-loss-streak': '최대 연패',
-                'best-worst-performance': '최고/최악 성과',
-                'best-trading-day': '최고 거래일',
-                'worst-trading-day': '최악 거래일',
-                'most-profitable-symbol': '최고 수익 심볼',
-                'least-profitable-symbol': '최저 수익 심볼',
-                'time-analysis': '시간 분석',
-                'best-hour': '최고 거래시간',
-                'worst-hour': '최악 거래시간',
-                'best-day-week': '최고 요일',
-                'worst-day-week': '최악 요일',
-                'symbol-performance': '심볼별 성과',
-                'trading-heatmap': '트레이딩 히트맵 (24시간)',
-                'pl-distribution': '손익 분포',
-                'cumulative-pl': '누적 손익',
-                'monthly-performance': '월별 성과',
-                'no-symbol-data': '심볼 데이터가 없습니다',
-                'daily-fees': '일일 수수료'
+                'longest-win-streak': '최장 연승',
+                'longest-loss-streak': '최장 연패',
+                'max-drawdown': '최대 드로우다운',
+                'current-drawdown': '현재 드로우다운',
+                // Notes translations
+                'notes-title': '트레이딩 노트',
+                'notes-subtitle': '거래 전략, 리뷰 및 인사이트를 문서화하세요',
+                'add-note': '노트 추가',
+                'no-notes': '아직 생성된 노트가 없습니다',
+                'note-title': '제목',
+                'note-type': '유형',
+                'note-content': '내용',
+                'strategy': '전략',
+                'review': '리뷰',
+                'analysis': '분석',
+                'general': '일반'
             }
         };
 
@@ -2395,12 +2731,12 @@
             
             const symbolInput = document.getElementById('symbol');
             if (symbolInput) {
-                symbolInput.placeholder = currentLanguage === 'ko' ? 'AAPL' : 'AAPL';
+                symbolInput.placeholder = 'AAPL';
             }
             
             const amountInput = document.getElementById('amount');
             if (amountInput) {
-                amountInput.placeholder = currentLanguage === 'ko' ? '5000' : '5000';
+                amountInput.placeholder = '5000';
             }
         }
 
@@ -2411,6 +2747,7 @@
             updateLanguage();
             updateStats();
             updateAnalytics();
+            renderNotes();
             localStorage.setItem('tradingPlatformLanguage', currentLanguage);
         }
 
@@ -2421,6 +2758,7 @@
             updateLanguage();
             updateStats();
             updateAnalytics();
+            renderNotes();
             localStorage.setItem('tradingPlatformLanguage', currentLanguage);
         }
 
@@ -2461,7 +2799,8 @@
                 closeDatePicker();
             }
         }
-function changeTradingDate(direction) {
+
+        function changeTradingDate(direction) {
             const newDate = new Date(currentTradingDate);
             newDate.setDate(newDate.getDate() + direction);
             currentTradingDate = newDate;
@@ -2471,6 +2810,7 @@ function changeTradingDate(direction) {
             loadDailyFees();
             showToast(direction > 0 ? 'Next day' : 'Previous day');
         }
+
         // Dashboard date range functions
         function clearDashboardRange() {
             dashboardStartDate = null;
@@ -2560,6 +2900,151 @@ function changeTradingDate(direction) {
             }, 2000);
         }
 
+        // Notes functions
+        function openNoteModal(noteId = null) {
+            const modal = document.getElementById('noteModal');
+            const title = document.getElementById('noteModalTitle');
+            const submitBtn = document.getElementById('noteSubmitBtn');
+            
+            if (noteId) {
+                const note = notes.find(n => n.id === noteId);
+                if (note) {
+                    document.getElementById('noteId').value = note.id;
+                    document.getElementById('noteTitle').value = note.title;
+                    document.getElementById('noteType').value = note.type;
+                    document.getElementById('noteContent').value = note.content;
+                    title.textContent = currentLanguage === 'ko' ? '노트 편집' : 'Edit Note';
+                    submitBtn.textContent = currentLanguage === 'ko' ? '업데이트' : 'Update Note';
+                }
+            } else {
+                document.getElementById('noteForm').reset();
+                document.getElementById('noteId').value = '';
+                title.textContent = currentLanguage === 'ko' ? '새 노트 추가' : 'Add New Note';
+                submitBtn.textContent = currentLanguage === 'ko' ? '노트 추가' : 'Add Note';
+            }
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeNoteModal() {
+            document.getElementById('noteModal').style.display = 'none';
+        }
+
+        function handleNoteSubmit(event) {
+            event.preventDefault();
+            
+            const noteId = document.getElementById('noteId').value;
+            const title = document.getElementById('noteTitle').value;
+            const type = document.getElementById('noteType').value;
+            const content = document.getElementById('noteContent').value;
+            
+            if (noteId) {
+                // Edit existing note
+                const noteIndex = notes.findIndex(n => n.id === parseInt(noteId));
+                if (noteIndex !== -1) {
+                    notes[noteIndex] = {
+                        ...notes[noteIndex],
+                        title,
+                        type,
+                        content,
+                        updatedAt: new Date().toISOString()
+                    };
+                }
+            } else {
+                // Add new note
+                const newNote = {
+                    id: Date.now(),
+                    title,
+                    type,
+                    content,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
+                notes.push(newNote);
+            }
+            
+            saveNotes();
+            renderNotes();
+            closeNoteModal();
+            showToast(noteId ? 'Note updated' : 'Note added');
+        }
+
+        function deleteNote(noteId) {
+            const confirmMessage = currentLanguage === 'ko' ? 
+                '이 노트를 삭제하시겠습니까?' : 
+                'Are you sure you want to delete this note?';
+            
+            if (confirm(confirmMessage)) {
+                notes = notes.filter(note => note.id !== noteId);
+                saveNotes();
+                renderNotes();
+                showToast(currentLanguage === 'ko' ? '노트 삭제됨' : 'Note deleted');
+            }
+        }
+
+        function renderNotes() {
+            const notesGrid = document.getElementById('notesGrid');
+            
+            if (notes.length === 0) {
+                notesGrid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📝</div>
+                        <div data-lang="no-notes">${translations[currentLanguage]['no-notes']}</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            const sortedNotes = [...notes].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+            
+            notesGrid.innerHTML = sortedNotes.map(note => {
+                const createdDate = new Date(note.createdAt).toLocaleDateString(currentLanguage === 'ko' ? 'ko-KR' : 'en-US');
+                const typeLabel = translations[currentLanguage][note.type] || note.type;
+                
+                return `
+                    <div class="note-card">
+                        <div class="note-header">
+                            <div class="note-title">${note.title}</div>
+                            <div class="note-date">${createdDate}</div>
+                        </div>
+                        <div class="note-type ${note.type}">${typeLabel}</div>
+                        <div class="note-content">${note.content}</div>
+                        <div class="note-actions">
+                            <button class="note-action-btn" onclick="openNoteModal(${note.id})">
+                                ${currentLanguage === 'ko' ? '편집' : 'Edit'}
+                            </button>
+                            <button class="note-action-btn danger" onclick="deleteNote(${note.id})">
+                                ${currentLanguage === 'ko' ? '삭제' : 'Delete'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function saveNotes() {
+            try {
+                localStorage.setItem('tradingPlatformNotes', JSON.stringify(notes));
+            } catch (error) {
+                console.error('Error saving notes:', error);
+                alert('Failed to save notes.');
+            }
+        }
+
+        function loadNotes() {
+            try {
+                const saved = localStorage.getItem('tradingPlatformNotes');
+                if (saved) {
+                    notes = JSON.parse(saved);
+                } else {
+                    notes = [];
+                }
+            } catch (error) {
+                console.error('Error loading notes:', error);
+                notes = [];
+            }
+        }
+
         // Page initialization
         document.addEventListener('DOMContentLoaded', function() {
             const savedLanguage = localStorage.getItem('tradingPlatformLanguage');
@@ -2580,15 +3065,18 @@ function changeTradingDate(direction) {
             updateLanguage();
             
             loadTrades();
+            loadNotes();
             updateStats();
             renderCalendar();
             updateAllTradesList();
             updateAnalytics();
+            renderNotes();
             calculateHoldingTime();
             loadDailyFees();
             
             document.getElementById('tradeForm').addEventListener('submit', handleTradeSubmit);
             document.getElementById('editTradeForm').addEventListener('submit', handleEditTradeSubmit);
+            document.getElementById('noteForm').addEventListener('submit', handleNoteSubmit);
             document.getElementById('entryTime').addEventListener('change', calculateHoldingTime);
             document.getElementById('exitTime').addEventListener('change', calculateHoldingTime);
             
@@ -2627,6 +3115,7 @@ function changeTradingDate(direction) {
                 updateAllTradesList();
             });
             
+            // Modal click outside to close
             document.getElementById('datePickerModal').addEventListener('click', function(e) {
                 if (e.target === this) {
                     closeDatePicker();
@@ -2636,6 +3125,12 @@ function changeTradingDate(direction) {
             document.getElementById('editTradeModal').addEventListener('click', function(e) {
                 if (e.target === this) {
                     closeEditTradeModal();
+                }
+            });
+
+            document.getElementById('noteModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeNoteModal();
                 }
             });
         });
@@ -2655,6 +3150,10 @@ function changeTradingDate(direction) {
             
             if (pageId === 'analysis') {
                 updateAnalytics();
+            }
+            
+            if (pageId === 'notes') {
+                renderNotes();
             }
             
             if (window.innerWidth <= 768) {
@@ -2929,7 +3428,7 @@ function changeTradingDate(direction) {
             }
         }
 
-        // Statistics update function
+        // Enhanced Statistics update function with fees included
         function updateStats() {
             const filteredTrades = getFilteredDashboardTrades();
             
@@ -2948,9 +3447,23 @@ function changeTradingDate(direction) {
             }
 
             const totalPL = filteredTrades.reduce((sum, trade) => sum + trade.pnl, 0);
-            const currentDate = formatTradingDate(currentTradingDate);
-            const dailyFee = dailyFees[currentDate] || 0;
-            const netPL = totalPL - dailyFee;
+            
+            // Calculate total fees for the filtered period
+            let totalDailyFees = 0;
+            if (dashboardStartDate || dashboardEndDate) {
+                // For date range, include all days with fees in range
+                Object.keys(dailyFees).forEach(date => {
+                    if (dashboardStartDate && date < dashboardStartDate) return;
+                    if (dashboardEndDate && date > dashboardEndDate) return;
+                    totalDailyFees += dailyFees[date] || 0;
+                });
+            } else {
+                // For current day only
+                const currentDate = formatTradingDate(currentTradingDate);
+                totalDailyFees = dailyFees[currentDate] || 0;
+            }
+            
+            const netPL = totalPL - totalDailyFees;
             const wins = filteredTrades.filter(trade => trade.pnl > 0);
             const losses = filteredTrades.filter(trade => trade.pnl < 0);
             const winRate = filteredTrades.length > 0 ? (wins.length / filteredTrades.length) * 100 : 0;
@@ -3048,7 +3561,7 @@ function changeTradingDate(direction) {
             document.getElementById('periodSummary').textContent = `${dashboardTrades.length} ${tradesText}`;
         }
 
-        // Enhanced Analytics functions
+        // Enhanced Analytics functions - Tradervue style
         function setAnalyticsPeriod(period) {
             analyticsPeriod = period;
             document.querySelectorAll('.filter-controls .filter-btn').forEach(btn => {
@@ -3100,166 +3613,218 @@ function changeTradingDate(direction) {
             return filteredTrades;
         }
 
+        // Enhanced Tradervue-style analytics update
         function updateAnalytics() {
             const filteredTrades = getFilteredTradesForAnalytics();
             
             if (filteredTrades.length === 0) {
-                resetAnalyticsDisplay();
+                resetTradervueAnalyticsDisplay();
                 return;
             }
             
-            // Performance Summary
-            const totalPL = filteredTrades.reduce((sum, trade) => sum + trade.pnl, 0);
-            // Apply daily fees
+            // Calculate fees for analytics period
             let totalDailyFees = 0;
             const uniqueDatesForFees = [...new Set(filteredTrades.map(trade => trade.date))];
             uniqueDatesForFees.forEach(date => {
                 totalDailyFees += dailyFees[date] || 0;
             });
-            const netTotalPL = totalPL - totalDailyFees;
+            
+            const totalPL = filteredTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+            const netPL = totalPL - totalDailyFees;
             const wins = filteredTrades.filter(trade => trade.pnl > 0);
             const losses = filteredTrades.filter(trade => trade.pnl < 0);
             const winRate = filteredTrades.length > 0 ? (wins.length / filteredTrades.length) * 100 : 0;
-            
-            const pnls = filteredTrades.map(trade => trade.pnl);
-            const largestWin = Math.max(...pnls);
-            const largestLoss = Math.min(...pnls);
             
             const totalWins = wins.reduce((sum, trade) => sum + trade.pnl, 0);
             const totalLosses = Math.abs(losses.reduce((sum, trade) => sum + trade.pnl, 0));
             const profitFactor = totalLosses > 0 ? totalWins / totalLosses : 0;
             
-            // Update Performance Summary
-            document.getElementById('summaryNetProfit').textContent = `$${netTotalPL.toFixed(2)}`;
-            document.getElementById('summaryNetProfit').className = `breakdown-value ${netTotalPL >= 0 ? 'positive' : 'negative'}`;
-            document.getElementById('summaryTotalTrades').textContent = filteredTrades.length;
-            document.getElementById('summaryWinRate').textContent = `${winRate.toFixed(1)}%`;
-            document.getElementById('summaryWinRate').className = `breakdown-value ${winRate >= 50 ? 'positive' : 'negative'}`;
-            document.getElementById('summaryProfitFactor').textContent = profitFactor.toFixed(2);
-            document.getElementById('summaryProfitFactor').className = `breakdown-value ${profitFactor >= 1 ? 'positive' : 'negative'}`;
-            document.getElementById('summaryLargestWin').textContent = `$${largestWin.toFixed(2)}`;
-            document.getElementById('summaryLargestWin').className = `breakdown-value positive`;
-            document.getElementById('summaryLargestLoss').textContent = `$${largestLoss.toFixed(2)}`;
-            document.getElementById('summaryLargestLoss').className = `breakdown-value negative`;
+            const avgWin = wins.length > 0 ? totalWins / wins.length : 0;
+            const avgLoss = losses.length > 0 ? totalLosses / losses.length : 0;
             
-            // Win/Loss Analysis
-            const avgWinningTrade = wins.length > 0 ? totalWins / wins.length : 0;
-            const avgLosingTrade = losses.length > 0 ? totalLosses / losses.length : 0;
+            const pnls = filteredTrades.map(trade => trade.pnl);
+            const largestWin = Math.max(...pnls);
+            const largestLoss = Math.min(...pnls);
             
-            document.getElementById('grossProfit').textContent = `$${totalWins.toFixed(2)}`;
-            document.getElementById('grossLoss').textContent = `$${totalLosses.toFixed(2)}`;
-            document.getElementById('winningTrades').textContent = `${wins.length} (${winRate.toFixed(1)}%)`;
-            document.getElementById('losingTrades').textContent = `${losses.length} (${(100 - winRate).toFixed(1)}%)`;
-            document.getElementById('avgWinningTrade').textContent = `$${avgWinningTrade.toFixed(2)}`;
-            document.getElementById('avgLosingTrade').textContent = `$${avgLosingTrade.toFixed(2)}`;
+            // Update Tradervue-style summary cards
+            document.getElementById('tradervueNetPL').textContent = `$${netPL.toFixed(2)}`;
+            document.getElementById('tradervueNetPL').className = `tradervue-card-value ${netPL >= 0 ? 'positive' : 'negative'}`;
             
-            // Trading Activity
-            const uniqueDates = [...new Set(filteredTrades.map(trade => trade.date))];
-            const tradingDays = uniqueDates.length;
-            const avgTradesPerDay = tradingDays > 0 ? filteredTrades.length / tradingDays : 0;
+            document.getElementById('tradervueTotalTrades').textContent = filteredTrades.length;
+            
+            document.getElementById('tradervueWinRate').textContent = `${winRate.toFixed(1)}%`;
+            document.getElementById('tradervueWinRate').className = `tradervue-card-value ${winRate >= 50 ? 'positive' : 'negative'}`;
+            document.getElementById('tradervueWinLoss').textContent = `${wins.length}W / ${losses.length}L`;
+            
+            document.getElementById('tradervueProfitFactor').textContent = profitFactor.toFixed(2);
+            document.getElementById('tradervueProfitFactor').className = `tradervue-card-value ${profitFactor >= 1 ? 'positive' : 'negative'}`;
+            
+            document.getElementById('tradervueAvgWin').textContent = `$${avgWin.toFixed(2)}`;
+            document.getElementById('tradervueAvgLoss').textContent = `$${avgLoss.toFixed(2)}`;
+            
+            // Update performance breakdown
+            document.getElementById('tradervueGrossProfit').textContent = `$${totalWins.toFixed(2)}`;
+            document.getElementById('tradervueGrossLoss').textContent = `$${totalLosses.toFixed(2)}`;
+            document.getElementById('tradervueTotalFees').textContent = `$${totalDailyFees.toFixed(2)}`;
+            document.getElementById('tradervueLargestWin').textContent = `$${largestWin.toFixed(2)}`;
+            document.getElementById('tradervueLargestLoss').textContent = `$${largestLoss.toFixed(2)}`;
+            
+            // Update win/loss visual bar
+            updateWinLossVisualBar(wins.length, losses.length);
+            
+            // Calculate expectancy and Kelly
+            const expectancy = filteredTrades.length > 0 ? netPL / filteredTrades.length : 0;
+            const kellyPercent = calculateKellyPercent(winRate, avgWin, avgLoss);
+            const sharpeRatio = calculateSharpeRatio(filteredTrades, netPL);
+            const riskRewardRatio = avgLoss !== 0 ? avgWin / avgLoss : 0;
+            
+            document.getElementById('expectancyValue').textContent = `$${expectancy.toFixed(2)}`;
+            document.getElementById('expectancyValue').className = `expectancy-value ${expectancy >= 0 ? 'positive' : 'negative'}`;
+            document.getElementById('kellyPercent').textContent = `${kellyPercent.toFixed(1)}%`;
+            document.getElementById('sharpeRatio').textContent = sharpeRatio.toFixed(2);
+            document.getElementById('riskRewardRatio').textContent = riskRewardRatio.toFixed(2);
+            
+            // Calculate trading statistics
             const totalVolume = filteredTrades.reduce((sum, trade) => sum + trade.amount, 0);
             const avgPositionSize = filteredTrades.length > 0 ? totalVolume / filteredTrades.length : 0;
             const largestPosition = filteredTrades.length > 0 ? Math.max(...filteredTrades.map(trade => trade.amount)) : 0;
             
-            // Calculate average hold time
             const holdTimes = filteredTrades
                 .filter(trade => trade.holdingTime)
                 .map(trade => parseInt(trade.holdingTime.replace('m', '')));
             const avgHoldTime = holdTimes.length > 0 ? 
                 holdTimes.reduce((sum, time) => sum + time, 0) / holdTimes.length : 0;
             
-            document.getElementById('tradingDays').textContent = tradingDays;
-            document.getElementById('avgTradesPerDay').textContent = avgTradesPerDay.toFixed(2);
-            document.getElementById('totalVolumeAnalytics').textContent = `$${totalVolume.toFixed(0)}`;
-            document.getElementById('avgPositionSize').textContent = `$${avgPositionSize.toFixed(0)}`;
-            document.getElementById('largestPosition').textContent = `$${largestPosition.toFixed(0)}`;
-            document.getElementById('avgHoldTime').textContent = `${avgHoldTime.toFixed(0)}m`;
+            const uniqueDates = [...new Set(filteredTrades.map(trade => trade.date))];
+            const tradingDays = uniqueDates.length;
             
-            // Update all other analytics sections
-            updateStreakAnalysis(filteredTrades);
-            updateBestWorstPerformance(filteredTrades);
-            updateTimeAnalysis(filteredTrades);
-            updateSymbolPerformance(filteredTrades);
-            updatePriceRangeAnalysis(filteredTrades);
-            updateDrawdownAnalysis(filteredTrades);
-            updateTotalGainsLosses(filteredTrades);
-            updateTradingHeatmap(filteredTrades);
-            updatePLDistribution(filteredTrades);
+            document.getElementById('tradervueTotalVolume').textContent = `$${totalVolume.toFixed(0)}`;
+            document.getElementById('tradervueAvgPosition').textContent = `$${avgPositionSize.toFixed(0)}`;
+            document.getElementById('tradervueLargestPosition').textContent = `$${largestPosition.toFixed(0)}`;
+            document.getElementById('tradervueAvgHoldTime').textContent = `${avgHoldTime.toFixed(0)}m`;
+            document.getElementById('tradervueTradingDays').textContent = tradingDays;
+            
+            // Update streaks and drawdown
+            updateStreaksAndDrawdown(filteredTrades);
+            
+            // Update day of week performance
+            updateDayOfWeekPerformance(filteredTrades);
+            
+            // Update time performance
+            updateTimePerformance(filteredTrades);
+            
+            // Update symbol analysis
+            updateSymbolAnalysis(filteredTrades);
         }
 
-        function resetAnalyticsDisplay() {
-            // Reset performance summary
-            document.getElementById('summaryNetProfit').textContent = '$0.00';
-            document.getElementById('summaryNetProfit').className = 'breakdown-value';
-            document.getElementById('summaryTotalTrades').textContent = '0';
-            document.getElementById('summaryWinRate').textContent = '0%';
-            document.getElementById('summaryWinRate').className = 'breakdown-value';
-            document.getElementById('summaryProfitFactor').textContent = '0.00';
-            document.getElementById('summaryProfitFactor').className = 'breakdown-value';
-            document.getElementById('summaryLargestWin').textContent = '$0.00';
-            document.getElementById('summaryLargestWin').className = 'breakdown-value';
-            document.getElementById('summaryLargestLoss').textContent = '$0.00';
-            document.getElementById('summaryLargestLoss').className = 'breakdown-value';
-            
-            // Reset other analytics elements
+        function resetTradervueAnalyticsDisplay() {
+            // Reset summary cards
             const elements = [
-                'grossProfit', 'grossLoss', 'winningTrades', 'losingTrades', 'avgWinningTrade', 'avgLosingTrade',
-                'tradingDays', 'avgTradesPerDay', 'totalVolumeAnalytics', 'avgPositionSize', 'largestPosition', 'avgHoldTime',
-                'currentStreak', 'maxWinStreak', 'maxLossStreak', 'bestTradingDay', 'worstTradingDay',
-                'mostProfitableSymbol', 'leastProfitableSymbol', 'bestHour', 'worstHour', 'bestDayOfWeek', 'worstDayOfWeek',
-                'maxDrawdown', 'currentDrawdown', 'recoveryTime', 'totalGains', 'totalLosses'
+                'tradervueNetPL', 'tradervueTotalTrades', 'tradervueWinRate', 'tradervueProfitFactor',
+                'tradervueAvgWin', 'tradervueAvgLoss', 'tradervueGrossProfit', 'tradervueGrossLoss',
+                'tradervueTotalFees', 'tradervueLargestWin', 'tradervueLargestLoss', 'expectancyValue',
+                'kellyPercent', 'sharpeRatio', 'riskRewardRatio', 'tradervueTotalVolume',
+                'tradervueAvgPosition', 'tradervueLargestPosition', 'tradervueAvgHoldTime',
+                'tradervueTradingDays', 'tradervueCurrentStreak', 'tradervueMaxWinStreak',
+                'tradervueMaxLossStreak', 'tradervueMaxDrawdown', 'tradervueCurrentDrawdown'
             ];
             
             elements.forEach(id => {
                 const element = document.getElementById(id);
                 if (element) {
-                    if (id.includes('Symbol') || id.includes('Hour') || id.includes('Day')) {
-                        element.textContent = '-';
-                    } else if (id.includes('Trades') && id !== 'tradingDays') {
-                        element.textContent = '0 (0%)';
-                    } else if (id.includes('Volume') || id.includes('Position') || id.includes('Day') || id.includes('Gains') || id.includes('Losses') || id.includes('Drawdown')) {
-                        element.textContent = '$0.00';
-                    } else if (id === 'recoveryTime') {
-                        element.textContent = '0 days';
-                    } else {
+                    if (id.includes('Trades') || id.includes('Days')) {
                         element.textContent = '0';
+                    } else if (id.includes('Percent') || id.includes('Rate')) {
+                        element.textContent = '0%';
+                    } else {
+                        element.textContent = '$0.00';
                     }
-                    element.className = 'metric-value';
+                    element.className = element.className.replace(/positive|negative/, '');
                 }
             });
             
-            // Reset complex displays
-            document.getElementById('symbolPerformanceList').innerHTML = `
-                <div class="empty-state" style="padding: 20px;">
-                    <div style="color: #64748b; font-size: 13px;" data-lang="no-symbol-data">${translations[currentLanguage]['no-symbol-data'] || 'No symbol data available'}</div>
-                </div>
-            `;
+            document.getElementById('tradervueWinLoss').textContent = '0W / 0L';
+            document.getElementById('maxConsecutiveLosses').textContent = '0';
             
-            document.getElementById('priceRangeAnalysis').innerHTML = `
-                <div class="empty-state" style="padding: 20px;">
-                    <div style="color: #64748b; font-size: 13px;">No price range data available</div>
-                </div>
-            `;
-            
-            document.getElementById('streakIndicator').innerHTML = '';
-            document.getElementById('tradingHeatmap').innerHTML = '';
-            document.getElementById('plDistribution').innerHTML = '';
+            // Reset visualizations
+            document.getElementById('dowGrid').innerHTML = '';
+            document.getElementById('timeGrid').innerHTML = '';
+            document.getElementById('symbolAnalysisGrid').innerHTML = '';
+            updateWinLossVisualBar(0, 0);
         }
 
-        function updateStreakAnalysis(filteredTrades) {
+        function calculateKellyPercent(winRate, avgWin, avgLoss) {
+            if (avgLoss === 0) return 0;
+            const winProb = winRate / 100;
+            const lossProb = 1 - winProb;
+            const kelly = (winProb * avgWin - lossProb * Math.abs(avgLoss)) / Math.abs(avgLoss);
+            return Math.max(0, kelly * 100);
+        }
+
+        function calculateSharpeRatio(trades, netPL) {
+            if (trades.length === 0) return 0;
+            
+            const dailyReturns = {};
+            trades.forEach(trade => {
+                if (!dailyReturns[trade.date]) {
+                    dailyReturns[trade.date] = 0;
+                }
+                dailyReturns[trade.date] += trade.pnl;
+            });
+            
+            const returns = Object.values(dailyReturns);
+            if (returns.length === 0) return 0;
+            
+            const avgReturn = returns.reduce((sum, ret) => sum + ret, 0) / returns.length;
+            const variance = returns.reduce((sum, ret) => sum + Math.pow(ret - avgReturn, 2), 0) / returns.length;
+            const stdDev = Math.sqrt(variance);
+            
+            return stdDev !== 0 ? avgReturn / stdDev : 0;
+        }
+
+        function updateWinLossVisualBar(winCount, lossCount) {
+            const totalTrades = winCount + lossCount;
+            if (totalTrades === 0) {
+                document.getElementById('winBar').style.width = '50%';
+                document.getElementById('lossBar').style.width = '50%';
+                document.getElementById('winBar').innerHTML = '<span>0% Wins</span>';
+                document.getElementById('lossBar').innerHTML = '<span>0% Losses</span>';
+                return;
+            }
+            
+            const winPercent = (winCount / totalTrades) * 100;
+            const lossPercent = (lossCount / totalTrades) * 100;
+            
+            document.getElementById('winBar').style.width = `${winPercent}%`;
+            document.getElementById('lossBar').style.width = `${lossPercent}%`;
+            document.getElementById('winBar').innerHTML = `<span>${winPercent.toFixed(0)}% Wins</span>`;
+            document.getElementById('lossBar').innerHTML = `<span>${lossPercent.toFixed(0)}% Losses</span>`;
+        }
+
+        function updateStreaksAndDrawdown(filteredTrades) {
             let currentStreak = 0;
             let maxWinStreak = 0;
             let maxLossStreak = 0;
             let currentWinStreak = 0;
             let currentLossStreak = 0;
+            let maxConsecutiveLosses = 0;
+            let consecutiveLosses = 0;
             
             const sortedTrades = [...filteredTrades].sort((a, b) => new Date(a.date) - new Date(b.date));
             
+            // Calculate drawdown
+            let cumulativePL = 0;
+            let peak = 0;
+            let maxDrawdown = 0;
+            let currentDrawdown = 0;
+            
             sortedTrades.forEach((trade, index) => {
+                // Streak calculation
                 if (trade.pnl > 0) {
                     currentLossStreak = 0;
                     currentWinStreak++;
                     maxWinStreak = Math.max(maxWinStreak, currentWinStreak);
+                    consecutiveLosses = 0;
                     if (index === sortedTrades.length - 1) {
                         currentStreak = currentWinStreak;
                     }
@@ -3267,336 +3832,177 @@ function changeTradingDate(direction) {
                     currentWinStreak = 0;
                     currentLossStreak++;
                     maxLossStreak = Math.max(maxLossStreak, currentLossStreak);
+                    consecutiveLosses++;
+                    maxConsecutiveLosses = Math.max(maxConsecutiveLosses, consecutiveLosses);
                     if (index === sortedTrades.length - 1) {
                         currentStreak = -currentLossStreak;
                     }
                 }
-            });
-            
-            document.getElementById('currentStreak').textContent = currentStreak;
-            document.getElementById('currentStreak').className = `metric-value ${currentStreak >= 0 ? 'positive' : 'negative'}`;
-            document.getElementById('maxWinStreak').textContent = maxWinStreak;
-            document.getElementById('maxLossStreak').textContent = maxLossStreak;
-            
-            // Create streak visualization
-            const streakIndicator = document.getElementById('streakIndicator');
-            const recentTrades = sortedTrades.slice(-20);
-            streakIndicator.innerHTML = recentTrades.map(trade => {
-                const width = Math.max(4, Math.abs(trade.pnl) / 100 * 20);
-                return `<div class="streak-bar ${trade.pnl >= 0 ? 'win' : 'loss'}" style="width: ${width}px;" title="${trade.symbol}: $${trade.pnl.toFixed(2)}"></div>`;
-            }).join('');
-        }
-
-        function updateBestWorstPerformance(filteredTrades) {
-            // Calculate daily P/L
-            const dailyStats = {};
-            filteredTrades.forEach(trade => {
-                if (!dailyStats[trade.date]) {
-                    dailyStats[trade.date] = 0;
-                }
-                dailyStats[trade.date] += trade.pnl;
-            });
-            
-            const dailyPLs = Object.values(dailyStats);
-            const bestTradingDay = dailyPLs.length > 0 ? Math.max(...dailyPLs) : 0;
-            const worstTradingDay = dailyPLs.length > 0 ? Math.min(...dailyPLs) : 0;
-            
-            document.getElementById('bestTradingDay').textContent = `$${bestTradingDay.toFixed(2)}`;
-            document.getElementById('worstTradingDay').textContent = `$${worstTradingDay.toFixed(2)}`;
-            
-            // Symbol performance for best/worst
-            const symbolStats = {};
-            filteredTrades.forEach(trade => {
-                if (!symbolStats[trade.symbol]) {
-                    symbolStats[trade.symbol] = { totalPL: 0, count: 0 };
-                }
-                symbolStats[trade.symbol].totalPL += trade.pnl;
-                symbolStats[trade.symbol].count++;
-            });
-            
-            const symbolEntries = Object.entries(symbolStats);
-            if (symbolEntries.length > 0) {
-                const sortedSymbols = symbolEntries.sort((a, b) => b[1].totalPL - a[1].totalPL);
-                const mostProfitable = sortedSymbols[0];
-                const leastProfitable = sortedSymbols[sortedSymbols.length - 1];
                 
-                document.getElementById('mostProfitableSymbol').textContent = 
-                    `${mostProfitable[0]} ($${mostProfitable[1].totalPL.toFixed(2)})`;
-                document.getElementById('leastProfitableSymbol').textContent = 
-                    `${leastProfitable[0]} ($${leastProfitable[1].totalPL.toFixed(2)})`;
-            } else {
-                document.getElementById('mostProfitableSymbol').textContent = '-';
-                document.getElementById('leastProfitableSymbol').textContent = '-';
-            }
-        }
-
-        function updateTimeAnalysis(filteredTrades) {
-            // Hour analysis
-            const hourStats = {};
-            filteredTrades.forEach(trade => {
-                if (trade.entryTime) {
-                    const hour = parseInt(trade.entryTime.split(':')[0]);
-                    if (!hourStats[hour]) {
-                        hourStats[hour] = { count: 0, totalPL: 0 };
-                    }
-                    hourStats[hour].count++;
-                    hourStats[hour].totalPL += trade.pnl;
+                // Drawdown calculation
+                cumulativePL += trade.pnl;
+                if (cumulativePL > peak) {
+                    peak = cumulativePL;
+                }
+                const drawdown = peak - cumulativePL;
+                if (drawdown > maxDrawdown) {
+                    maxDrawdown = drawdown;
+                }
+                if (index === sortedTrades.length - 1) {
+                    currentDrawdown = drawdown;
                 }
             });
             
-            const bestHour = Object.entries(hourStats)
-                .sort((a, b) => b[1].totalPL - a[1].totalPL)[0];
-            const worstHour = Object.entries(hourStats)
-                .sort((a, b) => a[1].totalPL - b[1].totalPL)[0];
-            
-            document.getElementById('bestHour').textContent = bestHour ? 
-                `${bestHour[0]}:00 ($${bestHour[1].totalPL.toFixed(2)})` : '-';
-            document.getElementById('worstHour').textContent = worstHour ? 
-                `${worstHour[0]}:00 ($${worstHour[1].totalPL.toFixed(2)})` : '-';
-            
-            // Day of week analysis
+            document.getElementById('tradervueCurrentStreak').textContent = currentStreak;
+            document.getElementById('tradervueCurrentStreak').className = `performance-value ${currentStreak >= 0 ? 'positive' : 'negative'}`;
+            document.getElementById('tradervueMaxWinStreak').textContent = maxWinStreak;
+            document.getElementById('tradervueMaxLossStreak').textContent = maxLossStreak;
+            document.getElementById('maxConsecutiveLosses').textContent = maxConsecutiveLosses;
+            document.getElementById('tradervueMaxDrawdown').textContent = `$${maxDrawdown.toFixed(2)}`;
+            document.getElementById('tradervueCurrentDrawdown').textContent = `$${currentDrawdown.toFixed(2)}`;
+            document.getElementById('tradervueCurrentDrawdown').className = `performance-value ${currentDrawdown === 0 ? 'positive' : 'negative'}`;
+        }
+
+        function updateDayOfWeekPerformance(filteredTrades) {
+            const dowGrid = document.getElementById('dowGrid');
             const dayStats = {};
-            const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-            const daysOfWeekKo = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+            const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const daysOfWeekKo = ['일', '월', '화', '수', '목', '금', '토'];
+            const dayNames = currentLanguage === 'ko' ? daysOfWeekKo : daysOfWeek;
+            
+            for (let i = 0; i < 7; i++) {
+                dayStats[i] = { count: 0, totalPL: 0 };
+            }
             
             filteredTrades.forEach(trade => {
                 const day = new Date(trade.date).getDay();
-                if (!dayStats[day]) {
-                    dayStats[day] = { count: 0, totalPL: 0 };
-                }
                 dayStats[day].count++;
                 dayStats[day].totalPL += trade.pnl;
             });
             
-            const bestDayOfWeek = Object.entries(dayStats)
-                .sort((a, b) => b[1].totalPL - a[1].totalPL)[0];
-            const worstDayOfWeek = Object.entries(dayStats)
-                .sort((a, b) => a[1].totalPL - b[1].totalPL)[0];
-            
-            document.getElementById('bestDayOfWeek').textContent = bestDayOfWeek ? 
-                (currentLanguage === 'ko' ? daysOfWeekKo[bestDayOfWeek[0]] : daysOfWeek[bestDayOfWeek[0]]) : '-';
-            document.getElementById('worstDayOfWeek').textContent = worstDayOfWeek ? 
-                (currentLanguage === 'ko' ? daysOfWeekKo[worstDayOfWeek[0]] : daysOfWeek[worstDayOfWeek[0]]) : '-';
+            dowGrid.innerHTML = dayNames.map((dayName, index) => {
+                const stats = dayStats[index];
+                return `
+                    <div class="dow-day">
+                        <div class="dow-day-name">${dayName}</div>
+                        <div class="dow-day-pnl ${stats.totalPL > 0 ? 'positive' : stats.totalPL < 0 ? 'negative' : 'neutral'}">
+                            $${stats.totalPL.toFixed(0)}
+                        </div>
+                        <div class="dow-day-count">${stats.count} trades</div>
+                    </div>
+                `;
+            }).join('');
         }
 
-        function updateSymbolPerformance(filteredTrades) {
+        function updateTimePerformance(filteredTrades) {
+            const timeGrid = document.getElementById('timeGrid');
+            const timeStats = {};
+            
+            // Group by 4-hour blocks
+            const timeBlocks = [
+                { start: 0, end: 3, label: '00-03' },
+                { start: 4, end: 7, label: '04-07' },
+                { start: 8, end: 11, label: '08-11' },
+                { start: 12, end: 15, label: '12-15' },
+                { start: 16, end: 19, label: '16-19' },
+                { start: 20, end: 23, label: '20-23' }
+            ];
+            
+            timeBlocks.forEach((block, index) => {
+                timeStats[index] = { count: 0, totalPL: 0, label: block.label };
+            });
+            
+            filteredTrades.forEach(trade => {
+                if (trade.entryTime) {
+                    const hour = parseInt(trade.entryTime.split(':')[0]);
+                    const blockIndex = timeBlocks.findIndex(block => hour >= block.start && hour <= block.end);
+                    if (blockIndex !== -1) {
+                        timeStats[blockIndex].count++;
+                        timeStats[blockIndex].totalPL += trade.pnl;
+                    }
+                }
+            });
+            
+            timeGrid.innerHTML = Object.values(timeStats).map(stats => `
+                <div class="time-block">
+                    <div class="time-block-hour">${stats.label}</div>
+                    <div class="time-block-pnl ${stats.totalPL > 0 ? 'positive' : stats.totalPL < 0 ? 'negative' : 'neutral'}">
+                        $${stats.totalPL.toFixed(0)}
+                    </div>
+                    <div style="font-size: 10px; color: #64748b;">${stats.count}</div>
+                </div>
+            `).join('');
+        }
+
+        function updateSymbolAnalysis(filteredTrades) {
+            const symbolGrid = document.getElementById('symbolAnalysisGrid');
             const symbolStats = {};
+            
             filteredTrades.forEach(trade => {
                 if (!symbolStats[trade.symbol]) {
                     symbolStats[trade.symbol] = {
                         count: 0,
                         totalPL: 0,
                         wins: 0,
-                        losses: 0
+                        losses: 0,
+                        totalVolume: 0
                     };
                 }
                 symbolStats[trade.symbol].count++;
                 symbolStats[trade.symbol].totalPL += trade.pnl;
+                symbolStats[trade.symbol].totalVolume += trade.amount;
                 if (trade.pnl > 0) symbolStats[trade.symbol].wins++;
                 else if (trade.pnl < 0) symbolStats[trade.symbol].losses++;
             });
             
-            const symbolPerfHtml = Object.entries(symbolStats)
-                .sort((a, b) => b[1].totalPL - a[1].totalPL)
-                .map(([symbol, stats]) => {
-                    const symbolWinRate = stats.count > 0 ? (stats.wins / stats.count) * 100 : 0;
-                    return `
-                        <div class="metric-row">
-                            <span class="metric-label">${symbol} (${stats.count})</span>
-                            <span class="metric-value ${stats.totalPL >= 0 ? 'positive' : 'negative'}">
-                                $${stats.totalPL.toFixed(2)} (${symbolWinRate.toFixed(0)}%)
-                            </span>
-                        </div>
-                    `;
-                }).join('');
+            const sortedSymbols = Object.entries(symbolStats)
+                .sort((a, b) => b[1].totalPL - a[1].totalPL);
             
-            document.getElementById('symbolPerformanceList').innerHTML = symbolPerfHtml || `
-                <div class="empty-state" style="padding: 20px;">
-                    <div style="color: #64748b; font-size: 13px;" data-lang="no-symbol-data">${translations[currentLanguage]['no-symbol-data'] || 'No symbol data available'}</div>
-                </div>
-            `;
-        }
-
-        function updatePriceRangeAnalysis(filteredTrades) {
-            const priceRanges = [
-                { min: 0, max: 1, label: '$0-$1' },
-                { min: 1, max: 5, label: '$1-$5' },
-                { min: 5, max: 10, label: '$5-$10' },
-                { min: 10, max: 50, label: '$10-$50' },
-                { min: 50, max: 100, label: '$50-$100' },
-                { min: 100, max: 500, label: '$100-$500' },
-                { min: 500, max: Infinity, label: '$500+' }
-            ];
-
-            const rangeStats = priceRanges.map(range => {
-                const rangetrades = filteredTrades.filter(trade => 
-                    trade.buyPrice >= range.min && trade.buyPrice < range.max
-                );
-                
-                const totalPL = rangeTradesSummer(rangesTrades.reduce((sum, trade) => sum + trade.pnl, 0));
-                const wins = rangesTrades.filter(trade => trade.pnl > 0).length;
-                const winRate = rangesTrades.length > 0 ? (wins / rangesTrades.length) * 100 : 0;
-                
-                return {
-                    ...range,
-                    count: rangesTrades.length,
-                    totalPL,
-                    winRate
-                };
-            }).filter(range => range.count > 0);
-
-            const rangeHtml = rangeStats.map(range => `
-                <div class="price-range-item">
-                    <div class="price-range-header">
-                        <span class="price-range-label">${range.label}</span>
-                        <span class="${range.totalPL >= 0 ? 'positive' : 'negative'}">$${range.totalPL.toFixed(2)}</span>
+            if (sortedSymbols.length === 0) {
+                symbolGrid.innerHTML = `
+                    <div class="empty-state">
+                        <div style="color: #64748b; font-size: 14px;">No symbol data available</div>
                     </div>
-                    <div class="price-range-stats">
-                        <div class="price-range-stat">
-                            <div class="price-range-stat-label">Trades</div>
-                            <div class="price-range-stat-value">${range.count}</div>
-                        </div>
-                        <div class="price-range-stat">
-                            <div class="price-range-stat-label">Win Rate</div>
-                            <div class="price-range-stat-value ${range.winRate >= 50 ? 'positive' : 'negative'}">${range.winRate.toFixed(0)}%</div>
-                        </div>
-                        <div class="price-range-stat">
-                            <div class="price-range-stat-label">Avg P/L</div>
-                            <div class="price-range-stat-value ${range.totalPL >= 0 ? 'positive' : 'negative'}">$${(range.totalPL / range.count).toFixed(2)}</div>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-
-            document.getElementById('priceRangeAnalysis').innerHTML = rangeHtml || `
-                <div class="empty-state" style="padding: 20px;">
-                    <div style="color: #64748b; font-size: 13px;">No price range data available</div>
-                </div>
-            `;
-        }
-
-        function updateDrawdownAnalysis(filteredTrades) {
-            const sortedTrades = [...filteredTrades].sort((a, b) => new Date(a.date) - new Date(b.date));
-            
-            let cumulativePL = 0;
-            let peak = 0;
-            let maxDrawdown = 0;
-            let currentDrawdown = 0;
-            let recoveryDays = 0;
-            let drawdownStart = null;
-            
-            sortedTrades.forEach((trade, index) => {
-                cumulativePL += trade.pnl;
-                
-                if (cumulativePL > peak) {
-                    peak = cumulativePL;
-                    if (drawdownStart) {
-                        recoveryDays = Math.max(recoveryDays, index - drawdownStart);
-                        drawdownStart = null;
-                    }
-                }
-                
-                const drawdown = peak - cumulativePL;
-                if (drawdown > maxDrawdown) {
-                    maxDrawdown = drawdown;
-                }
-                
-                if (index === sortedTrades.length - 1) {
-                    currentDrawdown = drawdown;
-                }
-                
-                if (drawdown > 0 && !drawdownStart) {
-                    drawdownStart = index;
-                }
-            });
-            
-            document.getElementById('maxDrawdown').textContent = `$${maxDrawdown.toFixed(2)}`;
-            document.getElementById('currentDrawdown').textContent = `$${currentDrawdown.toFixed(2)}`;
-            document.getElementById('currentDrawdown').className = `metric-value ${currentDrawdown === 0 ? 'positive' : 'negative'}`;
-            document.getElementById('recoveryTime').textContent = `${recoveryDays} days`;
-        }
-
-        function updateTotalGainsLosses(filteredTrades) {
-            const totalGains = filteredTrades.filter(trade => trade.pnl > 0).reduce((sum, trade) => sum + trade.pnl, 0);
-            const totalLosses = Math.abs(filteredTrades.filter(trade => trade.pnl < 0).reduce((sum, trade) => sum + trade.pnl, 0));
-            
-            document.getElementById('totalGains').textContent = `$${totalGains.toFixed(2)}`;
-            document.getElementById('totalLosses').textContent = `$${totalLosses.toFixed(2)}`;
-        }
-
-        function updateTradingHeatmap(filteredTrades) {
-            const heatmapContainer = document.getElementById('tradingHeatmap');
-            const hourlyData = {};
-            
-            for (let hour = 0; hour < 24; hour++) {
-                hourlyData[hour] = { count: 0, totalPL: 0 };
-            }
-            
-            filteredTrades.forEach(trade => {
-                if (trade.entryTime) {
-                    const hour = parseInt(trade.entryTime.split(':')[0]);
-                    hourlyData[hour].count++;
-                    hourlyData[hour].totalPL += trade.pnl;
-                }
-            });
-            
-            const values = Object.values(hourlyData).map(data => data.totalPL);
-            const maxPL = Math.max(...values);
-            const minPL = Math.min(...values);
-            const range = maxPL - minPL;
-            
-            heatmapContainer.innerHTML = '';
-            for (let hour = 0; hour < 24; hour++) {
-                const data = hourlyData[hour];
-                const intensity = range > 0 ? (data.totalPL - minPL) / range : 0.5;
-                const cell = document.createElement('div');
-                cell.className = 'heat-map-cell';
-                cell.textContent = hour.toString().padStart(2, '0');
-                
-                if (data.count > 0) {
-                    if (data.totalPL > 0) {
-                        cell.style.backgroundColor = `rgba(16, 185, 129, ${0.2 + intensity * 0.8})`;
-                    } else {
-                        cell.style.backgroundColor = `rgba(239, 68, 68, ${0.2 + (1 - intensity) * 0.8})`;
-                    }
-                    cell.title = `${hour}:00 - ${data.count} trades, $${data.totalPL.toFixed(2)} P/L`;
-                }
-                
-                heatmapContainer.appendChild(cell);
-            }
-        }
-
-        function updatePLDistribution(filteredTrades) {
-            const distributionContainer = document.getElementById('plDistribution');
-            const pnls = filteredTrades.map(trade => trade.pnl);
-            
-            if (pnls.length === 0) {
-                distributionContainer.innerHTML = '<div style="text-align: center; color: #64748b;">No data</div>';
+                `;
                 return;
             }
             
-            const min = Math.min(...pnls);
-            const max = Math.max(...pnls);
-            const bins = 10;
-            const binSize = (max - min) / bins;
-            const distribution = new Array(bins).fill(0);
-            
-            pnls.forEach(pnl => {
-                const binIndex = Math.min(Math.floor((pnl - min) / binSize), bins - 1);
-                distribution[binIndex]++;
-            });
-            
-            const maxCount = Math.max(...distribution);
-            
-            distributionContainer.innerHTML = distribution.map((count, index) => {
-                const height = maxCount > 0 ? (count / maxCount) * 100 : 0;
-                const binStart = min + index * binSize;
-                const isNegative = binStart < 0;
-                return `<div class="distribution-bar ${isNegative ? 'negative' : ''}" style="height: ${height}%" title="Bin: $${binStart.toFixed(0)} to $${(binStart + binSize).toFixed(0)}, Count: ${count}"></div>`;
+            symbolGrid.innerHTML = sortedSymbols.map(([symbol, stats]) => {
+                const winRate = stats.count > 0 ? (stats.wins / stats.count) * 100 : 0;
+                const avgTrade = stats.count > 0 ? stats.totalPL / stats.count : 0;
+                
+                return `
+                    <div class="symbol-card">
+                        <div class="symbol-header">
+                            <div class="symbol-name">${symbol}</div>
+                            <div class="symbol-pnl ${stats.totalPL >= 0 ? 'positive' : 'negative'}">
+                                $${stats.totalPL.toFixed(2)}
+                            </div>
+                        </div>
+                        <div class="symbol-stats">
+                            <div class="symbol-stat">
+                                <div class="symbol-stat-label">Trades</div>
+                                <div class="symbol-stat-value">${stats.count}</div>
+                            </div>
+                            <div class="symbol-stat">
+                                <div class="symbol-stat-label">Win Rate</div>
+                                <div class="symbol-stat-value ${winRate >= 50 ? 'positive' : 'negative'}">${winRate.toFixed(0)}%</div>
+                            </div>
+                            <div class="symbol-stat">
+                                <div class="symbol-stat-label">Avg P/L</div>
+                                <div class="symbol-stat-value ${avgTrade >= 0 ? 'positive' : 'negative'}">$${avgTrade.toFixed(2)}</div>
+                            </div>
+                            <div class="symbol-stat">
+                                <div class="symbol-stat-label">Volume</div>
+                                <div class="symbol-stat-value">$${stats.totalVolume.toFixed(0)}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
             }).join('');
         }
 
-        // Calendar related functions
+        // Calendar related functions with fees included
         function renderCalendar() {
             const grid = document.getElementById('calendarGrid');
             const year = calendarDate.getFullYear();
@@ -3625,7 +4031,6 @@ function changeTradingDate(direction) {
                 const dayElement = document.createElement('div');
                 dayElement.className = 'calendar-day';
                 
-                // Use EST date for calendar display
                 const estDate = getESTTradingDate(currentDate);
                 const dateString = formatTradingDate(estDate);
                 dayElement.dataset.date = dateString;
@@ -3649,7 +4054,9 @@ function changeTradingDate(direction) {
                 const dayTrades = trades.filter(trade => trade.date === dateString);
                 
                 if (dayTrades.length > 0) {
-                    const totalPnL = dayTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+                    const tradePL = dayTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+                    const dayFee = dailyFees[dateString] || 0;
+                    const totalPnL = tradePL - dayFee;
                     
                     const pnlElement = document.createElement('div');
                     pnlElement.className = `calendar-day-pnl ${totalPnL > 0 ? 'positive' : totalPnL < 0 ? 'negative' : 'neutral'}`;
@@ -3733,7 +4140,23 @@ function changeTradingDate(direction) {
                     return timeB.localeCompare(timeA);
                 });
                 
-                dayTradesList.innerHTML = dayTrades.map(trade => `
+                const dayFee = dailyFees[dateString] || 0;
+                const tradePL = dayTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+                const netDayPL = tradePL - dayFee;
+                
+                let content = '';
+                if (dayFee > 0) {
+                    content += `
+                        <div class="day-trade-item" style="background: #374151;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="color: #f59e0b; font-weight: 600;">Daily Fees</span>
+                                <span style="color: #ef4444; font-weight: 600;">-$${dayFee.toFixed(2)}</span>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                content += dayTrades.map(trade => `
                     <div class="day-trade-item">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
                             <span class="trade-symbol">${trade.symbol}</span>
@@ -3745,6 +4168,17 @@ function changeTradingDate(direction) {
                         ${trade.notes ? `<div style="font-size: 10px; color: #94a3b8; margin-top: 4px;">${trade.notes}</div>` : ''}
                     </div>
                 `).join('');
+                
+                if (dayFee > 0) {
+                    content += `
+                        <div style="margin-top: 12px; padding-top: 8px; border-top: 1px solid #334155; text-align: center;">
+                            <span style="color: #94a3b8; font-size: 12px;">Net P/L: </span>
+                            <span style="color: ${netDayPL >= 0 ? '#10b981' : '#ef4444'}; font-weight: 600;">$${netDayPL.toFixed(2)}</span>
+                        </div>
+                    `;
+                }
+                
+                dayTradesList.innerHTML = content;
             }
             
             dayDetails.style.display = 'block';
@@ -3810,7 +4244,17 @@ function changeTradingDate(direction) {
                     return tradeDate >= week.start && tradeDate <= week.end;
                 });
                 
-                const totalPL = weekTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+                const tradePL = weekTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+                
+                // Calculate weekly fees
+                let weeklyFees = 0;
+                const weekDates = [];
+                for (let d = new Date(week.start); d <= week.end; d.setDate(d.getDate() + 1)) {
+                    const dateStr = formatTradingDate(d);
+                    weeklyFees += dailyFees[dateStr] || 0;
+                }
+                
+                const totalPL = tradePL - weeklyFees;
                 const tradeCount = weekTrades.length;
                 
                 const weekLabel = currentLanguage === 'ko' ? `${index + 1}주차` : `Week ${index + 1}`;
@@ -3895,7 +4339,16 @@ function changeTradingDate(direction) {
             }
             
             const totalTrades = filteredTrades.length;
-            const totalPL = filteredTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+            const tradePL = filteredTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+            
+            // Calculate period fees
+            let periodFees = 0;
+            const uniqueDates = [...new Set(filteredTrades.map(trade => trade.date))];
+            uniqueDates.forEach(date => {
+                periodFees += dailyFees[date] || 0;
+            });
+            
+            const totalPL = tradePL - periodFees;
             
             const dailyStats = {};
             filteredTrades.forEach(trade => {
@@ -3903,6 +4356,12 @@ function changeTradingDate(direction) {
                     dailyStats[trade.date] = 0;
                 }
                 dailyStats[trade.date] += trade.pnl;
+            });
+            
+            // Include fees in daily stats
+            Object.keys(dailyStats).forEach(date => {
+                const dayFee = dailyFees[date] || 0;
+                dailyStats[date] -= dayFee;
             });
             
             const dailyPLs = Object.values(dailyStats);
@@ -3927,6 +4386,7 @@ function changeTradingDate(direction) {
         function exportData() {
             const exportData = {
                 trades: trades,
+                notes: notes,
                 dailyFees: dailyFees
             };
             const dataStr = JSON.stringify(exportData, null, 2);
@@ -3956,15 +4416,20 @@ function changeTradingDate(direction) {
                                 ...trade,
                                 notes: trade.notes || ''
                             }));
+                            if (importedData.notes && Array.isArray(importedData.notes)) {
+                                notes = importedData.notes;
+                            }
                             if (importedData.dailyFees) {
                                 dailyFees = importedData.dailyFees;
                             }
                             saveTrades();
+                            saveNotes();
                             localStorage.setItem('tradingPlatformDailyFees', JSON.stringify(dailyFees));
                             updateStats();
                             renderCalendar();
                             updateAllTradesList();
                             updateAnalytics();
+                            renderNotes();
                             loadDailyFees();
                             showToast(currentLanguage === 'ko' ? '데이터가 가져와졌습니다' : 'Data imported');
                         } else {
@@ -3985,76 +4450,20 @@ function changeTradingDate(direction) {
             
             if (confirm(confirmMessage)) {
                 trades = [];
+                notes = [];
                 dailyFees = {};
                 saveTrades();
+                saveNotes();
                 localStorage.setItem('tradingPlatformDailyFees', JSON.stringify(dailyFees));
                 updateStats();
                 renderCalendar();
                 updateAllTradesList();
                 updateAnalytics();
+                renderNotes();
                 clearCalendarRange();
                 loadDailyFees();
                 showToast(currentLanguage === 'ko' ? '모든 데이터가 삭제됨' : 'All data cleared');
             }
-        }
-
-        // Fix the price range analysis function
-        function updatePriceRangeAnalysis(filteredTrades) {
-            const priceRanges = [
-                { min: 0, max: 1, label: '$0-$1' },
-                { min: 1, max: 5, label: '$1-$5' },
-                { min: 5, max: 10, label: '$5-$10' },
-                { min: 10, max: 50, label: '$10-$50' },
-                { min: 50, max: 100, label: '$50-$100' },
-                { min: 100, max: 500, label: '$100-$500' },
-                { min: 500, max: Infinity, label: '$500+' }
-            ];
-
-            const rangeStats = priceRanges.map(range => {
-                const rangeTrades = filteredTrades.filter(trade => 
-                    trade.buyPrice >= range.min && trade.buyPrice < range.max
-                );
-                
-                const totalPL = rangeTrades.reduce((sum, trade) => sum + trade.pnl, 0);
-                const wins = rangeTrades.filter(trade => trade.pnl > 0).length;
-                const winRate = rangeTrades.length > 0 ? (wins / rangeTrades.length) * 100 : 0;
-                
-                return {
-                    ...range,
-                    count: rangeTrades.length,
-                    totalPL,
-                    winRate
-                };
-            }).filter(range => range.count > 0);
-
-            const rangeHtml = rangeStats.map(range => `
-                <div class="price-range-item">
-                    <div class="price-range-header">
-                        <span class="price-range-label">${range.label}</span>
-                        <span class="${range.totalPL >= 0 ? 'positive' : 'negative'}">$${range.totalPL.toFixed(2)}</span>
-                    </div>
-                    <div class="price-range-stats">
-                        <div class="price-range-stat">
-                            <div class="price-range-stat-label">Trades</div>
-                            <div class="price-range-stat-value">${range.count}</div>
-                        </div>
-                        <div class="price-range-stat">
-                            <div class="price-range-stat-label">Win Rate</div>
-                            <div class="price-range-stat-value ${range.winRate >= 50 ? 'positive' : 'negative'}">${range.winRate.toFixed(0)}%</div>
-                        </div>
-                        <div class="price-range-stat">
-                            <div class="price-range-stat-label">Avg P/L</div>
-                            <div class="price-range-stat-value ${range.totalPL >= 0 ? 'positive' : 'negative'}">$${(range.totalPL / range.count).toFixed(2)}</div>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-
-            document.getElementById('priceRangeAnalysis').innerHTML = rangeHtml || `
-                <div class="empty-state" style="padding: 20px;">
-                    <div style="color: #64748b; font-size: 13px;">No price range data available</div>
-                </div>
-            `;
         }
     </script>
 </body>
