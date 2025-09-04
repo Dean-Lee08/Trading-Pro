@@ -1667,7 +1667,6 @@
                                 <th data-lang="time">Time</th>
                                 <th data-lang="pnl">P&L</th>
                                 <th data-lang="return-pct">Return %</th>
-                                <th>Notes</th>
                                 <th data-lang="actions">Actions</th>
                             </tr>
                         </thead>
@@ -3649,7 +3648,9 @@ function changeTradingDate(direction) {
                 const dayTrades = trades.filter(trade => trade.date === dateString);
                 
                 if (dayTrades.length > 0) {
-                    const totalPnL = dayTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+                    const tradePnL = dayTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+                    const dailyFee = dailyFees[dateString] || 0;
+                    const totalPnL = tradePnL - dailyFee;
                     
                     const pnlElement = document.createElement('div');
                     pnlElement.className = `calendar-day-pnl ${totalPnL > 0 ? 'positive' : totalPnL < 0 ? 'negative' : 'neutral'}`;
@@ -3810,7 +3811,11 @@ function changeTradingDate(direction) {
                     return tradeDate >= week.start && tradeDate <= week.end;
                 });
                 
-                const totalPL = weekTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+                const tradePL = weekTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+                // 주간 수수료 계산
+                const weekDates = [...new Set(weekTrades.map(trade => trade.date))];
+                const weekFees = weekDates.reduce((sum, date) => sum + (dailyFees[date] || 0), 0);
+                const totalPL = tradePL - weekFees;
                 const tradeCount = weekTrades.length;
                 
                 const weekLabel = currentLanguage === 'ko' ? `${index + 1}주차` : `Week ${index + 1}`;
@@ -3894,8 +3899,13 @@ function changeTradingDate(direction) {
                 periodLabel = `${monthNames[month]} ${year}`;
             }
             
-            const totalTrades = filteredTrades.length;
-            const totalPL = filteredTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+           const totalTrades = filteredTrades.length;
+            const tradePL = filteredTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+            
+            // 해당 기간의 수수료 계산
+            const uniqueDatesInPeriod = [...new Set(filteredTrades.map(trade => trade.date))];
+            const totalFeesInPeriod = uniqueDatesInPeriod.reduce((sum, date) => sum + (dailyFees[date] || 0), 0);
+            const totalPL = tradePL - totalFeesInPeriod;
             
             const dailyStats = {};
             filteredTrades.forEach(trade => {
@@ -3903,6 +3913,11 @@ function changeTradingDate(direction) {
                     dailyStats[trade.date] = 0;
                 }
                 dailyStats[trade.date] += trade.pnl;
+            });
+            
+            // 각 날짜별로 수수료 차감
+            Object.keys(dailyStats).forEach(date => {
+                dailyStats[date] -= (dailyFees[date] || 0);
             });
             
             const dailyPLs = Object.values(dailyStats);
