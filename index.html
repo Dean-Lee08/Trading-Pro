@@ -3966,9 +3966,7 @@
          document.getElementById('detailTotalPL').textContent = `$${netTotalPL.toFixed(2)}`;
          document.getElementById('detailTotalPL').className = `detail-value ${netTotalPL >= 0 ? 'positive' : 'negative'}`;
          document.getElementById('detailTotalGain').textContent = `$${totalWins.toFixed(2)}`;
-         document.getElementById('detailTotalGain').className = 'detail-value positive';
          document.getElementById('detailTotalLoss').textContent = `$${totalLosses.toFixed(2)}`;
-         document.getElementById('detailTotalLoss').className = 'detail-value negative';
          document.getElementById('detailTotalFees').textContent = `$${totalDailyFees.toFixed(2)}`;
          document.getElementById('detailTotalVolume').textContent = `$${totalVolume.toFixed(2)}`;
          document.getElementById('detailProfitFactor').textContent = profitFactor.toFixed(2);
@@ -3983,17 +3981,11 @@
          const largestLoss = filteredTrades.length > 0 ? Math.min(...pnls) : 0;
 
          document.getElementById('detailWinningTrades').textContent = `${wins.length} (${winRate.toFixed(1)}%)`;
-         document.getElementById('detailWinningTrades').className = 'detail-value positive';
          document.getElementById('detailLosingTrades').textContent = `${losses.length} (${(100 - winRate).toFixed(1)}%)`;
-         document.getElementById('detailLosingTrades').className = 'detail-value negative';
          document.getElementById('detailAvgWinningTrade').textContent = `$${avgWinningTrade.toFixed(2)}`;
-         document.getElementById('detailAvgWinningTrade').className = 'detail-value positive';
          document.getElementById('detailAvgLosingTrade').textContent = `$${avgLosingTrade.toFixed(2)}`;
-         document.getElementById('detailAvgLosingTrade').className = 'detail-value negative';
          document.getElementById('detailLargestWin').textContent = `$${largestWin.toFixed(2)}`;
-         document.getElementById('detailLargestWin').className = 'detail-value positive';
          document.getElementById('detailLargestLoss').textContent = `$${largestLoss.toFixed(2)}`;
-         document.getElementById('detailLargestLoss').className = 'detail-value negative';
      }
 
      function updateDailyPerformanceDetails(filteredTrades, uniqueDatesForFees, totalDailyFees) {
@@ -4021,14 +4013,10 @@
          const avgDailyFees = uniqueDatesForFees.length > 0 ? totalDailyFees / uniqueDatesForFees.length : 0;
 
          document.getElementById('detailDailyPerWin').textContent = winDays > 0 ? `$${(dailyPLs.filter(pnl => pnl > 0).reduce((sum, pnl) => sum + pnl, 0) / winDays).toFixed(2)}` : '$0.00';
-         document.getElementById('detailDailyPerWin').className = 'detail-value positive';
          document.getElementById('detailDailyPerLoss').textContent = lossDays > 0 ? `$${(dailyPLs.filter(pnl => pnl < 0).reduce((sum, pnl) => sum + pnl, 0) / lossDays).toFixed(2)}` : '$0.00';
-         document.getElementById('detailDailyPerLoss').className = 'detail-value negative';
          document.getElementById('detailDailyPerFees').textContent = `$${avgDailyFees.toFixed(2)}`;
          document.getElementById('detailBestTradingDay').textContent = `$${bestTradingDay.toFixed(2)}`;
-         document.getElementById('detailBestTradingDay').className = 'detail-value positive';
          document.getElementById('detailWorstTradingDay').textContent = `$${worstTradingDay.toFixed(2)}`;
-         document.getElementById('detailWorstTradingDay').className = 'detail-value negative';
          document.getElementById('detailAvgDailyPL').textContent = `$${avgDailyPL.toFixed(2)}`;
          document.getElementById('detailAvgDailyPL').className = `detail-value ${avgDailyPL >= 0 ? 'positive' : 'negative'}`;
      }
@@ -4265,15 +4253,12 @@
          const riskRewardRatio = avgLoss > 0 ? avgWin / avgLoss : 0;
 
          document.getElementById('detailMaxDrawdown').textContent = `$${maxDrawdown.toFixed(2)}`;
-         document.getElementById('detailMaxDrawdown').className = 'detail-value negative';
          document.getElementById('detailCurrentDrawdown').textContent = `$${currentDrawdown.toFixed(2)}`;
          document.getElementById('detailCurrentDrawdown').className = `detail-value ${currentDrawdown === 0 ? 'positive' : 'negative'}`;
          document.getElementById('detailRecoveryFactor').textContent = recoveryFactor.toFixed(2);
          document.getElementById('detailRecoveryFactor').className = `detail-value ${recoveryFactor >= 1 ? 'positive' : 'negative'}`;
          document.getElementById('detailMaxDailyGain').textContent = `$${maxDailyGain.toFixed(2)}`;
-         document.getElementById('detailMaxDailyGain').className = 'detail-value positive';
          document.getElementById('detailMaxDailyLoss').textContent = `$${maxDailyLoss.toFixed(2)}`;
-         document.getElementById('detailMaxDailyLoss').className = 'detail-value negative';
          document.getElementById('detailRiskRewardRatio').textContent = riskRewardRatio.toFixed(2);
          document.getElementById('detailRiskRewardRatio').className = `detail-value ${riskRewardRatio >= 1 ? 'positive' : 'negative'}`;
      }
@@ -4316,6 +4301,7 @@
                  } else {
                      element.textContent = '0';
                  }
+                 element.className = 'detail-value';
              }
          });
 
