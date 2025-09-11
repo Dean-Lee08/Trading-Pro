@@ -4306,7 +4306,16 @@
                  } else {
                      element.textContent = '0';
                  }
-                 element.className = 'detail-value';
+                 if (id.includes('TotalGain') || id.includes('BestTradingDay') || id.includes('LargestWin') || 
+    id.includes('DailyPerWin') || id.includes('MaxDailyGain') || id.includes('MostProfitable')) {
+    element.className = 'detail-value positive';
+} else if (id.includes('TotalLoss') || id.includes('WorstTradingDay') || id.includes('LargestLoss') || 
+           id.includes('DailyPerLoss') || id.includes('MaxDailyLoss') || id.includes('LeastProfitable') || 
+           id.includes('MaxDrawdown')) {
+    element.className = 'detail-value negative';
+} else {
+    element.className = 'detail-value';
+}
              }
          });
 
