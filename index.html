@@ -946,8 +946,8 @@
      }
 
      .detail-card {
-         background: #334155;
-         border: 1px solid #475569;
+         background: #0f172a;
+         border: 1px solid #334155;
          border-radius: 8px;
          padding: 16px;
      }
@@ -958,7 +958,7 @@
          font-weight: 600;
          margin-bottom: 12px;
          padding-bottom: 8px;
-         border-bottom: 1px solid #475569;
+         border-bottom: 1px solid #334155;
      }
 
      .detail-item {
@@ -966,7 +966,7 @@
          justify-content: space-between;
          align-items: center;
          padding: 6px 0;
-         border-bottom: 1px solid #475569;
+         border-bottom: 1px solid #2d3748;
      }
 
      .detail-item:last-child {
@@ -1002,8 +1002,9 @@
          grid-template-columns: repeat(6, 1fr);
          gap: 16px;
          padding: 20px;
-         background: #1e293b;
+         background: #0f172a;
          border-radius: 12px;
+         border: 2px solid transparent;
          position: relative;
          overflow: hidden;
      }
@@ -1029,7 +1030,7 @@
          left: 0;
          right: 0;
          bottom: 0;
-         background: #1e293b;
+         background: #0f172a;
          border-radius: 12px;
          z-index: -1;
      }
@@ -1085,8 +1086,8 @@
      }
 
      .basic-chart-card {
-         background: #334155;
-         border: 1px solid #475569;
+         background: #0f172a;
+         border: 1px solid #334155;
          border-radius: 8px;
          padding: 16px;
          min-height: 250px;
@@ -1099,7 +1100,7 @@
          margin-bottom: 12px;
          text-align: center;
          padding-bottom: 8px;
-         border-bottom: 1px solid #475569;
+         border-bottom: 1px solid #334155;
      }
 
      .basic-chart-content {
@@ -1119,15 +1120,16 @@
      .chart-section.active {
          display: block;
      }
-  .advanced-charts-grid {
+
+     .advanced-charts-grid {
          display: grid;
          grid-template-columns: repeat(2, 1fr);
          gap: 20px;
      }
 
      .chart-container {
-         background: #334155;
-         border: 1px solid #475569;
+         background: #0f172a;
+         border: 1px solid #334155;
          border-radius: 8px;
          padding: 20px;
          margin-bottom: 20px;
@@ -1141,7 +1143,7 @@
          margin-bottom: 16px;
          text-align: center;
          padding-bottom: 12px;
-         border-bottom: 1px solid #475569;
+         border-bottom: 1px solid #334155;
      }
 
      .chart-content {
@@ -3154,7 +3156,7 @@
                  label: 'Correlation',
                  data: correlationValues,
                  backgroundColor: correlationValues.map(v => 
-                     v >0 ? `rgba(16, 185, 129, ${Math.abs(v)})` : `rgba(239, 68, 68, ${Math.abs(v)})`
+                     v > 0 ? `rgba(16, 185, 129, ${Math.abs(v)})` : `rgba(239, 68, 68, ${Math.abs(v)})`
                  )
              }]
          });
@@ -3969,6 +3971,7 @@
          document.getElementById('detailTotalVolume').textContent = `$${totalVolume.toFixed(2)}`;
          document.getElementById('detailProfitFactor').textContent = profitFactor.toFixed(2);
          document.getElementById('detailProfitFactor').className = `detail-value ${profitFactor >= 1 ? 'positive' : 'negative'}`;
+         document.getElementById('detailProfitFactor').className = `detail-value ${profitFactor >= 1 ? 'positive' : 'negative'}`;
      }
 
      function updateWinLossStatistics(filteredTrades, wins, losses, winRate) {
@@ -4011,10 +4014,14 @@
          const avgDailyFees = uniqueDatesForFees.length > 0 ? totalDailyFees / uniqueDatesForFees.length : 0;
 
          document.getElementById('detailDailyPerWin').textContent = winDays > 0 ? `$${(dailyPLs.filter(pnl => pnl > 0).reduce((sum, pnl) => sum + pnl, 0) / winDays).toFixed(2)}` : '$0.00';
+         document.getElementById('detailDailyPerWin').className = 'detail-value positive';
          document.getElementById('detailDailyPerLoss').textContent = lossDays > 0 ? `$${(dailyPLs.filter(pnl => pnl < 0).reduce((sum, pnl) => sum + pnl, 0) / lossDays).toFixed(2)}` : '$0.00';
+         document.getElementById('detailDailyPerLoss').className = 'detail-value negative';
          document.getElementById('detailDailyPerFees').textContent = `$${avgDailyFees.toFixed(2)}`;
          document.getElementById('detailBestTradingDay').textContent = `$${bestTradingDay.toFixed(2)}`;
+         document.getElementById('detailBestTradingDay').className = 'detail-value positive';
          document.getElementById('detailWorstTradingDay').textContent = `$${worstTradingDay.toFixed(2)}`;
+         document.getElementById('detailWorstTradingDay').className = 'detail-value negative';
          document.getElementById('detailAvgDailyPL').textContent = `$${avgDailyPL.toFixed(2)}`;
          document.getElementById('detailAvgDailyPL').className = `detail-value ${avgDailyPL >= 0 ? 'positive' : 'negative'}`;
      }
