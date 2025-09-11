@@ -3971,7 +3971,6 @@
          document.getElementById('detailTotalVolume').textContent = `$${totalVolume.toFixed(2)}`;
          document.getElementById('detailProfitFactor').textContent = profitFactor.toFixed(2);
          document.getElementById('detailProfitFactor').className = `detail-value ${profitFactor >= 1 ? 'positive' : 'negative'}`;
-         document.getElementById('detailProfitFactor').className = `detail-value ${profitFactor >= 1 ? 'positive' : 'negative'}`;
      }
 
      function updateWinLossStatistics(filteredTrades, wins, losses, winRate) {
@@ -4014,14 +4013,10 @@
          const avgDailyFees = uniqueDatesForFees.length > 0 ? totalDailyFees / uniqueDatesForFees.length : 0;
 
          document.getElementById('detailDailyPerWin').textContent = winDays > 0 ? `$${(dailyPLs.filter(pnl => pnl > 0).reduce((sum, pnl) => sum + pnl, 0) / winDays).toFixed(2)}` : '$0.00';
-         document.getElementById('detailDailyPerWin').className = 'detail-value positive';
          document.getElementById('detailDailyPerLoss').textContent = lossDays > 0 ? `$${(dailyPLs.filter(pnl => pnl < 0).reduce((sum, pnl) => sum + pnl, 0) / lossDays).toFixed(2)}` : '$0.00';
-         document.getElementById('detailDailyPerLoss').className = 'detail-value negative';
          document.getElementById('detailDailyPerFees').textContent = `$${avgDailyFees.toFixed(2)}`;
          document.getElementById('detailBestTradingDay').textContent = `$${bestTradingDay.toFixed(2)}`;
-         document.getElementById('detailBestTradingDay').className = 'detail-value positive';
          document.getElementById('detailWorstTradingDay').textContent = `$${worstTradingDay.toFixed(2)}`;
-         document.getElementById('detailWorstTradingDay').className = 'detail-value negative';
          document.getElementById('detailAvgDailyPL').textContent = `$${avgDailyPL.toFixed(2)}`;
          document.getElementById('detailAvgDailyPL').className = `detail-value ${avgDailyPL >= 0 ? 'positive' : 'negative'}`;
      }
@@ -4292,32 +4287,36 @@
          ];
 
          detailElements.forEach(id => {
-             const element = document.getElementById(id);
-             if (element) {
-                 if (id.includes('Symbol') || id.includes('Hour') || id.includes('Day')) {
-                     element.textContent = '-';
-                 } else if (id.includes('Trades') && !id.includes('Total') && !id.includes('Avg') && !id.includes('Max')) {
-                     element.textContent = '0 (0%)';
-                 } else if (id.includes('Time')) {
-                     element.textContent = '0m';
-                 } else if (id.includes('$') || id.includes('PL') || id.includes('Gain') || id.includes('Loss') || 
-                           id.includes('Fees') || id.includes('Volume') || id.includes('Position') || id.includes('Drawdown')) {
-                     element.textContent = '$0.00';
-                 } else {
-                     element.textContent = '0';
-                 }
-                 if (id.includes('TotalGain') || id.includes('BestTradingDay') || id.includes('LargestWin') || 
-    id.includes('DailyPerWin') || id.includes('MaxDailyGain') || id.includes('MostProfitable')) {
-    element.className = 'detail-value positive';
-} else if (id.includes('TotalLoss') || id.includes('WorstTradingDay') || id.includes('LargestLoss') || 
-           id.includes('DailyPerLoss') || id.includes('MaxDailyLoss') || id.includes('LeastProfitable') || 
-           id.includes('MaxDrawdown')) {
-    element.className = 'detail-value negative';
-} else {
-    element.className = 'detail-value';
-}
-             }
-         });
+    const element = document.getElementById(id);
+    if (element) {
+        if (id.includes('Symbol') || id.includes('Hour') || id.includes('Day')) {
+            element.textContent = '-';
+        } else if (id.includes('Trades') && !id.includes('Total') && !id.includes('Avg') && !id.includes('Max')) {
+            element.textContent = '0 (0%)';
+        } else if (id.includes('Time')) {
+            element.textContent = '0m';
+        } else if (id.includes('$') || id.includes('PL') || id.includes('Gain') || id.includes('Loss') || 
+                  id.includes('Fees') || id.includes('Volume') || id.includes('Position') || id.includes('Drawdown')) {
+            element.textContent = '$0.00';
+        } else {
+            element.textContent = '0';
+        }
+        
+        // 색상 클래스 적용
+        if (id.includes('TotalGain') || id.includes('BestTradingDay') || id.includes('LargestWin') || 
+            id.includes('DailyPerWin') || id.includes('MaxDailyGain') || id.includes('MostProfitable') ||
+            id.includes('WinningTrades') || id.includes('AvgWinningTrade') || id.includes('MaxWinStreak')) {
+            element.className = 'detail-value positive';
+        } else if (id.includes('TotalLoss') || id.includes('WorstTradingDay') || id.includes('LargestLoss') || 
+                   id.includes('DailyPerLoss') || id.includes('MaxDailyLoss') || id.includes('LeastProfitable') || 
+                   id.includes('MaxDrawdown') || id.includes('LosingTrades') || id.includes('AvgLosingTrade') ||
+                   id.includes('MaxLossStreak')) {
+            element.className = 'detail-value negative';
+        } else {
+            element.className = 'detail-value';
+        }
+    }
+});
 
          document.getElementById('detailBestHour').textContent = '-';
          document.getElementById('detailWorstHour').textContent = '-';
