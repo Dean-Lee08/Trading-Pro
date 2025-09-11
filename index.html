@@ -946,8 +946,8 @@
      }
 
      .detail-card {
-         background: #0f172a;
-         border: 1px solid #334155;
+         background: #334155;
+         border: 1px solid #475569;
          border-radius: 8px;
          padding: 16px;
      }
@@ -958,7 +958,7 @@
          font-weight: 600;
          margin-bottom: 12px;
          padding-bottom: 8px;
-         border-bottom: 1px solid #334155;
+         border-bottom: 1px solid #475569;
      }
 
      .detail-item {
@@ -966,7 +966,7 @@
          justify-content: space-between;
          align-items: center;
          padding: 6px 0;
-         border-bottom: 1px solid #2d3748;
+         border-bottom: 1px solid #475569;
      }
 
      .detail-item:last-child {
@@ -1002,9 +1002,8 @@
          grid-template-columns: repeat(6, 1fr);
          gap: 16px;
          padding: 20px;
-         background: #0f172a;
+         background: #1e293b;
          border-radius: 12px;
-         border: 2px solid transparent;
          position: relative;
          overflow: hidden;
      }
@@ -1030,7 +1029,7 @@
          left: 0;
          right: 0;
          bottom: 0;
-         background: #0f172a;
+         background: #1e293b;
          border-radius: 12px;
          z-index: -1;
      }
@@ -1086,8 +1085,8 @@
      }
 
      .basic-chart-card {
-         background: #0f172a;
-         border: 1px solid #334155;
+         background: #334155;
+         border: 1px solid #475569;
          border-radius: 8px;
          padding: 16px;
          min-height: 250px;
@@ -1100,7 +1099,7 @@
          margin-bottom: 12px;
          text-align: center;
          padding-bottom: 8px;
-         border-bottom: 1px solid #334155;
+         border-bottom: 1px solid #475569;
      }
 
      .basic-chart-content {
@@ -1120,16 +1119,15 @@
      .chart-section.active {
          display: block;
      }
-
-     .advanced-charts-grid {
+  .advanced-charts-grid {
          display: grid;
          grid-template-columns: repeat(2, 1fr);
          gap: 20px;
      }
 
      .chart-container {
-         background: #0f172a;
-         border: 1px solid #334155;
+         background: #334155;
+         border: 1px solid #475569;
          border-radius: 8px;
          padding: 20px;
          margin-bottom: 20px;
@@ -1143,7 +1141,7 @@
          margin-bottom: 16px;
          text-align: center;
          padding-bottom: 12px;
-         border-bottom: 1px solid #334155;
+         border-bottom: 1px solid #475569;
      }
 
      .chart-content {
@@ -3156,7 +3154,7 @@
                  label: 'Correlation',
                  data: correlationValues,
                  backgroundColor: correlationValues.map(v => 
-                     v > 0 ? `rgba(16, 185, 129, ${Math.abs(v)})` : `rgba(239, 68, 68, ${Math.abs(v)})`
+                     v >0 ? `rgba(16, 185, 129, ${Math.abs(v)})` : `rgba(239, 68, 68, ${Math.abs(v)})`
                  )
              }]
          });
