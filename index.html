@@ -4294,7 +4294,7 @@
             const tableBody = document.getElementById(tableBodyId);
             
             if (tradesToShow.length === 0) {
-                const colspan = tableBodyId === 'tradesTableBody' ? '8' : '10';
+                const colspan = tableBodyId === 'tradesTableBody' ? '9' : '10';
                 tableBody.innerHTML = `
                     <tr>
                         <td colspan="${colspan}">
@@ -4323,20 +4323,20 @@
             if (tableBodyId === 'tradesTableBody') {
                 tableBody.innerHTML = sortedTrades.map(trade => `
                     <tr>
-                         <td>${new Date(trade.date).toLocaleDateString()}</td>
-                         <td><strong>${trade.symbol}</strong></td>
-                         <td>${trade.buyPrice.toFixed(4)}</td>
-                         <td>${trade.sellPrice.toFixed(4)}</td>
-                         <td>$${trade.amount.toFixed(2)}</td>
-                         <td>${trade.holdingTime || 'N/A'}</td>
-                         <td class="${trade.pnl >= 0 ? 'positive' : 'negative'}">$${trade.pnl.toFixed(2)}</td>
-                         <td class="${trade.returnPct >= 0 ? 'positive' : 'negative'}">${trade.returnPct.toFixed(2)}%</td>
-                         <td>
-                              <button class="action-btn" onclick="editTrade(${trade.id})" title="Edit trade">✏️</button>
-                              <button class="action-btn" onclick="deleteTrade(${trade.id})" title="Delete trade">🗑️</button>
-                         </td>
-                     </tr>
-                 `).join('');
+                        <td>${new Date(trade.date).toLocaleDateString()}</td>
+                        <td><strong>${trade.symbol}</strong></td>
+                        <td>${trade.buyPrice.toFixed(4)}</td>
+                        <td>${trade.sellPrice.toFixed(4)}</td>
+                        <td>$${trade.amount.toFixed(2)}</td>
+                        <td>${trade.holdingTime || 'N/A'}</td>
+                        <td class="${trade.pnl >= 0 ? 'positive' : 'negative'}">$${trade.pnl.toFixed(2)}</td>
+                        <td class="${trade.returnPct >= 0 ? 'positive' : 'negative'}">${trade.returnPct.toFixed(2)}%</td>
+                        <td>
+                            <button class="action-btn" onclick="editTrade(${trade.id})" title="Edit trade">✏️</button>
+                            <button class="action-btn" onclick="deleteTrade(${trade.id})" title="Delete trade">🗑️</button>
+                        </td>
+                    </tr>
+                `).join('');
             } else {
                 tableBody.innerHTML = sortedTrades.map(trade => `
                     <tr>
