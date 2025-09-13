@@ -1011,12 +1011,11 @@
          padding: 20px;
          background: #0f172a;
          border-radius: 12px;
-         border: 2px solid transparent;
          position: relative;
          overflow: hidden;
      }
 
-     /* Enhanced animated gradient border for summary cards */
+     /* Enhanced gradient border for performance summary */
      .summary-cards::before {
          content: '';
          position: absolute;
@@ -1024,9 +1023,11 @@
          left: -3px;
          right: -3px;
          bottom: -3px;
-         background: linear-gradient(45deg, #3b82f6, #8b5cf6, #06b6d4, #10b981, #f59e0b, #ef4444, #3b82f6);
-         background-size: 400% 400%;
-         animation: gradientShift 3s ease infinite;
+         background: linear-gradient(45deg, 
+             #3b82f6, #8b5cf6, #06b6d4, #10b981, #f59e0b, #ef4444,
+             #ec4899, #06b6d4, #3b82f6);
+         background-size: 600% 600%;
+         animation: performanceSummaryGradient 4s ease infinite;
          border-radius: 15px;
          z-index: -2;
      }
@@ -1041,6 +1042,29 @@
          background: #0f172a;
          border-radius: 12px;
          z-index: -1;
+     }
+
+     @keyframes performanceSummaryGradient {
+         0% { 
+             background-position: 0% 50%;
+             filter: brightness(1.3) saturate(1.5);
+         }
+         25% { 
+             background-position: 100% 0%;
+             filter: brightness(1.5) saturate(1.7);
+         }
+         50% { 
+             background-position: 100% 100%;
+             filter: brightness(1.3) saturate(1.5);
+         }
+         75% { 
+             background-position: 0% 100%;
+             filter: brightness(1.5) saturate(1.7);
+         }
+         100% { 
+             background-position: 0% 50%;
+             filter: brightness(1.3) saturate(1.5);
+         }
      }
 
      .summary-card {
@@ -1171,6 +1195,181 @@
          height: 100%;
          max-width: 100%;
          max-height: 100%;
+     }
+
+     /* Notes Section */
+     .notes-section {
+         display: none;
+     }
+
+     .notes-section.active {
+         display: block;
+     }
+
+     .notes-container {
+         background: #0f172a;
+         border: 1px solid #334155;
+         border-radius: 8px;
+         padding: 20px;
+         margin-top: 20px;
+     }
+
+     .notes-header {
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         margin-bottom: 20px;
+         padding-bottom: 16px;
+         border-bottom: 1px solid #334155;
+     }
+
+     .notes-title {
+         color: #f8fafc;
+         font-size: 18px;
+         font-weight: 600;
+     }
+
+     .notes-controls {
+         display: flex;
+         gap: 8px;
+     }
+
+     .notes-btn {
+         background: #374151;
+         border: 1px solid #4b5563;
+         color: #e4e4e7;
+         padding: 8px 16px;
+         border-radius: 6px;
+         cursor: pointer;
+         font-size: 14px;
+         transition: all 0.2s ease;
+     }
+
+     .notes-btn:hover {
+         background: #4b5563;
+     }
+
+     .notes-btn.primary {
+         background: #3b82f6;
+         border-color: #3b82f6;
+         color: white;
+     }
+
+     .notes-btn.primary:hover {
+         background: #2563eb;
+     }
+
+     .notes-editor {
+         margin-bottom: 20px;
+     }
+
+     .notes-input {
+         width: 100%;
+         background: #1e293b;
+         border: 1px solid #334155;
+         color: #e4e4e7;
+         padding: 12px;
+         border-radius: 6px;
+         font-size: 14px;
+         margin-bottom: 8px;
+         font-family: 'Inter', sans-serif;
+     }
+
+     .notes-input:focus {
+         outline: none;
+         border-color: #3b82f6;
+     }
+
+     .notes-input.title {
+         font-weight: 600;
+         font-size: 16px;
+     }
+
+     .notes-input.content {
+         min-height: 200px;
+         resize: vertical;
+         line-height: 1.6;
+     }
+
+     .notes-list {
+         display: grid;
+         gap: 16px;
+     }
+
+     .note-item {
+         background: #1e293b;
+         border: 1px solid #334155;
+         border-radius: 8px;
+         padding: 16px;
+         transition: all 0.2s ease;
+     }
+
+     .note-item:hover {
+         border-color: #475569;
+         background: #334155;
+     }
+
+     .note-item-header {
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         margin-bottom: 12px;
+     }
+
+     .note-title {
+         color: #f8fafc;
+         font-size: 16px;
+         font-weight: 600;
+         margin: 0;
+     }
+
+     .note-meta {
+         color: #64748b;
+         font-size: 12px;
+         display: flex;
+         gap: 12px;
+     }
+
+     .note-content {
+         color: #e4e4e7;
+         font-size: 14px;
+         line-height: 1.6;
+         white-space: pre-wrap;
+         max-height: 150px;
+         overflow: hidden;
+         position: relative;
+     }
+
+     .note-content.expanded {
+         max-height: none;
+     }
+
+     .note-actions {
+         margin-top: 12px;
+         display: flex;
+         gap: 8px;
+     }
+
+     .note-action-btn {
+         background: none;
+         border: 1px solid #4b5563;
+         color: #94a3b8;
+         padding: 4px 8px;
+         border-radius: 4px;
+         cursor: pointer;
+         font-size: 12px;
+         transition: all 0.2s ease;
+     }
+
+     .note-action-btn:hover {
+         background: #4b5563;
+         color: #e4e4e7;
+     }
+
+     .note-action-btn.danger:hover {
+         background: #dc2626;
+         border-color: #dc2626;
+         color: white;
      }
 
      /* Edit trade modal */
@@ -1720,7 +1919,7 @@
                      </thead>
                      <tbody id="tradesTableBody">
                          <tr>
-                             <td colspan="10">
+                             <td colspan="9">
                                  <div class="empty-state">
                                      <div class="empty-state-icon">📊</div>
                                      <div data-lang="no-trades">No trades recorded yet</div>
@@ -1823,6 +2022,7 @@
                          <div class="analytics-tabs">
                              <button class="analytics-tab active" onclick="showAnalyticsSection('detail')" data-lang="detail">Detail</button>
                              <button class="analytics-tab" onclick="showAnalyticsSection('charts')" data-lang="charts">Charts</button>
+                             <button class="analytics-tab" onclick="showAnalyticsSection('notes')" data-lang="notes">Notes</button>
                          </div>
                      </div>
                      
@@ -2178,65 +2378,30 @@
                                  <canvas id="rollingPerformanceChart" class="chart-canvas"></canvas>
                              </div>
                          </div>
-                         <div class="chart-container">
-                             <div class="chart-header" data-lang="volume-analysis">Volume Analysis</div>
-                             <div class="chart-content">
-                                 <canvas id="volumeAnalysisChart" class="chart-canvas"></canvas>
+                     </div>
+                 </div>
+
+                 <!-- Notes Section -->
+                 <div class="notes-section" id="notesSection">
+                     <div class="notes-container">
+                         <div class="notes-header">
+                             <h3 class="notes-title" data-lang="trading-notes">Trading Notes</h3>
+                             <div class="notes-controls">
+                                 <button class="notes-btn" onclick="showNoteEditor()" data-lang="new-note">New Note</button>
                              </div>
                          </div>
-                         <div class="chart-container">
-                             <div class="chart-header" data-lang="correlation-matrix">Performance Correlation</div>
-                             <div class="chart-content">
-                                 <canvas id="correlationMatrixChart" class="chart-canvas"></canvas>
+
+                         <div class="notes-editor" id="notesEditor" style="display: none;">
+                             <input type="text" id="noteTitle" class="notes-input title" placeholder="Note title..." data-lang="note-title-placeholder">
+                             <textarea id="noteContent" class="notes-input content" placeholder="Write your trading thoughts, analysis, or observations here..." data-lang="note-content-placeholder"></textarea>
+                             <div class="notes-controls">
+                                 <button class="notes-btn" onclick="cancelNote()" data-lang="cancel">Cancel</button>
+                                 <button class="notes-btn primary" onclick="saveNote()" data-lang="save-note">Save Note</button>
                              </div>
                          </div>
-                         <div class="chart-container">
-                             <div class="chart-header" data-lang="volatility-analysis">Volatility Analysis</div>
-                             <div class="chart-content">
-                                 <canvas id="volatilityAnalysisChart" class="chart-canvas"></canvas>
-                             </div>
-                         </div>
-                         <div class="chart-container">
-                             <div class="chart-header" data-lang="risk-return-scatter">Risk-Return Scatter</div>
-                             <div class="chart-content">
-                                 <canvas id="riskReturnScatterChart" class="chart-canvas"></canvas>
-                             </div>
-                         </div>
-                         <div class="chart-container">
-                             <div class="chart-header" data-lang="performance-attribution">Performance Attribution</div>
-                             <div class="chart-content">
-                                 <canvas id="performanceAttributionChart" class="chart-canvas"></canvas>
-                             </div>
-                         </div>
-                         <div class="chart-container">
-                             <div class="chart-header" data-lang="trade-duration-analysis">Trade Duration Analysis</div>
-                             <div class="chart-content">
-                                 <canvas id="tradeDurationAnalysisChart" class="chart-canvas"></canvas>
-                             </div>
-                         </div>
-                         <div class="chart-container">
-                             <div class="chart-header" data-lang="pl-heatmap">P&L Heatmap</div>
-                             <div class="chart-content">
-                                 <canvas id="plHeatmapChart" class="chart-canvas"></canvas>
-                             </div>
-                         </div>
-                         <div class="chart-container">
-                             <div class="chart-header" data-lang="win-rate-by-time">Win Rate by Time</div>
-                             <div class="chart-content">
-                                 <canvas id="winRateByTimeChart" class="chart-canvas"></canvas>
-                             </div>
-                         </div>
-                         <div class="chart-container">
-                             <div class="chart-header" data-lang="position-sizing-analysis">Position Sizing Analysis</div>
-                             <div class="chart-content">
-                                 <canvas id="positionSizingAnalysisChart" class="chart-canvas"></canvas>
-                             </div>
-                         </div>
-                         <div class="chart-container">
-                             <div class="chart-header" data-lang="trading-efficiency-metrics">Trading Efficiency Metrics</div>
-                             <div class="chart-content">
-                                 <canvas id="tradingEfficiencyMetricsChart" class="chart-canvas"></canvas>
-                             </div>
+
+                         <div class="notes-list" id="notesList">
+                             <!-- Notes will be displayed here -->
                          </div>
                      </div>
                  </div>
@@ -2332,6 +2497,7 @@
      // Global variables
      let trades = [];
      let dailyFees = {};
+     let tradingNotes = [];
      let currentTradingDate = new Date();
      let calendarDate = new Date();
      let calendarStartDate = null;
@@ -2348,6 +2514,7 @@
      let tradesStartDate = null;
      let tradesEndDate = null;
      let currentAnalyticsSection = 'detail';
+     let editingNoteId = null;
 
      // Chart instances
      let basicCharts = {};
@@ -2423,6 +2590,7 @@
              'today': 'Today',
              'detail': 'Detail',
              'charts': 'Charts',
+             'notes': 'Notes',
              'net-profit': 'Net Profit',
              'largest-win': 'Largest Win',
              'largest-loss': 'Largest Loss',
@@ -2499,7 +2667,17 @@
              'pl-heatmap': 'P&L Heatmap',
              'win-rate-by-time': 'Win Rate by Time',
              'position-sizing-analysis': 'Position Sizing Analysis',
-             'trading-efficiency-metrics': 'Trading Efficiency Metrics'
+             'trading-efficiency-metrics': 'Trading Efficiency Metrics',
+             'trading-notes': 'Trading Notes',
+             'new-note': 'New Note',
+             'note-title-placeholder': 'Note title...',
+             'note-content-placeholder': 'Write your trading thoughts, analysis, or observations here...',
+             'cancel': 'Cancel',
+             'save-note': 'Save Note',
+             'edit-note': 'Edit',
+             'delete-note': 'Delete',
+             'expand': 'Expand',
+             'collapse': 'Collapse'
          },
          ko: {
              'dashboard': '대시보드',
@@ -2569,6 +2747,7 @@
              'today': '오늘',
              'detail': '상세',
              'charts': '차트',
+             'notes': '노트',
              'net-profit': '순이익',
              'largest-win': '최대 수익',
              'largest-loss': '최대 손실',
@@ -2645,7 +2824,17 @@
              'pl-heatmap': '손익 히트맵',
              'win-rate-by-time': '시간별 승률',
              'position-sizing-analysis': '포지션 크기 분석',
-             'trading-efficiency-metrics': '거래 효율성 지표'
+             'trading-efficiency-metrics': '거래 효율성 지표',
+             'trading-notes': '트레이딩 노트',
+             'new-note': '새 노트',
+             'note-title-placeholder': '노트 제목...',
+             'note-content-placeholder': '거래 생각, 분석 또는 관찰 내용을 여기에 작성하세요...',
+             'cancel': '취소',
+             'save-note': '노트 저장',
+             'edit-note': '편집',
+             'delete-note': '삭제',
+             'expand': '확장',
+             'collapse': '축소'
          }
      };
 
@@ -2666,18 +2855,13 @@
          document.querySelectorAll('[data-lang]').forEach(element => {
              const key = element.getAttribute('data-lang');
              if (translations[currentLanguage][key]) {
-                 element.textContent = translations[currentLanguage][key];
+                 if (element.tagName === 'INPUT' && (element.type === 'text' || element.type === 'textarea')) {
+                     element.placeholder = translations[currentLanguage][key];
+                 } else {
+                     element.textContent = translations[currentLanguage][key];
+                 }
              }
          });
-         const symbolInput = document.getElementById('symbol');
-         if (symbolInput) {
-             symbolInput.placeholder = currentLanguage === 'ko' ? 'AAPL' : 'AAPL';
-         }
-         
-         const amountInput = document.getElementById('amount');
-         if (amountInput) {
-             amountInput.placeholder = currentLanguage === 'ko' ? '5000' : '5000';
-         }
      }
 
      function changeLanguage() {
@@ -2687,6 +2871,7 @@
          updateLanguage();
          updateStats();
          updateDetailedAnalytics();
+         renderNotesSection();
          localStorage.setItem('tradingPlatformLanguage', currentLanguage);
      }
 
@@ -2697,6 +2882,7 @@
          updateLanguage();
          updateStats();
          updateDetailedAnalytics();
+         renderNotesSection();
          localStorage.setItem('tradingPlatformLanguage', currentLanguage);
      }
 
@@ -2784,6 +2970,11 @@
          document.getElementById('analyticsStartDate').value = '';
          document.getElementById('analyticsEndDate').value = '';
          updateDetailedAnalytics();
+         if (currentAnalyticsSection === 'detail') {
+             setTimeout(updateBasicCharts, 100);
+         } else if (currentAnalyticsSection === 'charts') {
+             setTimeout(updateAdvancedCharts, 100);
+         }
      }
 
      // Trades page date range functions
@@ -2848,17 +3039,176 @@
          event.target.classList.add('active');
          
          // Show/hide sections
-         document.querySelectorAll('.detail-section, .chart-section').forEach(section => {
+         document.querySelectorAll('.detail-section, .chart-section, .notes-section').forEach(section => {
              section.classList.remove('active');
          });
          
          if (sectionName === 'detail') {
              document.getElementById('detailSection').classList.add('active');
-             updateBasicCharts();
+             setTimeout(updateBasicCharts, 100);
          } else if (sectionName === 'charts') {
              document.getElementById('chartSection').classList.add('active');
-             updateAdvancedCharts();
+             setTimeout(updateAdvancedCharts, 100);
+         } else if (sectionName === 'notes') {
+             document.getElementById('notesSection').classList.add('active');
+             renderNotesSection();
          }
+     }
+
+     // Notes functions
+     function loadNotes() {
+         try {
+             const saved = localStorage.getItem('tradingPlatformNotes');
+             if (saved) {
+                 tradingNotes = JSON.parse(saved);
+             } else {
+                 tradingNotes = [];
+             }
+         } catch (error) {
+             console.error('Error loading notes:', error);
+             tradingNotes = [];
+         }
+     }
+
+     function saveNotes() {
+         try {
+             localStorage.setItem('tradingPlatformNotes', JSON.stringify(tradingNotes));
+         } catch (error) {
+             console.error('Error saving notes:', error);
+             alert('Failed to save notes. Please check browser storage.');
+         }
+     }
+
+     function showNoteEditor(noteId = null) {
+         const editor = document.getElementById('notesEditor');
+         const titleInput = document.getElementById('noteTitle');
+         const contentInput = document.getElementById('noteContent');
+         
+         if (noteId) {
+             // Editing existing note
+             const note = tradingNotes.find(n => n.id === noteId);
+             if (note) {
+                 titleInput.value = note.title;
+                 contentInput.value = note.content;
+                 editingNoteId = noteId;
+             }
+         } else {
+             // New note
+             titleInput.value = '';
+             contentInput.value = '';
+             editingNoteId = null;
+         }
+         
+         editor.style.display = 'block';
+         titleInput.focus();
+     }
+
+     function cancelNote() {
+         document.getElementById('notesEditor').style.display = 'none';
+         editingNoteId = null;
+     }
+
+     function saveNote() {
+         const titleInput = document.getElementById('noteTitle');
+         const contentInput = document.getElementById('noteContent');
+         const title = titleInput.value.trim();
+         const content = contentInput.value.trim();
+         
+         if (!title || !content) {
+             alert('Please enter both title and content');
+             return;
+         }
+         
+         if (editingNoteId) {
+             // Update existing note
+             const noteIndex = tradingNotes.findIndex(n => n.id === editingNoteId);
+             if (noteIndex !== -1) {
+                 tradingNotes[noteIndex] = {
+                     ...tradingNotes[noteIndex],
+                     title: title,
+                     content: content,
+                     updatedAt: new Date().toISOString()
+                 };
+             }
+         } else {
+             // Create new note
+             const newNote = {
+                 id: Date.now(),
+                 title: title,
+                 content: content,
+                 createdAt: new Date().toISOString(),
+                 updatedAt: new Date().toISOString()
+             };
+             tradingNotes.unshift(newNote);
+         }
+         
+         saveNotes();
+         renderNotesSection();
+         cancelNote();
+         showToast(editingNoteId ? 'Note updated' : 'Note saved');
+     }
+
+     function deleteNote(noteId) {
+         if (confirm('Are you sure you want to delete this note?')) {
+             tradingNotes = tradingNotes.filter(n => n.id !== noteId);
+             saveNotes();
+             renderNotesSection();
+             showToast('Note deleted');
+         }
+     }
+
+     function toggleNoteExpansion(noteId) {
+         const noteContent = document.querySelector(`[data-note-id="${noteId}"] .note-content`);
+         const expandBtn = document.querySelector(`[data-note-id="${noteId}"] .expand-btn`);
+         
+         if (noteContent.classList.contains('expanded')) {
+             noteContent.classList.remove('expanded');
+             expandBtn.textContent = translations[currentLanguage]['expand'] || 'Expand';
+         } else {
+             noteContent.classList.add('expanded');
+             expandBtn.textContent = translations[currentLanguage]['collapse'] || 'Collapse';
+         }
+     }
+
+     function renderNotesSection() {
+         const notesList = document.getElementById('notesList');
+         
+         if (tradingNotes.length === 0) {
+             notesList.innerHTML = `
+                 <div class="empty-state">
+                     <div class="empty-state-icon">📝</div>
+                     <div>${currentLanguage === 'ko' ? '아직 작성된 노트가 없습니다' : 'No notes written yet'}</div>
+                 </div>
+             `;
+             return;
+         }
+         
+         notesList.innerHTML = tradingNotes.map(note => {
+             const createdDate = new Date(note.createdAt).toLocaleDateString(currentLanguage === 'ko' ? 'ko-KR' : 'en-US');
+             const updatedDate = note.updatedAt !== note.createdAt ? 
+                 new Date(note.updatedAt).toLocaleDateString(currentLanguage === 'ko' ? 'ko-KR' : 'en-US') : null;
+             
+             const needsExpansion = note.content.length > 300;
+             const displayContent = needsExpansion ? note.content.substring(0, 300) + '...' : note.content;
+             
+             return `
+                 <div class="note-item" data-note-id="${note.id}">
+                     <div class="note-item-header">
+                         <h4 class="note-title">${note.title}</h4>
+                         <div class="note-meta">
+                             <span>${createdDate}</span>
+                             ${updatedDate ? `<span>(${currentLanguage === 'ko' ? '수정됨' : 'Updated'}: ${updatedDate})</span>` : ''}
+                         </div>
+                     </div>
+                     <div class="note-content${needsExpansion ? '' : ' expanded'}">${note.content}</div>
+                     <div class="note-actions">
+                         ${needsExpansion ? `<button class="note-action-btn expand-btn" onclick="toggleNoteExpansion(${note.id})">${translations[currentLanguage]['expand'] || 'Expand'}</button>` : ''}
+                         <button class="note-action-btn" onclick="showNoteEditor(${note.id})">${translations[currentLanguage]['edit-note'] || 'Edit'}</button>
+                         <button class="note-action-btn danger" onclick="deleteNote(${note.id})">${translations[currentLanguage]['delete-note'] || 'Delete'}</button>
+                     </div>
+                 </div>
+             `;
+         }).join('');
      }
 
      // Chart functions
@@ -2951,6 +3301,15 @@
                  if (basicCharts[chartId]) {
                      basicCharts[chartId].destroy();
                      delete basicCharts[chartId];
+                 }
+                 const canvas = document.getElementById(chartId);
+                 if (canvas) {
+                     const ctx = canvas.getContext('2d');
+                     ctx.clearRect(0, 0, canvas.width, canvas.height);
+                     ctx.fillStyle = '#64748b';
+                     ctx.font = '14px Inter';
+                     ctx.textAlign = 'center';
+                     ctx.fillText('No data available', canvas.width/2, canvas.height/2);
                  }
              });
              return;
@@ -3048,6 +3407,15 @@
                  if (advancedCharts[chartId]) {
                      advancedCharts[chartId].destroy();
                      delete advancedCharts[chartId];
+                 }
+                 const canvas = document.getElementById(chartId);
+                 if (canvas) {
+                     const ctx = canvas.getContext('2d');
+                     ctx.clearRect(0, 0, canvas.width, canvas.height);
+                     ctx.fillStyle = '#64748b';
+                     ctx.font = '14px Inter';
+                     ctx.textAlign = 'center';
+                     ctx.fillText('No data available', canvas.width/2, canvas.height/2);
                  }
              });
              return;
@@ -3242,252 +3610,6 @@
                  }
              }
          });
-
-         // 7. Volume Analysis
-         const volumeData = filteredTrades.map((trade, index) => ({
-             x: index + 1,
-             y: trade.amount
-         }));
-
-         createAdvancedChart('volumeAnalysisChart', 'scatter', {
-             datasets: [{
-                 label: 'Position Size',
-                 data: volumeData,
-                 backgroundColor: '#06b6d4'
-             }]
-         });
-
-         // 8. Performance Correlation
-         const correlationData = [];
-         filteredTrades.forEach((trade, index) => {
-             correlationData.push({
-                 x: trade.amount,
-                 y: trade.pnl
-             });
-         });
-
-         createAdvancedChart('correlationMatrixChart', 'scatter', {
-             datasets: [{
-                 label: 'Volume vs P&L',
-                 data: correlationData,
-                 backgroundColor: 'rgba(16, 185, 129, 0.6)'
-             }]
-         });
-
-         // 9. Volatility Analysis
-         const volatilityData = [];
-         const returns = filteredTrades.map(trade => trade.returnPct);
-         for (let i = 9; i < returns.length; i++) {
-             const recentReturns = returns.slice(i - 9, i + 1);
-             const mean = recentReturns.reduce((sum, ret) => sum + ret, 0) / recentReturns.length;
-             const variance = recentReturns.reduce((sum, ret) => sum + Math.pow(ret - mean, 2), 0) / recentReturns.length;
-             const volatility = Math.sqrt(variance);
-             volatilityData.push({
-                 x: i + 1,
-                 y: volatility
-             });
-         }
-
-         createAdvancedChart('volatilityAnalysisChart', 'line', {
-             datasets: [{
-                 label: '10-Trade Rolling Volatility',
-                 data: volatilityData,
-                 borderColor: '#8b5cf6',
-                 backgroundColor: 'rgba(139, 92, 246, 0.1)',
-                 fill: true
-             }]
-         });
-
-         // 10. Risk-Return Scatter
-         const riskReturnData = [];
-         const uniqueSymbols = [...new Set(filteredTrades.map(trade => trade.symbol))];
-         uniqueSymbols.forEach(symbol => {
-             const symbolTrades = filteredTrades.filter(trade => trade.symbol === symbol);
-             const returns = symbolTrades.map(trade => trade.returnPct);
-             const avgReturn = returns.reduce((sum, ret) => sum + ret, 0) / returns.length;
-             const variance = returns.reduce((sum, ret) => sum + Math.pow(ret - avgReturn, 2), 0) / returns.length;
-             const risk = Math.sqrt(variance);
-             riskReturnData.push({
-                 x: risk,
-                 y: avgReturn,
-                 label: symbol
-             });
-         });
-
-         createAdvancedChart('riskReturnScatterChart', 'scatter', {
-             datasets: [{
-                 label: 'Risk vs Return by Symbol',
-                 data: riskReturnData,
-                 backgroundColor: '#f59e0b'
-             }]
-         });
-
-         // 11. Performance Attribution
-         const attributionData = [];
-         uniqueSymbols.forEach(symbol => {
-             const symbolTrades = filteredTrades.filter(trade => trade.symbol === symbol);
-             const totalPL = symbolTrades.reduce((sum, trade) => sum + trade.pnl, 0);
-             attributionData.push({
-                 symbol: symbol,
-                 pnl: totalPL
-             });
-         });
-
-         const topContributors = attributionData.sort((a, b) => Math.abs(b.pnl) - Math.abs(a.pnl)).slice(0, 10);
-
-         createAdvancedChart('performanceAttributionChart', 'bar', {
-             labels: topContributors.map(item => item.symbol),
-             datasets: [{
-                 label: 'Contribution to P&L',
-                 data: topContributors.map(item => item.pnl),
-                 backgroundColor: topContributors.map(item => item.pnl >= 0 ? '#10b981' : '#ef4444')
-             }]
-         });
-
-         // 12. Trade Duration Analysis
-         const durationStats = {};
-         filteredTrades.forEach(trade => {
-             if (trade.holdingTime) {
-                 const duration = parseInt(trade.holdingTime.replace('m', ''));
-                 let range;
-                 if (duration < 30) range = '0-30m';
-                 else if (duration < 60) range = '30-60m';
-                 else if (duration < 120) range = '1-2h';
-                 else if (duration < 240) range = '2-4h';
-                 else range = '4h+';
-                 
-                 if (!durationStats[range]) {
-                     durationStats[range] = { count: 0, totalPL: 0 };
-                 }
-                 durationStats[range].count++;
-                 durationStats[range].totalPL += trade.pnl;
-             }
-         });
-
-         const durationData = Object.entries(durationStats).map(([range, data]) => ({
-             x: range,
-             y: data.totalPL / data.count
-         }));
-
-         createAdvancedChart('tradeDurationAnalysisChart', 'bar', {
-             datasets: [{
-                 label: 'Avg P&L by Duration',
-                 data: durationData,
-                 backgroundColor: '#06b6d4'
-             }]
-         });
-
-         // 13. P&L Heatmap (Monthly)
-         const heatmapData = {};
-         filteredTrades.forEach(trade => {
-             const date = new Date(trade.date);
-             const month = date.getMonth();
-             const day = date.getDate();
-             const key = `${month}-${Math.floor(day / 7)}`;
-             
-             if (!heatmapData[key]) {
-                 heatmapData[key] = 0;
-             }
-             heatmapData[key] += trade.pnl;
-         });
-
-         const heatmapDataArray = Object.entries(heatmapData).map(([key, pnl]) => {
-             const [month, week] = key.split('-');
-             return {
-                 x: parseInt(month),
-                 y: parseInt(week),
-                 v: pnl
-             };
-         });
-
-         createAdvancedChart('plHeatmapChart', 'scatter', {
-             datasets: [{
-                 label: 'P&L Heatmap',
-                 data: heatmapDataArray,
-                 backgroundColor: heatmapDataArray.map(d => 
-                     d.v > 0 ? `rgba(16, 185, 129, ${Math.min(Math.abs(d.v) / 1000, 1)})` : 
-                     `rgba(239, 68, 68, ${Math.min(Math.abs(d.v) / 1000, 1)})`
-                 )
-             }]
-         });
-
-         // 14. Win Rate by Time
-         const timeWinRate = {};
-         filteredTrades.forEach(trade => {
-             if (trade.entryTime) {
-                 const hour = parseInt(trade.entryTime.split(':')[0]);
-                 if (!timeWinRate[hour]) {
-                     timeWinRate[hour] = { wins: 0, total: 0 };
-                 }
-                 timeWinRate[hour].total++;
-                 if (trade.pnl > 0) timeWinRate[hour].wins++;
-             }
-         });
-
-         const winRateData = Object.entries(timeWinRate).map(([hour, data]) => ({
-             x: parseInt(hour),
-             y: data.total > 0 ? (data.wins / data.total) * 100 : 0
-         }));
-
-         createAdvancedChart('winRateByTimeChart', 'line', {
-             datasets: [{
-                 label: 'Win Rate by Hour (%)',
-                 data: winRateData,
-                 borderColor: '#10b981',
-                 backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                 fill: true
-             }]
-         });
-
-         // 15. Position Sizing Analysis
-         const positionSizes = filteredTrades.map(trade => trade.amount);
-         const sizeRanges = {
-             '0-1000': 0, '1000-2500': 0, '2500-5000': 0,
-             '5000-10000': 0, '10000+': 0
-         };
-
-         positionSizes.forEach(size => {
-             if (size < 1000) sizeRanges['0-1000']++;
-             else if (size < 2500) sizeRanges['1000-2500']++;
-             else if (size < 5000) sizeRanges['2500-5000']++;
-             else if (size < 10000) sizeRanges['5000-10000']++;
-             else sizeRanges['10000+']++;
-         });
-
-         createAdvancedChart('positionSizingAnalysisChart', 'doughnut', {
-             labels: Object.keys(sizeRanges),
-             datasets: [{
-                 data: Object.values(sizeRanges),
-                 backgroundColor: ['#3b82f6', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b']
-             }]
-         });
-
-         // 16. Trading Efficiency Metrics
-         const efficiencyData = [];
-         const wins = filteredTrades.filter(trade => trade.pnl > 0);
-         const losses = filteredTrades.filter(trade => trade.pnl < 0);
-         
-         const avgWin = wins.length > 0 ? wins.reduce((sum, trade) => sum + trade.pnl, 0) / wins.length : 0;
-         const avgLoss = losses.length > 0 ? Math.abs(losses.reduce((sum, trade) => sum + trade.pnl, 0) / losses.length) : 0;
-         const winRate = filteredTrades.length > 0 ? (wins.length / filteredTrades.length) * 100 : 0;
-         const profitFactor = avgLoss > 0 ? (avgWin * wins.length) / (avgLoss * losses.length) : 0;
-
-         efficiencyData.push(
-             { label: 'Win Rate', value: winRate },
-             { label: 'Profit Factor', value: profitFactor },
-             { label: 'Avg Win/Loss', value: avgLoss > 0 ? avgWin / avgLoss : 0 }
-         );
-
-         createAdvancedChart('tradingEfficiencyMetricsChart', 'radar', {
-             labels: efficiencyData.map(d => d.label),
-             datasets: [{
-                 label: 'Efficiency Metrics',
-                 data: efficiencyData.map(d => d.value),
-                 borderColor: '#3b82f6',
-                 backgroundColor: 'rgba(59, 130, 246, 0.2)',
-                 fill: true
-             }]
-         });
      }
 
      // Page initialization
@@ -3510,12 +3632,14 @@
          updateLanguage();
          
          loadTrades();
+         loadNotes();
          updateStats();
          renderCalendar();
          updateAllTradesList();
          updateDetailedAnalytics();
          calculateHoldingTime();
          loadDailyFees();
+         renderNotesSection();
          
          document.getElementById('tradeForm').addEventListener('submit', handleTradeSubmit);
          document.getElementById('editTradeForm').addEventListener('submit', handleEditTradeSubmit);
@@ -3539,11 +3663,21 @@
          document.getElementById('analyticsStartDate').addEventListener('change', function() {
              analyticsStartDate = this.value;
              updateDetailedAnalytics();
+             if (currentAnalyticsSection === 'detail') {
+                 setTimeout(updateBasicCharts, 100);
+             } else if (currentAnalyticsSection === 'charts') {
+                 setTimeout(updateAdvancedCharts, 100);
+             }
          });
          
          document.getElementById('analyticsEndDate').addEventListener('change', function() {
              analyticsEndDate = this.value;
              updateDetailedAnalytics();
+             if (currentAnalyticsSection === 'detail') {
+                 setTimeout(updateBasicCharts, 100);
+             } else if (currentAnalyticsSection === 'charts') {
+                 setTimeout(updateAdvancedCharts, 100);
+             }
          });
 
          // Trades page date range listeners
@@ -3587,8 +3721,10 @@
              updateDetailedAnalytics();
              if (currentAnalyticsSection === 'detail') {
                  setTimeout(updateBasicCharts, 100);
-             } else {
+             } else if (currentAnalyticsSection === 'charts') {
                  setTimeout(updateAdvancedCharts, 100);
+             } else if (currentAnalyticsSection === 'notes') {
+                 renderNotesSection();
              }
          }
          
@@ -4011,6 +4147,11 @@
          
          event.target.classList.add('active');
          updateDetailedAnalytics();
+         if (currentAnalyticsSection === 'detail') {
+             setTimeout(updateBasicCharts, 100);
+         } else if (currentAnalyticsSection === 'charts') {
+             setTimeout(updateAdvancedCharts, 100);
+         }
      }
 
      function getFilteredTradesForAnalytics() {
@@ -4102,11 +4243,6 @@
          updateStreakAnalysisDetails(filteredTrades);
          updateSymbolPerformanceDetails(filteredTrades);
          updateRiskManagementDetails(filteredTrades);
-
-         // Update basic charts if in detail section
-         if (currentAnalyticsSection === 'detail') {
-             setTimeout(updateBasicCharts, 100);
-         }
      }
 
      function updateTradingPerformanceDetails(filteredTrades, totalPL, totalWins, totalLosses, totalDailyFees) {
@@ -4359,7 +4495,7 @@
                  `${bestWinRate[0]} (${((bestWinRate[1].wins / bestWinRate[1].count) * 100).toFixed(1)}%)`;
              document.getElementById('detailBestSymbolReturn').textContent = 
                  `${bestAvgReturn[0]} (${(bestAvgReturn[1].totalReturn / bestAvgReturn[1].count).toFixed(2)}%)`;
-         } else {
+          } else {
              ['detailMostProfitableSymbol', 'detailLeastProfitableSymbol', 'detailMostTradedSymbol', 
               'detailBestSymbolWinRate', 'detailBestSymbolReturn'].forEach(id => {
                  document.getElementById(id).textContent = '-';
@@ -4824,7 +4960,8 @@
      function exportData() {
          const exportData = {
              trades: trades,
-             dailyFees: dailyFees
+             dailyFees: dailyFees,
+             notes: tradingNotes
          };
          const dataStr = JSON.stringify(exportData, null, 2);
          const dataBlob = new Blob([dataStr], {type: 'application/json'});
@@ -4856,13 +4993,18 @@
                          if (importedData.dailyFees) {
                              dailyFees = importedData.dailyFees;
                          }
+                         if (importedData.notes && Array.isArray(importedData.notes)) {
+                             tradingNotes = importedData.notes;
+                         }
                          saveTrades();
+                         saveNotes();
                          localStorage.setItem('tradingPlatformDailyFees', JSON.stringify(dailyFees));
                          updateStats();
                          renderCalendar();
                          updateAllTradesList();
                          updateDetailedAnalytics();
                          loadDailyFees();
+                         renderNotesSection();
                          showToast(currentLanguage === 'ko' ? '데이터가 가져와졌습니다' : 'Data imported');
                      } else {
                          throw new Error('Invalid data format');
@@ -4883,7 +5025,9 @@
          if (confirm(confirmMessage)) {
              trades = [];
              dailyFees = {};
+             tradingNotes = [];
              saveTrades();
+             saveNotes();
              localStorage.setItem('tradingPlatformDailyFees', JSON.stringify(dailyFees));
              updateStats();
              renderCalendar();
@@ -4891,6 +5035,7 @@
              updateDetailedAnalytics();
              clearCalendarRange();
              loadDailyFees();
+             renderNotesSection();
              showToast(currentLanguage === 'ko' ? '모든 데이터가 삭제됨' : 'All data cleared');
          }
      }
