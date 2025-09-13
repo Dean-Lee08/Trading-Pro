@@ -2478,7 +2478,7 @@
                     <button class="settings-btn" onclick="exportData()" data-lang="export-data">Export Data</button>
                     <button class="settings-btn" onclick="importData()" data-lang="import-data">Import Data</button>
                     <input type="file" id="importFileInput" accept=".json" style="display: none;" onchange="handleFileImport()">
-                >
+                </div>
 
                 <div class="settings-section">
                     <h3 data-lang="danger-zone">Danger Zone</h3>
@@ -3164,7 +3164,7 @@
             currentAnalyticsSection = sectionName;
             
             // Update tab states
-     document.querySelectorAll('.analytics-tab').forEach(tab => {
+        document.querySelectorAll('.analytics-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
             event.target.classList.add('active');
@@ -5070,4 +5070,207 @@
                 const totalPL = tradePL - weekFees;
                 const tradeCount = weekTrades.length;
                 
-                const weekLabel = currentLanguage === 'ko' ? `${index + 1}주차` : `Week ${
+                const weekLabel = currentLanguage === 'ko' ? `${index + 1}주차` : `Week ${index + 1}`;
+                
+                return `
+                    <div class="weekly-item">
+                        <span class="weekly-label">${weekLabel}</span>
+                        <span class="weekly-value ${totalPL >= 0 ? 'positive' : 'negative'}">
+                            $${totalPL.toFixed(2)} (${tradeCount})
+                        </span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getWeeksInMonth(year, month) {
+            const weeks = [];
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            
+            let currentDate = new Date(firstDay);
+            currentDate.setDate(currentDate.getDate() - currentDate.getDay());
+            
+            while (currentDate <= lastDay) {
+                const weekStart = new Date(currentDate);
+                const weekEnd = new Date(currentDate);
+                weekEnd.setDate(weekEnd.getDate() + 6);
+                
+                weeks.push({ start: weekStart, end: weekEnd });
+                currentDate.setDate(currentDate.getDate() + 7);
+            }
+            
+            return weeks;
+        }
+
+        function changeMonth(direction) {
+            calendarDate.setMonth(calendarDate.getMonth() + direction);
+            renderCalendar();
+        }
+
+        function clearCalendarRange() {
+            calendarStartDate = null;
+            calendarEndDate = null;
+            selectedCalendarDay = null;
+            
+            document.querySelectorAll('.calendar-day').forEach(day => {
+                day.classList.remove('selected', 'range-start', 'range-end', 'in-range');
+            });
+            
+            document.getElementById('dayDetails').style.display = 'none';
+            updateCalendarStats();
+        }
+
+        function updateCalendarStats() {
+            let filteredTrades = trades;
+            let periodLabel = currentLanguage === 'ko' ? '현재 월' : 'Current Month';
+            
+            if (calendarStartDate && calendarEndDate) {
+                const start = new Date(calendarStartDate);
+                const end = new Date(calendarEndDate);
+                const actualStart = start <= end ? start : end;
+                const actualEnd = start <= end ? end : start;
+                
+                filteredTrades = trades.filter(trade => {
+                    const tradeDate = new Date(trade.date);
+                    return tradeDate >= actualStart && tradeDate <= actualEnd;
+                });
+                
+                const startStr = actualStart.toLocaleDateString(currentLanguage === 'ko' ? 'ko-KR' : 'en-US', { month: 'short', day: 'numeric' });
+                const endStr = actualEnd.toLocaleDateString(currentLanguage === 'ko' ? 'ko-KR' : 'en-US', { month: 'short', day: 'numeric' });
+                periodLabel = `${startStr} - ${endStr}`;
+            } else {
+                const year = calendarDate.getFullYear();
+                const month = calendarDate.getMonth();
+                const monthStr = `${year}-${String(month + 1).padStart(2, '0')}`;
+                filteredTrades = trades.filter(trade => trade.date.startsWith(monthStr));
+                
+                const monthNames = currentLanguage === 'ko' ? 
+                    ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'] :
+                    ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                periodLabel = `${monthNames[month]} ${year}`;
+            }
+            
+            const totalTrades = filteredTrades.length;
+            const tradePL = filteredTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+            
+            const uniqueDatesInPeriod = [...new Set(filteredTrades.map(trade => trade.date))];
+            const totalFeesInPeriod = uniqueDatesInPeriod.reduce((sum, date) => sum + (dailyFees[date] || 0), 0);
+            const totalPL = tradePL - totalFeesInPeriod;
+            
+            const dailyStats = {};
+            filteredTrades.forEach(trade => {
+                if (!dailyStats[trade.date]) {
+                    dailyStats[trade.date] = 0;
+                }
+                dailyStats[trade.date] += trade.pnl;
+            });
+            
+            Object.keys(dailyStats).forEach(date => {
+                dailyStats[date] -= (dailyFees[date] || 0);
+            });
+            
+            const dailyPLs = Object.values(dailyStats);
+            const avgDaily = dailyPLs.length > 0 ? dailyPLs.reduce((sum, pnl) => sum + pnl, 0) / dailyPLs.length : 0;
+            const bestDay = dailyPLs.length > 0 ? Math.max(...dailyPLs) : 0;
+            const worstDay = dailyPLs.length > 0 ? Math.min(...dailyPLs) : 0;
+            
+            document.getElementById('calendarPeriodLabel').textContent = periodLabel;
+            document.getElementById('calendarTotalTrades').textContent = totalTrades;
+            
+            document.getElementById('calendarTotalPL').textContent = `$${totalPL.toFixed(2)}`;
+            document.getElementById('calendarTotalPL').className = `calendar-stat-value ${totalPL >= 0 ? 'positive' : 'negative'}`;
+            
+            document.getElementById('calendarAvgDaily').textContent = `$${avgDaily.toFixed(2)}`;
+            document.getElementById('calendarAvgDaily').className = `calendar-stat-value ${avgDaily >= 0 ? 'positive' : 'negative'}`;
+            
+            document.getElementById('calendarBestDay').textContent = `$${bestDay.toFixed(2)}`;
+            document.getElementById('calendarWorstDay').textContent = `$${worstDay.toFixed(2)}`;
+        }
+
+        // Settings functions
+        function exportData() {
+            const exportData = {
+                trades: trades,
+                notes: notes,
+                dailyFees: dailyFees
+            };
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = 'trading_data.json';
+            link.click();
+            
+            showToast(currentLanguage === 'ko' ? '데이터가 내보내졌습니다' : 'Data exported');
+        }
+
+        function importData() {
+            document.getElementById('importFileInput').click();
+        }
+
+        function handleFileImport() {
+            const file = document.getElementById('importFileInput').files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+                        if (importedData.trades && Array.isArray(importedData.trades)) {
+                            trades = importedData.trades.map(trade => ({
+                                ...trade,
+                                notes: trade.notes || ''
+                            }));
+                            if (importedData.notes && Array.isArray(importedData.notes)) {
+                                notes = importedData.notes;
+                            }
+                            if (importedData.dailyFees) {
+                                dailyFees = importedData.dailyFees;
+                            }
+                            saveTrades();
+                            saveNotes();
+                            localStorage.setItem('tradingPlatformDailyFees', JSON.stringify(dailyFees));
+                            updateStats();
+                            renderCalendar();
+                            renderNotesList();
+                            updateAllTradesList();
+                            updateDetailedAnalytics();
+                            loadDailyFees();
+                            showToast(currentLanguage === 'ko' ? '데이터가 가져와졌습니다' : 'Data imported');
+                        } else {
+                            throw new Error('Invalid data format');
+                        }
+                    } catch (error) {
+                        alert(currentLanguage === 'ko' ? '잘못된 파일 형식' : 'Invalid file format');
+                    }
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        function clearAllData() {
+            const confirmMessage = currentLanguage === 'ko' ? 
+                '모든 데이터를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.' : 
+                'Are you sure you want to clear all data? This action cannot be undone.';
+            
+            if (confirm(confirmMessage)) {
+                trades = [];
+                notes = [];
+                dailyFees = {};
+                saveTrades();
+                saveNotes();
+                localStorage.setItem('tradingPlatformDailyFees', JSON.stringify(dailyFees));
+                updateStats();
+                renderCalendar();
+                renderNotesList();
+                updateAllTradesList();
+                updateDetailedAnalytics();
+                clearCalendarRange();
+                loadDailyFees();
+                showToast(currentLanguage === 'ko' ? '모든 데이터가 삭제됨' : 'All data cleared');
+            }
+        }
+    </script>
+</body>
+</html>
