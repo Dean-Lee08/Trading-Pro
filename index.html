@@ -989,6 +989,7 @@
      .detail-value {
          font-size: 13px;
          font-weight: 600;
+         color: #e4e4e7;
      }
 
      /* Performance Summary Cards */
@@ -1061,6 +1062,7 @@
          font-weight: 700;
          margin-bottom: 4px;
          line-height: 1.2;
+         color: #e4e4e7;
      }
 
      .summary-card-label {
@@ -1115,7 +1117,7 @@
          height: 200px;
          display: flex;
          align-items: center;
-      justify-content: center;
+         justify-content: center;
          color: #64748b;
          font-size: 14px;
          position: relative;
@@ -1131,7 +1133,7 @@
      }
 
      .advanced-charts-grid {
-        display: grid;
+         display: grid;
          grid-template-columns: repeat(2, 1fr);
          gap: 20px;
      }
@@ -1389,6 +1391,40 @@
          transform: translateY(0);
      }
 
+     /* New Advanced Charts Grid */
+     .advanced-charts-section {
+         display: grid;
+         grid-template-columns: repeat(2, 1fr);
+         gap: 20px;
+     }
+
+     .advanced-chart-large {
+         grid-column: 1 / -1;
+     }
+
+     /* Heatmap specific styles */
+     .heatmap-container {
+         position: relative;
+         overflow: hidden;
+     }
+
+     .heatmap-cell {
+         position: absolute;
+         border: 1px solid #334155;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         font-size: 10px;
+         font-weight: 600;
+         transition: all 0.2s ease;
+     }
+
+     .heatmap-cell:hover {
+         border-color: #e4e4e7;
+         transform: scale(1.05);
+         z-index: 10;
+     }
+
      @media (max-width: 768px) {
          .mobile-menu-toggle {
              display: block;
@@ -1456,6 +1492,10 @@
          }
 
          .advanced-charts-grid {
+             grid-template-columns: 1fr;
+         }
+
+         .advanced-charts-section {
              grid-template-columns: 1fr;
          }
      }
@@ -1840,7 +1880,7 @@
                      </div>
                  </div>
 
-                 <!-- Performance Summary Cards -->
+                 <!-- Performance Summary Cards with Enhanced Animation -->
                  <div class="performance-summary">
                      <div class="performance-summary-title" data-lang="performance-summary">Performance Summary</div>
                      <div class="summary-cards">
@@ -2141,7 +2181,7 @@
 
                  <!-- Advanced Charts Section -->
                  <div class="chart-section" id="chartSection">
-                     <div class="advanced-charts-grid">
+                     <div class="advanced-charts-section">
                          <div class="chart-container">
                              <div class="chart-header" data-lang="equity-curve">Equity Curve</div>
                              <div class="chart-content">
@@ -2185,9 +2225,57 @@
                              </div>
                          </div>
                          <div class="chart-container">
-                             <div class="chart-header" data-lang="correlation-matrix">Correlation Matrix</div>
+                             <div class="chart-header" data-lang="performance-correlation">Performance Correlation</div>
                              <div class="chart-content">
-                                 <canvas id="correlationMatrixChart" class="chart-canvas"></canvas>
+                                 <canvas id="performanceCorrelationChart" class="chart-canvas"></canvas>
+                             </div>
+                         </div>
+                         <div class="chart-container">
+                             <div class="chart-header" data-lang="volatility-analysis">Volatility Analysis</div>
+                             <div class="chart-content">
+                                 <canvas id="volatilityAnalysisChart" class="chart-canvas"></canvas>
+                             </div>
+                         </div>
+                         <div class="chart-container">
+                             <div class="chart-header" data-lang="risk-return-scatter">Risk-Return Scatter</div>
+                             <div class="chart-content">
+                                 <canvas id="riskReturnScatterChart" class="chart-canvas"></canvas>
+                             </div>
+                         </div>
+                         <div class="chart-container">
+                             <div class="chart-header" data-lang="performance-attribution">Performance Attribution</div>
+                             <div class="chart-content">
+                                 <canvas id="performanceAttributionChart" class="chart-canvas"></canvas>
+                             </div>
+                         </div>
+                         <div class="chart-container">
+                             <div class="chart-header" data-lang="trade-duration-analysis">Trade Duration Analysis</div>
+                             <div class="chart-content">
+                                 <canvas id="tradeDurationAnalysisChart" class="chart-canvas"></canvas>
+                             </div>
+                         </div>
+                         <div class="chart-container advanced-chart-large">
+                             <div class="chart-header" data-lang="pnl-heatmap">P&L Heatmap</div>
+                             <div class="chart-content">
+                                 <div id="pnlHeatmapContainer" class="heatmap-container" style="width: 100%; height: 300px;"></div>
+                             </div>
+                         </div>
+                         <div class="chart-container">
+                             <div class="chart-header" data-lang="win-rate-by-time">Win Rate by Time</div>
+                             <div class="chart-content">
+                                 <canvas id="winRateByTimeChart" class="chart-canvas"></canvas>
+                             </div>
+                         </div>
+                         <div class="chart-container">
+                             <div class="chart-header" data-lang="position-sizing-analysis">Position Sizing Analysis</div>
+                             <div class="chart-content">
+                                 <canvas id="positionSizingAnalysisChart" class="chart-canvas"></canvas>
+                             </div>
+                         </div>
+                         <div class="chart-container">
+                             <div class="chart-header" data-lang="trading-efficiency-metrics">Trading Efficiency Metrics</div>
+                             <div class="chart-content">
+                                 <canvas id="tradingEfficiencyChart" class="chart-canvas"></canvas>
                              </div>
                          </div>
                      </div>
@@ -2442,8 +2530,16 @@
              'time-distribution': 'Time Distribution',
              'return-distribution': 'Return Distribution',
              'rolling-performance': 'Rolling Performance',
-            'volume-analysis': 'Volume Analysis',
-             'correlation-matrix': 'Correlation Matrix'
+             'volume-analysis': 'Volume Analysis',
+             'performance-correlation': 'Performance Correlation',
+             'volatility-analysis': 'Volatility Analysis',
+             'risk-return-scatter': 'Risk-Return Scatter',
+             'performance-attribution': 'Performance Attribution',
+             'trade-duration-analysis': 'Trade Duration Analysis',
+             'pnl-heatmap': 'P&L Heatmap',
+             'win-rate-by-time': 'Win Rate by Time',
+             'position-sizing-analysis': 'Position Sizing Analysis',
+             'trading-efficiency-metrics': 'Trading Efficiency Metrics'
          },
          ko: {
              'dashboard': '대시보드',
@@ -2581,7 +2677,15 @@
              'return-distribution': '수익률 분포',
              'rolling-performance': '롤링 성과',
              'volume-analysis': '거래량 분석',
-             'correlation-matrix': '상관관계 매트릭스'
+             'performance-correlation': '성과 상관관계',
+             'volatility-analysis': '변동성 분석',
+             'risk-return-scatter': '위험-수익 산포도',
+             'performance-attribution': '성과 기여도',
+             'trade-duration-analysis': '거래 기간 분석',
+             'pnl-heatmap': '손익 히트맵',
+             'win-rate-by-time': '시간별 승률',
+             'position-sizing-analysis': '포지션 크기 분석',
+             'trading-efficiency-metrics': '거래 효율성 지표'
          }
      };
 
@@ -2986,13 +3090,19 @@
                      delete advancedCharts[chartId];
                  }
              });
+             // Clear heatmap
+             const heatmapContainer = document.getElementById('pnlHeatmapContainer');
+             if (heatmapContainer) {
+                 heatmapContainer.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #64748b;">No data available</div>';
+             }
              return;
          }
 
-         // Equity Curve
+         const sortedTrades = [...filteredTrades].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+         // 1. Equity Curve
          const equityData = [];
          let equity = 0;
-         const sortedTrades = [...filteredTrades].sort((a, b) => new Date(a.date) - new Date(b.date));
          
          sortedTrades.forEach((trade, index) => {
              equity += trade.pnl;
@@ -3027,7 +3137,7 @@
              }
          });
 
-         // Drawdown Chart
+         // 2. Drawdown Chart
          const drawdownData = [];
          let peak = 0;
          let currentEquity = 0;
@@ -3069,7 +3179,7 @@
              }
          });
 
-         // Symbol Performance
+         // 3. Symbol Performance
          const symbolStats = {};
          filteredTrades.forEach(trade => {
              if (!symbolStats[trade.symbol]) {
@@ -3091,7 +3201,7 @@
              }]
          });
 
-         // Time Distribution
+         // 4. Time Distribution
          const hourStats = {};
          filteredTrades.forEach(trade => {
              if (trade.entryTime) {
@@ -3117,7 +3227,7 @@
              }]
          });
 
-         // Return Distribution
+         // 5. Return Distribution
          const returnRanges = {
              '<-5%': 0, '-5% to -2%': 0, '-2% to 0%': 0,
              '0% to 2%': 0, '2% to 5%': 0, '>5%': 0
@@ -3142,7 +3252,7 @@
              }]
          });
 
-         // Rolling Performance (30-day)
+         // 6. Rolling Performance (30-day)
          const rollingData = [];
          for (let i = 29; i < sortedTrades.length; i++) {
              const recentTrades = sortedTrades.slice(i - 29, i + 1);
@@ -3178,7 +3288,7 @@
              }
          });
 
-         // Volume Analysis
+         // 7. Volume Analysis
          const volumeData = filteredTrades.map((trade, index) => ({
              x: index + 1,
              y: trade.amount
@@ -3192,21 +3302,331 @@
              }]
          });
 
-         // Correlation Matrix (simplified)
-         const correlationData = [
-             { x: 'Volume', y: 'P&L', v: 0.15 },
-             { x: 'Hold Time', y: 'P&L', v: -0.08 },
-             { x: 'Volume', y: 'Hold Time', v: 0.23 }
-         ];
+         // 8. Performance Correlation
+         const correlationData = filteredTrades.map(trade => ({
+             x: trade.amount,
+             y: trade.pnl
+         }));
 
-         createAdvancedChart('correlationMatrixChart', 'scatter', {
+         createAdvancedChart('performanceCorrelationChart', 'scatter', {
              datasets: [{
-                 label: 'Correlation',
-                 data: correlationData.map(d => ({ x: d.x, y: d.y })),
-                 backgroundColor: correlationData.map(d => 
-                     d.v > 0 ? `rgba(16, 185, 129, ${Math.abs(d.v)})` : `rgba(239, 68, 68, ${Math.abs(d.v)})`
-                 )
+                 label: 'Volume vs P&L',
+                 data: correlationData,
+                 backgroundColor: '#8b5cf6'
              }]
+         }, {
+             scales: {
+                 x: {
+                     title: { display: true, text: 'Position Size ($)', color: '#94a3b8' },
+                     ticks: { color: '#94a3b8' },
+                     grid: { color: '#334155' }
+                 },
+                 y: {
+                     title: { display: true, text: 'P&L ($)', color: '#94a3b8' },
+                     ticks: { color: '#94a3b8' },
+                     grid: { color: '#334155' }
+                 }
+             }
+         });
+
+         // 9. Volatility Analysis
+         const volatilityData = [];
+         let volatilityWindow = 10;
+         for (let i = volatilityWindow; i < sortedTrades.length; i++) {
+             const recentReturns = sortedTrades.slice(i - volatilityWindow, i).map(t => t.returnPct);
+             const mean = recentReturns.reduce((sum, ret) => sum + ret, 0) / recentReturns.length;
+             const variance = recentReturns.reduce((sum, ret) => sum + Math.pow(ret - mean, 2), 0) / recentReturns.length;
+             const volatility = Math.sqrt(variance);
+             
+             volatilityData.push({
+                 x: new Date(sortedTrades[i].date),
+                 y: volatility
+             });
+         }
+
+         createAdvancedChart('volatilityAnalysisChart', 'line', {
+             datasets: [{
+                 label: 'Rolling Volatility',
+                 data: volatilityData,
+                 borderColor: '#f59e0b',
+                 backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                 fill: false
+             }]
+         }, {
+             scales: {
+                 x: {
+                     type: 'time',
+                     time: { unit: 'day' },
+                     ticks: { color: '#94a3b8' },
+                     grid: { color: '#334155' }
+                 },
+                 y: {
+                     ticks: { color: '#94a3b8' },
+                     grid: { color: '#334155' }
+                 }
+             }
+         });
+
+         // 10. Risk-Return Scatter
+         const riskReturnData = {};
+         filteredTrades.forEach(trade => {
+             if (!riskReturnData[trade.symbol]) {
+                 riskReturnData[trade.symbol] = { returns: [], pnl: 0 };
+             }
+             riskReturnData[trade.symbol].returns.push(trade.returnPct);
+             riskReturnData[trade.symbol].pnl += trade.pnl;
+         });
+
+         const riskReturnScatter = Object.entries(riskReturnData).map(([symbol, data]) => {
+             const avgReturn = data.returns.reduce((sum, ret) => sum + ret, 0) / data.returns.length;
+             const variance = data.returns.reduce((sum, ret) => sum + Math.pow(ret - avgReturn, 2), 0) / data.returns.length;
+             const risk = Math.sqrt(variance);
+             
+             return {
+                 x: risk,
+                 y: avgReturn,
+                 label: symbol
+             };
+         });
+
+         createAdvancedChart('riskReturnScatterChart', 'scatter', {
+             datasets: [{
+                 label: 'Risk vs Return by Symbol',
+                 data: riskReturnScatter,
+                 backgroundColor: '#ef4444'
+             }]
+         }, {
+             scales: {
+                 x: {
+                     title: { display: true, text: 'Risk (Volatility)', color: '#94a3b8' },
+                     ticks: { color: '#94a3b8' },
+                     grid: { color: '#334155' }
+                 },
+                 y: {
+                     title: { display: true, text: 'Average Return (%)', color: '#94a3b8' },
+                     ticks: { color: '#94a3b8' },
+                     grid: { color: '#334155' }
+                 }
+             }
+         });
+
+         // 11. Performance Attribution
+         const attributionData = Object.entries(symbolStats)
+             .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))
+             .slice(0, 8);
+
+         createAdvancedChart('performanceAttributionChart', 'bar', {
+             labels: attributionData.map(([symbol]) => symbol),
+             datasets: [{
+                 label: 'Contribution to P&L',
+                 data: attributionData.map(([, pnl]) => pnl),
+                 backgroundColor: attributionData.map(([, pnl]) => pnl >= 0 ? '#10b981' : '#ef4444')
+             }]
+         });
+
+         // 12. Trade Duration Analysis
+         const durationStats = {};
+         filteredTrades.forEach(trade => {
+             if (trade.holdingTime) {
+                 const duration = parseInt(trade.holdingTime.replace('m', ''));
+                 let bucket;
+                 if (duration < 5) bucket = '< 5m';
+                 else if (duration < 15) bucket = '5-15m';
+                 else if (duration < 60) bucket = '15-60m';
+                 else if (duration < 240) bucket = '1-4h';
+                 else bucket = '> 4h';
+                 
+                 if (!durationStats[bucket]) durationStats[bucket] = 0;
+                 durationStats[bucket]++;
+             }
+         });
+
+         createAdvancedChart('tradeDurationAnalysisChart', 'pie', {
+             labels: Object.keys(durationStats),
+             datasets: [{
+                 data: Object.values(durationStats),
+                 backgroundColor: ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b', '#ef4444']
+             }]
+         });
+
+         // 13. P&L Heatmap
+         generatePnLHeatmap(filteredTrades);
+
+         // 14. Win Rate by Time
+         const winRateByHour = {};
+         filteredTrades.forEach(trade => {
+             if (trade.entryTime) {
+                 const hour = parseInt(trade.entryTime.split(':')[0]);
+                 if (!winRateByHour[hour]) {
+                     winRateByHour[hour] = { wins: 0, total: 0 };
+                 }
+                 winRateByHour[hour].total++;
+                 if (trade.pnl > 0) winRateByHour[hour].wins++;
+             }
+         });
+
+         const winRateData = Object.entries(winRateByHour).map(([hour, data]) => ({
+             x: parseInt(hour),
+             y: data.total > 0 ? (data.wins / data.total) * 100 : 0
+         }));
+
+         createAdvancedChart('winRateByTimeChart', 'line', {
+             datasets: [{
+                 label: 'Win Rate by Hour (%)',
+                 data: winRateData,
+                 borderColor: '#10b981',
+                 backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                 fill: false
+             }]
+         });
+
+         // 15. Position Sizing Analysis
+         const positionBuckets = {};
+         filteredTrades.forEach(trade => {
+             const amount = trade.amount;
+             let bucket;
+             if (amount < 1000) bucket = '< $1K';
+             else if (amount < 5000) bucket = '$1K-5K';
+             else if (amount < 10000) bucket = '$5K-10K';
+             else if (amount < 25000) bucket = '$10K-25K';
+             else bucket = '> $25K';
+             
+             if (!positionBuckets[bucket]) {
+                 positionBuckets[bucket] = { count: 0, totalPL: 0 };
+             }
+             positionBuckets[bucket].count++;
+             positionBuckets[bucket].totalPL += trade.pnl;
+         });
+
+         const positionData = Object.entries(positionBuckets).map(([bucket, data]) => ({
+             x: bucket,
+             y: data.totalPL / data.count // Average P&L per trade
+         }));
+
+         createAdvancedChart('positionSizingAnalysisChart', 'bar', {
+             labels: positionData.map(d => d.x),
+             datasets: [{
+                 label: 'Avg P&L per Trade',
+                 data: positionData.map(d => d.y),
+                 backgroundColor: positionData.map(d => d.y >= 0 ? '#10b981' : '#ef4444')
+             }]
+         });
+
+         // 16. Trading Efficiency Metrics
+         const efficiencyMetrics = {
+             'Profit Factor': calculateProfitFactor(filteredTrades),
+             'Sharpe Ratio': calculateSharpeRatio(filteredTrades),
+             'Max Drawdown': calculateMaxDrawdown(filteredTrades),
+             'Recovery Factor': calculateRecoveryFactor(filteredTrades),
+             'Win Rate': (filteredTrades.filter(t => t.pnl > 0).length / filteredTrades.length) * 100
+         };
+
+         createAdvancedChart('tradingEfficiencyChart', 'radar', {
+             labels: Object.keys(efficiencyMetrics),
+             datasets: [{
+                 label: 'Efficiency Metrics',
+                 data: Object.values(efficiencyMetrics).map(val => Math.min(val, 100)), // Normalize to 0-100
+                 borderColor: '#3b82f6',
+                 backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                 pointBackgroundColor: '#3b82f6'
+             }]
+         });
+     }
+
+     // Helper functions for advanced calculations
+     function calculateProfitFactor(trades) {
+         const wins = trades.filter(t => t.pnl > 0);
+         const losses = trades.filter(t => t.pnl < 0);
+         const totalWins = wins.reduce((sum, t) => sum + t.pnl, 0);
+         const totalLosses = Math.abs(losses.reduce((sum, t) => sum + t.pnl, 0));
+         return totalLosses > 0 ? totalWins / totalLosses : 0;
+     }
+
+     function calculateSharpeRatio(trades) {
+         if (trades.length < 2) return 0;
+         const returns = trades.map(t => t.returnPct);
+         const avgReturn = returns.reduce((sum, ret) => sum + ret, 0) / returns.length;
+         const variance = returns.reduce((sum, ret) => sum + Math.pow(ret - avgReturn, 2), 0) / returns.length;
+         const stdDev = Math.sqrt(variance);
+         return stdDev > 0 ? (avgReturn / stdDev) * Math.sqrt(252) : 0; // Annualized
+     }
+
+     function calculateMaxDrawdown(trades) {
+         let peak = 0;
+         let maxDrawdown = 0;
+         let cumulative = 0;
+         
+         trades.forEach(trade => {
+             cumulative += trade.pnl;
+             if (cumulative > peak) peak = cumulative;
+             const drawdown = peak - cumulative;
+             if (drawdown > maxDrawdown) maxDrawdown = drawdown;
+         });
+         
+         return maxDrawdown;
+     }
+
+     function calculateRecoveryFactor(trades) {
+         const totalReturn = trades.reduce((sum, t) => sum + t.pnl, 0);
+         const maxDrawdown = calculateMaxDrawdown(trades);
+         return maxDrawdown > 0 ? totalReturn / maxDrawdown : 0;
+     }
+
+     // P&L Heatmap generation
+     function generatePnLHeatmap(trades) {
+         const container = document.getElementById('pnlHeatmapContainer');
+         if (!container) return;
+
+         container.innerHTML = '';
+
+         const dailyData = {};
+         trades.forEach(trade => {
+             const date = new Date(trade.date);
+             const dayOfWeek = date.getDay();
+             const hour = trade.entryTime ? parseInt(trade.entryTime.split(':')[0]) : 12;
+             
+             const key = `${dayOfWeek}-${hour}`;
+             if (!dailyData[key]) {
+                 dailyData[key] = { pnl: 0, count: 0 };
+             }
+             dailyData[key].pnl += trade.pnl;
+             dailyData[key].count++;
+         });
+
+         const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+         const hours = Array.from({length: 24}, (_, i) => i);
+
+         const cellWidth = 30;
+         const cellHeight = 30;
+         const maxAbsPnL = Math.max(...Object.values(dailyData).map(d => Math.abs(d.pnl)));
+
+         container.style.position = 'relative';
+         container.style.width = `${hours.length * cellWidth}px`;
+         container.style.height = `${days.length * cellHeight}px`;
+
+         days.forEach((day, dayIndex) => {
+             hours.forEach((hour, hourIndex) => {
+                 const key = `${dayIndex}-${hour}`;
+                 const data = dailyData[key] || { pnl: 0, count: 0 };
+                 
+                 const cell = document.createElement('div');
+                 cell.className = 'heatmap-cell';
+                 cell.style.left = `${hourIndex * cellWidth}px`;
+                 cell.style.top = `${dayIndex * cellHeight}px`;
+                 cell.style.width = `${cellWidth}px`;
+                 cell.style.height = `${cellHeight}px`;
+                 
+                 const intensity = maxAbsPnL > 0 ? Math.abs(data.pnl) / maxAbsPnL : 0;
+                 const color = data.pnl >= 0 ? 
+                     `rgba(16, 185, 129, ${intensity})` : 
+                     `rgba(239, 68, 68, ${intensity})`;
+                 
+                 cell.style.backgroundColor = color;
+                 cell.textContent = data.count > 0 ? data.count.toString() : '';
+                 cell.title = `${day} ${hour}:00 - P&L: $${data.pnl.toFixed(2)} (${data.count} trades)`;
+                 
+                 container.appendChild(cell);
+             });
          });
      }
 
@@ -3854,7 +4274,7 @@
          document.getElementById('detailWinningTrades').textContent = `${wins.length} (${winRate.toFixed(1)}%)`;
          document.getElementById('detailLosingTrades').textContent = `${losses.length} (${(100 - winRate).toFixed(1)}%)`;
          document.getElementById('detailAvgWinningTrade').textContent = `$${avgWinningTrade.toFixed(2)}`;
-      document.getElementById('detailAvgLosingTrade').textContent = `$${avgLosingTrade.toFixed(2)}`;
+         document.getElementById('detailAvgLosingTrade').textContent = `$${avgLosingTrade.toFixed(2)}`;
          document.getElementById('detailLargestWin').textContent = `$${largestWin.toFixed(2)}`;
          document.getElementById('detailLargestLoss').textContent = `$${largestLoss.toFixed(2)}`;
      }
@@ -3876,7 +4296,8 @@
              if (netDailyPL > 0) dailyStats[date].winDays = 1;
              else if (netDailyPL < 0) dailyStats[date].lossDays = 1;
          });
-        const dailyPLs = Object.values(dailyStats).map(data => data.tradePL - (dailyFees[Object.keys(dailyStats)[Object.values(dailyStats).indexOf(data)]] || 0));
+         
+         const dailyPLs = Object.values(dailyStats).map(data => data.tradePL - (dailyFees[Object.keys(dailyStats)[Object.values(dailyStats).indexOf(data)]] || 0));
          const winDays = Object.values(dailyStats).filter(data => data.winDays > 0).length;
          const lossDays = Object.values(dailyStats).filter(data => data.lossDays > 0).length;
          const bestTradingDay = dailyPLs.length > 0 ? Math.max(...dailyPLs) : 0;
@@ -4409,7 +4830,7 @@
          
          const weeks = getWeeksInMonth(year, month);
          
-         summaryContainer.innerHTML = weeks.map((week, index)=> {
+         summaryContainer.innerHTML = weeks.map((week, index) => {
              const weekTrades = trades.filter(trade => {
                  const tradeDate = new Date(trade.date);
                  return tradeDate >= week.start && tradeDate <= week.end;
@@ -4488,131 +4909,131 @@
              });
              
              const startStr = actualStart.toLocaleDateString(currentLanguage === 'ko' ? 'ko-KR' : 'en-US', { month: 'short', day: 'numeric' });
-          const endStr = actualEnd.toLocaleDateString(currentLanguage === 'ko' ? 'ko-KR' : 'en-US', { month: 'short', day: 'numeric' });
-              periodLabel = `${startStr} - ${endStr}`;
-          } else {
-              const year = calendarDate.getFullYear();
-              const month = calendarDate.getMonth();
-              const monthStr = `${year}-${String(month + 1).padStart(2, '0')}`;
-              filteredTrades = trades.filter(trade => trade.date.startsWith(monthStr));
-              
-              const monthNames = currentLanguage === 'ko' ? 
-                  ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'] :
-                  ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-              periodLabel = `${monthNames[month]} ${year}`;
-          }
-          
-          const totalTrades = filteredTrades.length;
-          const tradePL = filteredTrades.reduce((sum, trade) => sum + trade.pnl, 0);
-          
-          const uniqueDatesInPeriod = [...new Set(filteredTrades.map(trade => trade.date))];
-          const totalFeesInPeriod = uniqueDatesInPeriod.reduce((sum, date) => sum + (dailyFees[date] || 0), 0);
-          const totalPL = tradePL - totalFeesInPeriod;
-          
-          const dailyStats = {};
-          filteredTrades.forEach(trade => {
-              if (!dailyStats[trade.date]) {
-                  dailyStats[trade.date] = 0;
-              }
-              dailyStats[trade.date] += trade.pnl;
-          });
-          
-          Object.keys(dailyStats).forEach(date => {
-              dailyStats[date] -= (dailyFees[date] || 0);
-          });
-          
-          const dailyPLs = Object.values(dailyStats);
-          const avgDaily = dailyPLs.length > 0 ? dailyPLs.reduce((sum, pnl) => sum + pnl, 0) / dailyPLs.length : 0;
-          const bestDay = dailyPLs.length > 0 ? Math.max(...dailyPLs) : 0;
-          const worstDay = dailyPLs.length > 0 ? Math.min(...dailyPLs) : 0;
-          
-          document.getElementById('calendarPeriodLabel').textContent = periodLabel;
-          document.getElementById('calendarTotalTrades').textContent = totalTrades;
-          
-          document.getElementById('calendarTotalPL').textContent = `$${totalPL.toFixed(2)}`;
-          document.getElementById('calendarTotalPL').className = `calendar-stat-value ${totalPL >= 0 ? 'positive' : 'negative'}`;
-          
-          document.getElementById('calendarAvgDaily').textContent = `$${avgDaily.toFixed(2)}`;
-          document.getElementById('calendarAvgDaily').className = `calendar-stat-value ${avgDaily >= 0 ? 'positive' : 'negative'}`;
-          
-          document.getElementById('calendarBestDay').textContent = `$${bestDay.toFixed(2)}`;
-          document.getElementById('calendarWorstDay').textContent = `$${worstDay.toFixed(2)}`;
-      }
+             const endStr = actualEnd.toLocaleDateString(currentLanguage === 'ko' ? 'ko-KR' : 'en-US', { month: 'short', day: 'numeric' });
+             periodLabel = `${startStr} - ${endStr}`;
+         } else {
+             const year = calendarDate.getFullYear();
+             const month = calendarDate.getMonth();
+             const monthStr = `${year}-${String(month + 1).padStart(2, '0')}`;
+             filteredTrades = trades.filter(trade => trade.date.startsWith(monthStr));
+             
+             const monthNames = currentLanguage === 'ko' ? 
+                 ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'] :
+                 ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+             periodLabel = `${monthNames[month]} ${year}`;
+         }
+         
+         const totalTrades = filteredTrades.length;
+         const tradePL = filteredTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+         
+         const uniqueDatesInPeriod = [...new Set(filteredTrades.map(trade => trade.date))];
+         const totalFeesInPeriod = uniqueDatesInPeriod.reduce((sum, date) => sum + (dailyFees[date] || 0), 0);
+         const totalPL = tradePL - totalFeesInPeriod;
+         
+         const dailyStats = {};
+         filteredTrades.forEach(trade => {
+             if (!dailyStats[trade.date]) {
+                 dailyStats[trade.date] = 0;
+             }
+             dailyStats[trade.date] += trade.pnl;
+         });
+         
+         Object.keys(dailyStats).forEach(date => {
+             dailyStats[date] -= (dailyFees[date] || 0);
+         });
+         
+         const dailyPLs = Object.values(dailyStats);
+         const avgDaily = dailyPLs.length > 0 ? dailyPLs.reduce((sum, pnl) => sum + pnl, 0) / dailyPLs.length : 0;
+         const bestDay = dailyPLs.length > 0 ? Math.max(...dailyPLs) : 0;
+         const worstDay = dailyPLs.length > 0 ? Math.min(...dailyPLs) : 0;
+         
+         document.getElementById('calendarPeriodLabel').textContent = periodLabel;
+         document.getElementById('calendarTotalTrades').textContent = totalTrades;
+         
+         document.getElementById('calendarTotalPL').textContent = `$${totalPL.toFixed(2)}`;
+         document.getElementById('calendarTotalPL').className = `calendar-stat-value ${totalPL >= 0 ? 'positive' : 'negative'}`;
+         
+         document.getElementById('calendarAvgDaily').textContent = `$${avgDaily.toFixed(2)}`;
+         document.getElementById('calendarAvgDaily').className = `calendar-stat-value ${avgDaily >= 0 ? 'positive' : 'negative'}`;
+         
+         document.getElementById('calendarBestDay').textContent = `$${bestDay.toFixed(2)}`;
+         document.getElementById('calendarWorstDay').textContent = `$${worstDay.toFixed(2)}`;
+     }
 
-      // Settings functions
-      function exportData() {
-          const exportData = {
-              trades: trades,
-              dailyFees: dailyFees
-          };
-          const dataStr = JSON.stringify(exportData, null, 2);
-          const dataBlob = new Blob([dataStr], {type: 'application/json'});
-          
-          const link = document.createElement('a');
-          link.href = URL.createObjectURL(dataBlob);
-          link.download = 'trading_data.json';
-          link.click();
-          
-          showToast(currentLanguage === 'ko' ? '데이터가 내보내졌습니다' : 'Data exported');
-      }
+     // Settings functions
+     function exportData() {
+         const exportData = {
+             trades: trades,
+             dailyFees: dailyFees
+         };
+         const dataStr = JSON.stringify(exportData, null, 2);
+         const dataBlob = new Blob([dataStr], {type: 'application/json'});
+         
+         const link = document.createElement('a');
+         link.href = URL.createObjectURL(dataBlob);
+         link.download = 'trading_data.json';
+         link.click();
+         
+         showToast(currentLanguage === 'ko' ? '데이터가 내보내졌습니다' : 'Data exported');
+     }
 
-      function importData() {
-          document.getElementById('importFileInput').click();
-      }
+     function importData() {
+         document.getElementById('importFileInput').click();
+     }
 
-      function handleFileImport() {
-          const file = document.getElementById('importFileInput').files[0];
-          if (file) {
-              const reader = new FileReader();
-              reader.onload = function(e) {
-                  try {
-                      const importedData = JSON.parse(e.target.result);
-                      if (importedData.trades && Array.isArray(importedData.trades)) {
-                          trades = importedData.trades.map(trade => ({
-                              ...trade,
-                              notes: trade.notes || ''
-                          }));
-                          if (importedData.dailyFees) {
-                              dailyFees = importedData.dailyFees;
-                          }
-                          saveTrades();
-                          localStorage.setItem('tradingPlatformDailyFees', JSON.stringify(dailyFees));
-                          updateStats();
-                          renderCalendar();
-                          updateAllTradesList();
-                          updateDetailedAnalytics();
-                          loadDailyFees();
-                          showToast(currentLanguage === 'ko' ? '데이터가 가져와졌습니다' : 'Data imported');
-                      } else {
-                          throw new Error('Invalid data format');
-                      }
-                  } catch (error) {
-                      alert(currentLanguage === 'ko' ? '잘못된 파일 형식' : 'Invalid file format');
-                  }
-              };
-              reader.readAsText(file);
-          }
-      }
+     function handleFileImport() {
+         const file = document.getElementById('importFileInput').files[0];
+         if (file) {
+             const reader = new FileReader();
+             reader.onload = function(e) {
+                 try {
+                     const importedData = JSON.parse(e.target.result);
+                     if (importedData.trades && Array.isArray(importedData.trades)) {
+                         trades = importedData.trades.map(trade => ({
+                             ...trade,
+                             notes: trade.notes || ''
+                         }));
+                         if (importedData.dailyFees) {
+                             dailyFees = importedData.dailyFees;
+                         }
+                         saveTrades();
+                         localStorage.setItem('tradingPlatformDailyFees', JSON.stringify(dailyFees));
+                         updateStats();
+                         renderCalendar();
+                         updateAllTradesList();
+                         updateDetailedAnalytics();
+                         loadDailyFees();
+                         showToast(currentLanguage === 'ko' ? '데이터가 가져와졌습니다' : 'Data imported');
+                     } else {
+                         throw new Error('Invalid data format');
+                     }
+                 } catch (error) {
+                     alert(currentLanguage === 'ko' ? '잘못된 파일 형식' : 'Invalid file format');
+                 }
+             };
+             reader.readAsText(file);
+         }
+     }
 
-      function clearAllData() {
-          const confirmMessage = currentLanguage === 'ko' ? 
-              '모든 데이터를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.' : 
-              'Are you sure you want to clear all data? This action cannot be undone.';
-          
-          if (confirm(confirmMessage)) {
-              trades = [];
-              dailyFees = {};
-              saveTrades();
-              localStorage.setItem('tradingPlatformDailyFees', JSON.stringify(dailyFees));
-              updateStats();
-              renderCalendar();
-              updateAllTradesList();
-              updateDetailedAnalytics();
-              clearCalendarRange();
-              loadDailyFees();
-              showToast(currentLanguage === 'ko' ? '모든 데이터가 삭제됨' : 'All data cleared');
-          }
-      }
-  </script>
+     function clearAllData() {
+         const confirmMessage = currentLanguage === 'ko' ? 
+             '모든 데이터를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.' : 
+             'Are you sure you want to clear all data? This action cannot be undone.';
+         
+         if (confirm(confirmMessage)) {
+             trades = [];
+             dailyFees = {};
+             saveTrades();
+             localStorage.setItem('tradingPlatformDailyFees', JSON.stringify(dailyFees));
+             updateStats();
+             renderCalendar();
+             updateAllTradesList();
+             updateDetailedAnalytics();
+             clearCalendarRange();
+             loadDailyFees();
+             showToast(currentLanguage === 'ko' ? '모든 데이터가 삭제됨' : 'All data cleared');
+         }
+     }
+ </script>
 </body>
 </html>
