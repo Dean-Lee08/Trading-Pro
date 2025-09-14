@@ -208,48 +208,59 @@
         }
 
         .stats-overview {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin-bottom: 32px;
-        }
-        
-        .stat-item {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 8px;
-            padding: 16px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+    padding: 20px;
+    background: #0f172a;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+}
 
-        /* Enhanced animated gradient border effect */
-        .stat-item::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #3b82f6, #8b5cf6, #06b6d4, #10b981, #f59e0b, #ef4444, #3b82f6);
-            background-size: 400% 400%;
-            animation: gradientShift 2s ease infinite;
-            border-radius: 10px;
-            z-index: -2;
-        }
+/* Enhanced animated gradient border for stats overview */
+.stats-overview::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    background: linear-gradient(45deg, #3b82f6, #8b5cf6, #06b6d4, #10b981, #f59e0b, #ef4444, #3b82f6);
+    background-size: 400% 400%;
+    animation: gradientShift 3s ease infinite;
+    border-radius: 15px;
+    z-index: -2;
+}
 
-        .stat-item::after {
-            content: '';
-            position: absolute;
-            top: 1px;
-            left: 1px;
-            right: 1px;
-            bottom: 1px;
-            background: #1e293b;
-            border-radius: 7px;
-            z-index: -1;
-        }
+.stats-overview::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #0f172a;
+    border-radius: 12px;
+    z-index: -1;
+}
+
+.stat-item {
+    background: transparent;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+/* Remove the existing stat-item gradient animation */
+.stat-item::before,
+.stat-item::after {
+    display: none;
+}
 
         @keyframes gradientShift {
             0% { 
