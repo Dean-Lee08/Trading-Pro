@@ -219,14 +219,14 @@
     overflow: hidden;
 }
 
-/* Enhanced animated gradient border for stats overview */
+/* 전체 컨테이너 그라디언트 테두리 */
 .stats-overview::before {
     content: '';
     position: absolute;
-    top: -5px;
-    left: -5px;
-    right: -5px;
-    bottom: -5px;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
     background: linear-gradient(45deg, #3b82f6, #8b5cf6, #06b6d4, #10b981, #f59e0b, #ef4444, #3b82f6);
     background-size: 400% 400%;
     animation: gradientShift 3s ease infinite;
@@ -247,7 +247,7 @@
 }
 
 .stat-item {
-    background: transparent;
+    background: #1e293b;
     border: 1px solid #334155;
     border-radius: 8px;
     padding: 16px;
@@ -256,7 +256,7 @@
     z-index: 1;
 }
 
-/* Remove the existing stat-item gradient animation */
+/* 기존 stat-item 그라디언트 효과 제거 */
 .stat-item::before,
 .stat-item::after {
     display: none;
