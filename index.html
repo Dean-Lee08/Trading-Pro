@@ -929,7 +929,7 @@
             padding: 8px 0 16px 0;
             margin-bottom: 16px;
             border-bottom: 1px solid #334155;
-            font-family: 'Inter', sans-serif;
+            font-family: 'JetBrains Mono', monospace;
         }
 
         .note-title-input:focus {
@@ -947,7 +947,7 @@
             min-height: 300px;
             resize: vertical;
             padding: 0;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Source Code Pro', monospace;
         }
 
         .note-content-input:focus {
@@ -1058,7 +1058,7 @@
             font-size: 16px;
             font-weight: 600;
             margin: 0;
-            font-family: 'Inter', sans-serif;
+            font-family: 'JetBrains Mono', monospace;
         }
 
         .note-item-date {
@@ -1080,8 +1080,7 @@
             line-height: 1.5;
             max-height: 60px;
             overflow: hidden;
-            font-family: 'Inter', sans-serif;
-            transition: max-height 0.3s ease;
+            font-family: 'Source Code Pro', monospace;
         }
 
         .note-item-actions {
@@ -1094,57 +1093,6 @@
 
         .note-item:hover .note-item-actions {
             opacity: 1;
-        }
-
-        .note-item-preview.expanded {
-            max-height: none;
-        }
-
-        .expand-btn {
-            background: #374151;
-            border: 1px solid #4b5563;
-            color: #e4e4e7;
-            padding: 4px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 11px;
-            transition: all 0.2s ease;
-            margin-top: 8px;
-        }
-
-        .expand-btn:hover {
-            background: #4b5563;
-        }
-
-        .note-view-mode {
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 24px;
-        }
-
-        .note-view-title {
-            color: #f8fafc;
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            font-family: 'Inter', sans-serif;
-            border-bottom: 1px solid #334155;
-            padding-bottom: 12px;
-        }
-
-        .note-view-content {
-            color: #e4e4e7;
-            font-size: 14px;
-            line-height: 1.6;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .note-view-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 16px;
         }
 
         /* Enhanced Analytics Styles */
@@ -2620,11 +2568,10 @@
                 <div class="notes-container">
                     <!-- Notes Tabs -->
                     <div class="notes-tabs">
-    <button class="notes-tab active" onclick="showNotesSection('all')" data-lang="all-notes">All</button>
-    <button class="notes-tab" onclick="showNotesSection('daily')" data-lang="daily-review">Daily Review</button>
-    <button class="notes-tab" onclick="showNotesSection('strategy')" data-lang="strategy">Strategy</button>
-    <button class="notes-tab" onclick="showNotesSection('general')" data-lang="general">General</button>
-</div>
+                        <button class="notes-tab active" onclick="showNotesSection('daily')" data-lang="daily-review">Daily Review</button>
+                        <button class="notes-tab" onclick="showNotesSection('strategy')" data-lang="strategy">Strategy</button>
+                        <button class="notes-tab" onclick="showNotesSection('general')" data-lang="general">General</button>
+                    </div>
 
                     <!-- Note Editor -->
                     <div id="noteEditor" class="note-editor" style="display: none;">
@@ -2655,27 +2602,8 @@
                         </div>
                     </div>
 
-                    <!-- Note View Mode -->
-                    <div id="noteViewMode" class="note-view-mode" style="display: none;">
-                        <div class="note-view-title" id="noteViewTitle"></div>
-                        <div class="note-view-content" id="noteViewContent"></div>
-                        <div class="note-view-actions">
-                            <button class="btn btn-secondary" onclick="backToNotesList()" data-lang="back">Back</button>
-                            <button class="btn btn-primary" onclick="editCurrentNote()" data-lang="edit">Edit</button>
-                        </div>
-                    </div>
-
                     <!-- Notes Sections -->
-                    <div id="allNotesSection" class="note-section active">
-    <div id="allNotesList" class="notes-list">
-        <div class="empty-state">
-            <div class="empty-state-icon">📝</div>
-            <div data-lang="no-notes">No notes written yet. Click "New Note" to start.</div>
-        </div>
-    </div>
-</div>
-                    
-                    <div id="dailyNotesSection" class="note-section">
+                    <div id="dailyNotesSection" class="note-section active">
                         <div id="dailyNotesList" class="notes-list">
                             <div class="empty-state">
                                 <div class="empty-state-icon">📝</div>
@@ -2811,8 +2739,7 @@
         let tradesEndDate = null;
         let currentAnalyticsSection = 'detail';
         let editingNoteId = null;
-        let currentNotesSection = 'all';
-        let currentViewingNoteId = null;
+        let currentNotesSection = 'daily';
         let currentTextColor = '#e4e4e7';
         let currentFont = "'Source Code Pro', monospace";
 
@@ -2982,11 +2909,6 @@
                 'win-rate-by-time': 'Win Rate by Time',
                 'position-sizing-analysis': 'Position Sizing Analysis',
                 'trading-efficiency-metrics': 'Trading Efficiency Metrics'
-                'all-notes': 'All',
-                'no-notes': 'No notes written yet. Click "New Note" to start.',
-                'back': 'Back',
-                'show-more': 'Show more',
-                'show-less': 'Show less',
             },
             ko: {
                 'dashboard': '대시보드',
@@ -3148,11 +3070,6 @@
                 'win-rate-by-time': '시간별 승률',
                 'position-sizing-analysis': '포지션 크기 분석',
                 'trading-efficiency-metrics': '거래 효율성 지표'
-                'all-notes': '전체',
-                'no-notes': '아직 작성된 노트가 없습니다. "새 노트"를 클릭하여 시작하세요.',
-                'back': '뒤로',
-                'show-more': '더보기',
-                'show-less': '접기',
             }
         };
 
@@ -3306,22 +3223,8 @@
                 option.classList.remove('active');
             });
             event.target.classList.add('active');
-
-            if (window.getSelection().rangeCount > 0) {
-        const range = window.getSelection().getRangeAt(0);
-        if (range.toString().length > 0) {
-            const span = document.createElement('span');
-            span.style.color = color;
-            try {
-                range.surroundContents(span);
-            } catch (e) {
-                document.execCommand('foreColor', false, color);
-            }
+            document.execCommand('foreColor', false, color);
         }
-    } else {
-        document.execCommand('foreColor', false, color);
-    }
-}
 
         // Dashboard date range functions
         function clearDashboardRange() {
@@ -3426,30 +3329,20 @@
         }
 
         function editNote(noteId) {
-    const note = notes.find(n => n.id === noteId);
-    if (note) {
-        editingNoteId = noteId;
-        currentTextColor = note.textColor || '#e4e4e7';
-        
-        document.getElementById('noteTitle').value = note.title;
-        document.getElementById('noteContentEditor').innerHTML = note.content;
-        
-        document.querySelectorAll('.color-option').forEach(option => {
-            option.classList.remove('active');
-            if (option.style.backgroundColor === currentTextColor || 
-                (currentTextColor === '#e4e4e7' && option.style.backgroundColor === 'rgb(228, 228, 231)')) {
-                option.classList.add('active');
+            const note = notes.find(n => n.id === noteId);
+            if (note) {
+                editingNoteId = noteId;
+                document.getElementById('noteTitle').value = note.title;
+                document.getElementById('noteContentEditor').innerHTML = note.content;
+                document.getElementById('noteContentEditor').style.fontFamily = note.font || currentFont;
+                document.getElementById('fontSelector').value = note.font || currentFont;
+                document.getElementById('noteEditor').style.display = 'block';
+                document.querySelectorAll('.note-section').forEach(section => {
+                    section.style.display = 'none';
+                });
+                document.getElementById('noteTitle').focus();
             }
-        });
-        
-        document.getElementById('noteEditor').style.display = 'block';
-        document.getElementById('noteViewMode').style.display = 'none';
-        document.querySelectorAll('.note-section').forEach(section => {
-            section.style.display = 'none';
-        });
-        document.getElementById('noteTitle').focus();
-    }
-}
+        }
 
         function deleteNote(noteId) {
             if (confirm(currentLanguage === 'ko' ? '이 노트를 삭제하시겠습니까?' : 'Are you sure you want to delete this note?')) {
@@ -3516,76 +3409,66 @@
         }
 
         function renderAllNotesSections() {
-    renderNotesList('all');
-    renderNotesList('daily');
-    renderNotesList('strategy');
-    renderNotesList('general');
+            renderNotesList('daily');
+            renderNotesList('strategy');
+            renderNotesList('general');
         }
 
         function renderNotesList(category) {
-    let categoryNotes;
-    if (category === 'all') {
-        categoryNotes = notes;
-    } else {
-        categoryNotes = notes.filter(note => note.category === category);
-    }
-    
-    const notesList = document.getElementById(`${category}NotesList`);
-    
-    if (categoryNotes.length === 0) {
-        const emptyMessages = {
-            all: currentLanguage === 'ko' ? '아직 작성된 노트가 없습니다. "새 노트"를 클릭하여 시작하세요.' : 'No notes written yet. Click "New Note" to start.',
-            daily: currentLanguage === 'ko' ? '일일 리뷰 노트가 아직 없습니다. "새 노트"를 클릭하여 시작하세요.' : 'No daily review notes yet. Click "New Note" to start.',
-            strategy: currentLanguage === 'ko' ? '전략 노트가 아직 없습니다. "새 노트"를 클릭하여 시작하세요.' : 'No strategy notes yet. Click "New Note" to start.',
-            general: currentLanguage === 'ko' ? '일반 노트가 아직 없습니다. "새 노트"를 클릭하여 시작하세요.' : 'No general notes yet. Click "New Note" to start.'
-        };
-        
-        notesList.innerHTML = `
-            <div class="empty-state">
-                <div class="empty-state-icon">📝</div>
-                <div>${emptyMessages[category]}</div>
-            </div>
-        `;
-        return;
-    }
-
-    notesList.innerHTML = categoryNotes.map(note => {
-        const createdDate = new Date(note.createdAt);
-        const formattedDate = createdDate.toLocaleDateString(currentLanguage === 'ko' ? 'ko-KR' : 'en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-        });
-        
-        const preview = note.content.replace(/<[^>]*>/g, '');
-        const previewText = preview.length > 150 ? preview.substring(0, 150) + '...' : preview;
-        const showExpandBtn = preview.length > 150;
-
-        const categoryLabels = {
-            daily: currentLanguage === 'ko' ? '일일 리뷰' : 'Daily Review',
-            strategy: currentLanguage === 'ko' ? '전략' : 'Strategy',
-            general: currentLanguage === 'ko' ? '일반' : 'General'
-        };
-
-        return `
-            <div class="note-item" onclick="viewNote(${note.id})">
-                <div class="note-item-header">
-                    <div>
-                        <h3 class="note-item-title">${note.title}</h3>
-                        ${category === 'all' ? `<div class="note-item-category">${categoryLabels[note.category]}</div>` : ''}
+            const categoryNotes = notes.filter(note => note.category === category);
+            const notesList = document.getElementById(`${category}NotesList`);
+            
+            if (categoryNotes.length === 0) {
+                const emptyMessages = {
+                    daily: currentLanguage === 'ko' ? '일일 리뷰 노트가 아직 없습니다. "새 노트"를 클릭하여 시작하세요.' : 'No daily review notes yet. Click "New Note" to start.',
+                    strategy: currentLanguage === 'ko' ? '전략 노트가 아직 없습니다. "새 노트"를 클릭하여 시작하세요.' : 'No strategy notes yet. Click "New Note" to start.',
+                    general: currentLanguage === 'ko' ? '일반 노트가 아직 없습니다. "새 노트"를 클릭하여 시작하세요.' : 'No general notes yet. Click "New Note" to start.'
+                };
+                
+                notesList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📝</div>
+                        <div>${emptyMessages[category]}</div>
                     </div>
-                    <span class="note-item-date">${formattedDate}</span>
-                </div>
-                <div class="note-item-preview" id="preview-${note.id}" style="color: ${note.textColor || '#94a3b8'};">${previewText}</div>
-                ${showExpandBtn ? `<button class="expand-btn" onclick="event.stopPropagation(); toggleNotePreview(${note.id})" id="expand-btn-${note.id}">${currentLanguage === 'ko' ? '더보기' : 'Show more'}</button>` : ''}
-                <div class="note-item-actions">
-                    <button class="action-btn" onclick="event.stopPropagation(); editNote(${note.id})" title="Edit note">✏️</button>
-                    <button class="action-btn" onclick="event.stopPropagation(); deleteNote(${note.id})" title="Delete note">🗑️</button>
-                </div>
-            </div>
-        `;
-    }).join('');
-}
+                `;
+                return;
+            }
+
+            notesList.innerHTML = categoryNotes.map(note => {
+                const createdDate = new Date(note.createdAt);
+                const formattedDate = createdDate.toLocaleDateString(currentLanguage === 'ko' ? 'ko-KR' : 'en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+                
+                const preview = note.content.replace(/<[^>]*>/g, ''); // Strip HTML tags
+                const previewText = preview.length > 150 ? preview.substring(0, 150) + '...' : preview;
+
+                const categoryLabels = {
+                    daily: currentLanguage === 'ko' ? '일일 리뷰' : 'Daily Review',
+                    strategy: currentLanguage === 'ko' ? '전략' : 'Strategy',
+                    general: currentLanguage === 'ko' ? '일반' : 'General'
+                };
+
+                return `
+                    <div class="note-item" onclick="editNote(${note.id})">
+                        <div class="note-item-header">
+                            <div>
+                                <h3 class="note-item-title">${note.title}</h3>
+                                <div class="note-item-category">${categoryLabels[note.category]}</div>
+                            </div>
+                            <span class="note-item-date">${formattedDate}</span>
+                        </div>
+                        <div class="note-item-preview" style="font-family: ${note.font || currentFont}">${previewText}</div>
+                        <div class="note-item-actions">
+                            <button class="action-btn" onclick="event.stopPropagation(); editNote(${note.id})" title="Edit note">✏️</button>
+                            <button class="action-btn" onclick="event.stopPropagation(); deleteNote(${note.id})" title="Delete note">🗑️</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
 
         function saveNotes() {
             try {
@@ -3595,78 +3478,25 @@
             }
         }
 
-        function toggleNotePreview(noteId) {
-            const previewElement = document.getElementById(`preview-${noteId}`);
-            const expandBtn = document.getElementById(`expand-btn-${noteId}`);
-            const note = notes.find(n => n.id === noteId);
-            
-            if (previewElement.classList.contains('expanded')) {
-                // Collapse
-                const preview = note.content.replace(/<[^>]*>/g, '');
-                previewElement.innerHTML = preview.substring(0, 150) + '...';
-                previewElement.classList.remove('expanded');
-                expandBtn.textContent = currentLanguage === 'ko' ? '더보기' : 'Show more';
-            } else {
-                // Expand
-                previewElement.innerHTML = note.content;
-                previewElement.classList.add('expanded');
-                expandBtn.textContent = currentLanguage === 'ko' ? '접기' : 'Show less';
-            }
-        }
-
-        function viewNote(noteId) {
-            const note = notes.find(n => n.id === noteId);
-            if (!note) return;
-            
-            currentViewingNoteId = noteId;
-            
-            document.getElementById('noteViewTitle').textContent = note.title;
-            document.getElementById('noteViewContent').innerHTML = note.content;
-            
-            // 색상 적용
-            if (note.textColor) {
-                document.getElementById('noteViewContent').style.color = note.textColor;
-            }
-            
-            // Show view mode, hide other sections
-            document.getElementById('noteViewMode').style.display = 'block';
-            document.getElementById('noteEditor').style.display = 'none';
-            document.querySelectorAll('.note-section').forEach(section => {
-                section.style.display = 'none';
-            });
-        }
-
-        function backToNotesList() {
-            document.getElementById('noteViewMode').style.display = 'none';
-            document.getElementById('noteEditor').style.display = 'none';
-            document.getElementById(`${currentNotesSection}NotesSection`).style.display = 'block';
-            currentViewingNoteId = null;
-        }
-
-        function editCurrentNote() {
-            if (currentViewingNoteId) {
-                editNote(currentViewingNoteId);
-            }
-        }
-
         function loadNotes() {
-    try {
-        const saved = localStorage.getItem('tradingPlatformNotes');
-        if (saved) {
-            notes = JSON.parse(saved);
-            notes = notes.map(note => ({
-                ...note,
-                category: note.category || 'general',
-                textColor: note.textColor || '#94a3b8'
-            }));
-        } else {
-            notes = [];
+            try {
+                const saved = localStorage.getItem('tradingPlatformNotes');
+                if (saved) {
+                    notes = JSON.parse(saved);
+                    // Ensure all notes have category property
+                    notes = notes.map(note => ({
+                        ...note,
+                        category: note.category || 'general',
+                        font: note.font || "'Source Code Pro', monospace"
+                    }));
+                } else {
+                    notes = [];
+                }
+            } catch (error) {
+                console.error('Error loading notes:', error);
+                notes = [];
+            }
         }
-    } catch (error) {
-        console.error('Error loading notes:', error);
-        notes = [];
-    }
-}
 
         // Analytics section management
         function showAnalyticsSection(sectionName) {
