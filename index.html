@@ -3316,42 +3316,58 @@
 
         // Notes section functions
         function showNotesSection(section) {
-    // 편집 중인 노트가 있는지 확인
-    if (editingNoteId !== null || (document.getElementById('noteTitle').value.trim() || document.getElementById('noteContentEditor').innerHTML.trim())) {
-        if (!confirm(currentLanguage === 'ko' ? '작성 중인 노트가 있습니다. 저장하지 않고 이동하시겠습니까?' : 'You have unsaved changes. Do you want to leave without saving?')) {
-            return;
+            // 노트 작성/편집 중인지 확인
+    const noteEditor = document.getElementById('noteEditor');
+    const isEditing = noteEditor.style.display === 'block';
+    
+    if (isEditing) {
+        const title = document.getElementById('noteTitle').value.trim();
+        const content = document.getElementById('noteContentEditor').innerHTML.trim();
+        
+        if (title || content) {
+            const confirmMessage = currentLanguage === 'ko' ? 
+                '작성 중인 노트가 있습니다. 저장하지 않고 이동하시겠습니까?' : 
+                'You have unsaved note content. Do you want to leave without saving?';
+            
+            if (!confirm(confirmMessage)) {
+                return;
+            }
         }
     }
-    
-    currentNotesSection = section;
-    currentViewingNoteId = null;
-    editingNoteId = null;
-    
-    document.getElementById('noteEditor').style.display = 'none';
-    document.getElementById('noteViewMode').style.display = 'none';
-    document.getElementById('noteTitle').value = '';
-    document.getElementById('noteContentEditor').innerHTML = '';
-    
-    document.querySelectorAll('.notes-tab').forEach(tab => {
-        tab.classList.remove('active');
-    });
-    event.target.classList.add('active');
-    
-    document.querySelectorAll('.note-section').forEach(noteSection => {
-        noteSection.classList.remove('active');
-        noteSection.style.display = 'none';
-    });
-    
-    const targetSection = document.getElementById(`${section}NotesSection`);
-    if (targetSection) {
-        targetSection.classList.add('active');
-        targetSection.style.display = 'block';
-    }
-    
-    setTimeout(() => {
-        renderNotesList(section);
-    }, 10);
-}
+            
+            // 모든 상태 초기화
+            currentNotesSection = section;
+            currentViewingNoteId = null;
+            editingNoteId = null;
+            
+            // 에디터와 뷰모드 숨기기
+            document.getElementById('noteEditor').style.display = 'none';
+            document.getElementById('noteViewMode').style.display = 'none';
+            
+            // 탭 상태 업데이트
+            document.querySelectorAll('.notes-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // 모든 섹션 숨기기
+            document.querySelectorAll('.note-section').forEach(noteSection => {
+                noteSection.classList.remove('active');
+                noteSection.style.display = 'none';
+            });
+            
+            // 선택된 섹션만 표시
+            const targetSection = document.getElementById(`${section}NotesSection`);
+            if (targetSection) {
+                targetSection.classList.add('active');
+                targetSection.style.display = 'block';
+            }
+            
+            // 노트 목록 새로고침
+            setTimeout(() => {
+                renderNotesList(section);
+            }, 10);
+        }
 
         // Note formatting functions
         function toggleBold() {
@@ -3492,6 +3508,25 @@
 
         // Enhanced Notes functions with categories
         function showNoteEditor() {
+    // 기존 내용이 있는지 확인
+    const noteEditor = document.getElementById('noteEditor');
+    const isCurrentlyEditing = noteEditor.style.display === 'block';
+    
+    if (isCurrentlyEditing) {
+        const title = document.getElementById('noteTitle').value.trim();
+        const content = document.getElementById('noteContentEditor').innerHTML.trim();
+        
+        if (title || content) {
+            const confirmMessage = currentLanguage === 'ko' ? 
+                '작성 중인 노트가 있습니다. 새 노트를 시작하시겠습니까?' : 
+                'You have unsaved content. Start a new note?';
+            
+            if (!confirm(confirmMessage)) {
+                return;
+            }
+        }
+    }
+
     editingNoteId = null;
     currentFont = "'Inter', sans-serif";
     currentTextColor = '#e4e4e7';
@@ -3572,62 +3607,63 @@
         }
 
         function saveNote() {
-    const title = document.getElementById('noteTitle').value.trim();
-    const content = document.getElementById('noteContentEditor').innerHTML.trim();
-    
-    if (!title || !content) {
-        alert(currentLanguage === 'ko' ? '제목과 내용을 모두 입력해주세요.' : 'Please enter both title and content.');
-        return;
-    }
+            const title = document.getElementById('noteTitle').value.trim();
+            const content = document.getElementById('noteContentEditor').innerHTML.trim();
+            
+            if (!title || !content) {
+                alert(currentLanguage === 'ko' ? '제목과 내용을 모두 입력해주세요.' : 'Please enter both title and content.');
+                return;
+            }
 
-    const now = new Date();
-    
-    if (editingNoteId) {
-        const noteIndex = notes.findIndex(n => n.id === editingNoteId);
-        if (noteIndex !== -1) {
-            notes[noteIndex] = {
-                ...notes[noteIndex],
-                title: title,
-                content: content,
-                font: currentFont,
-                textColor: currentTextColor,
-                updatedAt: now.toISOString()
-            };
+            const now = new Date();
+            
+            if (editingNoteId) {
+                // Update existing note
+                const noteIndex = notes.findIndex(n => n.id === editingNoteId);
+                if (noteIndex !== -1) {
+                    notes[noteIndex] = {
+                        ...notes[noteIndex],
+                        title: title,
+                        content: content,
+                        font: currentFont,
+                        textColor: currentTextColor,
+                        updatedAt: now.toISOString()
+                    };
+                }
+            } else {
+                // Create new note
+                const actualCategory = currentNotesSection === 'all' ? 'general' : currentNotesSection;
+                const newNote = {
+                    id: Date.now(),
+                    title: title,
+                    content: content,
+                    font: currentFont,
+                    textColor: currentTextColor,
+                    category: actualCategory,
+                    pinned: false,
+                    createdAt: now.toISOString(),
+                    updatedAt: now.toISOString()
+                };
+                notes.unshift(newNote);
+            }
+
+            saveNotes();
+            cancelNote();
+            renderAllNotesSections();
+            showToast(editingNoteId ? 
+                (currentLanguage === 'ko' ? '노트가 업데이트되었습니다' : 'Note updated') :
+                (currentLanguage === 'ko' ? '노트가 저장되었습니다' : 'Note saved')
+            );
         }
-    } else {
-        const actualCategory = currentNotesSection === 'all' ? 'general' : currentNotesSection;
-        const newNote = {
-            id: Date.now(),
-            title: title,
-            content: content,
-            font: currentFont,
-            textColor: currentTextColor,
-            category: actualCategory,
-            pinned: false,
-            createdAt: now.toISOString(),
-            updatedAt: now.toISOString()
-        };
-        notes.unshift(newNote);
-    }
 
-    saveNotes();
-    cancelNote();
-    renderAllNotesSections();
-    showToast(editingNoteId ? 
-        (currentLanguage === 'ko' ? '노트가 업데이트되었습니다' : 'Note updated') :
-        (currentLanguage === 'ko' ? '노트가 저장되었습니다' : 'Note saved')
-    );
-}
-        
-  function cancelNote() {
+        function cancelNote() {
     editingNoteId = null;
     currentViewingNoteId = null;
     
-    document.getElementById('noteTitle').value = '';
-    document.getElementById('noteContentEditor').innerHTML = '';
     document.getElementById('noteEditor').style.display = 'none';
     document.getElementById('noteViewMode').style.display = 'none';
     
+    // 모든 섹션 숨기기 후 현재 카테고리만 표시
     document.querySelectorAll('.note-section').forEach(section => {
         section.style.display = 'none';
         section.classList.remove('active');
@@ -3639,18 +3675,18 @@
         targetSection.classList.add('active');
     }
     
+    // 노트 목록 새로 렌더링
     setTimeout(() => {
         renderNotesList(currentNotesSection);
     }, 10);
 }
-        
+
         function renderAllNotesSections() {
-    renderNotesList('all');
-    renderNotesList('daily');
-    renderNotesList('strategy');
-    renderNotesList('general');
-}
-        
+            renderNotesList('all');
+            renderNotesList('daily');
+            renderNotesList('strategy');
+            renderNotesList('general');
+            
             // 렌더링 후 이벤트 다시 바인딩
             setTimeout(() => {
                 bindNoteEvents();
@@ -3659,24 +3695,26 @@
 
         function bindNoteEvents() {
             // 모든 더보기 버튼에 이벤트 다시 바인딩
-            document.querySelectorAll('.expand-btn').forEach(btn => {
-                const noteId = btn.id.replace('expand-btn-', '');
-                btn.onclick = function(e) {
-                    e.stopPropagation();
-                    toggleNotePreview(parseInt(noteId));
-                };
-            });
-            
-            // 모든 노트 아이템에 클릭 이벤트 다시 바인딩
-            document.querySelectorAll('.note-item').forEach(item => {
-                const noteId = item.querySelector('.action-btn[onclick*="editNote"]')?.getAttribute('onclick')?.match(/\d+/)?.[0];
-                if (noteId) {
-                    item.onclick = function() {
-                        viewNote(parseInt(noteId));
-                    };
-                }
-            });
+    document.querySelectorAll('.expand-btn').forEach(btn => {
+        const idParts = btn.id.replace('expand-btn-', '').split('-');
+        const noteId = parseInt(idParts[0]);
+        const category = idParts[1];
+        btn.onclick = function(e) {
+            e.stopPropagation();
+            toggleNotePreview(noteId, category);
+        };
+    });
+    
+    // 모든 노트 아이템에 클릭 이벤트 다시 바인딩
+    document.querySelectorAll('.note-item').forEach(item => {
+        const noteId = item.querySelector('.action-btn[onclick*="editNote"]')?.getAttribute('onclick')?.match(/\d+/)?.[0];
+        if (noteId) {
+            item.onclick = function() {
+                viewNote(parseInt(noteId));
+            };
         }
+    });
+}
 
         function renderNotesList(category) {
     let categoryNotes;
@@ -3686,13 +3724,16 @@
         categoryNotes = notes.filter(note => note.category === category);
     }
     
+    // 고정된 노트와 일반 노트 분리
     const pinnedNotes = categoryNotes.filter(note => note.pinned);
     const regularNotes = categoryNotes.filter(note => !note.pinned);
     
+    // 고정된 노트는 업데이트 시간순, 일반 노트는 생성 시간순 정렬
     pinnedNotes.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
     regularNotes.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     
     const sortedNotes = [...pinnedNotes, ...regularNotes];
+    
     const notesList = document.getElementById(`${category}NotesList`);
     
     if (sortedNotes.length === 0) {
@@ -3703,14 +3744,12 @@
             general: currentLanguage === 'ko' ? '일반 노트가 아직 없습니다. "새 노트"를 클릭하여 시작하세요.' : 'No general notes yet. Click "New Note" to start.'
         };
         
-        notesList.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📝</div><div>${emptyMessages[category]}</div></div>`;
-        return;
-    }
-
-    notesList.innerHTML = sortedNotes.map(note => {
+        notesList.innerHTML = sortedNotes.map(note => {
         const createdDate = new Date(note.createdAt);
         const formattedDate = createdDate.toLocaleDateString(currentLanguage === 'ko' ? 'ko-KR' : 'en-US', {
-            year: 'numeric', month: 'short', day: 'numeric'
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
         });
         
         const preview = note.content.replace(/<[^>]*>/g, '');
@@ -3738,8 +3777,8 @@
                         <button class="pin-btn" onclick="event.stopPropagation(); togglePinNote(${note.id})" title="${note.pinned ? (currentLanguage === 'ko' ? '고정 해제' : 'Unpin') : (currentLanguage === 'ko' ? '상단 고정' : 'Pin to top')}">${note.pinned ? '📌' : '📌'}</button>
                     </div>
                 </div>
-                <div class="note-item-preview" id="preview-${note.id}" style="color: ${note.textColor || '#94a3b8'}; font-family: ${note.font || "'Inter', sans-serif"};">${previewText}</div>
-                ${showExpandBtn ? `<button class="expand-btn" onclick="event.stopPropagation(); toggleNotePreview(${note.id})" id="expand-btn-${note.id}">${currentLanguage === 'ko' ? '더보기' : 'Show more'}</button>` : ''}
+                <div class="note-item-preview" id="preview-${note.id}-${category}" style="color: ${note.textColor || '#94a3b8'}; font-family: ${note.font || "'Inter', sans-serif"};">${previewText}</div>
+                ${showExpandBtn ? `<button class="expand-btn" onclick="event.stopPropagation(); toggleNotePreview(${note.id}, '${category}')" id="expand-btn-${note.id}-${category}">${currentLanguage === 'ko' ? '더보기' : 'Show more'}</button>` : ''}
                 <div class="note-item-actions">
                     <button class="action-btn" onclick="event.stopPropagation(); editNote(${note.id})" title="Edit note">✏️</button>
                     <button class="action-btn" onclick="event.stopPropagation(); deleteNote(${note.id})" title="Delete note">🗑️</button>
@@ -3748,7 +3787,7 @@
         `;
     }).join('');
 }
-        
+
         function saveNotes() {
             try {
                 localStorage.setItem('tradingPlatformNotes', JSON.stringify(notes));
@@ -3757,14 +3796,13 @@
             }
         }
 
-        function toggleNotePreview(noteId) {
-    const previewElement = document.getElementById(`preview-${noteId}`);
-    const expandBtn = document.getElementById(`expand-btn-${noteId}`);
+        function toggleNotePreview(noteId, category) {
+    const previewElement = document.getElementById(`preview-${noteId}-${category}`);
+    const expandBtn = document.getElementById(`expand-btn-${noteId}-${category}`);
     const note = notes.find(n => n.id === noteId);
     
-    if (!previewElement || !expandBtn || !note) return;
-    
     if (previewElement.classList.contains('expanded')) {
+        // Collapse
         const preview = note.content.replace(/<[^>]*>/g, '');
         previewElement.innerHTML = preview.substring(0, 150) + '...';
         previewElement.style.fontFamily = note.font || "'Inter', sans-serif";
@@ -3772,6 +3810,7 @@
         previewElement.classList.remove('expanded');
         expandBtn.textContent = currentLanguage === 'ko' ? '더보기' : 'Show more';
     } else {
+        // Expand
         previewElement.innerHTML = note.content;
         previewElement.style.fontFamily = note.font || "'Inter', sans-serif";
         previewElement.style.color = note.textColor || '#94a3b8';
@@ -3779,7 +3818,7 @@
         expandBtn.textContent = currentLanguage === 'ko' ? '접기' : 'Show less';
     }
 }
-        
+
         function viewNote(noteId) {
             const note = notes.find(n => n.id === noteId);
             if (!note) return;
@@ -3830,25 +3869,19 @@
         }
 
         function togglePinNote(noteId) {
-    const noteIndex = notes.findIndex(n => n.id === noteId);
-    if (noteIndex !== -1) {
-        notes[noteIndex].pinned = !notes[noteIndex].pinned;
-        saveNotes();
-        
-        // 현재 섹션만 다시 렌더링
-        renderNotesList(currentNotesSection);
-        // all 섹션도 업데이트 (전체 보기에서도 반영되도록)
-        if (currentNotesSection !== 'all') {
-            renderNotesList('all');
+            const noteIndex = notes.findIndex(n => n.id === noteId);
+            if (noteIndex !== -1) {
+                notes[noteIndex].pinned = !notes[noteIndex].pinned;
+                saveNotes();
+                renderAllNotesSections();
+                
+                const message = notes[noteIndex].pinned ? 
+                    (currentLanguage === 'ko' ? '노트가 상단에 고정되었습니다' : 'Note pinned to top') :
+                    (currentLanguage === 'ko' ? '노트 고정이 해제되었습니다' : 'Note unpinned');
+                
+                showToast(message);
+            }
         }
-        
-        const message = notes[noteIndex].pinned ? 
-            (currentLanguage === 'ko' ? '노트가 상단에 고정되었습니다' : 'Note pinned to top') :
-            (currentLanguage === 'ko' ? '노트 고정이 해제되었습니다' : 'Note unpinned');
-        
-        showToast(message);
-    }
-}
 
         function loadNotes() {
     try {
