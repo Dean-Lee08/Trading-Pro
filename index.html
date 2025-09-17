@@ -1096,6 +1096,15 @@
             opacity: 1;
         }
 
+        .note-item-pinned {
+            border-left: 4px solid #3b82f6 !important;
+            background: rgba(59, 130, 246, 0.05) !important;
+        }
+
+        .note-item-pinned:hover {
+            background: rgba(59, 130, 246, 0.1) !important;
+        }
+
         .note-item-preview.expanded {
             max-height: none;
         }
@@ -3276,8 +3285,15 @@
         }
 
         // Notes section functions
+        // Notes section functions
         function showNotesSection(section) {
             currentNotesSection = section;
+            
+            // Hide view mode and editor first
+            document.getElementById('noteViewMode').style.display = 'none';
+            document.getElementById('noteEditor').style.display = 'none';
+            currentViewingNoteId = null;
+            editingNoteId = null;
             
             // Update tab states
             document.querySelectorAll('.notes-tab').forEach(tab => {
@@ -3323,21 +3339,24 @@
             });
             event.target.classList.add('active');
 
+            // 에디터 전체 텍스트 색상 변경
+            const editor = document.getElementById('noteContentEditor');
+            editor.style.color = color;
+            
+            // 선택된 텍스트가 있으면 해당 부분만 색상 변경
             if (window.getSelection().rangeCount > 0) {
-        const range = window.getSelection().getRangeAt(0);
-        if (range.toString().length > 0) {
-            const span = document.createElement('span');
-            span.style.color = color;
-            try {
-                range.surroundContents(span);
-            } catch (e) {
-                document.execCommand('foreColor', false, color);
+                const range = window.getSelection().getRangeAt(0);
+                if (range.toString().length > 0) {
+                    const span = document.createElement('span');
+                    span.style.color = color;
+                    try {
+                        range.surroundContents(span);
+                    } catch (e) {
+                        document.execCommand('foreColor', false, color);
+                    }
+                }
             }
         }
-    } else {
-        document.execCommand('foreColor', false, color);
-    }
-}
 
         // Dashboard date range functions
         function clearDashboardRange() {
@@ -3446,14 +3465,31 @@
     if (note) {
         editingNoteId = noteId;
         currentTextColor = note.textColor || '#e4e4e7';
+        currentFont = note.font || "'Inter', sans-serif";
         
         document.getElementById('noteTitle').value = note.title;
         document.getElementById('noteContentEditor').innerHTML = note.content;
+        document.getElementById('noteContentEditor').style.fontFamily = currentFont;
+        document.getElementById('noteContentEditor').style.color = currentTextColor;
+        document.getElementById('fontSelector').value = currentFont;
         
+        // 색상 옵션 업데이트
         document.querySelectorAll('.color-option').forEach(option => {
             option.classList.remove('active');
-            if (option.style.backgroundColor === currentTextColor || 
-                (currentTextColor === '#e4e4e7' && option.style.backgroundColor === 'rgb(228, 228, 231)')) {
+        });
+        
+        // 현재 색상에 맞는 옵션 선택
+        const colorMap = {
+            '#e4e4e7': 'rgb(228, 228, 231)',
+            '#10b981': 'rgb(16, 185, 129)',
+            '#ef4444': 'rgb(239, 68, 68)',
+            '#3b82f6': 'rgb(59, 130, 246)',
+            '#f59e0b': 'rgb(245, 158, 11)',
+            '#8b5cf6': 'rgb(139, 92, 246)'
+        };
+        
+        document.querySelectorAll('.color-option').forEach(option => {
+            if (colorMap[currentTextColor] === option.style.backgroundColor) {
                 option.classList.add('active');
             }
         });
@@ -3496,6 +3532,7 @@
                         title: title,
                         content: content,
                         font: currentFont,
+                        textColor: currentTextColor,
                         updatedAt: now.toISOString()
                     };
                 }
@@ -3506,7 +3543,9 @@
                     title: title,
                     content: content,
                     font: currentFont,
-                    category: currentNotesSection,
+                    textColor: currentTextColor,
+                    category: currentNotesSection === 'all' ? 'general' : currentNotesSection,
+                    pinned: false,
                     createdAt: now.toISOString(),
                     updatedAt: now.toISOString()
                 };
@@ -3546,9 +3585,19 @@
         categoryNotes = notes.filter(note => note.category === category);
     }
     
+    // 고정된 노트와 일반 노트 분리
+    const pinnedNotes = categoryNotes.filter(note => note.pinned);
+    const regularNotes = categoryNotes.filter(note => !note.pinned);
+    
+    // 고정된 노트는 업데이트 시간순, 일반 노트는 생성 시간순 정렬
+    pinnedNotes.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+    regularNotes.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    
+    const sortedNotes = [...pinnedNotes, ...regularNotes];
+    
     const notesList = document.getElementById(`${category}NotesList`);
     
-    if (categoryNotes.length === 0) {
+    if (sortedNotes.length === 0) {
         const emptyMessages = {
             all: currentLanguage === 'ko' ? '아직 작성된 노트가 없습니다. "새 노트"를 클릭하여 시작하세요.' : 'No notes written yet. Click "New Note" to start.',
             daily: currentLanguage === 'ko' ? '일일 리뷰 노트가 아직 없습니다. "새 노트"를 클릭하여 시작하세요.' : 'No daily review notes yet. Click "New Note" to start.',
@@ -3565,7 +3614,7 @@
         return;
     }
 
-    notesList.innerHTML = categoryNotes.map(note => {
+    notesList.innerHTML = sortedNotes.map(note => {
         const createdDate = new Date(note.createdAt);
         const formattedDate = createdDate.toLocaleDateString(currentLanguage === 'ko' ? 'ko-KR' : 'en-US', {
             year: 'numeric',
@@ -3583,18 +3632,22 @@
             general: currentLanguage === 'ko' ? '일반' : 'General'
         };
 
+        const pinnedClass = note.pinned ? 'note-item-pinned' : '';
+        const pinnedIcon = note.pinned ? '📌 ' : '';
+
         return `
-            <div class="note-item" onclick="viewNote(${note.id})">
+            <div class="note-item ${pinnedClass}" onclick="viewNote(${note.id})">
                 <div class="note-item-header">
                     <div>
-                        <h3 class="note-item-title">${note.title}</h3>
+                        <h3 class="note-item-title">${pinnedIcon}${note.title}</h3>
                         ${category === 'all' ? `<div class="note-item-category">${categoryLabels[note.category]}</div>` : ''}
                     </div>
                     <span class="note-item-date">${formattedDate}</span>
                 </div>
-                <div class="note-item-preview" id="preview-${note.id}" style="color: ${note.textColor || '#94a3b8'};">${previewText}</div>
+                <div class="note-item-preview" id="preview-${note.id}" style="color: ${note.textColor || '#94a3b8'}; font-family: ${note.font || "'Inter', sans-serif"};">${previewText}</div>
                 ${showExpandBtn ? `<button class="expand-btn" onclick="event.stopPropagation(); toggleNotePreview(${note.id})" id="expand-btn-${note.id}">${currentLanguage === 'ko' ? '더보기' : 'Show more'}</button>` : ''}
                 <div class="note-item-actions">
+                    <button class="action-btn" onclick="event.stopPropagation(); togglePinNote(${note.id})" title="${note.pinned ? (currentLanguage === 'ko' ? '고정 해제' : 'Unpin') : (currentLanguage === 'ko' ? '상단 고정' : 'Pin to top')}">${note.pinned ? '📌' : '📌'}</button>
                     <button class="action-btn" onclick="event.stopPropagation(); editNote(${note.id})" title="Edit note">✏️</button>
                     <button class="action-btn" onclick="event.stopPropagation(); deleteNote(${note.id})" title="Delete note">🗑️</button>
                 </div>
@@ -3620,11 +3673,15 @@
                 // Collapse
                 const preview = note.content.replace(/<[^>]*>/g, '');
                 previewElement.innerHTML = preview.substring(0, 150) + '...';
+                previewElement.style.fontFamily = note.font || "'Inter', sans-serif";
+                previewElement.style.color = note.textColor || '#94a3b8';
                 previewElement.classList.remove('expanded');
                 expandBtn.textContent = currentLanguage === 'ko' ? '더보기' : 'Show more';
             } else {
                 // Expand
                 previewElement.innerHTML = note.content;
+                previewElement.style.fontFamily = note.font || "'Inter', sans-serif";
+                previewElement.style.color = note.textColor || '#94a3b8';
                 previewElement.classList.add('expanded');
                 expandBtn.textContent = currentLanguage === 'ko' ? '접기' : 'Show less';
             }
@@ -3639,10 +3696,10 @@
             document.getElementById('noteViewTitle').textContent = note.title;
             document.getElementById('noteViewContent').innerHTML = note.content;
             
-            // 색상 적용
-            if (note.textColor) {
-                document.getElementById('noteViewContent').style.color = note.textColor;
-            }
+            // 폰트와 색상 적용
+            const viewContent = document.getElementById('noteViewContent');
+            viewContent.style.fontFamily = note.font || "'Inter', sans-serif";
+            viewContent.style.color = note.textColor || '#e4e4e7';
             
             // Show view mode, hide other sections
             document.getElementById('noteViewMode').style.display = 'block';
@@ -3665,6 +3722,21 @@
             }
         }
 
+        function togglePinNote(noteId) {
+            const noteIndex = notes.findIndex(n => n.id === noteId);
+            if (noteIndex !== -1) {
+                notes[noteIndex].pinned = !notes[noteIndex].pinned;
+                saveNotes();
+                renderAllNotesSections();
+                
+                const message = notes[noteIndex].pinned ? 
+                    (currentLanguage === 'ko' ? '노트가 상단에 고정되었습니다' : 'Note pinned to top') :
+                    (currentLanguage === 'ko' ? '노트 고정이 해제되었습니다' : 'Note unpinned');
+                
+                showToast(message);
+            }
+        }
+
         function loadNotes() {
     try {
         const saved = localStorage.getItem('tradingPlatformNotes');
@@ -3673,7 +3745,9 @@
             notes = notes.map(note => ({
                 ...note,
                 category: note.category || 'general',
-                textColor: note.textColor || '#94a3b8'
+                textColor: note.textColor || '#94a3b8',
+                font: note.font || "'Inter', sans-serif",
+                pinned: note.pinned || false
             }));
         } else {
             notes = [];
