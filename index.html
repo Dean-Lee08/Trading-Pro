@@ -3735,7 +3735,6 @@
         
         const preview = note.content.replace(/<[^>]*>/g, '');
         const previewText = preview.length > 150 ? preview.substring(0, 150) + '...' : preview;
-        const showExpandBtn = preview.length > 150;
 
         const categoryLabels = {
             daily: currentLanguage === 'ko' ? '일일 리뷰' : 'Daily Review',
@@ -3760,7 +3759,7 @@
                     </div>
                 </div>
                 <div class="note-item-preview" id="preview-${uniqueId}" style="color: ${note.textColor || '#94a3b8'}; font-family: ${note.font || "'Inter', sans-serif"};">${previewText}</div>
-                ${showExpandBtn ? `<button class="expand-btn" data-note-id="${note.id}" data-category="${category}" onclick="event.stopPropagation(); toggleNotePreview(this)">${currentLanguage === 'ko' ? '더보기' : 'Show more'}</button>` : ''}
+                <button class="expand-btn" data-note-id="${note.id}" data-category="${category}" onclick="event.stopPropagation(); toggleNotePreview(this)">${currentLanguage === 'ko' ? '더보기' : 'Show more'}</button>
                 <div class="note-item-actions">
                     <button class="action-btn" onclick="event.stopPropagation(); editNote(${note.id})" title="Edit note">✏️</button>
                     <button class="action-btn" onclick="event.stopPropagation(); deleteNote(${note.id})" title="Delete note">🗑️</button>
