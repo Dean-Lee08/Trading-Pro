@@ -3682,16 +3682,11 @@
 }
 
         function renderAllNotesSections() {
-    renderNotesList('all');
-    renderNotesList('daily');
-    renderNotesList('strategy');
-    renderNotesList('general');
-    
-    // 렌더링 완료 후 모든 이벤트가 제대로 작동하도록 보장
-    setTimeout(() => {
-        // 필요한 경우 추가 처리
-    }, 10);
-}
+            renderNotesList('all');
+            renderNotesList('daily');
+            renderNotesList('strategy');
+            renderNotesList('general');
+        }
 
         function renderNotesList(category) {
     let categoryNotes;
