@@ -3748,7 +3748,7 @@
         `;
     }).join('');
 }
-
+        
         function saveNotes() {
             try {
                 localStorage.setItem('tradingPlatformNotes', JSON.stringify(notes));
@@ -3779,7 +3779,7 @@
         expandBtn.textContent = currentLanguage === 'ko' ? '접기' : 'Show less';
     }
 }
-
+        
         function viewNote(noteId) {
             const note = notes.find(n => n.id === noteId);
             if (!note) return;
@@ -3830,19 +3830,25 @@
         }
 
         function togglePinNote(noteId) {
-            const noteIndex = notes.findIndex(n => n.id === noteId);
-            if (noteIndex !== -1) {
-                notes[noteIndex].pinned = !notes[noteIndex].pinned;
-                saveNotes();
-                renderAllNotesSections();
-                
-                const message = notes[noteIndex].pinned ? 
-                    (currentLanguage === 'ko' ? '노트가 상단에 고정되었습니다' : 'Note pinned to top') :
-                    (currentLanguage === 'ko' ? '노트 고정이 해제되었습니다' : 'Note unpinned');
-                
-                showToast(message);
-            }
+    const noteIndex = notes.findIndex(n => n.id === noteId);
+    if (noteIndex !== -1) {
+        notes[noteIndex].pinned = !notes[noteIndex].pinned;
+        saveNotes();
+        
+        // 현재 섹션만 다시 렌더링
+        renderNotesList(currentNotesSection);
+        // all 섹션도 업데이트 (전체 보기에서도 반영되도록)
+        if (currentNotesSection !== 'all') {
+            renderNotesList('all');
         }
+        
+        const message = notes[noteIndex].pinned ? 
+            (currentLanguage === 'ko' ? '노트가 상단에 고정되었습니다' : 'Note pinned to top') :
+            (currentLanguage === 'ko' ? '노트 고정이 해제되었습니다' : 'Note unpinned');
+        
+        showToast(message);
+    }
+}
 
         function loadNotes() {
     try {
