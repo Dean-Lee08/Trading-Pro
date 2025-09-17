@@ -3686,35 +3686,7 @@
             renderNotesList('daily');
             renderNotesList('strategy');
             renderNotesList('general');
-            
-            // 렌더링 후 이벤트 다시 바인딩
-            setTimeout(() => {
-                bindNoteEvents();
-            }, 50);
         }
-
-        function bindNoteEvents() {
-            // 모든 더보기 버튼에 이벤트 다시 바인딩
-    document.querySelectorAll('.expand-btn').forEach(btn => {
-        const idParts = btn.id.replace('expand-btn-', '').split('-');
-        const noteId = parseInt(idParts[0]);
-        const category = idParts[1];
-        btn.onclick = function(e) {
-            e.stopPropagation();
-            toggleNotePreview(noteId, category);
-        };
-    });
-    
-    // 모든 노트 아이템에 클릭 이벤트 다시 바인딩
-    document.querySelectorAll('.note-item').forEach(item => {
-        const noteId = item.querySelector('.action-btn[onclick*="editNote"]')?.getAttribute('onclick')?.match(/\d+/)?.[0];
-        if (noteId) {
-            item.onclick = function() {
-                viewNote(parseInt(noteId));
-            };
-        }
-    });
-}
 
         function renderNotesList(category) {
     let categoryNotes;
@@ -3744,7 +3716,16 @@
             general: currentLanguage === 'ko' ? '일반 노트가 아직 없습니다. "새 노트"를 클릭하여 시작하세요.' : 'No general notes yet. Click "New Note" to start.'
         };
         
-        notesList.innerHTML = sortedNotes.map(note => {
+        notesList.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">📝</div>
+                <div>${emptyMessages[category]}</div>
+            </div>
+        `;
+        return;
+    }
+
+    notesList.innerHTML = sortedNotes.map(note => {
         const createdDate = new Date(note.createdAt);
         const formattedDate = createdDate.toLocaleDateString(currentLanguage === 'ko' ? 'ko-KR' : 'en-US', {
             year: 'numeric',
@@ -3764,6 +3745,7 @@
 
         const pinnedClass = note.pinned ? 'note-item-pinned' : '';
         const pinnedIcon = note.pinned ? '📌 ' : '';
+        const uniqueId = `${note.id}_${category}`;
 
         return `
             <div class="note-item ${pinnedClass}" onclick="viewNote(${note.id})">
@@ -3777,8 +3759,8 @@
                         <button class="pin-btn" onclick="event.stopPropagation(); togglePinNote(${note.id})" title="${note.pinned ? (currentLanguage === 'ko' ? '고정 해제' : 'Unpin') : (currentLanguage === 'ko' ? '상단 고정' : 'Pin to top')}">${note.pinned ? '📌' : '📌'}</button>
                     </div>
                 </div>
-                <div class="note-item-preview" id="preview-${note.id}-${category}" style="color: ${note.textColor || '#94a3b8'}; font-family: ${note.font || "'Inter', sans-serif"};">${previewText}</div>
-                ${showExpandBtn ? `<button class="expand-btn" onclick="event.stopPropagation(); toggleNotePreview(${note.id}, '${category}')" id="expand-btn-${note.id}-${category}">${currentLanguage === 'ko' ? '더보기' : 'Show more'}</button>` : ''}
+                <div class="note-item-preview" id="preview-${uniqueId}" style="color: ${note.textColor || '#94a3b8'}; font-family: ${note.font || "'Inter', sans-serif"};">${previewText}</div>
+                ${showExpandBtn ? `<button class="expand-btn" data-note-id="${note.id}" data-category="${category}" onclick="event.stopPropagation(); toggleNotePreview(this)">${currentLanguage === 'ko' ? '더보기' : 'Show more'}</button>` : ''}
                 <div class="note-item-actions">
                     <button class="action-btn" onclick="event.stopPropagation(); editNote(${note.id})" title="Edit note">✏️</button>
                     <button class="action-btn" onclick="event.stopPropagation(); deleteNote(${note.id})" title="Delete note">🗑️</button>
@@ -3796,10 +3778,15 @@
             }
         }
 
-        function toggleNotePreview(noteId, category) {
-    const previewElement = document.getElementById(`preview-${noteId}-${category}`);
-    const expandBtn = document.getElementById(`expand-btn-${noteId}-${category}`);
+        function toggleNotePreview(buttonElement) {
+    const noteId = parseInt(buttonElement.getAttribute('data-note-id'));
+    const category = buttonElement.getAttribute('data-category');
+    const uniqueId = `${noteId}_${category}`;
+    
+    const previewElement = document.getElementById(`preview-${uniqueId}`);
     const note = notes.find(n => n.id === noteId);
+    
+    if (!previewElement || !note) return;
     
     if (previewElement.classList.contains('expanded')) {
         // Collapse
@@ -3808,14 +3795,14 @@
         previewElement.style.fontFamily = note.font || "'Inter', sans-serif";
         previewElement.style.color = note.textColor || '#94a3b8';
         previewElement.classList.remove('expanded');
-        expandBtn.textContent = currentLanguage === 'ko' ? '더보기' : 'Show more';
+        buttonElement.textContent = currentLanguage === 'ko' ? '더보기' : 'Show more';
     } else {
         // Expand
         previewElement.innerHTML = note.content;
         previewElement.style.fontFamily = note.font || "'Inter', sans-serif";
         previewElement.style.color = note.textColor || '#94a3b8';
         previewElement.classList.add('expanded');
-        expandBtn.textContent = currentLanguage === 'ko' ? '접기' : 'Show less';
+        buttonElement.textContent = currentLanguage === 'ko' ? '접기' : 'Show less';
     }
 }
 
