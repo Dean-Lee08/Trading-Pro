@@ -3648,13 +3648,28 @@
             }
 
             saveNotes();
-            cancelNote();
-            renderAllNotesSections();
-            showToast(editingNoteId ? 
-                (currentLanguage === 'ko' ? '노트가 업데이트되었습니다' : 'Note updated') :
-                (currentLanguage === 'ko' ? '노트가 저장되었습니다' : 'Note saved')
-            );
-        }
+cancelNote();
+renderAllNotesSections();
+
+// 렌더링 완료 후 더보기 기능이 제대로 작동하도록 보장
+setTimeout(() => {
+    // 모든 더보기 버튼에 이벤트 재바인딩
+    document.querySelectorAll('.expand-btn').forEach(btn => {
+        const noteId = parseInt(btn.getAttribute('data-note-id'));
+        const category = btn.getAttribute('data-category');
+        
+        // 기존 이벤트 리스너 제거 후 새로 추가
+        btn.onclick = function(e) {
+            e.stopPropagation();
+            toggleNotePreview(this);
+        };
+    });
+}, 50);
+
+showToast(editingNoteId ? 
+    (currentLanguage === 'ko' ? '노트가 업데이트되었습니다' : 'Note updated') :
+    (currentLanguage === 'ko' ? '노트가 저장되었습니다' : 'Note saved')
+);
 
         function cancelNote() {
     editingNoteId = null;
