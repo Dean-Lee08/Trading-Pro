@@ -1105,6 +1105,36 @@
             background: rgba(59, 130, 246, 0.1) !important;
         }
 
+        .note-item-header-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+        .pin-btn {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 2px 4px;
+            font-size: 12px;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+            opacity: 0.7;
+        }
+
+        .pin-btn:hover {
+            background: #334155;
+            color: #e4e4e7;
+            opacity: 1;
+        }
+
+        .note-item-pinned .pin-btn {
+            color: #3b82f6;
+            opacity: 1;
+        }
+        
         .note-item-preview.expanded {
             max-height: none;
         }
@@ -2823,7 +2853,7 @@
         let currentNotesSection = 'all';
         let currentViewingNoteId = null;
         let currentTextColor = '#e4e4e7';
-        let currentFont = "'Source Code Pro', monospace";
+        let currentFont = "'Inter', sans-serif";
 
         // Chart instances
         let basicCharts = {};
@@ -3285,28 +3315,39 @@
         }
 
         // Notes section functions
-        // Notes section functions
         function showNotesSection(section) {
+            // 모든 상태 초기화
             currentNotesSection = section;
-            
-            // Hide view mode and editor first
-            document.getElementById('noteViewMode').style.display = 'none';
-            document.getElementById('noteEditor').style.display = 'none';
             currentViewingNoteId = null;
             editingNoteId = null;
             
-            // Update tab states
+            // 에디터와 뷰모드 숨기기
+            document.getElementById('noteEditor').style.display = 'none';
+            document.getElementById('noteViewMode').style.display = 'none';
+            
+            // 탭 상태 업데이트
             document.querySelectorAll('.notes-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
             event.target.classList.add('active');
             
-            // Show/hide sections
+            // 모든 섹션 숨기기
             document.querySelectorAll('.note-section').forEach(noteSection => {
                 noteSection.classList.remove('active');
+                noteSection.style.display = 'none';
             });
             
-            document.getElementById(`${section}NotesSection`).classList.add('active');
+            // 선택된 섹션만 표시
+            const targetSection = document.getElementById(`${section}NotesSection`);
+            if (targetSection) {
+                targetSection.classList.add('active');
+                targetSection.style.display = 'block';
+            }
+            
+            // 노트 목록 새로고침
+            setTimeout(() => {
+                renderNotesList(section);
+            }, 10);
         }
 
         // Note formatting functions
@@ -3449,17 +3490,27 @@
         // Enhanced Notes functions with categories
         function showNoteEditor() {
             editingNoteId = null;
+            currentFont = "'Inter', sans-serif";
+            currentTextColor = '#e4e4e7';
+            
             document.getElementById('noteTitle').value = '';
             document.getElementById('noteContentEditor').innerHTML = '';
             document.getElementById('noteContentEditor').style.fontFamily = currentFont;
+            document.getElementById('noteContentEditor').style.color = currentTextColor;
             document.getElementById('fontSelector').value = currentFont;
+            
+            // 색상 옵션 초기화
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            document.querySelector('.color-option[style*="228, 228, 231"]').classList.add('active');
+            
             document.getElementById('noteEditor').style.display = 'block';
             document.querySelectorAll('.note-section').forEach(section => {
                 section.style.display = 'none';
             });
             document.getElementById('noteTitle').focus();
         }
-
         function editNote(noteId) {
     const note = notes.find(n => n.id === noteId);
     if (note) {
@@ -3563,18 +3614,56 @@
 
         function cancelNote() {
             editingNoteId = null;
+            currentViewingNoteId = null;
+            
             document.getElementById('noteEditor').style.display = 'none';
+            document.getElementById('noteViewMode').style.display = 'none';
+            
+            // 모든 섹션 숨기기
             document.querySelectorAll('.note-section').forEach(section => {
                 section.style.display = 'none';
+                section.classList.remove('active');
             });
-            document.getElementById(`${currentNotesSection}NotesSection`).style.display = 'block';
+            
+            // 현재 카테고리 섹션만 표시
+            const targetSection = document.getElementById(`${currentNotesSection}NotesSection`);
+            if (targetSection) {
+                targetSection.style.display = 'block';
+                targetSection.classList.add('active');
+            }
         }
 
         function renderAllNotesSections() {
-    renderNotesList('all');
-    renderNotesList('daily');
-    renderNotesList('strategy');
-    renderNotesList('general');
+            renderNotesList('all');
+            renderNotesList('daily');
+            renderNotesList('strategy');
+            renderNotesList('general');
+            
+            // 렌더링 후 이벤트 다시 바인딩
+            setTimeout(() => {
+                bindNoteEvents();
+            }, 50);
+        }
+
+        function bindNoteEvents() {
+            // 모든 더보기 버튼에 이벤트 다시 바인딩
+            document.querySelectorAll('.expand-btn').forEach(btn => {
+                const noteId = btn.id.replace('expand-btn-', '');
+                btn.onclick = function(e) {
+                    e.stopPropagation();
+                    toggleNotePreview(parseInt(noteId));
+                };
+            });
+            
+            // 모든 노트 아이템에 클릭 이벤트 다시 바인딩
+            document.querySelectorAll('.note-item').forEach(item => {
+                const noteId = item.querySelector('.action-btn[onclick*="editNote"]')?.getAttribute('onclick')?.match(/\d+/)?.[0];
+                if (noteId) {
+                    item.onclick = function() {
+                        viewNote(parseInt(noteId));
+                    };
+                }
+            });
         }
 
         function renderNotesList(category) {
@@ -3642,12 +3731,14 @@
                         <h3 class="note-item-title">${pinnedIcon}${note.title}</h3>
                         ${category === 'all' ? `<div class="note-item-category">${categoryLabels[note.category]}</div>` : ''}
                     </div>
-                    <span class="note-item-date">${formattedDate}</span>
+                    <div class="note-item-header-right">
+                        <span class="note-item-date">${formattedDate}</span>
+                        <button class="pin-btn" onclick="event.stopPropagation(); togglePinNote(${note.id})" title="${note.pinned ? (currentLanguage === 'ko' ? '고정 해제' : 'Unpin') : (currentLanguage === 'ko' ? '상단 고정' : 'Pin to top')}">${note.pinned ? '📌' : '📌'}</button>
+                    </div>
                 </div>
                 <div class="note-item-preview" id="preview-${note.id}" style="color: ${note.textColor || '#94a3b8'}; font-family: ${note.font || "'Inter', sans-serif"};">${previewText}</div>
                 ${showExpandBtn ? `<button class="expand-btn" onclick="event.stopPropagation(); toggleNotePreview(${note.id})" id="expand-btn-${note.id}">${currentLanguage === 'ko' ? '더보기' : 'Show more'}</button>` : ''}
                 <div class="note-item-actions">
-                    <button class="action-btn" onclick="event.stopPropagation(); togglePinNote(${note.id})" title="${note.pinned ? (currentLanguage === 'ko' ? '고정 해제' : 'Unpin') : (currentLanguage === 'ko' ? '상단 고정' : 'Pin to top')}">${note.pinned ? '📌' : '📌'}</button>
                     <button class="action-btn" onclick="event.stopPropagation(); editNote(${note.id})" title="Edit note">✏️</button>
                     <button class="action-btn" onclick="event.stopPropagation(); deleteNote(${note.id})" title="Delete note">🗑️</button>
                 </div>
@@ -3710,12 +3801,26 @@
         }
 
         function backToNotesList() {
+            currentViewingNoteId = null;
+            editingNoteId = null;
+            
             document.getElementById('noteViewMode').style.display = 'none';
             document.getElementById('noteEditor').style.display = 'none';
-            document.getElementById(`${currentNotesSection}NotesSection`).style.display = 'block';
-            currentViewingNoteId = null;
+            
+            // 모든 섹션 숨기기
+            document.querySelectorAll('.note-section').forEach(section => {
+                section.style.display = 'none';
+                section.classList.remove('active');
+            });
+            
+            // 현재 카테고리 섹션만 표시
+            const targetSection = document.getElementById(`${currentNotesSection}NotesSection`);
+            if (targetSection) {
+                targetSection.style.display = 'block';
+                targetSection.classList.add('active');
+            }
         }
-
+        
         function editCurrentNote() {
             if (currentViewingNoteId) {
                 editNote(currentViewingNoteId);
