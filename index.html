@@ -3607,54 +3607,54 @@
         }
 
         function saveNote() {
-            const title = document.getElementById('noteTitle').value.trim();
-            const content = document.getElementById('noteContentEditor').innerHTML.trim();
-            
-            if (!title || !content) {
-                alert(currentLanguage === 'ko' ? '제목과 내용을 모두 입력해주세요.' : 'Please enter both title and content.');
-                return;
-            }
+    const title = document.getElementById('noteTitle').value.trim();
+    const content = document.getElementById('noteContentEditor').innerHTML.trim();
+    
+    if (!title || !content) {
+        alert(currentLanguage === 'ko' ? '제목과 내용을 모두 입력해주세요.' : 'Please enter both title and content.');
+        return;
+    }
 
-            const now = new Date();
-            
-            if (editingNoteId) {
-                // Update existing note
-                const noteIndex = notes.findIndex(n => n.id === editingNoteId);
-                if (noteIndex !== -1) {
-                    notes[noteIndex] = {
-                        ...notes[noteIndex],
-                        title: title,
-                        content: content,
-                        font: currentFont,
-                        textColor: currentTextColor,
-                        updatedAt: now.toISOString()
-                    };
-                }
-            } else {
-                // Create new note
-                const actualCategory = currentNotesSection === 'all' ? 'general' : currentNotesSection;
-                const newNote = {
-                    id: Date.now(),
-                    title: title,
-                    content: content,
-                    font: currentFont,
-                    textColor: currentTextColor,
-                    category: actualCategory,
-                    pinned: false,
-                    createdAt: now.toISOString(),
-                    updatedAt: now.toISOString()
-                };
-                notes.unshift(newNote);
-            }
-
-            saveNotes();
-            cancelNote();
-            renderAllNotesSections();
-            showToast(editingNoteId ? 
-                (currentLanguage === 'ko' ? '노트가 업데이트되었습니다' : 'Note updated') :
-                (currentLanguage === 'ko' ? '노트가 저장되었습니다' : 'Note saved')
-            );
+    const now = new Date();
+    
+    if (editingNoteId) {
+        // Update existing note
+        const noteIndex = notes.findIndex(n => n.id === editingNoteId);
+        if (noteIndex !== -1) {
+            notes[noteIndex] = {
+                ...notes[noteIndex],
+                title: title,
+                content: content,
+                font: currentFont,
+                textColor: currentTextColor,
+                updatedAt: now.toISOString()
+            };
         }
+    } else {
+        // Create new note
+        const actualCategory = currentNotesSection === 'all' ? 'general' : currentNotesSection;
+        const newNote = {
+            id: Date.now(),
+            title: title,
+            content: content,
+            font: currentFont,
+            textColor: currentTextColor,
+            category: actualCategory,
+            pinned: false,
+            createdAt: now.toISOString(),
+            updatedAt: now.toISOString()
+        };
+        notes.unshift(newNote);
+    }
+
+    saveNotes();
+    cancelNote();
+    renderAllNotesSections();
+    showToast(editingNoteId ? 
+        (currentLanguage === 'ko' ? '노트가 업데이트되었습니다' : 'Note updated') :
+        (currentLanguage === 'ko' ? '노트가 저장되었습니다' : 'Note saved')
+    );
+}
 
         function cancelNote() {
     editingNoteId = null;
