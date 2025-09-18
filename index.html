@@ -2678,13 +2678,17 @@
                                 <option value="'Georgia', serif">Georgia</option>
                             </select>
                             <div class="color-picker">
-                                <div class="color-option" style="background-color: #e4e4e7;" onclick="changeTextColor('#e4e4e7')"></div>
-                                <div class="color-option" style="background-color: #10b981;" onclick="changeTextColor('#10b981')"></div>
-                                <div class="color-option" style="background-color: #ef4444;" onclick="changeTextColor('#ef4444')"></div>
-                                <div class="color-option" style="background-color: #3b82f6;" onclick="changeTextColor('#3b82f6')"></div>
-                                <div class="color-option" style="background-color: #f59e0b;" onclick="changeTextColor('#f59e0b')"></div>
-                                <div class="color-option" style="background-color: #8b5cf6;" onclick="changeTextColor('#8b5cf6')"></div>
-                            </div>
+    <div class="color-option" style="background-color: #e4e4e7;" onclick="changeTextColor('#e4e4e7')" title="Light Gray"></div>
+    <div class="color-option" style="background-color: #94a3b8;" onclick="changeTextColor('#94a3b8')" title="Gray"></div>
+    <div class="color-option" style="background-color: #64748b;" onclick="changeTextColor('#64748b')" title="Dark Gray"></div>
+    <div class="color-option" style="background-color: #475569;" onclick="changeTextColor('#475569')" title="Darker Gray"></div>
+    <div class="color-option" style="background-color: #10b981;" onclick="changeTextColor('#10b981')" title="Green"></div>
+    <div class="color-option" style="background-color: #ef4444;" onclick="changeTextColor('#ef4444')" title="Red"></div>
+    <div class="color-option" style="background-color: #3b82f6;" onclick="changeTextColor('#3b82f6')" title="Blue"></div>
+    <div class="color-option" style="background-color: #f59e0b;" onclick="changeTextColor('#f59e0b')" title="Orange"></div>
+    <div class="color-option" style="background-color: #8b5cf6;" onclick="changeTextColor('#8b5cf6')" title="Purple"></div>
+    <div class="color-option" style="background-color: #06b6d4;" onclick="changeTextColor('#06b6d4')" title="Cyan"></div>
+</div>
                         </div>
                         <input type="text" id="noteTitle" class="note-title-input" placeholder="Enter note title..." data-lang="note-title-placeholder">
                         <div id="noteContentEditor" class="note-content-input" contenteditable="true" data-placeholder="Write your note here..."></div>
@@ -3393,31 +3397,48 @@
         }
 
         function changeTextColor(color) {
-            currentTextColor = color;
-            document.querySelectorAll('.color-option').forEach(option => {
-                option.classList.remove('active');
-            });
-            event.target.classList.add('active');
+    currentTextColor = color;
+    document.querySelectorAll('.color-option').forEach(option => {
+        option.classList.remove('active');
+    });
+    event.target.classList.add('active');
 
-            // 에디터 전체 텍스트 색상 변경
-            const editor = document.getElementById('noteContentEditor');
-            editor.style.color = color;
+    const editor = document.getElementById('noteContentEditor');
+    const selection = window.getSelection();
+    
+    // 선택된 텍스트가 있는지 확인
+    if (selection.rangeCount > 0 && selection.toString().length > 0) {
+        // 선택된 텍스트만 색상 변경
+        try {
+            const range = selection.getRangeAt(0);
+            const selectedText = range.toString();
             
-            // 선택된 텍스트가 있으면 해당 부분만 색상 변경
-            if (window.getSelection().rangeCount > 0) {
-                const range = window.getSelection().getRangeAt(0);
-                if (range.toString().length > 0) {
-                    const span = document.createElement('span');
-                    span.style.color = color;
-                    try {
-                        range.surroundContents(span);
-                    } catch (e) {
-                        document.execCommand('foreColor', false, color);
-                    }
-                }
+            if (selectedText.length > 0) {
+                const span = document.createElement('span');
+                span.style.color = color;
+                span.style.fontFamily = currentFont;
+                
+                // 기존 내용을 span으로 감싸기
+                const contents = range.extractContents();
+                span.appendChild(contents);
+                range.insertNode(span);
+                
+                // 선택 해제
+                selection.removeAllRanges();
             }
+        } catch (e) {
+            // 오류 발생 시 기존 방식 사용
+            document.execCommand('foreColor', false, color);
         }
-
+    } else {
+        // 선택된 텍스트가 없으면 에디터 전체 기본 색상 변경
+        editor.style.color = color;
+    }
+    
+    // 에디터에 포커스 유지
+    editor.focus();
+}
+        
         // Dashboard date range functions
         function clearDashboardRange() {
             dashboardStartDate = null;
@@ -3574,13 +3595,17 @@
         
         // 현재 색상에 맞는 옵션 선택
         const colorMap = {
-            '#e4e4e7': 'rgb(228, 228, 231)',
-            '#10b981': 'rgb(16, 185, 129)',
-            '#ef4444': 'rgb(239, 68, 68)',
-            '#3b82f6': 'rgb(59, 130, 246)',
-            '#f59e0b': 'rgb(245, 158, 11)',
-            '#8b5cf6': 'rgb(139, 92, 246)'
-        };
+    '#e4e4e7': 'rgb(228, 228, 231)',
+    '#94a3b8': 'rgb(148, 163, 184)', 
+    '#64748b': 'rgb(100, 116, 139)',
+    '#475569': 'rgb(71, 85, 105)',
+    '#10b981': 'rgb(16, 185, 129)',
+    '#ef4444': 'rgb(239, 68, 68)',
+    '#3b82f6': 'rgb(59, 130, 246)',
+    '#f59e0b': 'rgb(245, 158, 11)',
+    '#8b5cf6': 'rgb(139, 92, 246)',
+    '#06b6d4': 'rgb(6, 182, 212)'
+};
         
         document.querySelectorAll('.color-option').forEach(option => {
             if (colorMap[currentTextColor] === option.style.backgroundColor) {
