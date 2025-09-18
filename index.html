@@ -3402,34 +3402,28 @@
     const editor = document.getElementById('noteContentEditor');
     const selection = window.getSelection();
     
-    // 선택된 텍스트가 있는지 확인
     if (selection.rangeCount > 0) {
         const range = selection.getRangeAt(0);
         const selectedText = range.toString();
         
         if (selectedText.length > 0) {
-            // 선택된 텍스트만 색상 변경
+            const span = document.createElement('span');
+            span.style.color = color;
             try {
-                const span = document.createElement('span');
-                span.style.color = color;
                 range.surroundContents(span);
                 selection.removeAllRanges();
             } catch (e) {
                 document.execCommand('foreColor', false, color);
                 selection.removeAllRanges();
             }
-        } else {
-            // 선택된 텍스트가 없으면 전체 색상 변경
-            editor.style.color = color;
+            editor.focus();
+            return;
         }
-    } else {
-        // 선택 범위가 없으면 전체 색상 변경
-        editor.style.color = color;
     }
     
-    // 에디터 포커스 유지
+    editor.style.color = color;
     editor.focus();
-                    }
+}
                 }
             }
         }
