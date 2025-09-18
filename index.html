@@ -3393,34 +3393,31 @@
         }
 
         function changeTextColor(color) {
-    currentTextColor = color;
-    document.querySelectorAll('.color-option').forEach(option => {
-        option.classList.remove('active');
-    });
-    event.target.classList.add('active');
+            currentTextColor = color;
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            event.target.classList.add('active');
 
-    const editor = document.getElementById('noteContentEditor');
-    const selection = window.getSelection();
-    
-    // 선택된 텍스트가 있는 경우
-    if (selection.rangeCount > 0 && selection.toString().length > 0) {
-        const range = selection.getRangeAt(0);
-        
-        // 기존 span 요소들을 처리하기 위해 fragment 사용
-        const fragment = range.extractContents();
-        const span = document.createElement('span');
-        span.style.color = color;
-        span.appendChild(fragment);
-        range.insertNode(span);
-        
-        // 선택 상태 해제
-        selection.removeAllRanges();
-    } else {
-        // 선택된 텍스트가 없는 경우, 에디터 전체 기본 색상만 변경
-        editor.style.color = color;
-    }
-}
-        
+            // 에디터 전체 텍스트 색상 변경
+            const editor = document.getElementById('noteContentEditor');
+            editor.style.color = color;
+            
+            // 선택된 텍스트가 있으면 해당 부분만 색상 변경
+            if (window.getSelection().rangeCount > 0) {
+                const range = window.getSelection().getRangeAt(0);
+                if (range.toString().length > 0) {
+                    const span = document.createElement('span');
+                    span.style.color = color;
+                    try {
+                        range.surroundContents(span);
+                    } catch (e) {
+                        document.execCommand('foreColor', false, color);
+                    }
+                }
+            }
+        }
+
         // Dashboard date range functions
         function clearDashboardRange() {
             dashboardStartDate = null;
