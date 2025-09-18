@@ -2678,12 +2678,12 @@
                                 <option value="'Georgia', serif">Georgia</option>
                             </select>
                             <div class="color-picker">
-                                <div class="color-option" style="background-color: #e4e4e7;" onclick="changeTextColor('#e4e4e7')"></div>
-                                <div class="color-option" style="background-color: #10b981;" onclick="changeTextColor('#10b981')"></div>
-                                <div class="color-option" style="background-color: #ef4444;" onclick="changeTextColor('#ef4444')"></div>
-                                <div class="color-option" style="background-color: #3b82f6;" onclick="changeTextColor('#3b82f6')"></div>
-                                <div class="color-option" style="background-color: #f59e0b;" onclick="changeTextColor('#f59e0b')"></div>
-                                <div class="color-option" style="background-color: #8b5cf6;" onclick="changeTextColor('#8b5cf6')"></div>
+                                <div class="color-option" style="background-color: #e4e4e7;" onmousedown="event.preventDefault(); changeTextColor('#e4e4e7');"></div>
+                                <div class="color-option" style="background-color: #10b981;" onmousedown="event.preventDefault(); changeTextColor('#10b981');"></div>
+                                <div class="color-option" style="background-color: #ef4444;" onmousedown="event.preventDefault(); changeTextColor('#ef4444');"></div>
+                                <div class="color-option" style="background-color: #3b82f6;" onmousedown="event.preventDefault(); changeTextColor('#3b82f6');"></div>
+                                <div class="color-option" style="background-color: #f59e0b;" onmousedown="event.preventDefault(); changeTextColor('#f59e0b');"></div>
+                                <div class="color-option" style="background-color: #8b5cf6;" onmousedown="event.preventDefault(); changeTextColor('#8b5cf6');"></div>
                             </div>
                         </div>
                         <input type="text" id="noteTitle" class="note-title-input" placeholder="Enter note title..." data-lang="note-title-placeholder">
@@ -3397,54 +3397,36 @@
     document.querySelectorAll('.color-option').forEach(option => {
         option.classList.remove('active');
     });
-    event.target.classList.add('active');
+    
+    // event.target 대신 색상으로 active 찾기
+    const colorMap = {
+        '#e4e4e7': 'rgb(228, 228, 231)',
+        '#10b981': 'rgb(16, 185, 129)',
+        '#ef4444': 'rgb(239, 68, 68)',
+        '#3b82f6': 'rgb(59, 130, 246)',
+        '#f59e0b': 'rgb(245, 158, 11)',
+        '#8b5cf6': 'rgb(139, 92, 246)'
+    };
+    
+    document.querySelectorAll('.color-option').forEach(option => {
+        if (colorMap[color] === option.style.backgroundColor) {
+            option.classList.add('active');
+        }
+    });
 
-    const editor = document.getElementById('noteContentEditor');
     const selection = window.getSelection();
     
-    // 디버깅을 위한 콘솔 로그 (나중에 제거 가능)
     console.log('Selection range count:', selection.rangeCount);
     console.log('Selected text:', selection.toString());
     
-    // 텍스트가 선택된 상태인지 확인
-    if (selection.rangeCount > 0) {
-        const range = selection.getRangeAt(0);
-        const selectedText = selection.toString().trim();
-        
-        console.log('Selected text length:', selectedText.length);
-        
-        if (selectedText.length > 0 && !range.collapsed) {
-            // 선택된 텍스트를 span으로 래핑
-            const span = document.createElement('span');
-            span.style.color = color;
-            
-            try {
-                // 더 안전한 방법: cloneContents 사용
-                const fragment = range.cloneContents();
-                span.appendChild(fragment);
-                range.deleteContents();
-                range.insertNode(span);
-                
-                // 커서를 span 뒤로 이동
-                range.setStartAfter(span);
-                range.collapse(true);
-                selection.removeAllRanges();
-                selection.addRange(range);
-                
-                console.log('Color applied to selected text');
-                return;
-            } catch (e) {
-                console.error('Error applying color:', e);
-                // 폴백: execCommand 사용
-                selection.removeAllRanges();
-                selection.addRange(range);
-                document.execCommand('foreColor', false, color);
-                return;
-            }
-        }
+    if (selection.rangeCount > 0 && selection.toString().trim().length > 0) {
+        document.execCommand('styleWithCSS', false, true);
+        document.execCommand('foreColor', false, color);
+        console.log('Color applied using execCommand');
+        return;
     }
     
-    // 선택된 텍스트가 없을 때만 전체 색상 변경
+    const editor = document.getElementById('noteContentEditor');
     editor.style.color = color;
     console.log('Applied color to entire editor');
 }
