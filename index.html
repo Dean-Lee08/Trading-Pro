@@ -3402,31 +3402,51 @@
     const editor = document.getElementById('noteContentEditor');
     const selection = window.getSelection();
     
-    // 선택된 텍스트가 있는지 확인
-    if (selection.rangeCount > 0 && !selection.isCollapsed) {
+    // 디버깅을 위한 콘솔 로그 (나중에 제거 가능)
+    console.log('Selection range count:', selection.rangeCount);
+    console.log('Selected text:', selection.toString());
+    
+    // 텍스트가 선택된 상태인지 확인
+    if (selection.rangeCount > 0) {
         const range = selection.getRangeAt(0);
-        const selectedText = range.toString();
+        const selectedText = selection.toString().trim();
         
-        if (selectedText.length > 0) {
-            // 선택된 내용을 추출
-            const contents = range.extractContents();
-            
-            // 새로운 span 요소 생성하고 색상 적용
+        console.log('Selected text length:', selectedText.length);
+        
+        if (selectedText.length > 0 && !range.collapsed) {
+            // 선택된 텍스트를 span으로 래핑
             const span = document.createElement('span');
             span.style.color = color;
-            span.appendChild(contents);
             
-            // range에 새로운 span 삽입
-            range.insertNode(span);
-            
-            // 선택 해제
-            selection.removeAllRanges();
-            return;
+            try {
+                // 더 안전한 방법: cloneContents 사용
+                const fragment = range.cloneContents();
+                span.appendChild(fragment);
+                range.deleteContents();
+                range.insertNode(span);
+                
+                // 커서를 span 뒤로 이동
+                range.setStartAfter(span);
+                range.collapse(true);
+                selection.removeAllRanges();
+                selection.addRange(range);
+                
+                console.log('Color applied to selected text');
+                return;
+            } catch (e) {
+                console.error('Error applying color:', e);
+                // 폴백: execCommand 사용
+                selection.removeAllRanges();
+                selection.addRange(range);
+                document.execCommand('foreColor', false, color);
+                return;
+            }
         }
     }
     
-    // 선택된 텍스트가 없을 때만 에디터 전체 기본 색상 변경
+    // 선택된 텍스트가 없을 때만 전체 색상 변경
     editor.style.color = color;
+    console.log('Applied color to entire editor');
 }
 
         // Dashboard date range functions
