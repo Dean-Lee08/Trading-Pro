@@ -3402,18 +3402,26 @@
     const editor = document.getElementById('noteContentEditor');
     const selection = window.getSelection();
     
-    // 선택된 텍스트가 있는 경우에만 해당 부분에 색상 적용
-    if (selection.rangeCount > 0 && !selection.isCollapsed) {
-        // execCommand 사용으로 더 안정적인 색상 적용
-        document.execCommand('styleWithCSS', false, true);
-        document.execCommand('foreColor', false, color);
-        
-        // 선택 해제
-        selection.removeAllRanges();
-    } else {
-        // 선택된 텍스트가 없을 때만 에디터 전체 기본 색상 변경
-        editor.style.color = color;
+    // 선택된 텍스트가 있는지 먼저 확인
+    if (selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        if (range.toString().length > 0) {
+            // 선택된 텍스트가 있으면 해당 부분만 색상 변경
+            const span = document.createElement('span');
+            span.style.color = color;
+            try {
+                range.surroundContents(span);
+            } catch (e) {
+                document.execCommand('foreColor', false, color);
+            }
+            // 선택 해제
+            selection.removeAllRanges();
+            return; // 여기서 함수 종료
+        }
     }
+    
+    // 선택된 텍스트가 없을 때만 에디터 전체 색상 변경
+    editor.style.color = color;
 }
 
         // Dashboard date range functions
