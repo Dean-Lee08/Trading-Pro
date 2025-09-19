@@ -3601,6 +3601,16 @@
             });
         }
 
+        function changeLanguage() {
+            const select = document.getElementById('languageSelect');
+            currentLanguage = select.value;
+            document.getElementById('settingsLanguageSelect').value = currentLanguage;
+            updateLanguage();
+            updateStats();
+            updateDetailedAnalytics();
+            localStorage.setItem('tradingPlatformLanguage', currentLanguage);
+        }
+
         function changeLanguageFromSettings() {
             const select = document.getElementById('settingsLanguageSelect');
             currentLanguage = select.value;
