@@ -6372,7 +6372,7 @@
             const utilization = (recommendedPosition / balance) * 100;
             document.getElementById('accountUtil').textContent = utilization.toFixed(1) + '%';
             
-            const expectedValue = (p * avgWin - q * avgLoss) * (recommendedPosition / (avgWin > 0 ? avgWin : 1));
+            const expectedValue = (p * avgWin - q * avgLoss) * (recommendedPosition / Math.max(avgWin, 1));
             document.getElementById('expectedVal').textContent = '$' + expectedValue.toFixed(0);
             document.getElementById('expectedVal').className = 'sidebar-stat-value ' + (expectedValue >= 0 ? 'positive' : 'negative');
             
@@ -6390,13 +6390,13 @@
                 option.classList.remove('selected');
             });
             
-            element.classList.add('active');
+            element.classList.add('selected');
             selectedKellyMultiplier = parseFloat(element.dataset.multiplier);
             calculatePosition();
         }
 
         function autoLoadTradeData() {
-            if (trades.length === 0) {
+            if (!trades || trades.length === 0) {
                 alert('거래 이력이 없습니다.');
                 return;
             }
