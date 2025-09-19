@@ -1852,7 +1852,7 @@
             background: #3b82f6;
             color: white;
         }
-
+        
         /* Position Calculator Styles */
         .position-calculator {
             background: #1e293b;
@@ -2147,7 +2147,6 @@
                             <button class="toggle-btn" id="positionCalcBtn" onclick="toggleView('calculator')">Position Calculator</button>
                         </div>
                     </div>
-                </div>
 
                 <div class="stats-overview">
                     <div class="stat-item">
@@ -3407,9 +3406,7 @@
                 'atr-value': 'ATR Value',
                 'volatility-multiplier': 'Volatility Multiplier',
                 'current-price': 'Current Price ($)',
-                }
-        };
-        
+                },
             ko: {
                 'dashboard': '대시보드',
                 'calendar': '캘린더 뷰',
@@ -6559,6 +6556,10 @@
             const positionSize = shares * currentPrice;
             
             document.getElementById('volatilityResult').textContent = '$' + positionSize.toFixed(2);
+        }
+
+        function toggleView(view) {
+            console.log('Toggle view:', view);  // 디버깅용
         }
     </script>
 </body>
