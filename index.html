@@ -2143,8 +2143,8 @@
                             <button class="date-nav-btn" onclick="changeTradingDate(1)" title="Next day">→</button>
                         </div>
                         <div class="view-toggle">
-                            <button class="toggle-btn active" id="tradeRecordBtn" onclick="toggleView('record')" data-lang="trade-record">거래기록</button>
-                            <button class="toggle-btn" id="positionCalcBtn" onclick="toggleView('calculator')" data-lang="position-calc">Position Calculator</button>
+                            <button class="toggle-btn active" id="tradeRecordBtn" onclick="toggleView('record')">거래기록</button>
+                            <button class="toggle-btn" id="positionCalcBtn" onclick="toggleView('calculator')">Position Calculator</button>
                         </div>
                     </div>
                 </div>
@@ -6430,22 +6430,15 @@
         function toggleView(view) {
             const recordBtn = document.getElementById('tradeRecordBtn');
             const calcBtn = document.getElementById('positionCalcBtn');
-            const tradeSection = document.getElementById('tradeEntrySection');
-            const calcSection = document.getElementById('positionCalculatorSection');
             
             if (view === 'record') {
                 recordBtn.classList.add('active');
                 calcBtn.classList.remove('active');
-                tradeSection.style.display = 'block';
-                calcSection.style.display = 'none';
+                alert('거래기록 모드');
             } else {
                 recordBtn.classList.remove('active');
                 calcBtn.classList.add('active');
-                tradeSection.style.display = 'none';
-                calcSection.style.display = 'block';
-                
-                // Auto-populate win rate from historical data
-                autoPopulateStats();
+                alert('Position Calculator 모드');
             }
         }
 
