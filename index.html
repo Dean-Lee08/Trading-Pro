@@ -3601,20 +3601,9 @@
             });
         }
 
-        function changeLanguage() {
-            const select = document.getElementById('languageSelect');
-            currentLanguage = select.value;
-            document.getElementById('settingsLanguageSelect').value = currentLanguage;
-            updateLanguage();
-            updateStats();
-            updateDetailedAnalytics();
-            localStorage.setItem('tradingPlatformLanguage', currentLanguage);
-        }
-
         function changeLanguageFromSettings() {
             const select = document.getElementById('settingsLanguageSelect');
             currentLanguage = select.value;
-            document.getElementById('languageSelect').value = currentLanguage;
             updateLanguage();
             updateStats();
             updateDetailedAnalytics();
@@ -4971,14 +4960,13 @@
 
         // Page initialization
         document.addEventListener('DOMContentLoaded', async function() {
-            // Wait for Chart.js to load
-            await waitForChart();
-            const savedLanguage = localStorage.getItem('tradingPlatformLanguage');
-            if (savedLanguage) {
-                currentLanguage = savedLanguage;
-                document.getElementById('languageSelect').value = currentLanguage;
-                document.getElementById('settingsLanguageSelect').value = currentLanguage;
-            }
+    await waitForChart();
+    const savedLanguage = localStorage.getItem('tradingPlatformLanguage');
+    if (savedLanguage) {
+        currentLanguage = savedLanguage;
+        // document.getElementById('languageSelect').value = currentLanguage; // 이 줄 삭제
+        document.getElementById('settingsLanguageSelect').value = currentLanguage;
+    }
             
             // Load daily fees
             const savedFees = localStorage.getItem('tradingPlatformDailyFees');
