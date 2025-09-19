@@ -142,6 +142,7 @@
             display: flex;
             align-items: center;
             gap: 20px;
+            flex-wrap: wrap;
         }
 
         .current-date-display {
@@ -1996,7 +1997,6 @@
                 grid-template-columns: 1fr;
             }
         }
-        
     </style>
 </head>
 <body>
@@ -2121,6 +2121,13 @@
                         <div class="dashboard-tabs">
                             <button class="dashboard-tab active" onclick="showDashboardSection('trading')">거래 기록</button>
                             <button class="dashboard-tab" onclick="showDashboardSection('position-calc')">Position Calculator</button>
+                        </div>
+                        <div class="language-selector">
+                            <label data-lang="language">Language:</label>
+                            <select id="languageSelect" onchange="changeLanguage()">
+                                <option value="en">English</option>
+                                <option value="ko">한국어</option>
+                            </select>
                         </div>
                     </div>
                 </div>
