@@ -1713,211 +1713,6 @@
             cursor: pointer;
         }
 
-        /* View Toggle Styles */
-        .view-toggle {
-            display: flex;
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .toggle-btn {
-            background: transparent;
-            border: none;
-            color: #94a3b8;
-            padding: 8px 16px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            border-right: 1px solid #334155;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .toggle-btn:last-child {
-            border-right: none;
-        }
-
-        .toggle-btn:hover {
-            background: #334155;
-            color: #e4e4e7;
-        }
-
-        .toggle-btn.active {
-            background: #3b82f6;
-            color: white;
-        }
-
-        /* Position Calculator Styles */
-        .position-calculator {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 20px;
-            display: none;
-        }
-
-        .calc-section {
-            margin-bottom: 24px;
-            padding: 16px;
-            background: #0f172a;
-            border-radius: 8px;
-            border: 1px solid #334155;
-        }
-
-        .calc-section h3 {
-            color: #f8fafc;
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            text-align: center;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #334155;
-        }
-
-        .calc-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-            margin-bottom: 16px;
-        }
-
-        .calc-input-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .calc-input-group label {
-            color: #94a3b8;
-            font-size: 12px;
-            font-weight: 500;
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-
-        .calc-input {
-            background: #1e293b;
-            border: 1px solid #334155;
-            color: #e4e4e7;
-            padding: 10px 12px;
-            font-size: 14px;
-            border-radius: 6px;
-            transition: border-color 0.2s ease;
-        }
-
-        .calc-input:focus {
-            outline: none;
-            border-color: #3b82f6;
-        }
-
-        .calc-result {
-            background: #0f172a;
-            border: 2px solid #334155;
-            border-radius: 8px;
-            padding: 12px;
-            text-align: center;
-            margin-top: 12px;
-        }
-
-        .calc-result-label {
-            color: #94a3b8;
-            font-size: 11px;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 4px;
-        }
-
-        .calc-result-value {
-            font-size: 18px;
-            font-weight: 700;
-            color: #e4e4e7;
-        }
-
-        .calc-result.positive .calc-result-value {
-            color: #10b981;
-        }
-
-        .calc-result.negative .calc-result-value {
-            color: #ef4444;
-        }
-
-        .calc-method-selector {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-        }
-
-        .calc-method-btn {
-            background: #374151;
-            border: 1px solid #4b5563;
-            color: #e4e4e7;
-            padding: 8px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: all 0.2s ease;
-        }
-
-        .calc-method-btn:hover {
-            background: #4b5563;
-        }
-
-        .calc-method-btn.active {
-            background: #3b82f6;
-            border-color: #3b82f6;
-            color: white;
-        }
-
-        .kelly-info {
-            background: rgba(59, 130, 246, 0.1);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 6px;
-            padding: 12px;
-            margin-top: 12px;
-        }
-
-        .kelly-info-title {
-            color: #3b82f6;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .kelly-info-text {
-            color: #94a3b8;
-            font-size: 12px;
-            line-height: 1.4;
-        }
-
-        .risk-warning {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            border-radius: 6px;
-            padding: 12px;
-            margin-top: 12px;
-        }
-
-        .risk-warning-title {
-            color: #ef4444;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .risk-warning-text {
-            color: #94a3b8;
-            font-size: 12px;
-            line-height: 1.4;
-        }
-
-        .calc-method-inputs {
-            margin-top: 16px;
-        }
-
         /* Date navigation styles */
         .date-navigation {
             display: flex;
@@ -2019,6 +1814,263 @@
 
             .advanced-charts-grid {
                 grid-template-columns: 1fr;
+            }
+        }
+
+        /* Position Calculator CSS 추가 */
+        .view-toggle-selector {
+            display: flex;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .toggle-btn {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-right: 1px solid #334155;
+        }
+
+        .toggle-btn:last-child {
+            border-right: none;
+        }
+
+        .toggle-btn:hover {
+            background: #334155;
+            color: #e4e4e7;
+        }
+
+        .toggle-btn.active {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .position-calculator {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 24px;
+            display: none;
+        }
+
+        .calculator-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .calculator-title {
+            color: #f8fafc;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .calculator-method-tabs {
+            display: flex;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .method-tab {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-right: 1px solid #334155;
+        }
+
+        .method-tab:last-child {
+            border-right: none;
+        }
+
+        .method-tab:hover {
+            background: #1e293b;
+            color: #e4e4e7;
+        }
+
+        .method-tab.active {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .calculator-inputs {
+            display: grid;
+            gap: 16px;
+        }
+
+        .calc-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .calc-form-group label {
+            color: #94a3b8;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .calc-form-group input,
+        .calc-form-group select {
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: #e4e4e7;
+            padding: 10px 12px;
+            font-size: 14px;
+            border-radius: 6px;
+            transition: border-color 0.2s ease;
+        }
+
+        .calc-form-group input:focus,
+        .calc-form-group select:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        .calculator-results {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .result-title {
+            color: #f8fafc;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #334155;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            color: #94a3b8;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .result-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #e4e4e7;
+        }
+
+        .result-value.primary {
+            color: #10b981;
+            font-size: 16px;
+        }
+
+        .result-value.warning {
+            color: #f59e0b;
+        }
+
+        .result-value.danger {
+            color: #ef4444;
+        }
+
+        .kelly-info {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 16px;
+        }
+
+        .kelly-info-title {
+            color: #3b82f6;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .kelly-info-text {
+            color: #94a3b8;
+            font-size: 11px;
+            line-height: 1.4;
+        }
+
+        .risk-warning {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 12px;
+        }
+
+        .risk-warning-text {
+            color: #ef4444;
+            font-size: 11px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .auto-fill-btn {
+            margin-left: 8px;
+            padding: 2px 6px;
+            font-size: 10px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .auto-fill-btn:hover {
+            background: #2563eb;
+        }
+
+        @media (max-width: 768px) {
+            .calculator-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .view-toggle-selector {
+                flex-direction: column;
+            }
+
+            .toggle-btn {
+                border-right: none;
+                border-bottom: 1px solid #334155;
+            }
+
+            .toggle-btn:last-child {
+                border-bottom: none;
             }
         }
     </style>
@@ -2126,27 +2178,28 @@
             <!-- Dashboard page -->
             <div id="dashboard" class="page active">
                 <div class="page-header">
-                    <div>
-                        <h1 class="page-title" data-lang="dashboard-title">Trading Dashboard</h1>
-                        <p class="page-subtitle" data-lang="dashboard-subtitle">Track your trades and performance</p>
-                    </div>
-                    <div class="page-header-info">
-                        <div class="date-range-selector">
-                            <input type="date" id="dashboardStartDate" class="date-range-input">
-                            <span style="color: #64748b;">to</span>
-                            <input type="date" id="dashboardEndDate" class="date-range-input">
-                            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="clearDashboardRange()">Clear</button>
-                        </div>
-                        <div class="date-navigation">
-                            <button class="date-nav-btn" onclick="changeTradingDate(-1)" title="Previous day">←</button>
-                            <div class="current-date-display" id="currentDateDisplay" onclick="openDatePicker()"></div>
-                            <button class="date-nav-btn" onclick="changeTradingDate(1)" title="Next day">→</button>
-                        </div>
-                        <div class="view-toggle">
-                            <button class="toggle-btn active" id="tradeRecordBtn" onclick="toggleView('record')">거래기록</button>
-                            <button class="toggle-btn" id="positionCalcBtn" onclick="toggleView('calculator')">Position Calculator</button>
-                        </div>
-                    </div>
+    <div>
+        <h1 class="page-title" data-lang="dashboard-title">Trading Dashboard</h1>
+        <p class="page-subtitle" data-lang="dashboard-subtitle">Track your trades and performance</p>
+    </div>
+    <div class="page-header-info">
+        <div class="date-range-selector">
+            <input type="date" id="dashboardStartDate" class="date-range-input">
+            <span style="color: #64748b;">to</span>
+            <input type="date" id="dashboardEndDate" class="date-range-input">
+            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="clearDashboardRange()">Clear</button>
+        </div>
+        <div class="date-navigation">
+            <button class="date-nav-btn" onclick="changeTradingDate(-1)" title="Previous day">←</button>
+            <div class="current-date-display" id="currentDateDisplay" onclick="openDatePicker()"></div>
+            <button class="date-nav-btn" onclick="changeTradingDate(1)" title="Next day">→</button>
+        </div>
+        <div class="view-toggle-selector">
+            <button class="toggle-btn active" id="tradeHistoryToggle" onclick="toggleView('history')" data-lang="trade-history">Trade History</button>
+            <button class="toggle-btn" id="positionCalcToggle" onclick="toggleView('calculator')" data-lang="position-calculator">Position Calculator</button>
+        </div>
+    </div>
+</div>
 
                 <div class="stats-overview">
                     <div class="stat-item">
@@ -2169,7 +2222,7 @@
                 </div>
 
                 <div class="dashboard-grid">
-                    <div class="trade-entry" id="tradeEntrySection">
+                    <div class="trade-entry">
                         <h2 data-lang="record-trade">Record Trade</h2>
                         
                         <form id="tradeForm">
@@ -2261,143 +2314,6 @@
                     </div>
                 </div>
 
-                    <!-- Position Calculator (초기에는 숨김) -->
-                    <div class="position-calculator" id="positionCalculatorSection">
-                        <h2>Position Calculator</h2>
-                        
-                        <!-- 계산 방법 선택 -->
-                        <div class="calc-section">
-                            <h3>Calculation Method</h3>
-                            <div class="calc-method-selector">
-                                <button class="calc-method-btn active" onclick="selectCalcMethod('kelly')">Kelly Criterion</button>
-                                <button class="calc-method-btn" onclick="selectCalcMethod('fixed')">Fixed %</button>
-                                <button class="calc-method-btn" onclick="selectCalcMethod('risk')">Risk-Based</button>
-                                <button class="calc-method-btn" onclick="selectCalcMethod('volatility')">Volatility</button>
-                            </div>
-
-                            <!-- Kelly Criterion 입력 -->
-                            <div id="kellyInputs" class="calc-method-inputs">
-                                <div class="calc-grid">
-                                    <div class="calc-input-group">
-                                        <label>Win Rate (%)</label>
-                                        <input type="number" class="calc-input" id="kellyWinRate" step="0.1" placeholder="55.0" oninput="calculateKelly()">
-                                    </div>
-                                    <div class="calc-input-group">
-                                        <label>Avg Win/Loss Ratio</label>
-                                        <input type="number" class="calc-input" id="kellyWinLossRatio" step="0.01" placeholder="1.5" oninput="calculateKelly()">
-                                    </div>
-                                    <div class="calc-input-group">
-                                        <label>Account Balance ($)</label>
-                                        <input type="number" class="calc-input" id="accountBalance" step="0.01" placeholder="10000" oninput="calculateKelly()">
-                                    </div>
-                                    <div class="calc-input-group">
-                                        <label>Kelly Fraction (%)</label>
-                                        <input type="number" class="calc-input" id="kellyFraction" value="25" step="5" min="5" max="100" oninput="calculateKelly()">
-                                    </div>
-                                </div>
-                                
-                                <div class="calc-result positive">
-                                    <div class="calc-result-label">Optimal Position Size</div>
-                                    <div class="calc-result-value" id="kellyResult">$0.00</div>
-                                </div>
-
-                                <div class="kelly-info">
-                                    <div class="kelly-info-title">Kelly Criterion Information</div>
-                                    <div class="kelly-info-text">
-                                        Kelly Criterion calculates optimal position size based on win rate and win/loss ratio. 
-                                        Using 25% Kelly fraction is recommended for risk management.
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Fixed Percentage 입력 -->
-                            <div id="fixedInputs" class="calc-method-inputs" style="display: none;">
-                                <div class="calc-grid">
-                                    <div class="calc-input-group">
-                                        <label>Fixed Percentage (%)</label>
-                                        <input type="number" class="calc-input" id="fixedPercentage" step="0.1" placeholder="2.0" oninput="calculateFixed()">
-                                    </div>
-                                    <div class="calc-input-group">
-                                        <label>Account Balance ($)</label>
-                                        <input type="number" class="calc-input" id="fixedAccountBalance" step="0.01" placeholder="10000" oninput="calculateFixed()">
-                                    </div>
-                                </div>
-                                
-                                <div class="calc-result">
-                                    <div class="calc-result-label">Position Size</div>
-                                    <div class="calc-result-value" id="fixedResult">$0.00</div>
-                                </div>
-                            </div>
-
-                            <!-- Risk-Based 입력 -->
-                            <div id="riskInputs" class="calc-method-inputs" style="display: none;">
-                                <div class="calc-grid">
-                                    <div class="calc-input-group">
-                                        <label>Entry Price ($)</label>
-                                        <input type="number" class="calc-input" id="riskEntryPrice" step="0.01" placeholder="100.00" oninput="calculateRiskBased()">
-                                    </div>
-                                    <div class="calc-input-group">
-                                        <label>Stop Loss ($)</label>
-                                        <input type="number" class="calc-input" id="riskStopLoss" step="0.01" placeholder="95.00" oninput="calculateRiskBased()">
-                                    </div>
-                                    <div class="calc-input-group">
-                                        <label>Risk Amount ($)</label>
-                                        <input type="number" class="calc-input" id="riskAmount" step="0.01" placeholder="200" oninput="calculateRiskBased()">
-                                    </div>
-                                    <div class="calc-input-group">
-                                        <label>Account Balance ($)</label>
-                                        <input type="number" class="calc-input" id="riskAccountBalance" step="0.01" placeholder="10000" oninput="calculateRiskBased()">
-                                    </div>
-                                </div>
-                                
-                                <div class="calc-result">
-                                    <div class="calc-result-label">Position Size</div>
-                                    <div class="calc-result-value" id="riskResult">$0.00</div>
-                                </div>
-                                
-                                <div class="calc-result">
-                                    <div class="calc-result-label">Share Quantity</div>
-                                    <div class="calc-result-value" id="shareQuantity">0</div>
-                                </div>
-
-                                <div class="risk-warning">
-                                    <div class="risk-warning-title">Risk Warning</div>
-                                    <div class="risk-warning-text">
-                                        Never risk more than 1-2% of your account on a single trade. 
-                                        Always use stop losses to limit your downside risk.
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Volatility-Based 입력 -->
-                            <div id="volatilityInputs" class="calc-method-inputs" style="display: none;">
-                                <div class="calc-grid">
-                                    <div class="calc-input-group">
-                                        <label>ATR Value</label>
-                                        <input type="number" class="calc-input" id="atrValue" step="0.01" placeholder="2.50" oninput="calculateVolatility()">
-                                    </div>
-                                    <div class="calc-input-group">
-                                        <label>Volatility Multiplier</label>
-                                        <input type="number" class="calc-input" id="volMultiplier" step="0.1" placeholder="2.0" oninput="calculateVolatility()">
-                                    </div>
-                                    <div class="calc-input-group">
-                                        <label>Account Balance ($)</label>
-                                        <input type="number" class="calc-input" id="volAccountBalance" step="0.01" placeholder="10000" oninput="calculateVolatility()">
-                                    </div>
-                                    <div class="calc-input-group">
-                                        <label>Current Price ($)</label>
-                                        <input type="number" class="calc-input" id="currentPrice" step="0.01" placeholder="100.00" oninput="calculateVolatility()">
-                                    </div>
-                                </div>
-                                
-                                <div class="calc-result">
-                                    <div class="calc-result-label">Position Size</div>
-                                    <div class="calc-result-value" id="volatilityResult">$0.00</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
                 <div class="trades-section">
                     <div class="trades-header">
                         <h2 data-lang="trade-history">Trade History</h2>
@@ -2430,6 +2346,123 @@
                     </table>
                 </div>
             </div>
+
+            <!-- Position Calculator Section 추가 -->
+            <div class="position-calculator">
+                <div class="calculator-header">
+                    <h2 class="calculator-title" data-lang="position-calc-title">Advanced Position Calculator</h2>
+                    <div class="calculator-method-tabs">
+                        <button class="method-tab active" onclick="changeCalculatorMethod('kelly')" data-lang="kelly-criterion">Kelly</button>
+                        <button class="method-tab" onclick="changeCalculatorMethod('fixed')" data-lang="fixed-percentage">Fixed %</button>
+                        <button class="method-tab" onclick="changeCalculatorMethod('atr')" data-lang="volatility-based">ATR</button>
+                    </div>
+                </div>
+                
+                <div class="calculator-grid">
+                    <div class="calculator-inputs">
+                        <!-- Common inputs -->
+                        <div class="calc-form-group">
+                            <label data-lang="account-size">Account Size ($)</label>
+                            <input type="number" id="accountSize" placeholder="10000" oninput="calculatePosition()">
+                        </div>
+                        
+                        <div class="calc-form-group">
+                            <label data-lang="current-price">Current Price</label>
+                            <input type="number" id="currentPrice" placeholder="150.00" step="0.01" oninput="calculatePosition()">
+                        </div>
+                        
+                        <div class="calc-form-group">
+                            <label data-lang="stop-loss">Stop Loss</label>
+                            <input type="number" id="stopLoss" placeholder="145.00" step="0.01" oninput="calculatePosition()">
+                        </div>
+                        
+                        <!-- Kelly Criterion inputs -->
+                        <div id="kellyInputs">
+                            <div class="calc-form-group">
+                                <label data-lang="win-rate">Win Rate (%)
+                                    <button class="auto-fill-btn" onclick="autoFillFromTrades()">Auto Fill</button>
+                                </label>
+                                <input type="number" id="winRate" placeholder="65" min="0" max="100" oninput="calculatePosition()">
+                            </div>
+                            
+                            <div class="calc-form-group">
+                                <label data-lang="avg-win">Avg Win ($)</label>
+                                <input type="number" id="avgWin" placeholder="150" step="0.01" oninput="calculatePosition()">
+                            </div>
+                            
+                            <div class="calc-form-group">
+                                <label data-lang="avg-loss">Avg Loss ($)</label>
+                                <input type="number" id="avgLoss" placeholder="80" step="0.01" oninput="calculatePosition()">
+                            </div>
+                        </div>
+                        
+                        <!-- Fixed Percentage inputs -->
+                        <div id="fixedInputs" style="display: none;">
+                            <div class="calc-form-group">
+                                <label data-lang="risk-percentage">Risk Per Trade (%)</label>
+                                <input type="number" id="fixedRisk" placeholder="2" min="0.1" max="10" step="0.1" value="2" oninput="calculatePosition()">
+                            </div>
+                        </div>
+                        
+                        <!-- ATR Based inputs -->
+                        <div id="atrInputs" style="display: none;">
+                            <div class="calc-form-group">
+                                <label data-lang="atr-value">ATR Value</label>
+                                <input type="number" id="atrValue" placeholder="3.50" step="0.01" oninput="calculatePosition()">
+                            </div>
+                            
+                            <div class="calc-form-group">
+                                <label data-lang="volatility-multiplier">Volatility Multiplier</label>
+                                <input type="number" id="atrMultiplier" placeholder="2" min="1" max="5" step="0.1" value="2" oninput="calculatePosition()">
+                            </div>
+                            
+                            <div class="calc-form-group">
+                                <label>Base Risk (%)</label>
+                                <input type="number" id="baseRisk" placeholder="2" min="0.5" max="5" step="0.1" value="2" oninput="calculatePosition()">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="calculator-results">
+                        <div class="result-title" data-lang="recommended-position">Recommended Position</div>
+                        
+                        <div class="result-item">
+                            <span class="result-label" data-lang="position-shares">Position (Shares)</span>
+                            <span class="result-value primary" id="recommendedShares">0</span>
+                        </div>
+                        
+                        <div class="result-item">
+                            <span class="result-label" data-lang="position-value">Position Value</span>
+                            <span class="result-value" id="positionValue">$0</span>
+                        </div>
+                        
+                        <div class="result-item">
+                            <span class="result-label" data-lang="risk-amount">Risk Amount</span>
+                            <span class="result-value" id="riskAmount">$0</span>
+                        </div>
+                        
+                        <div class="result-item">
+                            <span class="result-label">Risk Percentage</span>
+                            <span class="result-value" id="riskPercent">0%</span>
+                        </div>
+                        
+                        <div class="result-item" id="kellyResult">
+                            <span class="result-label" data-lang="kelly-percentage">Kelly %</span>
+                            <span class="result-value" id="kellyPercent">0%</span>
+                        </div>
+                        
+                        <div class="kelly-info" id="kellyInfo" style="display: none;">
+                            <div class="kelly-info-title">Kelly Information</div>
+                            <div class="kelly-info-text" id="kellyInfoText"></div>
+                        </div>
+                        
+                        <div class="risk-warning" id="riskWarning" style="display: none;">
+                            <div class="risk-warning-text">⚠️ Risk exceeds 5% - Consider reducing position size</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
             <!-- Calendar page -->
             <div id="calendar" class="page">
@@ -3140,15 +3173,22 @@
                 </div>
 
                 <div class="settings-section">
-                    <h3 data-lang="general-settings">General Settings</h3>
-                    <div class="settings-option">
-                        <label data-lang="default-language">Default Language</label>
-                        <select id="settingsLanguageSelect" onchange="changeLanguageFromSettings()">
-                            <option value="en">English</option>
-                            <option value="ko">한국어</option>
-                        </select>
-                    </div>
-                </div>
+    <h3 data-lang="general-settings">General Settings</h3>
+    <div class="settings-option">
+        <label data-lang="default-language">Default Language</label>
+        <select id="settingsLanguageSelect" onchange="changeLanguageFromSettings()">
+            <option value="en">English</option>
+            <option value="ko">한국어</option>
+        </select>
+    </div>
+    <div class="settings-option">
+        <label>Theme Preference</label>
+        <select id="themeSelect" onchange="changeTheme()">
+            <option value="dark">Dark Mode</option>
+            <option value="light" disabled>Light Mode (Coming Soon)</option>
+        </select>
+    </div>
+</div>
 
                 <div class="settings-section">
                     <h3 data-lang="data-management">Data Management</h3>
@@ -3192,6 +3232,8 @@
         let currentViewingNoteId = null;
         let currentTextColor = '#e4e4e7';
         let currentFont = "'Inter', sans-serif";
+        let currentCalculatorMethod = 'kelly';
+        let currentView = 'history';
 
         // Chart instances
         let basicCharts = {};
@@ -3380,7 +3422,29 @@
                 'back': 'Back',
                 'show-more': 'Show more',
                 'show-less': 'Show less',
-            },
+                'trade-history': 'Trade History',
+        'position-calculator': 'Position Calculator',
+        'kelly-criterion': 'Kelly Criterion',
+        'fixed-percentage': 'Fixed %',
+        'risk-parity': 'Risk Parity',
+        'volatility-based': 'ATR Based',
+        'account-size': 'Account Size ($)',
+        'win-rate': 'Win Rate (%)',
+        'avg-win': 'Avg Win ($)',
+        'avg-loss': 'Avg Loss ($)',
+        'current-price': 'Current Price',
+        'stop-loss': 'Stop Loss',
+        'risk-percentage': 'Risk Per Trade (%)',
+        'atr-value': 'ATR Value',
+        'volatility-multiplier': 'Volatility Multiplier',
+        'recommended-position': 'Recommended Position',
+        'position-shares': 'Position (Shares)',
+        'position-value': 'Position Value',
+        'risk-amount': 'Risk Amount',
+        'kelly-percentage': 'Kelly %',
+        'conservative-kelly': 'Conservative Kelly',
+        'position-calc-title': 'Advanced Position Calculator',
+    },
             ko: {
                 'dashboard': '대시보드',
                 'calendar': '캘린더 뷰',
@@ -3546,8 +3610,30 @@
                 'back': '뒤로',
                 'show-more': '더보기',
                 'show-less': '접기',
-            }
-        };
+                'trade-history': '거래 기록',
+        'position-calculator': '포지션 계산기',
+        'kelly-criterion': '켈리 공식',
+        'fixed-percentage': '고정 %',
+        'risk-parity': '리스크 패리티',
+        'volatility-based': 'ATR 기반',
+        'account-size': '계좌 크기 ($)',
+        'win-rate': '승률 (%)',
+        'avg-win': '평균 수익 ($)',
+        'avg-loss': '평균 손실 ($)',
+        'current-price': '현재가',
+        'stop-loss': '손절가',
+        'risk-percentage': '거래당 리스크 (%)',
+        'atr-value': 'ATR 값',
+        'volatility-multiplier': '변동성 배수',
+        'recommended-position': '권장 포지션',
+        'position-shares': '포지션 (주식수)',
+        'position-value': '포지션 가치',
+        'risk-amount': '리스크 금액',
+        'kelly-percentage': '켈리 %',
+        'conservative-kelly': '보수적 켈리',
+        'position-calc-title': '고급 포지션 계산기',
+    }
+};
 
         // Function to get EST trading date
         function getESTTradingDate(date = new Date()) {
@@ -3578,8 +3664,9 @@
         }
 
         function changeLanguage() {
-            const select = document.getElementById('settingsLanguageSelect');
+            const select = document.getElementById('languageSelect');
             currentLanguage = select.value;
+            document.getElementById('settingsLanguageSelect').value = currentLanguage;
             updateLanguage();
             updateStats();
             updateDetailedAnalytics();
@@ -4951,6 +5038,7 @@
             const savedLanguage = localStorage.getItem('tradingPlatformLanguage');
             if (savedLanguage) {
                 currentLanguage = savedLanguage;
+                document.getElementById('languageSelect').value = currentLanguage;
                 document.getElementById('settingsLanguageSelect').value = currentLanguage;
             }
             
@@ -6366,151 +6454,245 @@
                 loadDailyFees();
                 showToast(currentLanguage === 'ko' ? '모든 데이터가 삭제됨' : 'All data cleared');
             }
-        }
 
-        // Global variable
-        let currentCalcMethod = 'kelly';
-
-        // View toggle functions
+            // Position Calculator 함수들을 여기에 추가
         function toggleView(view) {
-            const recordBtn = document.getElementById('tradeRecordBtn');
-            const calcBtn = document.getElementById('positionCalcBtn');
-            const tradeSection = document.getElementById('tradeEntrySection');
-            const calcSection = document.getElementById('positionCalculatorSection');
+            currentView = view;
             
-            if (view === 'record') {
-                recordBtn.classList.add('active');
-                calcBtn.classList.remove('active');
-                tradeSection.style.display = 'block';
-                calcSection.style.display = 'none';
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (view === 'history') {
+                document.getElementById('tradeHistoryToggle').classList.add('active');
+                document.querySelector('.trades-section').style.display = 'block';
+                document.querySelector('.position-calculator').style.display = 'none';
             } else {
-                recordBtn.classList.remove('active');
-                calcBtn.classList.add('active');
-                tradeSection.style.display = 'none';
-                calcSection.style.display = 'block';
-                
-                // Auto-populate win rate from historical data
-                autoPopulateStats();
+                document.getElementById('positionCalcToggle').classList.add('active');
+                document.querySelector('.trades-section').style.display = 'none';
+                document.querySelector('.position-calculator').style.display = 'block';
             }
         }
 
-        // Position calculator functions
-        function selectCalcMethod(method) {
-            document.querySelectorAll('.calc-method-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+        function changeCalculatorMethod(method) {
+            currentCalculatorMethod = method;
             
-            document.querySelectorAll('.calc-method-inputs').forEach(inputs => inputs.style.display = 'none');
-            document.getElementById(method + 'Inputs').style.display = 'block';
+            document.querySelectorAll('.method-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
             
-            currentCalcMethod = method;
+            document.querySelector(`[onclick="changeCalculatorMethod('${method}')"]`).classList.add('active');
+            
+            updateCalculatorInputs();
+            calculatePosition();
         }
 
-        function autoPopulateStats() {
-            if (trades.length === 0) return;
+        function updateCalculatorInputs() {
+            const kellyInputs = document.getElementById('kellyInputs');
+            const fixedInputs = document.getElementById('fixedInputs');
+            const atrInputs = document.getElementById('atrInputs');
+            
+            [kellyInputs, fixedInputs, atrInputs].forEach(el => {
+                if (el) el.style.display = 'none';
+            });
+            
+            switch (currentCalculatorMethod) {
+                case 'kelly':
+                    if (kellyInputs) kellyInputs.style.display = 'block';
+                    break;
+                case 'fixed':
+                    if (fixedInputs) fixedInputs.style.display = 'block';
+                    break;
+                case 'atr':
+                    if (atrInputs) atrInputs.style.display = 'block';
+                    break;
+            }
+        }
+
+        function calculateKelly(winRate, avgWin, avgLoss) {
+            if (avgLoss <= 0) return 0;
+            const winProb = winRate / 100;
+            const lossProb = 1 - winProb;
+            const winLossRatio = avgWin / Math.abs(avgLoss);
+            
+            const kelly = (winProb * winLossRatio - lossProb) / winLossRatio;
+            return Math.max(0, Math.min(kelly, 0.25));
+        }
+
+        function calculatePosition() {
+            const accountSize = parseFloat(document.getElementById('accountSize')?.value) || 0;
+            const currentPrice = parseFloat(document.getElementById('currentPrice')?.value) || 0;
+            const stopLoss = parseFloat(document.getElementById('stopLoss')?.value) || 0;
+            
+            if (!accountSize || !currentPrice || !stopLoss) {
+                updateResults({});
+                return;
+            }
+            
+            const riskPerShare = Math.abs(currentPrice - stopLoss);
+            
+            let recommendedPosition = 0;
+            let kellyPercent = 0;
+            let riskPercent = 0;
+            let additionalInfo = {};
+            
+            switch (currentCalculatorMethod) {
+                case 'kelly':
+                    const winRate = parseFloat(document.getElementById('winRate')?.value) || 0;
+                    const avgWin = parseFloat(document.getElementById('avgWin')?.value) || 0;
+                    const avgLoss = parseFloat(document.getElementById('avgLoss')?.value) || 0;
+                    
+                    if (winRate && avgWin && avgLoss) {
+                        kellyPercent = calculateKelly(winRate, avgWin, avgLoss) * 100;
+                        const conservativeKelly = kellyPercent * 0.5;
+                        const riskAmount = accountSize * (conservativeKelly / 100);
+                        recommendedPosition = Math.floor(riskAmount / riskPerShare);
+                        riskPercent = conservativeKelly;
+                        
+                        additionalInfo = {
+                            fullKelly: kellyPercent.toFixed(2),
+                            conservativeKelly: conservativeKelly.toFixed(2),
+                            winLossRatio: (avgWin / Math.abs(avgLoss)).toFixed(2)
+                        };
+                    }
+                    break;
+                    
+                case 'fixed':
+                    const fixedRisk = parseFloat(document.getElementById('fixedRisk')?.value) || 2;
+                    const riskAmount = accountSize * (fixedRisk / 100);
+                    recommendedPosition = Math.floor(riskAmount / riskPerShare);
+                    riskPercent = fixedRisk;
+                    break;
+                    
+                case 'atr':
+                    const atrValue = parseFloat(document.getElementById('atrValue')?.value) || 0;
+                    const atrMultiplier = parseFloat(document.getElementById('atrMultiplier')?.value) || 2;
+                    const baseRisk = parseFloat(document.getElementById('baseRisk')?.value) || 2;
+                    
+                    if (atrValue) {
+                        const volatilityAdjustedRisk = baseRisk * (atrValue / currentPrice * atrMultiplier);
+                        const finalRisk = Math.min(volatilityAdjustedRisk, 5);
+                        const riskAmount = accountSize * (finalRisk / 100);
+                        recommendedPosition = Math.floor(riskAmount / riskPerShare);
+                        riskPercent = finalRisk;
+                        
+                        additionalInfo = {
+                            volatilityRisk: volatilityAdjustedRisk.toFixed(2),
+                            atrPercent: (atrValue / currentPrice * 100).toFixed(2)
+                        };
+                    }
+                    break;
+            }
+            
+            const positionValue = recommendedPosition * currentPrice;
+            const actualRiskAmount = recommendedPosition * riskPerShare;
+            const actualRiskPercent = accountSize > 0 ? (actualRiskAmount / accountSize * 100) : 0;
+            
+            updateResults({
+                recommendedPosition,
+                positionValue,
+                actualRiskAmount,
+                actualRiskPercent,
+                kellyPercent,
+                riskPercent,
+                ...additionalInfo
+            });
+        }
+
+        function updateResults(results) {
+            const elements = {
+                recommendedShares: document.getElementById('recommendedShares'),
+                positionValue: document.getElementById('positionValue'),
+                riskAmount: document.getElementById('riskAmount'),
+                riskPercent: document.getElementById('riskPercent'),
+                kellyPercent: document.getElementById('kellyPercent')
+            };
+            
+            Object.keys(elements).forEach(key => {
+                if (elements[key]) {
+                    elements[key].textContent = '0';
+                    elements[key].className = 'result-value';
+                }
+            });
+            
+            if (results.recommendedPosition && results.recommendedPosition > 0) {
+                if (elements.recommendedShares) {
+                    elements.recommendedShares.textContent = results.recommendedPosition.toLocaleString();
+                    elements.recommendedShares.className = 'result-value primary';
+                }
+                
+                if (elements.positionValue) {
+                    elements.positionValue.textContent = `$${results.positionValue.toLocaleString()}`;
+                    elements.positionValue.className = 'result-value';
+                }
+                
+                if (elements.riskAmount) {
+                    elements.riskAmount.textContent = `$${results.actualRiskAmount.toFixed(2)}`;
+                    elements.riskAmount.className = results.actualRiskPercent > 3 ? 'result-value warning' : 'result-value';
+                }
+                
+                if (elements.riskPercent) {
+                    elements.riskPercent.textContent = `${results.actualRiskPercent.toFixed(2)}%`;
+                    elements.riskPercent.className = results.actualRiskPercent > 3 ? 'result-value warning' : 'result-value';
+                }
+                
+                if (elements.kellyPercent && results.kellyPercent !== undefined) {
+                    elements.kellyPercent.textContent = `${results.kellyPercent}%`;
+                }
+            }
+            
+            const riskWarning = document.getElementById('riskWarning');
+            if (riskWarning) {
+                riskWarning.style.display = results.actualRiskPercent > 5 ? 'block' : 'none';
+            }
+            
+            const kellyInfo = document.getElementById('kellyInfo');
+            if (kellyInfo && results.fullKelly) {
+                kellyInfo.style.display = 'block';
+                const kellyInfoText = document.getElementById('kellyInfoText');
+                if (kellyInfoText) {
+                    kellyInfoText.innerHTML = `Full Kelly: ${results.fullKelly}% | Conservative: ${results.conservativeKelly}% | W/L Ratio: ${results.winLossRatio}`;
+                }
+            } else if (kellyInfo) {
+                kellyInfo.style.display = 'none';
+            }
+        }
+
+        function autoFillFromTrades() {
+            if (trades.length === 0) {
+                showToast(currentLanguage === 'ko' ? '거래 데이터가 없습니다' : 'No trade data available');
+                return;
+            }
             
             const wins = trades.filter(trade => trade.pnl > 0);
             const losses = trades.filter(trade => trade.pnl < 0);
-            const winRate = (wins.length / trades.length) * 100;
             
-            const avgWin = wins.length > 0 ? wins.reduce((sum, trade) => sum + trade.pnl, 0) / wins.length : 0;
-            const avgLoss = losses.length > 0 ? Math.abs(losses.reduce((sum, trade) => sum + trade.pnl, 0) / losses.length) : 0;
-            const winLossRatio = avgLoss > 0 ? avgWin / avgLoss : 0;
+            const winRate = (wins.length / trades.length * 100).toFixed(1);
+            const avgWin = wins.length > 0 ? (wins.reduce((sum, trade) => sum + trade.pnl, 0) / wins.length).toFixed(2) : 0;
+            const avgLoss = losses.length > 0 ? Math.abs(losses.reduce((sum, trade) => sum + trade.pnl, 0) / losses.length).toFixed(2) : 0;
             
-            document.getElementById('kellyWinRate').value = winRate.toFixed(1);
-            document.getElementById('kellyWinLossRatio').value = winLossRatio.toFixed(2);
+            const winRateInput = document.getElementById('winRate');
+            const avgWinInput = document.getElementById('avgWin');
+            const avgLossInput = document.getElementById('avgLoss');
             
-            calculateKelly();
+            if (winRateInput) winRateInput.value = winRate;
+            if (avgWinInput) avgWinInput.value = avgWin;
+            if (avgLossInput) avgLossInput.value = avgLoss;
+            
+            calculatePosition();
+            
+            showToast(currentLanguage === 'ko' ? '거래 기록에서 자동 입력됨' : 'Auto-filled from trade history');
         }
 
-        function calculateKelly() {
-            const winRate = parseFloat(document.getElementById('kellyWinRate').value) || 0;
-            const winLossRatio = parseFloat(document.getElementById('kellyWinLossRatio').value) || 0;
-            const accountBalance = parseFloat(document.getElementById('accountBalance').value) || 0;
-            const kellyFraction = parseFloat(document.getElementById('kellyFraction').value) || 25;
-            
-            if (winRate <= 0 || winLossRatio <= 0 || accountBalance <= 0) {
-                document.getElementById('kellyResult').textContent = '$0.00';
-                return;
-            }
-            
-            const winRateDecimal = winRate / 100;
-            const loseRate = 1 - winRateDecimal;
-            
-            // Kelly Formula: f = (bp - q) / b
-            const kellyPercent = (winRateDecimal * winLossRatio - loseRate) / winLossRatio;
-            const adjustedKelly = Math.max(0, kellyPercent * (kellyFraction / 100));
-            
-            const positionSize = accountBalance * adjustedKelly;
-            
-            document.getElementById('kellyResult').textContent = '$' + positionSize.toFixed(2);
-            
-            // Color coding based on kelly percentage
-            const resultElement = document.getElementById('kellyResult').parentElement;
-            if (adjustedKelly > 0.15) {
-                resultElement.className = 'calc-result negative';
-            } else if (adjustedKelly > 0.05) {
-                resultElement.className = 'calc-result';
-            } else {
-                resultElement.className = 'calc-result positive';
-            }
-        }
-
-        function calculateFixed() {
-            const percentage = parseFloat(document.getElementById('fixedPercentage').value) || 0;
-            const accountBalance = parseFloat(document.getElementById('fixedAccountBalance').value) || 0;
-            
-            const positionSize = (accountBalance * percentage) / 100;
-            document.getElementById('fixedResult').textContent = '$' + positionSize.toFixed(2);
-        }
-
-        function calculateRiskBased() {
-            const entryPrice = parseFloat(document.getElementById('riskEntryPrice').value) || 0;
-            const stopLoss = parseFloat(document.getElementById('riskStopLoss').value) || 0;
-            const riskAmount = parseFloat(document.getElementById('riskAmount').value) || 0;
-            const accountBalance = parseFloat(document.getElementById('riskAccountBalance').value) || 0;
-            
-            if (entryPrice <= 0 || stopLoss <= 0 || riskAmount <= 0 || entryPrice <= stopLoss) {
-                document.getElementById('riskResult').textContent = '$0.00';
-                document.getElementById('shareQuantity').textContent = '0';
-                return;
-            }
-            
-            const riskPerShare = entryPrice - stopLoss;
-            const shares = Math.floor(riskAmount / riskPerShare);
-            const positionSize = shares * entryPrice;
-            const riskPercent = (riskAmount / accountBalance) * 100;
-            
-            document.getElementById('riskResult').textContent = '$' + positionSize.toFixed(2);
-            document.getElementById('shareQuantity').textContent = shares.toString();
-            
-            // Warning if risk is too high
-            const resultElement = document.getElementById('riskResult').parentElement;
-            if (riskPercent > 2) {
-                resultElement.className = 'calc-result negative';
-            } else if (riskPercent > 1) {
-                resultElement.className = 'calc-result';
-            } else {
-                resultElement.className = 'calc-result positive';
-            }
-        }
-
-        function calculateVolatility() {
-            const atrValue = parseFloat(document.getElementById('atrValue').value) || 0;
-            const multiplier = parseFloat(document.getElementById('volMultiplier').value) || 2;
-            const accountBalance = parseFloat(document.getElementById('volAccountBalance').value) || 0;
-            const currentPrice = parseFloat(document.getElementById('currentPrice').value) || 0;
-            
-            if (atrValue <= 0 || accountBalance <= 0 || currentPrice <= 0) {
-                document.getElementById('volatilityResult').textContent = '$0.00';
-                return;
-            }
-            
-            const volatilityRisk = atrValue * multiplier;
-            const riskAmount = accountBalance * 0.02; // 2% risk
-            const shares = Math.floor(riskAmount / volatilityRisk);
-            const positionSize = shares * currentPrice;
-            
-            document.getElementById('volatilityResult').textContent = '$' + positionSize.toFixed(2);
+        // 기존 changeLanguage 함수를 제거하고 Settings 전용으로 변경
+        function changeLanguageFromSettings() {
+            const select = document.getElementById('settingsLanguageSelect');
+            currentLanguage = select.value;
+            updateLanguage();
+            updateStats();
+            updateDetailedAnalytics();
+            localStorage.setItem('tradingPlatformLanguage', currentLanguage);
+            showToast(currentLanguage === 'ko' ? '언어가 변경되었습니다' : 'Language changed');
         }
     </script>
 </body>
