@@ -1713,110 +1713,6 @@
             cursor: pointer;
         }
 
-        /* Date navigation styles */
-        .date-navigation {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .date-nav-btn {
-            background: #334155;
-            border: 1px solid #475569;
-            color: #e4e4e7;
-            padding: 8px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            transition: all 0.2s ease;
-            min-width: 40px;
-            height: 34px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .date-nav-btn:hover {
-            background: #475569;
-            transform: translateY(-1px);
-        }
-
-        .date-nav-btn:active {
-            transform: translateY(0);
-        }
-
-        @media (max-width: 768px) {
-            .mobile-menu-toggle {
-                display: block;
-            }
-
-            .sidebar {
-                transform: translateX(-100%);
-                z-index: 1000;
-            }
-
-            .sidebar.open {
-                transform: translateX(0);
-            }
-
-            .main-content {
-                margin-left: 0;
-            }
-
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .calendar-main-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .calendar-day {
-                min-height: 60px;
-                padding: 4px;
-            }
-
-            .calendar-stats-summary {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .page {
-                padding: 16px;
-            }
-
-            .summary-cards {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .detail-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .analytics-header {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 16px;
-            }
-
-            .analytics-title-section {
-                flex-direction: column;
-                gap: 16px;
-            }
-
-            .filter-controls {
-                justify-content: center;
-            }
-
-            .basic-charts-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .advanced-charts-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
         /* View Toggle Styles */
         .view-toggle {
             display: flex;
@@ -1852,7 +1748,7 @@
             background: #3b82f6;
             color: white;
         }
-        
+
         /* Position Calculator Styles */
         .position-calculator {
             background: #1e293b;
@@ -2020,6 +1916,110 @@
 
         .calc-method-inputs {
             margin-top: 16px;
+        }
+
+        /* Date navigation styles */
+        .date-navigation {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .date-nav-btn {
+            background: #334155;
+            border: 1px solid #475569;
+            color: #e4e4e7;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            min-width: 40px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .date-nav-btn:hover {
+            background: #475569;
+            transform: translateY(-1px);
+        }
+
+        .date-nav-btn:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+                z-index: 1000;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .calendar-main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .calendar-day {
+                min-height: 60px;
+                padding: 4px;
+            }
+
+            .calendar-stats-summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .page {
+                padding: 16px;
+            }
+
+            .summary-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .analytics-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 16px;
+            }
+
+            .analytics-title-section {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .filter-controls {
+                justify-content: center;
+            }
+
+            .basic-charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .advanced-charts-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -2225,143 +2225,6 @@
                         </form>
                     </div>
 
-                    <!-- Position Calculator (초기에는 숨김) -->
-                    <div class="position-calculator" id="positionCalculatorSection">
-                        <h2 data-lang="position-calculator">Position Calculator</h2>
-                        
-                        <!-- 계산 방법 선택 -->
-                        <div class="calc-section">
-                            <h3 data-lang="calculation-method">Calculation Method</h3>
-                            <div class="calc-method-selector">
-                                <button class="calc-method-btn active" onclick="selectCalcMethod('kelly')" data-lang="kelly-criterion">Kelly Criterion</button>
-                                <button class="calc-method-btn" onclick="selectCalcMethod('fixed')" data-lang="fixed-percent">Fixed %</button>
-                                <button class="calc-method-btn" onclick="selectCalcMethod('risk')" data-lang="risk-based">Risk-Based</button>
-                                <button class="calc-method-btn" onclick="selectCalcMethod('volatility')" data-lang="volatility">Volatility</button>
-                            </div>
-
-                            <!-- Kelly Criterion 입력 -->
-                            <div id="kellyInputs" class="calc-method-inputs">
-                                <div class="calc-grid">
-                                    <div class="calc-input-group">
-                                        <label data-lang="win-rate-input">Win Rate (%)</label>
-                                        <input type="number" class="calc-input" id="kellyWinRate" step="0.1" placeholder="55.0" oninput="calculateKelly()">
-                                    </div>
-                                    <div class="calc-input-group">
-                                        <label data-lang="avg-win-loss">Avg Win/Loss Ratio</label>
-                                        <input type="number" class="calc-input" id="kellyWinLossRatio" step="0.01" placeholder="1.5" oninput="calculateKelly()">
-                                    </div>
-                                    <div class="calc-input-group">
-                                        <label data-lang="account-balance">Account Balance ($)</label>
-                                        <input type="number" class="calc-input" id="accountBalance" step="0.01" placeholder="10000" oninput="calculateKelly()">
-                                    </div>
-                                    <div class="calc-input-group">
-                                        <label data-lang="kelly-fraction">Kelly Fraction (%)</label>
-                                        <input type="number" class="calc-input" id="kellyFraction" value="25" step="5" min="5" max="100" oninput="calculateKelly()">
-                                    </div>
-                                </div>
-                                
-                                <div class="calc-result positive">
-                                    <div class="calc-result-label" data-lang="optimal-position">Optimal Position Size</div>
-                                    <div class="calc-result-value" id="kellyResult">$0.00</div>
-                                </div>
-
-                                <div class="kelly-info">
-                                    <div class="kelly-info-title" data-lang="kelly-info">Kelly Criterion Information</div>
-                                    <div class="kelly-info-text" data-lang="kelly-description">
-                                        Kelly Criterion calculates optimal position size based on win rate and win/loss ratio. 
-                                        Using 25% Kelly fraction is recommended for risk management.
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Fixed Percentage 입력 -->
-                            <div id="fixedInputs" class="calc-method-inputs" style="display: none;">
-                                <div class="calc-grid">
-                                    <div class="calc-input-group">
-                                        <label data-lang="fixed-percentage">Fixed Percentage (%)</label>
-                                        <input type="number" class="calc-input" id="fixedPercentage" step="0.1" placeholder="2.0" oninput="calculateFixed()">
-                                    </div>
-                                    <div class="calc-input-group">
-                                        <label data-lang="account-balance">Account Balance ($)</label>
-                                        <input type="number" class="calc-input" id="fixedAccountBalance" step="0.01" placeholder="10000" oninput="calculateFixed()">
-                                    </div>
-                                </div>
-                                
-                                <div class="calc-result">
-                                    <div class="calc-result-label" data-lang="position-size">Position Size</div>
-                                    <div class="calc-result-value" id="fixedResult">$0.00</div>
-                                </div>
-                            </div>
-
-                            <!-- Risk-Based 입력 -->
-                            <div id="riskInputs" class="calc-method-inputs" style="display: none;">
-                                <div class="calc-grid">
-                                    <div class="calc-input-group">
-                                        <label data-lang="entry-price">Entry Price ($)</label>
-                                        <input type="number" class="calc-input" id="riskEntryPrice" step="0.01" placeholder="100.00" oninput="calculateRiskBased()">
-                                    </div>
-                                    <div class="calc-input-group">
-                                        <label data-lang="stop-loss">Stop Loss ($)</label>
-                                        <input type="number" class="calc-input" id="riskStopLoss" step="0.01" placeholder="95.00" oninput="calculateRiskBased()">
-                                    </div>
-                                    <div class="calc-input-group">
-                                        <label data-lang="risk-amount">Risk Amount ($)</label>
-                                        <input type="number" class="calc-input" id="riskAmount" step="0.01" placeholder="200" oninput="calculateRiskBased()">
-                                    </div>
-                                    <div class="calc-input-group">
-                                        <label data-lang="account-balance">Account Balance ($)</label>
-                                        <input type="number" class="calc-input" id="riskAccountBalance" step="0.01" placeholder="10000" oninput="calculateRiskBased()">
-                                    </div>
-                                </div>
-                                
-                                <div class="calc-result">
-                                    <div class="calc-result-label" data-lang="position-size">Position Size</div>
-                                    <div class="calc-result-value" id="riskResult">$0.00</div>
-                                </div>
-                                
-                                <div class="calc-result">
-                                    <div class="calc-result-label" data-lang="share-quantity">Share Quantity</div>
-                                    <div class="calc-result-value" id="shareQuantity">0</div>
-                                </div>
-
-                                <div class="risk-warning">
-                                    <div class="risk-warning-title" data-lang="risk-warning">Risk Warning</div>
-                                    <div class="risk-warning-text" data-lang="risk-description">
-                                        Never risk more than 1-2% of your account on a single trade. 
-                                        Always use stop losses to limit your downside risk.
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Volatility-Based 입력 -->
-                            <div id="volatilityInputs" class="calc-method-inputs" style="display: none;">
-                                <div class="calc-grid">
-                                    <div class="calc-input-group">
-                                        <label data-lang="atr-value">ATR Value</label>
-                                        <input type="number" class="calc-input" id="atrValue" step="0.01" placeholder="2.50" oninput="calculateVolatility()">
-                                    </div>
-                                    <div class="calc-input-group">
-                                        <label data-lang="volatility-multiplier">Volatility Multiplier</label>
-                                        <input type="number" class="calc-input" id="volMultiplier" step="0.1" placeholder="2.0" oninput="calculateVolatility()">
-                                    </div>
-                                    <div class="calc-input-group">
-                                        <label data-lang="account-balance">Account Balance ($)</label>
-                                        <input type="number" class="calc-input" id="volAccountBalance" step="0.01" placeholder="10000" oninput="calculateVolatility()">
-                                    </div>
-                                    <div class="calc-input-group">
-                                        <label data-lang="current-price">Current Price ($)</label>
-                                        <input type="number" class="calc-input" id="currentPrice" step="0.01" placeholder="100.00" oninput="calculateVolatility()">
-                                    </div>
-                                </div>
-                                
-                                <div class="calc-result">
-                                    <div class="calc-result-label" data-lang="position-size">Position Size</div>
-                                    <div class="calc-result-value" id="volatilityResult">$0.00</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <div>
                         <div class="stats-sidebar">
                             <div class="sidebar-title-stats" data-lang="performance">Performance</div>
@@ -2398,6 +2261,143 @@
                     </div>
                 </div>
 
+                    <!-- Position Calculator (초기에는 숨김) -->
+                    <div class="position-calculator" id="positionCalculatorSection">
+                        <h2>Position Calculator</h2>
+                        
+                        <!-- 계산 방법 선택 -->
+                        <div class="calc-section">
+                            <h3>Calculation Method</h3>
+                            <div class="calc-method-selector">
+                                <button class="calc-method-btn active" onclick="selectCalcMethod('kelly')">Kelly Criterion</button>
+                                <button class="calc-method-btn" onclick="selectCalcMethod('fixed')">Fixed %</button>
+                                <button class="calc-method-btn" onclick="selectCalcMethod('risk')">Risk-Based</button>
+                                <button class="calc-method-btn" onclick="selectCalcMethod('volatility')">Volatility</button>
+                            </div>
+
+                            <!-- Kelly Criterion 입력 -->
+                            <div id="kellyInputs" class="calc-method-inputs">
+                                <div class="calc-grid">
+                                    <div class="calc-input-group">
+                                        <label>Win Rate (%)</label>
+                                        <input type="number" class="calc-input" id="kellyWinRate" step="0.1" placeholder="55.0" oninput="calculateKelly()">
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label>Avg Win/Loss Ratio</label>
+                                        <input type="number" class="calc-input" id="kellyWinLossRatio" step="0.01" placeholder="1.5" oninput="calculateKelly()">
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label>Account Balance ($)</label>
+                                        <input type="number" class="calc-input" id="accountBalance" step="0.01" placeholder="10000" oninput="calculateKelly()">
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label>Kelly Fraction (%)</label>
+                                        <input type="number" class="calc-input" id="kellyFraction" value="25" step="5" min="5" max="100" oninput="calculateKelly()">
+                                    </div>
+                                </div>
+                                
+                                <div class="calc-result positive">
+                                    <div class="calc-result-label">Optimal Position Size</div>
+                                    <div class="calc-result-value" id="kellyResult">$0.00</div>
+                                </div>
+
+                                <div class="kelly-info">
+                                    <div class="kelly-info-title">Kelly Criterion Information</div>
+                                    <div class="kelly-info-text">
+                                        Kelly Criterion calculates optimal position size based on win rate and win/loss ratio. 
+                                        Using 25% Kelly fraction is recommended for risk management.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Fixed Percentage 입력 -->
+                            <div id="fixedInputs" class="calc-method-inputs" style="display: none;">
+                                <div class="calc-grid">
+                                    <div class="calc-input-group">
+                                        <label>Fixed Percentage (%)</label>
+                                        <input type="number" class="calc-input" id="fixedPercentage" step="0.1" placeholder="2.0" oninput="calculateFixed()">
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label>Account Balance ($)</label>
+                                        <input type="number" class="calc-input" id="fixedAccountBalance" step="0.01" placeholder="10000" oninput="calculateFixed()">
+                                    </div>
+                                </div>
+                                
+                                <div class="calc-result">
+                                    <div class="calc-result-label">Position Size</div>
+                                    <div class="calc-result-value" id="fixedResult">$0.00</div>
+                                </div>
+                            </div>
+
+                            <!-- Risk-Based 입력 -->
+                            <div id="riskInputs" class="calc-method-inputs" style="display: none;">
+                                <div class="calc-grid">
+                                    <div class="calc-input-group">
+                                        <label>Entry Price ($)</label>
+                                        <input type="number" class="calc-input" id="riskEntryPrice" step="0.01" placeholder="100.00" oninput="calculateRiskBased()">
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label>Stop Loss ($)</label>
+                                        <input type="number" class="calc-input" id="riskStopLoss" step="0.01" placeholder="95.00" oninput="calculateRiskBased()">
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label>Risk Amount ($)</label>
+                                        <input type="number" class="calc-input" id="riskAmount" step="0.01" placeholder="200" oninput="calculateRiskBased()">
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label>Account Balance ($)</label>
+                                        <input type="number" class="calc-input" id="riskAccountBalance" step="0.01" placeholder="10000" oninput="calculateRiskBased()">
+                                    </div>
+                                </div>
+                                
+                                <div class="calc-result">
+                                    <div class="calc-result-label">Position Size</div>
+                                    <div class="calc-result-value" id="riskResult">$0.00</div>
+                                </div>
+                                
+                                <div class="calc-result">
+                                    <div class="calc-result-label">Share Quantity</div>
+                                    <div class="calc-result-value" id="shareQuantity">0</div>
+                                </div>
+
+                                <div class="risk-warning">
+                                    <div class="risk-warning-title">Risk Warning</div>
+                                    <div class="risk-warning-text">
+                                        Never risk more than 1-2% of your account on a single trade. 
+                                        Always use stop losses to limit your downside risk.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Volatility-Based 입력 -->
+                            <div id="volatilityInputs" class="calc-method-inputs" style="display: none;">
+                                <div class="calc-grid">
+                                    <div class="calc-input-group">
+                                        <label>ATR Value</label>
+                                        <input type="number" class="calc-input" id="atrValue" step="0.01" placeholder="2.50" oninput="calculateVolatility()">
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label>Volatility Multiplier</label>
+                                        <input type="number" class="calc-input" id="volMultiplier" step="0.1" placeholder="2.0" oninput="calculateVolatility()">
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label>Account Balance ($)</label>
+                                        <input type="number" class="calc-input" id="volAccountBalance" step="0.01" placeholder="10000" oninput="calculateVolatility()">
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label>Current Price ($)</label>
+                                        <input type="number" class="calc-input" id="currentPrice" step="0.01" placeholder="100.00" oninput="calculateVolatility()">
+                                    </div>
+                                </div>
+                                
+                                <div class="calc-result">
+                                    <div class="calc-result-label">Position Size</div>
+                                    <div class="calc-result-value" id="volatilityResult">$0.00</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                 <div class="trades-section">
                     <div class="trades-header">
                         <h2 data-lang="trade-history">Trade History</h2>
@@ -3380,33 +3380,7 @@
                 'back': 'Back',
                 'show-more': 'Show more',
                 'show-less': 'Show less',
-                'trade-record': 'Trade Record',
-                'position-calc': 'Position Calculator',
-                'position-calculator': 'Position Calculator',
-                'calculation-method': 'Calculation Method',
-                'kelly-criterion': 'Kelly Criterion',
-                'fixed-percent': 'Fixed %',
-                'risk-based': 'Risk-Based',
-                'volatility': 'Volatility',
-                'win-rate-input': 'Win Rate (%)',
-                'avg-win-loss': 'Avg Win/Loss Ratio',
-                'account-balance': 'Account Balance ($)',
-                'kelly-fraction': 'Kelly Fraction (%)',
-                'optimal-position': 'Optimal Position Size',
-                'kelly-info': 'Kelly Criterion Information',
-                'kelly-description': 'Kelly Criterion calculates optimal position size based on win rate and win/loss ratio. Using 25% Kelly fraction is recommended for risk management.',
-                'fixed-percentage': 'Fixed Percentage (%)',
-                'position-size': 'Position Size',
-                'entry-price': 'Entry Price ($)',
-                'stop-loss': 'Stop Loss ($)',
-                'risk-amount': 'Risk Amount ($)',
-                'share-quantity': 'Share Quantity',
-                'risk-warning': 'Risk Warning',
-                'risk-description': 'Never risk more than 1-2% of your account on a single trade. Always use stop losses to limit your downside risk.',
-                'atr-value': 'ATR Value',
-                'volatility-multiplier': 'Volatility Multiplier',
-                'current-price': 'Current Price ($)',
-                },
+            },
             ko: {
                 'dashboard': '대시보드',
                 'calendar': '캘린더 뷰',
@@ -3572,32 +3546,6 @@
                 'back': '뒤로',
                 'show-more': '더보기',
                 'show-less': '접기',
-                'trade-record': '거래기록',
-                'position-calc': 'Position Calculator',
-                'position-calculator': 'Position Calculator',
-                'calculation-method': '계산 방법',
-                'kelly-criterion': 'Kelly Criterion',
-                'fixed-percent': '고정 %',
-                'risk-based': '리스크 기반',
-                'volatility': '변동성',
-                'win-rate-input': '승률 (%)',
-                'avg-win-loss': '평균 승/패 비율',
-                'account-balance': '계좌 잔고 ($)',
-                'kelly-fraction': 'Kelly Fraction (%)',
-                'optimal-position': '최적 포지션 크기',
-                'kelly-info': 'Kelly Criterion 정보',
-                'kelly-description': 'Kelly Criterion은 승률과 승/패 비율을 기반으로 최적 포지션 크기를 계산합니다. 리스크 관리를 위해 25% Kelly fraction 사용을 권장합니다.',
-                'fixed-percentage': '고정 퍼센티지 (%)',
-                'position-size': '포지션 크기',
-                'entry-price': '진입 가격 ($)',
-                'stop-loss': '손절매 ($)',
-                'risk-amount': '리스크 금액 ($)',
-                'share-quantity': '주식 수량',
-                'risk-warning': '리스크 경고',
-                'risk-description': '단일 거래에서 계좌의 1-2% 이상 리스크를 지지 마세요. 항상 손절매를 사용하여 하방 리스크를 제한하세요.',
-                'atr-value': 'ATR 값',
-                'volatility-multiplier': '변동성 승수',
-                'current-price': '현재 가격 ($)',
             }
         };
 
@@ -3630,7 +3578,7 @@
         }
 
         function changeLanguage() {
-            const select = document.getElementById('settingsLanguageSelect'); // languageSelect를 settingsLanguageSelect로 변경
+            const select = document.getElementById('settingsLanguageSelect');
             currentLanguage = select.value;
             updateLanguage();
             updateStats();
@@ -6420,22 +6368,29 @@
             }
         }
 
-        // Global variables 추가
+        // Global variable
         let currentCalcMethod = 'kelly';
 
         // View toggle functions
         function toggleView(view) {
             const recordBtn = document.getElementById('tradeRecordBtn');
             const calcBtn = document.getElementById('positionCalcBtn');
+            const tradeSection = document.getElementById('tradeEntrySection');
+            const calcSection = document.getElementById('positionCalculatorSection');
             
             if (view === 'record') {
                 recordBtn.classList.add('active');
                 calcBtn.classList.remove('active');
-                alert('거래기록 모드');
+                tradeSection.style.display = 'block';
+                calcSection.style.display = 'none';
             } else {
                 recordBtn.classList.remove('active');
                 calcBtn.classList.add('active');
-                alert('Position Calculator 모드');
+                tradeSection.style.display = 'none';
+                calcSection.style.display = 'block';
+                
+                // Auto-populate win rate from historical data
+                autoPopulateStats();
             }
         }
 
@@ -6556,10 +6511,6 @@
             const positionSize = shares * currentPrice;
             
             document.getElementById('volatilityResult').textContent = '$' + positionSize.toFixed(2);
-        }
-
-        function toggleView(view) {
-            console.log('Toggle view:', view);  // 디버깅용
         }
     </script>
 </body>
