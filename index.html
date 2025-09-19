@@ -2195,10 +2195,8 @@
             <button class="date-nav-btn" onclick="changeTradingDate(1)" title="Next day">→</button>
         </div>
         <div class="view-toggle-selector">
-            <button class="toggle-btn active" id="tradeHistoryToggle" onclick="toggleView('history')" data-lang="trade-history">Trade History</button>
-            <button class="toggle-btn" id="positionCalcToggle" onclick="toggleView('calculator')" data-lang="position-calculator">Position Calculator</button>
-        </div>
-    </div>
+    <button class="toggle-btn active" id="tradeHistoryToggle" onclick="toggleView('history')" data-lang="record-trade">Record Trade</button>
+    <button class="toggle-btn" id="positionCalcToggle" onclick="toggleView('calculator')" data-lang="position-calculator">Position Calculator</button>
 </div>
 
                 <div class="stats-overview">
@@ -3422,7 +3420,7 @@
                 'back': 'Back',
                 'show-more': 'Show more',
                 'show-less': 'Show less',
-                'trade-history': 'Trade History',
+                'trade-record': 'Trade Record',
         'position-calculator': 'Position Calculator',
         'kelly-criterion': 'Kelly Criterion',
         'fixed-percentage': 'Fixed %',
@@ -3610,7 +3608,7 @@
                 'back': '뒤로',
                 'show-more': '더보기',
                 'show-less': '접기',
-                'trade-history': '거래 기록',
+                'trade-trade': '거래 기록',
         'position-calculator': '포지션 계산기',
         'kelly-criterion': '켈리 공식',
         'fixed-percentage': '고정 %',
@@ -3676,11 +3674,11 @@
         function changeLanguageFromSettings() {
             const select = document.getElementById('settingsLanguageSelect');
             currentLanguage = select.value;
-            document.getElementById('languageSelect').value = currentLanguage;
             updateLanguage();
             updateStats();
             updateDetailedAnalytics();
             localStorage.setItem('tradingPlatformLanguage', currentLanguage);
+            showToast(currentLanguage === 'ko' ? '언어가 변경되었습니다' : 'Language changed');
         }
 
         // Date management functions
@@ -4591,6 +4589,223 @@
         });
         return;
     }
+
+    // Position Calculator Functions
+        function toggleView(view) {
+            currentView = view;
+            
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (view === 'history') {
+                document.getElementById('tradeHistoryToggle').classList.add('active');
+                document.querySelector('.trades-section').style.display = 'block';
+                document.querySelector('.position-calculator').style.display = 'none';
+            } else {
+                document.getElementById('positionCalcToggle').classList.add('active');
+                document.querySelector('.trades-section').style.display = 'none';
+                document.querySelector('.position-calculator').style.display = 'block';
+            }
+        }
+
+        function changeCalculatorMethod(method) {
+            currentCalculatorMethod = method;
+            
+            document.querySelectorAll('.method-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.querySelector(`[onclick="changeCalculatorMethod('${method}')"]`).classList.add('active');
+            
+            updateCalculatorInputs();
+            calculatePosition();
+        }
+
+        function updateCalculatorInputs() {
+            const kellyInputs = document.getElementById('kellyInputs');
+            const fixedInputs = document.getElementById('fixedInputs');
+            const atrInputs = document.getElementById('atrInputs');
+            
+            [kellyInputs, fixedInputs, atrInputs].forEach(el => {
+                if (el) el.style.display = 'none';
+            });
+            
+            switch (currentCalculatorMethod) {
+                case 'kelly':
+                    if (kellyInputs) kellyInputs.style.display = 'block';
+                    break;
+                case 'fixed':
+                    if (fixedInputs) fixedInputs.style.display = 'block';
+                    break;
+                case 'atr':
+                    if (atrInputs) atrInputs.style.display = 'block';
+                    break;
+            }
+        }
+
+        function calculateKelly(winRate, avgWin, avgLoss) {
+            if (avgLoss <= 0) return 0;
+            const winProb = winRate / 100;
+            const lossProb = 1 - winProb;
+            const winLossRatio = avgWin / Math.abs(avgLoss);
+            
+            const kelly = (winProb * winLossRatio - lossProb) / winLossRatio;
+            return Math.max(0, Math.min(kelly, 0.25));
+        }
+
+        function calculatePosition() {
+            const accountSize = parseFloat(document.getElementById('accountSize')?.value) || 0;
+            const currentPrice = parseFloat(document.getElementById('currentPrice')?.value) || 0;
+            const stopLoss = parseFloat(document.getElementById('stopLoss')?.value) || 0;
+            
+            if (!accountSize || !currentPrice || !stopLoss) {
+                updateResults({});
+                return;
+            }
+            
+            const riskPerShare = Math.abs(currentPrice - stopLoss);
+            let recommendedPosition = 0;
+            let additionalInfo = {};
+            
+            switch (currentCalculatorMethod) {
+                case 'kelly':
+                    const winRate = parseFloat(document.getElementById('winRate')?.value) || 0;
+                    const avgWin = parseFloat(document.getElementById('avgWin')?.value) || 0;
+                    const avgLoss = parseFloat(document.getElementById('avgLoss')?.value) || 0;
+                    
+                    if (winRate && avgWin && avgLoss) {
+                        const kellyPercent = calculateKelly(winRate, avgWin, avgLoss) * 100;
+                        const conservativeKelly = kellyPercent * 0.5;
+                        const riskAmount = accountSize * (conservativeKelly / 100);
+                        recommendedPosition = Math.floor(riskAmount / riskPerShare);
+                        
+                        additionalInfo = {
+                            fullKelly: kellyPercent.toFixed(2),
+                            conservativeKelly: conservativeKelly.toFixed(2),
+                            winLossRatio: (avgWin / Math.abs(avgLoss)).toFixed(2),
+                            kellyPercent: kellyPercent.toFixed(2)
+                        };
+                    }
+                    break;
+                    
+                case 'fixed':
+                    const fixedRisk = parseFloat(document.getElementById('fixedRisk')?.value) || 2;
+                    const riskAmount = accountSize * (fixedRisk / 100);
+                    recommendedPosition = Math.floor(riskAmount / riskPerShare);
+                    break;
+                    
+                case 'atr':
+                    const atrValue = parseFloat(document.getElementById('atrValue')?.value) || 0;
+                    const atrMultiplier = parseFloat(document.getElementById('atrMultiplier')?.value) || 2;
+                    const baseRisk = parseFloat(document.getElementById('baseRisk')?.value) || 2;
+                    
+                    if (atrValue) {
+                        const volatilityAdjustedRisk = baseRisk * (atrValue / currentPrice * atrMultiplier);
+                        const finalRisk = Math.min(volatilityAdjustedRisk, 5);
+                        const riskAmount = accountSize * (finalRisk / 100);
+                        recommendedPosition = Math.floor(riskAmount / riskPerShare);
+                    }
+                    break;
+            }
+            
+            const positionValue = recommendedPosition * currentPrice;
+            const actualRiskAmount = recommendedPosition * riskPerShare;
+            const actualRiskPercent = accountSize > 0 ? (actualRiskAmount / accountSize * 100) : 0;
+            
+            updateResults({
+                recommendedPosition,
+                positionValue,
+                actualRiskAmount,
+                actualRiskPercent,
+                ...additionalInfo
+            });
+        }
+
+        function updateResults(results) {
+            const elements = {
+                recommendedShares: document.getElementById('recommendedShares'),
+                positionValue: document.getElementById('positionValue'),
+                riskAmount: document.getElementById('riskAmount'),
+                riskPercent: document.getElementById('riskPercent'),
+                kellyPercent: document.getElementById('kellyPercent')
+            };
+            
+            Object.keys(elements).forEach(key => {
+                if (elements[key]) {
+                    elements[key].textContent = '0';
+                    elements[key].className = 'result-value';
+                }
+            });
+            
+            if (results.recommendedPosition && results.recommendedPosition > 0) {
+                if (elements.recommendedShares) {
+                    elements.recommendedShares.textContent = results.recommendedPosition.toLocaleString();
+                    elements.recommendedShares.className = 'result-value primary';
+                }
+                
+                if (elements.positionValue) {
+                    elements.positionValue.textContent = `$${results.positionValue.toLocaleString()}`;
+                }
+                
+                if (elements.riskAmount) {
+                    elements.riskAmount.textContent = `$${results.actualRiskAmount.toFixed(2)}`;
+                    elements.riskAmount.className = results.actualRiskPercent > 3 ? 'result-value warning' : 'result-value';
+                }
+                
+                if (elements.riskPercent) {
+                    elements.riskPercent.textContent = `${results.actualRiskPercent.toFixed(2)}%`;
+                    elements.riskPercent.className = results.actualRiskPercent > 3 ? 'result-value warning' : 'result-value';
+                }
+                
+                if (elements.kellyPercent && results.kellyPercent) {
+                    elements.kellyPercent.textContent = `${results.kellyPercent}%`;
+                }
+            }
+            
+            const riskWarning = document.getElementById('riskWarning');
+            if (riskWarning) {
+                riskWarning.style.display = results.actualRiskPercent > 5 ? 'block' : 'none';
+            }
+            
+            const kellyInfo = document.getElementById('kellyInfo');
+            if (kellyInfo && results.fullKelly) {
+                kellyInfo.style.display = 'block';
+                const kellyInfoText = document.getElementById('kellyInfoText');
+                if (kellyInfoText) {
+                    kellyInfoText.innerHTML = `Full Kelly: ${results.fullKelly}% | Conservative: ${results.conservativeKelly}% | W/L Ratio: ${results.winLossRatio}`;
+                }
+            } else if (kellyInfo) {
+                kellyInfo.style.display = 'none';
+            }
+        }
+
+        function autoFillFromTrades() {
+            if (trades.length === 0) {
+                showToast(currentLanguage === 'ko' ? '거래 데이터가 없습니다' : 'No trade data available');
+                return;
+            }
+            
+            const wins = trades.filter(trade => trade.pnl > 0);
+            const losses = trades.filter(trade => trade.pnl < 0);
+            
+            const winRate = (wins.length / trades.length * 100).toFixed(1);
+            const avgWin = wins.length > 0 ? (wins.reduce((sum, trade) => sum + trade.pnl, 0) / wins.length).toFixed(2) : 0;
+            const avgLoss = losses.length > 0 ? Math.abs(losses.reduce((sum, trade) => sum + trade.pnl, 0) / losses.length).toFixed(2) : 0;
+            
+            const winRateInput = document.getElementById('winRate');
+            const avgWinInput = document.getElementById('avgWin');
+            const avgLossInput = document.getElementById('avgLoss');
+            
+            if (winRateInput) winRateInput.value = winRate;
+            if (avgWinInput) avgWinInput.value = avgWin;
+            if (avgLossInput) avgLossInput.value = avgLoss;
+            
+            calculatePosition();
+            showToast(currentLanguage === 'ko' ? '거래 기록에서 자동 입력됨' : 'Auto-filled from trade history');
+        }
+
+        // Page initialization
 
     // Restore canvas elements
     const chartIds = [
