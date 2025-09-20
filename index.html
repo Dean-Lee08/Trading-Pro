@@ -1996,6 +1996,40 @@
             .kelly-options {
                 grid-template-columns: 1fr;
             }
+
+            .risk-preset-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .risk-preset-btn {
+            background: #334155;
+            border: 1px solid #475569;
+            color: #e4e4e7;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .risk-preset-btn:hover {
+            background: #475569;
+        }
+
+        .risk-preset-btn.active {
+            background: #3b82f6;
+            border-color: #3b82f6;
+            color: white;
+        }
+
+        .scenario-analysis {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 16px;
+        }
         }
     </style>
 </head>
@@ -3379,6 +3413,16 @@
                 'safe': 'Safe',
                 'medium': 'Medium',
                 'high': 'High',
+                'risk-calculator': 'Risk Calculator',
+'risk-percentage': 'Risk Percentage (%)',
+'entry-price': 'Entry Price ($)',
+'stop-loss-price': 'Stop Loss Price ($)',
+'risk-amount': 'Risk Amount',
+'position-size': 'Position Size',
+'shares-quantity': 'Shares/Quantity',
+'risk-per-share': 'Risk per Share',
+'max-loss': 'Max Loss (Stop Hit)',
+'breakeven-moves': 'Breakeven if moves',
             },
             ko: {
                 'dashboard': '대시보드',
@@ -3570,6 +3614,16 @@
         'safe': '안전',
         'medium': '보통',
         'high': '위험'
+                'risk-calculator': '리스크 계산기',
+'risk-percentage': '리스크 비율 (%)',
+'entry-price': '진입가 ($)',
+'stop-loss-price': '손절가 ($)',
+'risk-amount': '리스크 금액',
+'position-size': '포지션 크기',
+'shares-quantity': '주식 수량',
+'risk-per-share': '주당 리스크',
+'max-loss': '최대 손실',
+'breakeven-moves': '손익분기점',
             }
         };
 
@@ -4987,6 +5041,7 @@
             updateDetailedAnalytics();
             calculateHoldingTime();
             loadDailyFees();
+            calculateRisk();
             
             document.getElementById('tradeForm').addEventListener('submit', handleTradeSubmit);
             document.getElementById('editTradeForm').addEventListener('submit', handleEditTradeSubmit);
@@ -6414,7 +6469,7 @@
         }
 
         function calculatePosition() {
-            const balance = parseFloat(document.getElementById('calcAccountBalance').value) || 0;
+            const balance = parseFloat(document.getElementById('riskAccountBalance').value) || 0;
             const winRate = parseFloat(document.getElementById('calcWinRate').value) / 100 || 0;
             const avgWin = parseFloat(document.getElementById('calcAvgWin').value) || 0;
             const avgLoss = parseFloat(document.getElementById('calcAvgLoss').value) || 0;
@@ -6428,24 +6483,10 @@
             const kellyFraction = Math.max(0, (b * p - q) / b);
             const kellyPercent = kellyFraction * 100;
             
-            const fullKelly = balance * kellyFraction;
-            const quarterKelly = fullKelly * 0.25;
-            const tenthKelly = fullKelly * 0.1;
+            const recommendedPosition = balance * kellyFraction * selectedKellyMultiplier;
             
             document.getElementById('kellyPercent').textContent = kellyPercent.toFixed(1) + '%';
-            document.getElementById('fullKellyAmount').textContent = '$' + fullKelly.toFixed(0);
-            document.getElementById('quarterKellyAmount').textContent = '$' + quarterKelly.toFixed(0);
-            document.getElementById('tenthKellyAmount').textContent = '$' + tenthKelly.toFixed(0);
-            
-            const recommendedPosition = fullKelly * selectedKellyMultiplier;
             document.getElementById('recommendedSize').textContent = '$' + recommendedPosition.toFixed(0);
-            
-            const utilization = (recommendedPosition / balance) * 100;
-            document.getElementById('accountUtil').textContent = utilization.toFixed(1) + '%';
-            
-            const expectedValue = (p * avgWin - q * avgLoss) * (recommendedPosition / Math.max(avgWin, 1));
-            document.getElementById('expectedVal').textContent = '$' + expectedValue.toFixed(0);
-            document.getElementById('expectedVal').className = 'sidebar-stat-value ' + (expectedValue >= 0 ? 'positive' : 'negative');
             
             let riskLevel = 'Safe';
             if (kellyPercent > 25) riskLevel = 'High';
@@ -6454,6 +6495,39 @@
             document.getElementById('kellyStatus').textContent = riskLevel;
             document.getElementById('kellyStatus').className = 'sidebar-stat-value ' + 
                 (riskLevel === 'Safe' ? 'positive' : riskLevel === 'Medium' ? 'neutral' : 'negative');
+        }
+
+        function calculateRisk() {
+            const balance = parseFloat(document.getElementById('riskAccountBalance').value) || 0;
+            const riskPercent = parseFloat(document.getElementById('riskPercentage').value) / 100 || 0;
+            const entryPrice = parseFloat(document.getElementById('riskEntryPrice').value) || 0;
+            const stopLoss = parseFloat(document.getElementById('riskStopLoss').value) || 0;
+            
+            if (balance === 0 || entryPrice === 0 || stopLoss === 0) return;
+            
+            const riskAmount = balance * riskPercent;
+            const riskPerShare = Math.abs(entryPrice - stopLoss);
+            const sharesQuantity = riskPerShare > 0 ? Math.floor(riskAmount / riskPerShare) : 0;
+            const positionSize = sharesQuantity * entryPrice;
+            const actualRiskAmount = sharesQuantity * riskPerShare;
+            const breakevenPercent = riskPerShare > 0 ? (riskPerShare / entryPrice) * 100 : 0;
+            
+            document.getElementById('riskAmount').textContent = '$' + riskAmount.toFixed(2);
+            document.getElementById('positionSize').textContent = '$' + positionSize.toFixed(2);
+            document.getElementById('sharesQuantity').textContent = sharesQuantity.toLocaleString();
+            document.getElementById('riskPerShare').textContent = '$' + riskPerShare.toFixed(2);
+            document.getElementById('maxLoss').textContent = '$' + actualRiskAmount.toFixed(2);
+            document.getElementById('breakevenMoves').textContent = breakevenPercent.toFixed(2) + '%';
+        }
+
+        function setRiskPreset(percent) {
+            document.querySelectorAll('.risk-preset-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            event.target.classList.add('active');
+            document.getElementById('riskPercentage').value = percent;
+            calculateRisk();
         }
 
         function selectKellyMultiplier(element) {
