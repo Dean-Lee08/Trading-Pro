@@ -1953,18 +1953,55 @@
         .kelly-options {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-top: 16px;
+            gap: 12px;
+            margin-top: 20px;
+            padding: 16px;
+            background: #1e293b;
+            border-radius: 8px;
+            border: 1px solid #334155;
+        }
+
+        .kelly-options-title {
+            grid-column: 1 / -1;
+            color: #f8fafc;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-align: center;
         }
 
         .kelly-option {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 6px;
-            padding: 8px;
+            background: #0f172a;
+            border: 2px solid #334155;
+            border-radius: 8px;
+            padding: 12px 8px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kelly-option:hover {
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+        }
+
+        .kelly-option.selected {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.1);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .kelly-option.selected::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
         }
 
         .kelly-option:hover {
@@ -2007,19 +2044,71 @@
             border: 1px solid #334155;
             border-radius: 8px;
             overflow: hidden;
+            margin-bottom: 24px;
         }
 
         .position-calc-tab {
             background: transparent;
             border: none;
             color: #94a3b8;
-            padding: 12px 24px;
+            padding: 16px 24px;
             cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
+            font-size: 15px;
+            font-weight: 600;
             transition: all 0.2s ease;
             border-right: 1px solid #334155;
             flex: 1;
+            text-align: center;
+        }
+
+        .position-calc-tab:last-child {
+            border-right: none;
+        }
+
+        .position-calc-tab:hover {
+            background: #1e293b;
+            color: #e4e4e7;
+        }
+
+        .position-calc-tab.active {
+            background: #3b82f6;
+            color: white;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+        }
+
+        .position-calc-content {
+            display: none;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 24px;
+            min-height: 400px;
+        }
+
+        .position-calc-content.active {
+            display: block;
+        }
+
+        .calc-section-title {
+            color: #f8fafc;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #334155;
+        }
+
+        .calc-description {
+            color: #94a3b8;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 24px;
+            text-align: center;
+            padding: 12px;
+            background: #1e293b;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
         }
 
         .position-calc-tab:last-child {
@@ -2044,22 +2133,52 @@
             display: block;
         }
 
+        .risk-preset-section {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 20px 0;
+        }
+
+        .risk-preset-title {
+            color: #f8fafc;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
         .risk-preset-buttons {
             display: flex;
-            gap: 8px;
+            gap: 12px;
             justify-content: center;
-            margin: 16px 0;
         }
 
         .risk-preset-btn {
-            background: #334155;
-            border: 1px solid #475569;
+            background: #0f172a;
+            border: 2px solid #334155;
             color: #e4e4e7;
-            padding: 8px 16px;
-            border-radius: 6px;
+            padding: 10px 16px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 12px;
-            transition: all 0.2s ease;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-width: 60px;
+        }
+
+        .risk-preset-btn:hover {
+            border-color: #3b82f6;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+        }
+
+        .risk-preset-btn.active {
+            background: #3b82f6;
+            border-color: #3b82f6;
+            color: white;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
         }
 
         .risk-preset-btn:hover {
@@ -2264,6 +2383,12 @@
 
                             <!-- Kelly Calculator Section -->
                             <div id="kellyCalcSection" class="position-calc-content active">
+                                <div class="calc-section-title" data-lang="kelly-section-title">Kelly Criterion Position Sizing</div>
+                                <div class="calc-description" data-lang="kelly-description">
+                                    Kelly Criterion helps determine optimal position size based on win rate and risk-reward ratio. 
+                                    It maximizes long-term growth while managing risk.
+                                </div>
+                                
                                 <div class="calc-grid">
                                     <div class="calc-input-group">
                                         <label class="calc-label" data-lang="account-balance">Account Balance ($)</label>
@@ -2309,6 +2434,7 @@
                                 </div>
 
                                 <div class="kelly-options">
+                                    <div class="kelly-options-title" data-lang="kelly-strategies">Position Sizing Strategies</div>
                                     <div class="kelly-option selected" data-multiplier="0.1" onclick="selectKellyMultiplier(this)">
                                         <div class="kelly-option-label" data-lang="ultra-safe">Ultra Safe</div>
                                         <div class="kelly-option-value">10% Kelly</div>
@@ -2326,6 +2452,12 @@
 
                             <!-- Risk Calculator Section -->
                             <div id="riskCalcSection" class="position-calc-content">
+                                <div class="calc-section-title" data-lang="risk-section-title">Risk-Based Position Sizing</div>
+                                <div class="calc-description" data-lang="risk-description">
+                                    Calculate position size based on account risk percentage and stop loss levels. 
+                                    Helps maintain consistent risk across all trades.
+                                </div>
+                                
                                 <div class="risk-input-grid">
                                     <div class="calc-input-group">
                                         <label class="calc-label" data-lang="account-balance">Account Balance ($)</label>
@@ -2345,11 +2477,14 @@
                                     </div>
                                 </div>
 
-                                <div class="risk-preset-buttons">
-                                    <button class="risk-preset-btn" onclick="setRiskPreset(1)">1%</button>
-                                    <button class="risk-preset-btn active" onclick="setRiskPreset(2)">2%</button>
-                                    <button class="risk-preset-btn" onclick="setRiskPreset(3)">3%</button>
-                                    <button class="risk-preset-btn" onclick="setRiskPreset(5)">5%</button>
+                                <div class="risk-preset-section">
+                                    <div class="risk-preset-title" data-lang="risk-presets">Quick Risk Presets</div>
+                                    <div class="risk-preset-buttons">
+                                        <button class="risk-preset-btn" onclick="setRiskPreset(1)">1%</button>
+                                        <button class="risk-preset-btn active" onclick="setRiskPreset(2)">2%</button>
+                                        <button class="risk-preset-btn" onclick="setRiskPreset(3)">3%</button>
+                                        <button class="risk-preset-btn" onclick="setRiskPreset(5)">5%</button>
+                                    </div>
                                 </div>
 
                                 <div class="calc-results">
@@ -3501,7 +3636,6 @@
                 'position-sizing-analysis': 'Position Sizing Analysis',
                 'trading-efficiency-metrics': 'Trading Efficiency Metrics',
                 'all-notes': 'All',
-                'no-notes': 'No notes written yet. Click "New Note" to start.',
                 'back': 'Back',
                 'show-more': 'Show more',
                 'show-less': 'Show less',
@@ -3541,6 +3675,12 @@
                 'max-loss': 'Max Loss',
                 'breakeven-move': 'Breakeven Move',
                 'risk-amount': 'Risk Amount',
+                'kelly-section-title': 'Kelly Criterion Position Sizing',
+                'kelly-description': 'Kelly Criterion helps determine optimal position size based on win rate and risk-reward ratio. It maximizes long-term growth while managing risk.',
+                'kelly-strategies': 'Position Sizing Strategies',
+                'risk-section-title': 'Risk-Based Position Sizing',
+                'risk-description': 'Calculate position size based on account risk percentage and stop loss levels. Helps maintain consistent risk across all trades.',
+                'risk-presets': 'Quick Risk Presets'
             },
             ko: {
                 'dashboard': '대시보드',
@@ -3703,7 +3843,6 @@
                 'position-sizing-analysis': '포지션 크기 분석',
                 'trading-efficiency-metrics': '거래 효율성 지표',
                 'all-notes': '전체',
-                'no-notes': '아직 작성된 노트가 없습니다. "새 노트"를 클릭하여 시작하세요.',
                 'back': '뒤로',
                 'show-more': '더보기',
                 'show-less': '접기',
@@ -3730,22 +3869,28 @@
                 'pl-ratio': '손익 비율',
                 'kelly-status': '켈리 상태',
                 'safe': '안전',
-        'medium': '보통',
-        'high': '위험',
-        'kelly-calculator': '켈리 계산기',
-        'risk-calculator': '리스크 계산기',
-        'risk-percentage': '리스크 비율 (%)',
-        'entry-price': '진입 가격 ($)',
-        'stop-loss-price': '손절 가격 ($)',
-        'position-size': '포지션 크기',
-        'shares-quantity': '주식 수량',
-        'risk-per-share': '주당 리스크',
-        'max-loss': '최대 손실',
-        'breakeven-move': '손익분기 변동',
-        'risk-amount': '리스크 금액'
+                'medium': '보통',
+                'high': '위험',
+                'kelly-calculator': '켈리 계산기',
+                'risk-calculator': '리스크 계산기',
+                'risk-percentage': '리스크 비율 (%)',
+                'entry-price': '진입 가격 ($)',
+                'stop-loss-price': '손절 가격 ($)',
+                'position-size': '포지션 크기',
+                'shares-quantity': '주식 수량',
+                'risk-per-share': '주당 리스크',
+                'max-loss': '최대 손실',
+                'breakeven-move': '손익분기 변동',
+                'risk-amount': '리스크 금액',
+                'kelly-section-title': '켈리 기준 포지션 사이징',
+                'kelly-description': '켈리 기준은 승률과 위험-보상 비율을 기반으로 최적의 포지션 크기를 결정합니다. 장기적 성장을 극대화하면서 위험을 관리합니다.',
+                'kelly-strategies': '포지션 사이징 전략',
+                'risk-section-title': '리스크 기반 포지션 사이징',
+                'risk-description': '계좌 리스크 비율과 손절 수준을 기반으로 포지션 크기를 계산합니다. 모든 거래에서 일관된 리스크를 유지하는 데 도움이 됩니다.',
+                'risk-presets': '빠른 리스크 프리셋'
             }
         };
-
+        
         // Function to get EST trading date
         function getESTTradingDate(date = new Date()) {
             return new Date(date);
