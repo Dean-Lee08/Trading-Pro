@@ -6637,11 +6637,24 @@
             const avgWin = parseFloat(document.getElementById('calcAvgWin').value) || 0;
             const avgLoss = parseFloat(document.getElementById('calcAvgLoss').value) || 0;
             
+            // 기본값으로 초기화
+            const recommendedSizeEl = document.getElementById('recommendedSize');
+            const accountUtilEl = document.getElementById('accountUtil');
+            const expectedValEl = document.getElementById('expectedVal');
+            const kellyStatusEl = document.getElementById('kellyStatus');
+            
+            if (!recommendedSizeEl || !accountUtilEl || !expectedValEl || !kellyStatusEl) {
+                console.error('Required elements not found');
+                return;
+            }
+            
             if (avgLoss === 0 || balance === 0) {
-                document.getElementById('recommendedSize').textContent = '$0';
-                document.getElementById('accountUtil').textContent = '0%';
-                document.getElementById('expectedVal').textContent = '$0';
-                document.getElementById('expectedVal').className = 'sidebar-stat-value';
+                recommendedSizeEl.textContent = '$0';
+                accountUtilEl.textContent = '0%';
+                expectedValEl.textContent = '$0';
+                expectedValEl.className = 'sidebar-stat-value';
+                kellyStatusEl.textContent = 'Safe';
+                kellyStatusEl.className = 'sidebar-stat-value positive';
                 return;
             }
             
@@ -6653,22 +6666,22 @@
             const fullKelly = balance * kellyFraction;
             
             const recommendedPosition = fullKelly * selectedKellyMultiplier;
-            document.getElementById('recommendedSize').textContent = '$' + recommendedPosition.toFixed(0);
+            recommendedSizeEl.textContent = '$' + recommendedPosition.toFixed(0);
             
             const utilization = (recommendedPosition / balance) * 100;
-            document.getElementById('accountUtil').textContent = utilization.toFixed(1) + '%';
+            accountUtilEl.textContent = utilization.toFixed(1) + '%';
             
             const expectedValue = (p * avgWin - q * avgLoss) * (recommendedPosition / Math.max(avgWin, 1));
-            document.getElementById('expectedVal').textContent = '$' + expectedValue.toFixed(0);
-            document.getElementById('expectedVal').className = 'sidebar-stat-value ' + (expectedValue >= 0 ? 'positive' : 'negative');
+            expectedValEl.textContent = '$' + expectedValue.toFixed(0);
+            expectedValEl.className = 'sidebar-stat-value ' + (expectedValue >= 0 ? 'positive' : 'negative');
             
             const kellyPercent = kellyFraction * 100;
             let riskLevel = 'Safe';
             if (kellyPercent > 25) riskLevel = 'High';
             else if (kellyPercent > 15) riskLevel = 'Medium';
             
-            document.getElementById('kellyStatus').textContent = riskLevel;
-            document.getElementById('kellyStatus').className = 'sidebar-stat-value ' + 
+            kellyStatusEl.textContent = riskLevel;
+            kellyStatusEl.className = 'sidebar-stat-value ' + 
                 (riskLevel === 'Safe' ? 'positive' : riskLevel === 'Medium' ? 'neutral' : 'negative');
         }
 
