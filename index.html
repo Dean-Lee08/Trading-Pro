@@ -3730,19 +3730,19 @@
                 'pl-ratio': '손익 비율',
                 'kelly-status': '켈리 상태',
                 'safe': '안전',
-                'medium': '보통',
-                'high': '위험'
-                'kelly-calculator': '켈리 계산기',
-                'risk-calculator': '리스크 계산기',
-                'risk-percentage': '리스크 비율 (%)',
-                'entry-price': '진입 가격 ($)',
-                'stop-loss-price': '손절 가격 ($)',
-                'position-size': '포지션 크기',
-                'shares-quantity': '주식 수량',
-                'risk-per-share': '주당 리스크',
-                'max-loss': '최대 손실',
-                'breakeven-move': '손익분기 변동',        
-                'risk-amount': '리스크 금액',                                           
+        'medium': '보통',
+        'high': '위험',
+        'kelly-calculator': '켈리 계산기',
+        'risk-calculator': '리스크 계산기',
+        'risk-percentage': '리스크 비율 (%)',
+        'entry-price': '진입 가격 ($)',
+        'stop-loss-price': '손절 가격 ($)',
+        'position-size': '포지션 크기',
+        'shares-quantity': '주식 수량',
+        'risk-per-share': '주당 리스크',
+        'max-loss': '최대 손실',
+        'breakeven-move': '손익분기 변동',
+        'risk-amount': '리스크 금액'
             }
         };
 
@@ -6572,15 +6572,18 @@
             const positionSection = document.getElementById('positionCalculatorSection');
             const dashboardGrid = document.querySelector('.dashboard-grid');
             const tradesSection = document.querySelector('.trades-section');
+            const statsOverview = document.querySelector('.stats-overview');
             
             if (section === 'trading') {
                 if (positionSection) positionSection.style.display = 'none';
                 if (dashboardGrid) dashboardGrid.style.display = 'grid';
                 if (tradesSection) tradesSection.style.display = 'block';
+                if (statsOverview) statsOverview.style.display = 'grid';
             } else if (section === 'position-calc') {
                 if (positionSection) positionSection.style.display = 'block';
                 if (dashboardGrid) dashboardGrid.style.display = 'none';
                 if (tradesSection) tradesSection.style.display = 'none';
+                if (statsOverview) statsOverview.style.display = 'none';
                 
                 setTimeout(() => calculatePosition(), 100);
             }
