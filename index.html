@@ -2328,6 +2328,66 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        .position-calc-content {
+            display: none;
+        }
+
+        .position-calc-content.active {
+            display: block;
+        }
+
+        .risk-input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .risk-presets {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 20px 0;
+        }
+
+        .risk-presets-title {
+            color: #f8fafc;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .risk-preset-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .risk-preset-btn {
+            background: #0f172a;
+            border: 2px solid #334155;
+            color: #e4e4e7;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-width: 60px;
+        }
+
+        .risk-preset-btn:hover {
+            border-color: #3b82f6;
+        }
+
+        .risk-preset-btn.active {
+            background: #3b82f6;
+            border-color: #3b82f6;
+            color: white;
+        }
         }
     </style>
 </head>
@@ -2439,23 +2499,11 @@
                         <p class="page-subtitle" data-lang="dashboard-subtitle">Track your trades and performance</p>
                     </div>
                     <div class="page-header-info">
-                        <div class="date-range-selector">
-                            <input type="date" id="dashboardStartDate" class="date-range-input">
-                            <span style="color: #64748b;">to</span>
-                            <input type="date" id="dashboardEndDate" class="date-range-input">
-                            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="clearDashboardRange()">Clear</button>
-                        </div>
-                        <div class="date-navigation">
-                            <button class="date-nav-btn" onclick="changeTradingDate(-1)" title="Previous day">←</button>
-                            <div class="current-date-display" id="currentDateDisplay" onclick="openDatePicker()"></div>
-                            <button class="date-nav-btn" onclick="changeTradingDate(1)" title="Next day">→</button>
-                        </div>
                         <div class="dashboard-tabs">
                             <button class="dashboard-tab active" onclick="showDashboardSection('trading')">거래 기록</button>
                             <button class="dashboard-tab" onclick="showDashboardSection('position-calc')">Position Calculator</button>
                         </div>
                     </div>
-                </div>
 
                 <div class="stats-overview">
                     <div class="stat-item">
@@ -2514,6 +2562,11 @@
                         </div>
 
                         <div class="calculator-container">
+                            <div class="analytics-tabs">
+                                <button class="analytics-tab active" onclick="showPositionCalcSection('kelly')" data-lang="kelly-calculator">Kelly Calculator</button>
+                                <button class="analytics-tab" onclick="showPositionCalcSection('risk')" data-lang="risk-calculator">Risk Calculator</button>
+                            </div>
+                            
                             <!-- Analytics Style Tabs -->
                             <div class="position-calc-tabs">
                                 <button class="position-calc-tab active" onclick="showPositionCalcSection('kelly')" data-lang="kelly-calculator">Kelly Calculator</button>
@@ -2623,9 +2676,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
                 
                 <div class="dashboard-grid">
                     <div class="trade-entry">
