@@ -2220,6 +2220,15 @@
                 grid-template-columns: 1fr;
             }    
         }
+
+        .kelly-calculator-section,
+        .risk-calculator-section {
+            display: none;
+        }
+
+        .risk-analysis {
+            margin-top: 20px;
+        }    
         }
     </style>
 </head>
@@ -2344,7 +2353,8 @@
                         </div>
                         <div class="dashboard-tabs">
                             <button class="dashboard-tab active" onclick="showDashboardSection('trading')">거래 기록</button>
-                            <button class="dashboard-tab" onclick="showDashboardSection('position-calc')">Position Calculator</button>
+                            <button class="dashboard-tab" onclick="showDashboardSection('kelly-calc')" data-lang="kelly-calculator">Kelly Calculator</button>
+                            <button class="dashboard-tab" onclick="showDashboardSection('risk-calc')" data-lang="risk-calculator">Risk Calculator</button>
                         </div>
                     </div>
                 </div>
@@ -2382,12 +2392,10 @@
                             </div>
 
                             <!-- Kelly Calculator Section -->
-                            <div id="kellyCalcSection" class="position-calc-content active">
-                                <div class="calc-section-title" data-lang="kelly-section-title">Kelly Criterion Position Sizing</div>
-                                <div class="calc-description" data-lang="kelly-description">
-                                    Kelly Criterion helps determine optimal position size based on win rate and risk-reward ratio. 
-                                    It maximizes long-term growth while managing risk.
-                                </div>
+                            <div class="kelly-calculator-section" id="kellyCalculatorSection">
+                                <div class="calculator-main-grid">
+                                    <div class="calculator-container">
+                                        <h2 class="calculator-title" data-lang="kelly-calculator">Kelly Calculator</h2>
                                 
                                 <div class="calc-grid">
                                     <div class="calc-input-group">
@@ -2451,115 +2459,85 @@
                             </div>
 
                             <!-- Risk Calculator Section -->
-                            <div id="riskCalcSection" class="position-calc-content">
-                                <div class="calc-section-title" data-lang="risk-section-title">Risk-Based Position Sizing</div>
-                                <div class="calc-description" data-lang="risk-description">
-                                    Calculate position size based on account risk percentage and stop loss levels. 
-                                    Helps maintain consistent risk across all trades.
+                <div class="risk-calculator-section" id="riskCalculatorSection" style="display: none;">
+                    <div class="calculator-main-grid">
+                        <div class="calculator-container">
+                            <h2 class="calculator-title" data-lang="risk-calculator">Risk Calculator</h2>
+                            
+                            <div class="risk-input-grid">
+                                <div class="calc-input-group">
+                                    <label class="calc-label" data-lang="account-balance">Account Balance ($)</label>
+                                    <input type="number" class="calc-input" id="riskAccountBalance" value="10000" oninput="calculateRisk()">
                                 </div>
-                                
-                                <div class="risk-input-grid">
-                                    <div class="calc-input-group">
-                                        <label class="calc-label" data-lang="account-balance">Account Balance ($)</label>
-                                        <input type="number" class="calc-input" id="riskAccountBalance" value="10000" oninput="calculateRisk()">
-                                    </div>
-                                    <div class="calc-input-group">
-                                        <label class="calc-label" data-lang="risk-percentage">Risk Percentage (%)</label>
-                                        <input type="number" class="calc-input" id="riskPercentage" value="2" min="0" max="100" step="0.1" oninput="calculateRisk()">
-                                    </div>
-                                    <div class="calc-input-group">
-                                        <label class="calc-label" data-lang="entry-price">Entry Price ($)</label>
-                                        <input type="number" class="calc-input" id="riskEntryPrice" value="100" step="0.01" oninput="calculateRisk()">
-                                    </div>
-                                    <div class="calc-input-group">
-                                        <label class="calc-label" data-lang="stop-loss-price">Stop Loss Price ($)</label>
-                                        <input type="number" class="calc-input" id="riskStopLoss" value="95" step="0.01" oninput="calculateRisk()">
-                                    </div>
+                                <div class="calc-input-group">
+                                    <label class="calc-label" data-lang="risk-percentage">Risk Percentage (%)</label>
+                                    <input type="number" class="calc-input" id="riskPercentage" value="2" min="0" max="100" step="0.1" oninput="calculateRisk()">
                                 </div>
+                                <div class="calc-input-group">
+                                    <label class="calc-label" data-lang="entry-price">Entry Price ($)</label>
+                                    <input type="number" class="calc-input" id="riskEntryPrice" value="100" step="0.01" oninput="calculateRisk()">
+                                </div>
+                                <div class="calc-input-group">
+                                    <label class="calc-label" data-lang="stop-loss-price">Stop Loss Price ($)</label>
+                                    <input type="number" class="calc-input" id="riskStopLoss" value="95" step="0.01" oninput="calculateRisk()">
+                                </div>
+                            </div>
 
-                                <div class="risk-preset-section">
-                                    <div class="risk-preset-title" data-lang="risk-presets">Quick Risk Presets</div>
-                                    <div class="risk-preset-buttons">
-                                        <button class="risk-preset-btn" onclick="setRiskPreset(1)">1%</button>
-                                        <button class="risk-preset-btn active" onclick="setRiskPreset(2)">2%</button>
-                                        <button class="risk-preset-btn" onclick="setRiskPreset(3)">3%</button>
-                                        <button class="risk-preset-btn" onclick="setRiskPreset(5)">5%</button>
-                                    </div>
+                            <div class="risk-preset-section">
+                                <div class="risk-preset-title" data-lang="risk-presets">Quick Risk Presets</div>
+                                <div class="risk-preset-buttons">
+                                    <button class="risk-preset-btn" onclick="setRiskPreset(1)">1%</button>
+                                    <button class="risk-preset-btn active" onclick="setRiskPreset(2)">2%</button>
+                                    <button class="risk-preset-btn" onclick="setRiskPreset(3)">3%</button>
+                                    <button class="risk-preset-btn" onclick="setRiskPreset(5)">5%</button>
                                 </div>
+                            </div>
 
-                                <div class="calc-results">
-                                    <div class="calc-result-item">
-                                        <span class="calc-result-label" data-lang="risk-amount">Risk Amount</span>
-                                        <span class="calc-result-value negative" id="riskAmount">$0</span>
-                                    </div>
-                                    <div class="calc-result-item">
-                                        <span class="calc-result-label" data-lang="position-size">Position Size</span>
-                                        <span class="calc-result-value neutral" id="positionSize">$0</span>
-                                    </div>
-                                    <div class="calc-result-item">
-                                        <span class="calc-result-label" data-lang="shares-quantity">Shares Quantity</span>
-                                        <span class="calc-result-value neutral" id="sharesQuantity">0</span>
-                                    </div>
-                                    <div class="calc-result-item">
-                                        <span class="calc-result-label" data-lang="risk-per-share">Risk per Share</span>
-                                        <span class="calc-result-value neutral" id="riskPerShare">$0</span>
-                                    </div>
+                            <div class="calc-results">
+                                <div class="calc-result-item">
+                                    <span class="calc-result-label" data-lang="risk-amount">Risk Amount</span>
+                                    <span class="calc-result-value negative" id="riskAmount">$0</span>
                                 </div>
-
-                                <div class="scenario-analysis">
-                                    <div class="calc-result-item">
-                                        <span class="calc-result-label" data-lang="max-loss">Max Loss (Stop Hit)</span>
-                                        <span class="calc-result-value negative" id="maxLoss">$0</span>
-                                    </div>
-                                    <div class="calc-result-item">
-                                        <span class="calc-result-label" data-lang="breakeven-move">Breakeven Move</span>
-                                        <span class="calc-result-value neutral" id="breakevenMoves">0%</span>
-                                    </div>
+                                <div class="calc-result-item">
+                                    <span class="calc-result-label" data-lang="position-size">Position Size</span>
+                                    <span class="calc-result-value neutral" id="positionSize">$0</span>
                                 </div>
+                                <div class="calc-result-item">
+                                    <span class="calc-result-label" data-lang="shares-quantity">Shares Quantity</span>
+                                    <span class="calc-result-value neutral" id="sharesQuantity">0</span>
+                                </div>
+                                <div class="calc-result-item">
+                                    <span class="calc-result-label" data-lang="risk-per-share">Risk per Share</span>
+                                    <span class="calc-result-value neutral" id="riskPerShare">$0</span>
+                                </div>
+                            </div>
 
-                                <div class="scenario-analysis">
-                                    <div class="calc-result-item">
-                                        <span class="calc-result-label">Max Loss (Stop Hit)</span>
-                                        <span class="calc-result-value negative" id="maxLoss">$0</span>
-                                    </div>
-                                    <div class="calc-result-item">
-                                        <span class="calc-result-label">Breakeven if moves</span>
-                                        <span class="calc-result-value neutral" id="breakevenMoves">0%</span>
-                                    </div>
+                            <div class="scenario-analysis">
+                                <div class="calc-result-item">
+                                    <span class="calc-result-label" data-lang="max-loss">Max Loss (Stop Hit)</span>
+                                    <span class="calc-result-value negative" id="maxLoss">$0</span>
+                                </div>
+                                <div class="calc-result-item">
+                                    <span class="calc-result-label" data-lang="breakeven-move">Breakeven Move</span>
+                                    <span class="calc-result-value neutral" id="breakevenMoves">0%</span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="stats-sidebar">
-                            <div class="sidebar-title-stats" data-lang="position-analysis">Position Analysis</div>
+                            <div class="sidebar-title-stats" data-lang="risk-analysis">Risk Analysis</div>
                             
                             <div class="sidebar-stat">
-                                <span class="sidebar-stat-label" data-lang="recommended-size">Recommended Size</span>
-                                <span class="sidebar-stat-value positive" id="recommendedSize">$0</span>
+                                <span class="sidebar-stat-label" data-lang="position-cost">Position Cost</span>
+                                <span class="sidebar-stat-value neutral" id="positionCost">$0</span>
                             </div>
                             <div class="sidebar-stat">
-                                <span class="sidebar-stat-label" data-lang="account-utilization">Account Utilization</span>
-                                <span class="sidebar-stat-value neutral" id="accountUtil">0%</span>
+                                <span class="sidebar-stat-label" data-lang="risk-ratio">Risk Ratio</span>
+                                <span class="sidebar-stat-value neutral" id="riskRatio">0%</span>
                             </div>
                             <div class="sidebar-stat">
-                                <span class="sidebar-stat-label" data-lang="expected-value">Expected Value</span>
-                                <span class="sidebar-stat-value" id="expectedVal">$0</span>
-                            </div>
-
-                            <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #334155;">
-                                <div class="sidebar-title-stats" style="font-size: 14px;" data-lang="auto-analysis">Auto Analysis</div>
-                                <div class="sidebar-stat">
-                                    <span class="sidebar-stat-label" data-lang="recent-win-rate">Recent Win Rate</span>
-                                    <span class="sidebar-stat-value" id="recentWinRateCalc">-</span>
-                                </div>
-                                <div class="sidebar-stat">
-                                    <span class="sidebar-stat-label" data-lang="pl-ratio">P&L Ratio</span>
-                                    <span class="sidebar-stat-value" id="plRatioCalc">-</span>
-                                </div>
-                                <div class="sidebar-stat">
-                                    <span class="sidebar-stat-label" data-lang="kelly-status">Kelly Status</span>
-                                    <span class="sidebar-stat-value positive" id="kellyStatus">Safe</span>
-                                </div>
+                                <span class="sidebar-stat-label" data-lang="stop-distance">Stop Distance</span>
+                                <span class="sidebar-stat-value" id="stopDistance">$0</span>
                             </div>
                         </div>
                     </div>
@@ -3675,12 +3653,12 @@
                 'max-loss': 'Max Loss',
                 'breakeven-move': 'Breakeven Move',
                 'risk-amount': 'Risk Amount',
-                'kelly-section-title': 'Kelly Criterion Position Sizing',
-                'kelly-description': 'Kelly Criterion helps determine optimal position size based on win rate and risk-reward ratio. It maximizes long-term growth while managing risk.',
                 'kelly-strategies': 'Position Sizing Strategies',
-                'risk-section-title': 'Risk-Based Position Sizing',
-                'risk-description': 'Calculate position size based on account risk percentage and stop loss levels. Helps maintain consistent risk across all trades.',
-                'risk-presets': 'Quick Risk Presets'
+                'risk-presets': 'Quick Risk Presets',
+                'risk-analysis': 'Risk Analysis',
+                'position-cost': 'Position Cost',
+                'risk-ratio': 'Risk Ratio',
+                'stop-distance': 'Stop Distance'
             },
             ko: {
                 'dashboard': '대시보드',
@@ -3882,12 +3860,12 @@
                 'max-loss': '최대 손실',
                 'breakeven-move': '손익분기 변동',
                 'risk-amount': '리스크 금액',
-                'kelly-section-title': '켈리 기준 포지션 사이징',
-                'kelly-description': '켈리 기준은 승률과 위험-보상 비율을 기반으로 최적의 포지션 크기를 결정합니다. 장기적 성장을 극대화하면서 위험을 관리합니다.',
                 'kelly-strategies': '포지션 사이징 전략',
-                'risk-section-title': '리스크 기반 포지션 사이징',
-                'risk-description': '계좌 리스크 비율과 손절 수준을 기반으로 포지션 크기를 계산합니다. 모든 거래에서 일관된 리스크를 유지하는 데 도움이 됩니다.',
-                'risk-presets': '빠른 리스크 프리셋'
+                'risk-presets': '빠른 리스크 프리셋',
+                'risk-analysis': '리스크 분석',
+                'position-cost': '포지션 비용',
+                'risk-ratio': '리스크 비율',
+                'stop-distance': '손절 거리'
             }
         };
         
@@ -6714,23 +6692,29 @@
             event.target.classList.add('active');
             
             // 섹션 표시/숨기기
-            const positionSection = document.getElementById('positionCalculatorSection');
+            const kellySection = document.getElementById('kellyCalculatorSection');
+            const riskSection = document.getElementById('riskCalculatorSection');
             const dashboardGrid = document.querySelector('.dashboard-grid');
             const tradesSection = document.querySelector('.trades-section');
             const statsOverview = document.querySelector('.stats-overview');
             
+            // 모든 섹션 숨기기
+            if (kellySection) kellySection.style.display = 'none';
+            if (riskSection) riskSection.style.display = 'none';
+            if (dashboardGrid) dashboardGrid.style.display = 'none';
+            if (tradesSection) tradesSection.style.display = 'none';
+            if (statsOverview) statsOverview.style.display = 'none';
+            
             if (section === 'trading') {
-                if (positionSection) positionSection.style.display = 'none';
                 if (dashboardGrid) dashboardGrid.style.display = 'grid';
                 if (tradesSection) tradesSection.style.display = 'block';
                 if (statsOverview) statsOverview.style.display = 'grid';
-            } else if (section === 'position-calc') {
-                if (positionSection) positionSection.style.display = 'block';
-                if (dashboardGrid) dashboardGrid.style.display = 'none';
-                if (tradesSection) tradesSection.style.display = 'none';
-                if (statsOverview) statsOverview.style.display = 'none';
-                
+            } else if (section === 'kelly-calc') {
+                if (kellySection) kellySection.style.display = 'block';
                 setTimeout(() => calculatePosition(), 100);
+            } else if (section === 'risk-calc') {
+                if (riskSection) riskSection.style.display = 'block';
+                setTimeout(() => calculateRisk(), 100);
             }
         }
 
