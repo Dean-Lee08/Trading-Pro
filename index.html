@@ -2631,6 +2631,7 @@
                         </div>
                     </div>
 
+                    <!-- Position Analysis Stats 복원 -->
                     <div class="stats-overview">
                         <div class="stat-item">
                             <h3 data-lang="recommended-size">Recommended Size</h3>
@@ -2651,239 +2652,256 @@
                         </div>
                     </div>
 
-                    <!-- Kelly Criterion Calculator -->
-                    <div class="detail-section active" id="kellyCalculatorSection">
-                        <div class="calculator-container">
-                            <div class="calc-section-title">Kelly Criterion Calculator</div>
-                            <div class="calc-description">
-                                Optimal position sizing based on your historical win rate and average profit/loss ratio. Best for consistent strategies.
+                    <div class="dashboard-grid">
+                        <!-- 메인 Calculator 영역 -->
+                        <div>
+                            <!-- Kelly Criterion Calculator -->
+                            <div class="detail-section active" id="kellyCalculatorSection">
+                                <div class="trade-entry">
+                                    <h2 class="calc-section-title">Kelly Criterion Calculator</h2>
+                                    <div class="calc-description">
+                                        Optimal position sizing based on your historical win rate and average profit/loss ratio. Best for consistent strategies.
+                                    </div>
+                                    
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label data-lang="account-balance">Account Balance ($)</label>
+                                            <input type="number" id="calcAccountBalance" value="25000" oninput="calculateAllPositions()">
+                                        </div>
+                                        <div class="form-group">
+                                            <label data-lang="win-rate-input">Win Rate (%)</label>
+                                            <input type="number" id="calcWinRate" value="55" min="0" max="100" oninput="calculateAllPositions()">
+                                        </div>
+                                        <div class="form-group">
+                                            <label data-lang="average-win">Average Win ($)</label>
+                                            <input type="number" id="calcAvgWin" value="150" oninput="calculateAllPositions()">
+                                        </div>
+                                        <div class="form-group">
+                                            <label data-lang="average-loss">Average Loss ($)</label>
+                                            <input type="number" id="calcAvgLoss" value="100" oninput="calculateAllPositions()">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-actions">
+                                        <button class="btn btn-secondary" onclick="autoLoadTradeData()" style="width: 100%;" data-lang="auto-load-trade-data">
+                                            Auto Load from Trade History
+                                        </button>
+                                    </div>
+
+                                    <div class="kelly-options">
+                                        <div class="kelly-options-title">Position Sizing Strategy</div>
+                                        <div class="kelly-option selected" data-multiplier="0.1" onclick="selectKellyMultiplier(this)">
+                                            <div class="kelly-option-label" data-lang="ultra-safe">Ultra Safe</div>
+                                            <div class="kelly-option-value">10% Kelly</div>
+                                        </div>
+                                        <div class="kelly-option" data-multiplier="0.25" onclick="selectKellyMultiplier(this)">
+                                            <div class="kelly-option-label" data-lang="conservative">Conservative</div>
+                                            <div class="kelly-option-value">25% Kelly</div>
+                                        </div>
+                                        <div class="kelly-option" data-multiplier="0.5" onclick="selectKellyMultiplier(this)">
+                                            <div class="kelly-option-label" data-lang="moderate">Moderate</div>
+                                            <div class="kelly-option-value">50% Kelly</div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+
+                            <!-- Risk-Based Calculator -->
+                            <div class="detail-section" id="riskCalculatorSection">
+                                <div class="trade-entry">
+                                    <h2 class="calc-section-title">Risk-Based Position Calculator</h2>
+                                    <div class="calc-description">
+                                        Calculate position size based on fixed risk percentage. Perfect for day trading with tight stop losses.
+                                    </div>
+
+                                    <div class="risk-preset-section">
+                                        <div class="risk-preset-title" data-lang="quick-risk-presets">Quick Risk Presets</div>
+                                        <div class="risk-preset-buttons">
+                                            <button class="risk-preset-btn" onclick="setRiskPreset(0.5)">0.5%</button>
+                                            <button class="risk-preset-btn active" onclick="setRiskPreset(1)">1%</button>
+                                            <button class="risk-preset-btn" onclick="setRiskPreset(1.5)">1.5%</button>
+                                            <button class="risk-preset-btn" onclick="setRiskPreset(2)">2%</button>
+                                            <button class="risk-preset-btn" onclick="setRiskPreset(3)">3%</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label data-lang="account-balance">Account Balance ($)</label>
+                                            <input type="number" id="riskAccountBalance" value="25000" oninput="calculateRiskPosition()">
+                                        </div>
+                                        <div class="form-group">
+                                            <label data-lang="risk-percentage">Risk Percentage (%)</label>
+                                            <input type="number" id="riskPercentage" value="1" step="0.1" min="0.1" max="10" oninput="calculateRiskPosition()">
+                                        </div>
+                                        <div class="form-group">
+                                            <label data-lang="entry-price">Entry Price ($)</label>
+                                            <input type="number" id="riskEntryPrice" value="100" step="0.01" oninput="calculateRiskPosition()">
+                                        </div>
+                                        <div class="form-group">
+                                            <label data-lang="stop-loss-price">Stop Loss Price ($)</label>
+                                            <input type="number" id="riskStopLoss" value="98" step="0.01" oninput="calculateRiskPosition()">
+                                        </div>
+                                    </div>
+
+                                    <div class="calc-results">
+                                        <div class="calc-result-item">
+                                            <span class="calc-result-label" data-lang="risk-amount">Risk Amount</span>
+                                            <span class="calc-result-value" id="riskAmount">$250</span>
+                                        </div>
+                                        <div class="calc-result-item">
+                                            <span class="calc-result-label" data-lang="position-size">Position Size</span>
+                                            <span class="calc-result-value" id="positionSize">$12,500</span>
+                                        </div>
+                                        <div class="calc-result-item">
+                                            <span class="calc-result-label" data-lang="shares-quantity">Shares Quantity</span>
+                                            <span class="calc-result-value" id="sharesQuantity">125</span>
+                                        </div>
+                                        <div class="calc-result-item">
+                                            <span class="calc-result-label" data-lang="risk-per-share">Risk per Share</span>
+                                            <span class="calc-result-value" id="riskPerShare">$2.00</span>
+                                        </div>
+                                        <div class="calc-result-item">
+                                            <span class="calc-result-label" data-lang="max-loss">Max Loss</span>
+                                            <span class="calc-result-value negative" id="maxLoss">-$250</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Volatility Calculator -->
+                            <div class="detail-section" id="volatilityCalculatorSection">
+                                <div class="trade-entry">
+                                    <h2 class="calc-section-title">Volatility-Based Calculator</h2>
+                                    <div class="calc-description">
+                                        Adjust position size based on stock volatility. Higher volatility = smaller position to maintain consistent risk.
+                                    </div>
+
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label data-lang="account-balance">Account Balance ($)</label>
+                                            <input type="number" id="volAccountBalance" value="25000" oninput="calculateVolatilityPosition()">
+                                        </div>
+                                        <div class="form-group">
+                                            <label data-lang="target-risk">Target Risk (%)</label>
+                                            <input type="number" id="volTargetRisk" value="1" step="0.1" oninput="calculateVolatilityPosition()">
+                                        </div>
+                                        <div class="form-group">
+                                            <label data-lang="stock-price">Stock Price ($)</label>
+                                            <input type="number" id="volStockPrice" value="100" step="0.01" oninput="calculateVolatilityPosition()">
+                                        </div>
+                                        <div class="form-group">
+                                            <label data-lang="daily-atr">Daily ATR ($)</label>
+                                            <input type="number" id="volATR" value="3" step="0.01" oninput="calculateVolatilityPosition()">
+                                        </div>
+                                    </div>
+
+                                    <div class="scenario-analysis">
+                                        <div class="scenario-title" data-lang="volatility-scenarios">Volatility Scenarios</div>
+                                        <div class="scenario-grid">
+                                            <div class="scenario-item">
+                                                <div class="scenario-label" data-lang="low-volatility">Low Volatility</div>
+                                                <div class="scenario-value" id="lowVolPosition">$15,000</div>
+                                            </div>
+                                            <div class="scenario-item">
+                                                <div class="scenario-label" data-lang="current-atr">Current ATR</div>
+                                                <div class="scenario-value" id="currentVolPosition">$8,333</div>
+                                            </div>
+                                            <div class="scenario-item">
+                                                <div class="scenario-label" data-lang="high-volatility">High Volatility</div>
+                                                <div class="scenario-value" id="highVolPosition">$5,000</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="position-size-display">
+                                        <div class="position-size-title">Recommended Position Size</div>
+                                        <div class="position-size-value" id="volPositionSize">$8,333</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Day Trader Calculator -->
+                            <div class="detail-section" id="daytraderCalculatorSection">
+                                <div class="trade-entry">
+                                    <h2 class="calc-section-title">Day Trader Special Calculator</h2>
+                                    <div class="calc-description">
+                                        Optimized for intraday trading with multiple positions, quick scalps, and tight risk management.
+                                    </div>
+
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label data-lang="account-balance">Account Balance ($)</label>
+                                            <input type="number" id="daytraderBalance" value="25000" oninput="calculateDaytraderPosition()">
+                                        </div>
+                                        <div class="form-group">
+                                            <label data-lang="max-daily-risk">Max Daily Risk (%)</label>
+                                            <input type="number" id="daytraderDailyRisk" value="2" step="0.1" oninput="calculateDaytraderPosition()">
+                                        </div>
+                                        <div class="form-group">
+                                            <label data-lang="trades-per-day">Trades per Day</label>
+                                            <input type="number" id="daytraderTradesPerDay" value="5" min="1" max="20" oninput="calculateDaytraderPosition()">
+                                        </div>
+                                        <div class="form-group">
+                                            <label data-lang="risk-per-trade">Risk per Trade (%)</label>
+                                            <input type="number" id="daytraderRiskPerTrade" value="0.4" step="0.1" readonly style="background: #1e293b;">
+                                        </div>
+                                    </div>
+
+                                    <div class="calc-results">
+                                        <div class="calc-result-item">
+                                            <span class="calc-result-label" data-lang="daily-risk-limit">Daily Risk Limit</span>
+                                            <span class="calc-result-value" id="dailyRiskLimit">$500</span>
+                                        </div>
+                                        <div class="calc-result-item">
+                                            <span class="calc-result-label" data-lang="risk-per-trade">Risk per Trade</span>
+                                            <span class="calc-result-value" id="riskPerTrade">$100</span>
+                                        </div>
+                                        <div class="calc-result-item">
+                                            <span class="calc-result-label" data-lang="max-position-size">Max Position Size</span>
+                                            <span class="calc-result-value" id="maxPositionSize">$10,000</span>
+                                        </div>
+                                        <div class="calc-result-item">
+                                            <span class="calc-result-label" data-lang="buying-power-used">Buying Power Used</span>
+                                            <span class="calc-result-value" id="buyingPowerUsed">40%</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="alert-section" id="daytraderAlert" style="display: none;">
+                                        <div class="alert-title" data-lang="risk-warning">Risk Warning</div>
+                                        <div class="alert-text" id="alertText">Your risk settings may be too aggressive for day trading.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 우측 사이드바 복원 -->
+                        <div class="stats-sidebar">
+                            <div class="sidebar-title-stats" data-lang="auto-analysis">Auto Analysis</div>
                             
-                            <div class="calc-grid">
-                                <div class="calc-input-group">
-                                    <label class="calc-label" data-lang="account-balance">Account Balance ($)</label>
-                                    <input type="number" class="calc-input" id="calcAccountBalance" value="25000" oninput="calculateAllPositions()">
-                                </div>
-                                <div class="calc-input-group">
-                                    <label class="calc-label" data-lang="win-rate-input">Win Rate (%)</label>
-                                    <input type="number" class="calc-input" id="calcWinRate" value="55" min="0" max="100" oninput="calculateAllPositions()">
-                                </div>
-                                <div class="calc-input-group">
-                                    <label class="calc-label" data-lang="average-win">Average Win ($)</label>
-                                    <input type="number" class="calc-input" id="calcAvgWin" value="150" oninput="calculateAllPositions()">
-                                </div>
-                                <div class="calc-input-group">
-                                    <label class="calc-label" data-lang="average-loss">Average Loss ($)</label>
-                                    <input type="number" class="calc-input" id="calcAvgLoss" value="100" oninput="calculateAllPositions()">
-                                </div>
+                            <div class="sidebar-stat">
+                                <span class="sidebar-stat-label" data-lang="recent-win-rate">Recent Win Rate</span>
+                                <span class="sidebar-stat-value" id="recentWinRateCalc">-</span>
                             </div>
-
-                            <div class="calc-input-group">
-                                <button class="btn btn-secondary" onclick="autoLoadTradeData()" style="width: 100%;" data-lang="auto-load-trade-data">
-                                    Auto Load from Trade History
-                                </button>
+                            <div class="sidebar-stat">
+                                <span class="sidebar-stat-label" data-lang="pl-ratio">P&L Ratio</span>
+                                <span class="sidebar-stat-value" id="plRatioCalc">-</span>
                             </div>
-
-                            <div class="kelly-options">
-                                <div class="kelly-options-title">Position Sizing Strategy</div>
-                                <div class="kelly-option selected" data-multiplier="0.1" onclick="selectKellyMultiplier(this)">
-                                    <div class="kelly-option-label" data-lang="ultra-safe">Ultra Safe</div>
-                                    <div class="kelly-option-value">10% Kelly</div>
-                                </div>
-                                <div class="kelly-option" data-multiplier="0.25" onclick="selectKellyMultiplier(this)">
-                                    <div class="kelly-option-label" data-lang="conservative">Conservative</div>
-                                    <div class="kelly-option-value">25% Kelly</div>
-                                </div>
-                                <div class="kelly-option" data-multiplier="0.5" onclick="selectKellyMultiplier(this)">
-                                    <div class="kelly-option-label" data-lang="moderate">Moderate</div>
-                                    <div class="kelly-option-value">50% Kelly</div>
-                                </div>
+                            <div class="sidebar-stat">
+                                <span class="sidebar-stat-label">Avg Hold Time</span>
+                                <span class="sidebar-stat-value" id="avgHoldTimeCalc">-</span>
                             </div>
-
-                            <div class="scenario-analysis">
-                                <div class="scenario-title">Auto Analysis</div>
-                                <div class="scenario-grid">
-                                    <div class="scenario-item">
-                                        <div class="scenario-label" data-lang="recent-win-rate">Recent Win Rate</div>
-                                        <div class="scenario-value" id="recentWinRateCalc">-</div>
-                                    </div>
-                                    <div class="scenario-item">
-                                        <div class="scenario-label" data-lang="pl-ratio">P&L Ratio</div>
-                                        <div class="scenario-value" id="plRatioCalc">-</div>
-                                    </div>
-                                    <div class="scenario-item">
-                                        <div class="scenario-label">Avg Hold Time</div>
-                                        <div class="scenario-value" id="avgHoldTimeCalc">-</div>
-                                    </div>
-                                </div>
+                            <div class="sidebar-stat">
+                                <span class="sidebar-stat-label">Total Trades</span>
+                                <span class="sidebar-stat-value neutral" id="totalTradesCalc">0</span>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Risk-Based Calculator -->
-                    <div class="detail-section" id="riskCalculatorSection">
-                        <div class="calculator-container">
-                            <div class="calc-section-title">Risk-Based Position Calculator</div>
-                            <div class="calc-description">
-                                Calculate position size based on fixed risk percentage. Perfect for day trading with tight stop losses.
+                            <div class="sidebar-stat">
+                                <span class="sidebar-stat-label">Best Trade</span>
+                                <span class="sidebar-stat-value positive" id="bestTradeCalc">$0</span>
                             </div>
-
-                            <div class="risk-preset-section">
-                                <div class="risk-preset-title" data-lang="quick-risk-presets">Quick Risk Presets</div>
-                                <div class="risk-preset-buttons">
-                                    <button class="risk-preset-btn" onclick="setRiskPreset(0.5)">0.5%</button>
-                                    <button class="risk-preset-btn active" onclick="setRiskPreset(1)">1%</button>
-                                    <button class="risk-preset-btn" onclick="setRiskPreset(1.5)">1.5%</button>
-                                    <button class="risk-preset-btn" onclick="setRiskPreset(2)">2%</button>
-                                    <button class="risk-preset-btn" onclick="setRiskPreset(3)">3%</button>
-                                </div>
-                            </div>
-
-                            <div class="calc-grid">
-                                <div class="calc-input-group">
-                                    <label class="calc-label" data-lang="account-balance">Account Balance ($)</label>
-                                    <input type="number" class="calc-input" id="riskAccountBalance" value="25000" oninput="calculateRiskPosition()">
-                                </div>
-                                <div class="calc-input-group">
-                                    <label class="calc-label" data-lang="risk-percentage">Risk Percentage (%)</label>
-                                    <input type="number" class="calc-input" id="riskPercentage" value="1" step="0.1" min="0.1" max="10" oninput="calculateRiskPosition()">
-                                </div>
-                                <div class="calc-input-group">
-                                    <label class="calc-label" data-lang="entry-price">Entry Price ($)</label>
-                                    <input type="number" class="calc-input" id="riskEntryPrice" value="100" step="0.01" oninput="calculateRiskPosition()">
-                                </div>
-                                <div class="calc-input-group">
-                                    <label class="calc-label" data-lang="stop-loss-price">Stop Loss Price ($)</label>
-                                    <input type="number" class="calc-input" id="riskStopLoss" value="98" step="0.01" oninput="calculateRiskPosition()">
-                                </div>
-                            </div>
-
-                            <div class="calc-results">
-                                <div class="calc-result-item">
-                                    <span class="calc-result-label" data-lang="risk-amount">Risk Amount</span>
-                                    <span class="calc-result-value" id="riskAmount">$250</span>
-                                </div>
-                                <div class="calc-result-item">
-                                    <span class="calc-result-label" data-lang="position-size">Position Size</span>
-                                    <span class="calc-result-value" id="positionSize">$12,500</span>
-                                </div>
-                                <div class="calc-result-item">
-                                    <span class="calc-result-label" data-lang="shares-quantity">Shares Quantity</span>
-                                    <span class="calc-result-value" id="sharesQuantity">125</span>
-                                </div>
-                                <div class="calc-result-item">
-                                    <span class="calc-result-label" data-lang="risk-per-share">Risk per Share</span>
-                                    <span class="calc-result-value" id="riskPerShare">$2.00</span>
-                                </div>
-                                <div class="calc-result-item">
-                                    <span class="calc-result-label" data-lang="max-loss">Max Loss</span>
-                                    <span class="calc-result-value negative" id="maxLoss">-$250</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Volatility Calculator -->
-                    <div class="detail-section" id="volatilityCalculatorSection">
-                        <div class="calculator-container">
-                            <div class="calc-section-title">Volatility-Based Calculator</div>
-                            <div class="calc-description">
-                                Adjust position size based on stock volatility. Higher volatility = smaller position to maintain consistent risk.
-                            </div>
-
-                            <div class="volatility-input-grid">
-                                <div class="calc-input-group">
-                                    <label class="calc-label" data-lang="account-balance">Account Balance ($)</label>
-                                    <input type="number" class="calc-input" id="volAccountBalance" value="25000" oninput="calculateVolatilityPosition()">
-                                </div>
-                                <div class="calc-input-group">
-                                    <label class="calc-label" data-lang="target-risk">Target Risk (%)</label>
-                                    <input type="number" class="calc-input" id="volTargetRisk" value="1" step="0.1" oninput="calculateVolatilityPosition()">
-                                </div>
-                                <div class="calc-input-group">
-                                    <label class="calc-label" data-lang="stock-price">Stock Price ($)</label>
-                                    <input type="number" class="calc-input" id="volStockPrice" value="100" step="0.01" oninput="calculateVolatilityPosition()">
-                                </div>
-                                <div class="calc-input-group">
-                                    <label class="calc-label" data-lang="daily-atr">Daily ATR ($)</label>
-                                    <input type="number" class="calc-input" id="volATR" value="3" step="0.01" oninput="calculateVolatilityPosition()">
-                                </div>
-                            </div>
-
-                            <div class="scenario-analysis">
-                                <div class="scenario-title" data-lang="volatility-scenarios">Volatility Scenarios</div>
-                                <div class="scenario-grid">
-                                    <div class="scenario-item">
-                                        <div class="scenario-label" data-lang="low-volatility">Low Volatility</div>
-                                        <div class="scenario-value" id="lowVolPosition">$15,000</div>
-                                    </div>
-                                    <div class="scenario-item">
-                                        <div class="scenario-label" data-lang="current-atr">Current ATR</div>
-                                        <div class="scenario-value" id="currentVolPosition">$8,333</div>
-                                    </div>
-                                    <div class="scenario-item">
-                                        <div class="scenario-label" data-lang="high-volatility">High Volatility</div>
-                                        <div class="scenario-value" id="highVolPosition">$5,000</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="position-size-display">
-                                <div class="position-size-title">Recommended Position Size</div>
-                                <div class="position-size-value" id="volPositionSize">$8,333</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Day Trader Calculator -->
-                    <div class="detail-section" id="daytraderCalculatorSection">
-                        <div class="calculator-container">
-                            <div class="calc-section-title">Day Trader Special Calculator</div>
-                            <div class="calc-description">
-                                Optimized for intraday trading with multiple positions, quick scalps, and tight risk management.
-                            </div>
-
-                            <div class="calc-grid">
-                                <div class="calc-input-group">
-                                    <label class="calc-label" data-lang="account-balance">Account Balance ($)</label>
-                                    <input type="number" class="calc-input" id="daytraderBalance" value="25000" oninput="calculateDaytraderPosition()">
-                                </div>
-                                <div class="calc-input-group">
-                                    <label class="calc-label" data-lang="max-daily-risk">Max Daily Risk (%)</label>
-                                    <input type="number" class="calc-input" id="daytraderDailyRisk" value="2" step="0.1" oninput="calculateDaytraderPosition()">
-                                </div>
-                                <div class="calc-input-group">
-                                    <label class="calc-label" data-lang="trades-per-day">Trades per Day</label>
-                                    <input type="number" class="calc-input" id="daytraderTradesPerDay" value="5" min="1" max="20" oninput="calculateDaytraderPosition()">
-                                </div>
-                                <div class="calc-input-group">
-                                    <label class="calc-label" data-lang="risk-per-trade">Risk per Trade (%)</label>
-                                    <input type="number" class="calc-input" id="daytraderRiskPerTrade" value="0.4" step="0.1" readonly style="background: #1e293b;">
-                                </div>
-                            </div>
-
-                            <div class="calc-results">
-                                <div class="calc-result-item">
-                                    <span class="calc-result-label" data-lang="daily-risk-limit">Daily Risk Limit</span>
-                                    <span class="calc-result-value" id="dailyRiskLimit">$500</span>
-                                </div>
-                                <div class="calc-result-item">
-                                    <span class="calc-result-label" data-lang="risk-per-trade">Risk per Trade</span>
-                                    <span class="calc-result-value" id="riskPerTrade">$100</span>
-                                </div>
-                                <div class="calc-result-item">
-                                    <span class="calc-result-label" data-lang="max-position-size">Max Position Size</span>
-                                    <span class="calc-result-value" id="maxPositionSize">$10,000</span>
-                                </div>
-                                <div class="calc-result-item">
-                                    <span class="calc-result-label" data-lang="buying-power-used">Buying Power Used</span>
-                                    <span class="calc-result-value" id="buyingPowerUsed">40%</span>
-                                </div>
-                            </div>
-
-                            <div class="alert-section" id="daytraderAlert" style="display: none;">
-                                <div class="alert-title" data-lang="risk-warning">Risk Warning</div>
-                                <div class="alert-text" id="alertText">Your risk settings may be too aggressive for day trading.</div>
+                            <div class="sidebar-stat">
+                                <span class="sidebar-stat-label">Worst Trade</span>
+                                <span class="sidebar-stat-value negative" id="worstTradeCalc">$0</span>
                             </div>
                         </div>
                     </div>
@@ -3797,7 +3815,7 @@
             });
         }
 
-        // Language translations (enhanced with new terms)
+        // Language translations (완전히 정리된 버전)
         const translations = {
             en: {
                 'dashboard': 'Dashboard',
@@ -4005,10 +4023,11 @@
                 'position-cost': 'Position Cost',
                 'risk-ratio': 'Risk Ratio',
                 'stop-distance': 'Stop Distance',
-                'day-trader-calc': 'Day Trader',
-                'risk-based-calc': 'Risk-Based',
-                'volatility-calc': 'Volatility',
                 'kelly-calc': 'Kelly Criterion',
+                'risk-calc': 'Risk-Based',
+                'volatility-calc': 'Volatility',
+                'daytrader-calc': 'Day Trader',
+                'risk-level': 'Risk Level',
                 'daily-risk-limit': 'Daily Risk Limit',
                 'risk-per-trade': 'Risk per Trade',
                 'max-position-size': 'Max Position Size',
@@ -4023,35 +4042,7 @@
                 'max-daily-risk': 'Max Daily Risk (%)',
                 'quick-risk-presets': 'Quick Risk Presets',
                 'volatility-scenarios': 'Volatility Scenarios',
-                'risk-warning': 'Risk Warning',
-                'kelly-calc': 'Kelly Criterion',
-'risk-calc': 'Risk-Based',
-'volatility-calc': 'Volatility',
-'daytrader-calc': 'Day Trader',
-'risk-level': 'Risk Level',
-'risk-percentage': 'Risk Percentage (%)',
-'entry-price': 'Entry Price ($)',
-'stop-loss-price': 'Stop Loss Price ($)',
-'risk-amount': 'Risk Amount',
-'position-size': 'Position Size',
-'shares-quantity': 'Shares Quantity',
-'risk-per-share': 'Risk per Share',
-'max-loss': 'Max Loss',
-'target-risk': 'Target Risk (%)',
-'stock-price': 'Stock Price ($)',
-'daily-atr': 'Daily ATR ($)',
-'low-volatility': 'Low Volatility',
-'current-atr': 'Current ATR',
-'high-volatility': 'High Volatility',
-'volatility-scenarios': 'Volatility Scenarios',
-'max-daily-risk': 'Max Daily Risk (%)',
-'trades-per-day': 'Trades per Day',
-'risk-per-trade': 'Risk per Trade',
-'daily-risk-limit': 'Daily Risk Limit',
-'max-position-size': 'Max Position Size',
-'buying-power-used': 'Buying Power Used',
-'risk-warning': 'Risk Warning',
-'quick-risk-presets': 'Quick Risk Presets'
+                'risk-warning': 'Risk Warning'
             },
             ko: {
                 'dashboard': '대시보드',
@@ -4259,53 +4250,26 @@
                 'position-cost': '포지션 비용',
                 'risk-ratio': '리스크 비율',
                 'stop-distance': '손절 거리',
-                'day-trader-calc': '데이트레이더',
-'risk-based-calc': '리스크 기반',
-'volatility-calc': '변동성',
-'kelly-calc': '켈리 기준',
-'daily-risk-limit': '일일 리스크 한도',
-'risk-per-trade': '거래당 리스크',
-'max-position-size': '최대 포지션 크기',
-'buying-power-used': '매수력 사용률',
-'target-risk': '목표 리스크 (%)',
-'daily-atr': '일일 ATR ($)',
-'stock-price': '주가 ($)',
-'low-volatility': '낮은 변동성',
-'current-atr': '현재 ATR',
-'high-volatility': '높은 변동성',
-'trades-per-day': '일일 거래 횟수',
-'max-daily-risk': '최대 일일 리스크 (%)',
-'quick-risk-presets': '빠른 리스크 프리셋',
-'volatility-scenarios': '변동성 시나리오',
-'risk-warning': '리스크 경고',
                 'kelly-calc': '켈리 기준',
-'risk-calc': '리스크 기반',
-'volatility-calc': '변동성',
-'daytrader-calc': '데이트레이더',
-'risk-level': '리스크 레벨',
-'risk-percentage': '리스크 비율 (%)',
-'entry-price': '진입 가격 ($)',
-'stop-loss-price': '손절 가격 ($)',
-'risk-amount': '리스크 금액',
-'position-size': '포지션 크기',
-'shares-quantity': '주식 수량',
-'risk-per-share': '주당 리스크',
-'max-loss': '최대 손실',
-'target-risk': '목표 리스크 (%)',
-'stock-price': '주가 ($)',
-'daily-atr': '일일 ATR ($)',
-'low-volatility': '낮은 변동성',
-'current-atr': '현재 ATR',
-'high-volatility': '높은 변동성',
-'volatility-scenarios': '변동성 시나리오',
-'max-daily-risk': '최대 일일 리스크 (%)',
-'trades-per-day': '일일 거래 횟수',
-'risk-per-trade': '거래당 리스크',
-'daily-risk-limit': '일일 리스크 한도',
-'max-position-size': '최대 포지션 크기',
-'buying-power-used': '매수력 사용률',
-'risk-warning': '리스크 경고',
-'quick-risk-presets': '빠른 리스크 프리셋'
+                'risk-calc': '리스크 기반',
+                'volatility-calc': '변동성',
+                'daytrader-calc': '데이트레이더',
+                'risk-level': '리스크 레벨',
+                'daily-risk-limit': '일일 리스크 한도',
+                'risk-per-trade': '거래당 리스크',
+                'max-position-size': '최대 포지션 크기',
+                'buying-power-used': '매수력 사용률',
+                'target-risk': '목표 리스크 (%)',
+                'daily-atr': '일일 ATR ($)',
+                'stock-price': '주가 ($)',
+                'low-volatility': '낮은 변동성',
+                'current-atr': '현재 ATR',
+                'high-volatility': '높은 변동성',
+                'trades-per-day': '일일 거래 횟수',
+                'max-daily-risk': '최대 일일 리스크 (%)',
+                'quick-risk-presets': '빠른 리스크 프리셋',
+                'volatility-scenarios': '변동성 시나리오',
+                'risk-warning': '리스크 경고'
             }
         };
         
@@ -7683,20 +7647,29 @@
         function showCalculatorSection(sectionName) {
             currentCalculatorSection = sectionName;
             
-            // Update tab states
-            document.querySelectorAll('.analytics-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            event.target.classList.add('active');
+            // Update tab states - Position Calculator 내에서는 analytics-tab 클래스 사용
+            const positionSection = document.getElementById('positionCalculatorSection');
+            if (positionSection) {
+                positionSection.querySelectorAll('.analytics-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                
+                // 클릭된 탭을 active로 설정
+                if (event && event.target) {
+                    event.target.classList.add('active');
+                }
+            }
             
-            // Show/hide sections
-            document.querySelectorAll('.detail-section').forEach(section => {
-                section.classList.remove('active');
-            });
-            
-            const targetSection = document.getElementById(`${sectionName}CalculatorSection`);
-            if (targetSection) {
-                targetSection.classList.add('active');
+            // Show/hide sections - Position Calculator 내의 detail-section들만 대상
+            if (positionSection) {
+                positionSection.querySelectorAll('.detail-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                const targetSection = document.getElementById(`${sectionName}CalculatorSection`);
+                if (targetSection) {
+                    targetSection.classList.add('active');
+                }
             }
             
             // Calculate based on section
