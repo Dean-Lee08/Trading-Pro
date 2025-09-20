@@ -2228,7 +2228,109 @@
 
         .risk-analysis {
             margin-top: 20px;
-        }    
+        }
+
+            .position-calc-tabs {
+            display: flex;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .position-calc-tab {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            padding: 12px 24px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border-right: 1px solid #334155;
+            flex: 1;
+        }
+
+        .position-calc-tab:last-child {
+            border-right: none;
+        }
+
+        .position-calc-tab:hover {
+            background: #1e293b;
+            color: #e4e4e7;
+        }
+
+        .position-calc-tab.active {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .position-calc-content {
+            display: none;
+        }
+
+        .position-calc-content.active {
+            display: block;
+        }
+
+        .risk-input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .risk-preset-section {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 20px 0;
+        }
+
+        .risk-preset-title {
+            color: #f8fafc;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .risk-preset-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .risk-preset-btn {
+            background: #0f172a;
+            border: 2px solid #334155;
+            color: #e4e4e7;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            min-width: 50px;
+        }
+
+        .risk-preset-btn:hover {
+            border-color: #3b82f6;
+        }
+
+        .risk-preset-btn.active {
+            background: #3b82f6;
+            border-color: #3b82f6;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .risk-input-grid {
+                grid-template-columns: 1fr;
+            }
+        }
         }
     </style>
 </head>
@@ -2384,8 +2486,14 @@
                         <div class="calculator-container">
                             <h2 class="calculator-title">Position Calculator</h2>
                             
+                            <!-- Position Calculator 내부 탭 -->
+                            <div class="position-calc-tabs" style="margin-bottom: 20px;">
+                                <button class="position-calc-tab active" onclick="showPositionCalcSection('kelly')" data-lang="kelly-calculator">Kelly Calculator</button>
+                                <button class="position-calc-tab" onclick="showPositionCalcSection('risk')" data-lang="risk-calculator">Risk Calculator</button>
+                            </div>
+                            
                             <!-- Kelly Calculator -->
-                            <div id="kellyCalcSection">
+                            <div id="kellyCalcSection" class="position-calc-content active">
                                 <div class="calc-grid">
                                     <div class="calc-input-group">
                                         <label class="calc-label" data-lang="account-balance">Account Balance ($)</label>
@@ -2446,6 +2554,69 @@
                                 </div>
                             </div>
                         </div>
+                        </div>
+
+                    <!-- Risk Calculator Section -->
+                            <div id="riskCalcSection" class="position-calc-content">
+                                <div class="risk-input-grid">
+                                    <div class="calc-input-group">
+                                        <label class="calc-label" data-lang="account-balance">Account Balance ($)</label>
+                                        <input type="number" class="calc-input" id="riskAccountBalance" value="10000" oninput="calculateRisk()">
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label class="calc-label" data-lang="risk-percentage">Risk Percentage (%)</label>
+                                        <input type="number" class="calc-input" id="riskPercentage" value="2" min="0" max="100" step="0.1" oninput="calculateRisk()">
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label class="calc-label" data-lang="entry-price">Entry Price ($)</label>
+                                        <input type="number" class="calc-input" id="riskEntryPrice" value="100" step="0.01" oninput="calculateRisk()">
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label class="calc-label" data-lang="stop-loss-price">Stop Loss Price ($)</label>
+                                        <input type="number" class="calc-input" id="riskStopLoss" value="95" step="0.01" oninput="calculateRisk()">
+                                    </div>
+                                </div>
+
+                                <div class="risk-preset-section">
+                                    <div class="risk-preset-title" data-lang="risk-presets">Quick Risk Presets</div>
+                                    <div class="risk-preset-buttons">
+                                        <button class="risk-preset-btn" onclick="setRiskPreset(1)">1%</button>
+                                        <button class="risk-preset-btn active" onclick="setRiskPreset(2)">2%</button>
+                                        <button class="risk-preset-btn" onclick="setRiskPreset(3)">3%</button>
+                                        <button class="risk-preset-btn" onclick="setRiskPreset(5)">5%</button>
+                                    </div>
+                                </div>
+
+                                <div class="calc-results">
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label" data-lang="risk-amount">Risk Amount</span>
+                                        <span class="calc-result-value negative" id="riskAmount">$0</span>
+                                    </div>
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label" data-lang="position-size">Position Size</span>
+                                        <span class="calc-result-value neutral" id="positionSize">$0</span>
+                                    </div>
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label" data-lang="shares-quantity">Shares Quantity</span>
+                                        <span class="calc-result-value neutral" id="sharesQuantity">0</span>
+                                    </div>
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label" data-lang="risk-per-share">Risk per Share</span>
+                                        <span class="calc-result-value neutral" id="riskPerShare">$0</span>
+                                    </div>
+                                </div>
+
+                                <div class="scenario-analysis">
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label" data-lang="max-loss">Max Loss (Stop Hit)</span>
+                                        <span class="calc-result-value negative" id="maxLoss">$0</span>
+                                    </div>
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label" data-lang="breakeven-move">Breakeven Move</span>
+                                        <span class="calc-result-value neutral" id="breakevenMoves">0%</span>
+                                    </div>
+                                </div>
+                            </div>
 
                         <div class="stats-sidebar">
                             <div class="sidebar-title-stats" data-lang="position-analysis">Position Analysis</div>
@@ -6718,6 +6889,7 @@
             
             if (section === 'kelly') {
                 document.getElementById('kellyCalcSection').classList.add('active');
+                setTimeout(() => calculatePosition(), 100);
             } else if (section === 'risk') {
                 document.getElementById('riskCalcSection').classList.add('active');
                 setTimeout(() => calculateRisk(), 100);
