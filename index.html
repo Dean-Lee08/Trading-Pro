@@ -3698,36 +3698,35 @@
                 'position-sizing-analysis': '포지션 크기 분석',
                 'trading-efficiency-metrics': '거래 효율성 지표',
                 'all-notes': '전체',
-                'no-notes': '아직 작성된 노트가 없습니다. "새 노트"를 클릭하여 시작하세요.',
                 'back': '뒤로',
                 'show-more': '더보기',
                 'show-less': '접기',
                 'position-calculator': '포지션 계산기',
-        'kelly-criterion-calculator': '켈리 기준 계산기',
-        'account-balance': '계좌 잔고 ($)',
-        'win-rate-input': '승률 (%)',
-        'average-win': '평균 수익 ($)',
-        'average-loss': '평균 손실 ($)',
-        'auto-load-trade-data': '거래 이력에서 자동 계산',
-        'kelly-percentage': '켈리 비율',
-        'full-kelly-position': '풀 켈리 포지션',
-        'quarter-kelly': '1/4 켈리 (25%)',
-        'tenth-kelly': '1/10 켈리 (10%)',
-        'ultra-safe': '매우 안전',
-        'conservative': '보수적',
-        'moderate': '보통',
-        'position-analysis': '포지션 분석',
-        'recommended-size': '권장 규모',
-        'account-utilization': '계좌 활용률',
-        'expected-value': '기댓값',
-        'auto-analysis': '자동 분석',
-        'recent-win-rate': '최근 승률',
-        'pl-ratio': '손익 비율',
-        'kelly-status': '켈리 상태',
-        'safe': '안전',
-        'medium': '보통',
-        'high': '위험'
-        'kelly-calculator': '켈리 계산기',
+                'kelly-criterion-calculator': '켈리 기준 계산기',
+                'account-balance': '계좌 잔고 ($)',
+                'win-rate-input': '승률 (%)',
+                'average-win': '평균 수익 ($)',
+                'average-loss': '평균 손실 ($)',
+                'auto-load-trade-data': '거래 이력에서 자동 계산',
+                'kelly-percentage': '켈리 비율',
+                'full-kelly-position': '풀 켈리 포지션',
+                'quarter-kelly': '1/4 켈리 (25%)',
+                'tenth-kelly': '1/10 켈리 (10%)',
+                'ultra-safe': '매우 안전',
+                'conservative': '보수적',
+                'moderate': '보통',
+                'position-analysis': '포지션 분석',
+                'recommended-size': '권장 규모',
+                'account-utilization': '계좌 활용률',
+                'expected-value': '기댓값',
+                'auto-analysis': '자동 분석',
+                'recent-win-rate': '최근 승률',
+                'pl-ratio': '손익 비율',
+                'kelly-status': '켈리 상태',
+                'safe': '안전',
+                'medium': '보통',
+                'high': '위험',
+                'kelly-calculator': '켈리 계산기',
                 'risk-calculator': '리스크 계산기',
                 'risk-percentage': '리스크 비율 (%)',
                 'entry-price': '진입가 ($)',
@@ -5298,6 +5297,72 @@
                 } catch (error) {
                     document.getElementById('holdingTimeDisplay').value = '0m';
                 }
+            }
+        }
+
+        // Navigation functions
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            document.getElementById(pageId).classList.add('active');
+            event.target.closest('.nav-item').classList.add('active');
+            
+            if (pageId === 'analysis') {
+                updateDetailedAnalytics();
+                if (currentAnalyticsSection === 'detail') {
+                    setTimeout(updateBasicCharts, 100);
+                } else {
+                    setTimeout(updateAdvancedCharts, 100);
+                }
+            }
+            
+            if (pageId === 'notes') {
+                renderAllNotesSections();
+            }
+            
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('open');
+            }
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Dashboard Section Management
+        let currentDashboardSection = 'trading';
+        let selectedKellyMultiplier = 0.1;
+
+        function showDashboardSection(section) {
+            currentDashboardSection = section;
+            
+            // 탭 상태 업데이트
+            document.querySelectorAll('.dashboard-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // 섹션 표시/숨기기
+            const positionSection = document.getElementById('positionCalculatorSection');
+            const dashboardGrid = document.querySelector('.dashboard-grid');
+            const tradesSection = document.querySelector('.trades-section');
+            
+            if (section === 'trading') {
+                if (positionSection) positionSection.style.display = 'none';
+                if (dashboardGrid) dashboardGrid.style.display = 'grid';
+                if (tradesSection) tradesSection.style.display = 'block';
+            } else if (section === 'position-calc') {
+                if (positionSection) positionSection.style.display = 'block';
+                if (dashboardGrid) dashboardGrid.style.display = 'none';
+                if (tradesSection) tradesSection.style.display = 'none';
+                
+                setTimeout(() => calculatePosition(), 100);
             }
         }
 
