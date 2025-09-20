@@ -2230,84 +2230,239 @@
             margin-top: 20px;
         }
 
-        /* Kelly Calculator 개선 스타일 */
-        .risk-management-section {
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 8px;
-            padding: 16px;
-            margin: 16px 0;
-        }
-
-        .backtest-section {
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 8px;
-            padding: 16px;
-            margin-top: 16px;
-        }
-
-        .backtest-controls {
+        /* Enhanced Position Calculator Styles */
+        .position-calc-tabs {
             display: flex;
-            align-items: center;
-            gap: 8px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 24px;
         }
 
-        .kelly-options-title {
-            grid-column: 1 / -1;
+        .position-calc-tab {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border-right: 1px solid #334155;
+            flex: 1;
+            text-align: center;
+        }
+
+        .position-calc-tab:last-child {
+            border-right: none;
+        }
+
+        .position-calc-tab:hover {
+            background: #1e293b;
+            color: #e4e4e7;
+        }
+
+        .position-calc-tab.active {
+            background: #3b82f6;
+            color: white;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+        }
+
+        .position-calc-content {
+            display: none;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 24px;
+            min-height: 500px;
+        }
+
+        .position-calc-content.active {
+            display: block;
+        }
+
+        .calc-section-title {
+            color: #f8fafc;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #334155;
+        }
+
+        .calc-description {
+            color: #94a3b8;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 24px;
+            text-align: center;
+            padding: 12px;
+            background: #1e293b;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .risk-preset-section {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 20px 0;
+        }
+
+        .risk-preset-title {
             color: #f8fafc;
             font-size: 14px;
             font-weight: 600;
             margin-bottom: 12px;
             text-align: center;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #334155;
         }
 
-        .kelly-option {
+        .risk-preset-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .risk-preset-btn {
             background: #0f172a;
             border: 2px solid #334155;
+            color: #e4e4e7;
+            padding: 10px 16px;
             border-radius: 8px;
-            padding: 12px 8px;
-            text-align: center;
             cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            min-width: 60px;
         }
 
-        .kelly-option:hover {
+        .risk-preset-btn:hover {
             border-color: #3b82f6;
             transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.2);
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
         }
 
-        .kelly-option.selected {
+        .risk-preset-btn.active {
+            background: #3b82f6;
             border-color: #3b82f6;
-            background: rgba(59, 130, 246, 0.1);
-            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+            color: white;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
         }
 
-        .kelly-option-label {
+        .scenario-analysis {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 20px;
+        }
+
+        .scenario-title {
+            color: #f8fafc;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .scenario-item {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .scenario-label {
             color: #94a3b8;
-            font-size: 10px;
-            margin-bottom: 2px;
+            font-size: 11px;
+            margin-bottom: 4px;
         }
 
-        .kelly-option-value {
+        .scenario-value {
             color: #e4e4e7;
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 600;
         }
 
+        .volatility-calculator-section {
+            margin-top: 24px;
+        }
+
+        .volatility-input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .position-size-display {
+            background: #1e293b;
+            border: 2px solid #3b82f6;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .position-size-title {
+            color: #94a3b8;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .position-size-value {
+            color: #3b82f6;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .alert-section {
+            background: #1e293b;
+            border-left: 4px solid #ef4444;
+            padding: 12px;
+            margin-top: 16px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .alert-title {
+            color: #ef4444;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .alert-text {
+            color: #94a3b8;
+            font-size: 11px;
+        }
+
         @media (max-width: 768px) {
-            .backtest-controls {
-                flex-direction: column;
+            .calculator-main-grid {
+                grid-template-columns: 1fr;
             }
             
-            .backtest-controls select {
-                margin-right: 0 !important;
-                margin-bottom: 8px;
+            .calc-grid, .volatility-input-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .kelly-options, .scenario-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .risk-preset-buttons {
+                flex-direction: column;
+                align-items: center;
             }
         }
         }
@@ -2478,8 +2633,8 @@
                                 <span class="sidebar-stat-value" id="expectedVal">$0</span>
                             </div>
                             <div class="sidebar-stat">
-                                <span class="sidebar-stat-label">Max Drawdown Risk</span>
-                                <span class="sidebar-stat-value" id="maxDrawdownRisk">0%</span>
+                                <span class="sidebar-stat-label">Risk Level</span>
+                                <span class="sidebar-stat-value" id="riskLevel">Safe</span>
                             </div>
 
                             <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #334155;">
@@ -2493,52 +2648,46 @@
                                     <span class="sidebar-stat-value" id="plRatioCalc">-</span>
                                 </div>
                                 <div class="sidebar-stat">
-                                    <span class="sidebar-stat-label" data-lang="kelly-status">Kelly Status</span>
-                                    <span class="sidebar-stat-value positive" id="kellyStatus">Safe</span>
-                                </div>
-                                <div class="sidebar-stat">
-                                    <span class="sidebar-stat-label">Consecutive Loss Risk</span>
-                                    <span class="sidebar-stat-value" id="consecutiveLossRisk">Low</span>
-                                </div>
-                            </div>
-
-                            <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #334155;">
-                                <div class="sidebar-title-stats" style="font-size: 14px;">Backtest Results</div>
-                                <div class="sidebar-stat">
-                                    <span class="sidebar-stat-label">Simulated Return</span>
-                                    <span class="sidebar-stat-value" id="backtestReturn">-</span>
-                                </div>
-                                <div class="sidebar-stat">
-                                    <span class="sidebar-stat-label">Max Historical DD</span>
-                                    <span class="sidebar-stat-value" id="backtestMaxDD">-</span>
-                                </div>
-                                <div class="sidebar-stat">
-                                    <span class="sidebar-stat-label">Sharpe Ratio</span>
-                                    <span class="sidebar-stat-value" id="backtestSharpe">-</span>
+                                    <span class="sidebar-stat-label">Avg Hold Time</span>
+                                    <span class="sidebar-stat-value" id="avgHoldTimeCalc">-</span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="calculator-container">
-                            <h2 class="calculator-title">Kelly Calculator</h2>
+                            <h2 class="calculator-title">Day Trading Position Calculator</h2>
                             
-                            <div id="kellyCalcSection">
+                            <!-- Calculator Tabs -->
+                            <div class="position-calc-tabs">
+                                <button class="position-calc-tab active" onclick="showPositionCalcSection('kelly')">Kelly Criterion</button>
+                                <button class="position-calc-tab" onclick="showPositionCalcSection('risk')">Risk-Based</button>
+                                <button class="position-calc-tab" onclick="showPositionCalcSection('volatility')">Volatility</button>
+                                <button class="position-calc-tab" onclick="showPositionCalcSection('daytrader')">Day Trader</button>
+                            </div>
+
+                            <!-- Kelly Criterion Calculator -->
+                            <div class="position-calc-content active" id="kellyCalcContent">
+                                <div class="calc-section-title">Kelly Criterion Calculator</div>
+                                <div class="calc-description">
+                                    Optimal position sizing based on your historical win rate and average profit/loss ratio. Best for consistent strategies.
+                                </div>
+                                
                                 <div class="calc-grid">
                                     <div class="calc-input-group">
                                         <label class="calc-label" data-lang="account-balance">Account Balance ($)</label>
-                                        <input type="number" class="calc-input" id="calcAccountBalance" value="10000" oninput="calculatePosition()">
+                                        <input type="number" class="calc-input" id="calcAccountBalance" value="25000" oninput="calculateAllPositions()">
                                     </div>
                                     <div class="calc-input-group">
                                         <label class="calc-label" data-lang="win-rate-input">Win Rate (%)</label>
-                                        <input type="number" class="calc-input" id="calcWinRate" value="55" min="0" max="100" oninput="calculatePosition()">
+                                        <input type="number" class="calc-input" id="calcWinRate" value="55" min="0" max="100" oninput="calculateAllPositions()">
                                     </div>
                                     <div class="calc-input-group">
                                         <label class="calc-label" data-lang="average-win">Average Win ($)</label>
-                                        <input type="number" class="calc-input" id="calcAvgWin" value="150" oninput="calculatePosition()">
+                                        <input type="number" class="calc-input" id="calcAvgWin" value="150" oninput="calculateAllPositions()">
                                     </div>
                                     <div class="calc-input-group">
                                         <label class="calc-label" data-lang="average-loss">Average Loss ($)</label>
-                                        <input type="number" class="calc-input" id="calcAvgLoss" value="100" oninput="calculatePosition()">
+                                        <input type="number" class="calc-input" id="calcAvgLoss" value="100" oninput="calculateAllPositions()">
                                     </div>
                                 </div>
 
@@ -2546,17 +2695,6 @@
                                     <button class="btn btn-secondary" onclick="autoLoadTradeData()" style="width: 100%;" data-lang="auto-load-trade-data">
                                         Auto Load from Trade History
                                     </button>
-                                </div>
-
-                                <div class="risk-management-section">
-                                    <div class="calc-input-group">
-                                        <label class="calc-label">Max Drawdown Limit (%)</label>
-                                        <input type="number" class="calc-input" id="maxDrawdownLimit" value="20" min="5" max="50" oninput="calculatePosition()">
-                                    </div>
-                                    <div class="calc-input-group">
-                                        <label class="calc-label">Consecutive Loss Limit</label>
-                                        <input type="number" class="calc-input" id="consecutiveLossLimit" value="5" min="2" max="10" oninput="calculatePosition()">
-                                    </div>
                                 </div>
 
                                 <div class="kelly-options">
@@ -2574,17 +2712,167 @@
                                         <div class="kelly-option-value">50% Kelly</div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <div class="backtest-section">
-                                    <div class="backtest-controls">
-                                        <select class="calc-input" id="backtestPeriod" style="flex: 1; margin-right: 8px;">
-                                            <option value="30">Last 30 Trades</option>
-                                            <option value="50">Last 50 Trades</option>
-                                            <option value="100">Last 100 Trades</option>
-                                            <option value="all">All Trades</option>
-                                        </select>
-                                        <button class="btn btn-secondary" onclick="runBacktest()">Run Backtest</button>
+                            <!-- Risk-Based Calculator -->
+                            <div class="position-calc-content" id="riskCalcContent">
+                                <div class="calc-section-title">Risk-Based Position Calculator</div>
+                                <div class="calc-description">
+                                    Calculate position size based on fixed risk percentage. Perfect for day trading with tight stop losses.
+                                </div>
+
+                                <div class="risk-preset-section">
+                                    <div class="risk-preset-title">Quick Risk Presets</div>
+                                    <div class="risk-preset-buttons">
+                                        <button class="risk-preset-btn" onclick="setRiskPreset(0.5)">0.5%</button>
+                                        <button class="risk-preset-btn active" onclick="setRiskPreset(1)">1%</button>
+                                        <button class="risk-preset-btn" onclick="setRiskPreset(1.5)">1.5%</button>
+                                        <button class="risk-preset-btn" onclick="setRiskPreset(2)">2%</button>
+                                        <button class="risk-preset-btn" onclick="setRiskPreset(3)">3%</button>
                                     </div>
+                                </div>
+
+                                <div class="calc-grid">
+                                    <div class="calc-input-group">
+                                        <label class="calc-label">Account Balance ($)</label>
+                                        <input type="number" class="calc-input" id="riskAccountBalance" value="25000" oninput="calculateRiskPosition()">
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label class="calc-label">Risk Percentage (%)</label>
+                                        <input type="number" class="calc-input" id="riskPercentage" value="1" step="0.1" min="0.1" max="10" oninput="calculateRiskPosition()">
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label class="calc-label">Entry Price ($)</label>
+                                        <input type="number" class="calc-input" id="riskEntryPrice" value="100" step="0.01" oninput="calculateRiskPosition()">
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label class="calc-label">Stop Loss Price ($)</label>
+                                        <input type="number" class="calc-input" id="riskStopLoss" value="98" step="0.01" oninput="calculateRiskPosition()">
+                                    </div>
+                                </div>
+
+                                <div class="calc-results">
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label">Risk Amount</span>
+                                        <span class="calc-result-value" id="riskAmount">$250</span>
+                                    </div>
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label">Position Size</span>
+                                        <span class="calc-result-value" id="positionSize">$12,500</span>
+                                    </div>
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label">Shares Quantity</span>
+                                        <span class="calc-result-value" id="sharesQuantity">125</span>
+                                    </div>
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label">Risk per Share</span>
+                                        <span class="calc-result-value" id="riskPerShare">$2.00</span>
+                                    </div>
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label">Max Loss</span>
+                                        <span class="calc-result-value negative" id="maxLoss">-$250</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Volatility-Based Calculator -->
+                            <div class="position-calc-content" id="volatilityCalcContent">
+                                <div class="calc-section-title">Volatility-Based Calculator</div>
+                                <div class="calc-description">
+                                    Adjust position size based on stock volatility. Higher volatility = smaller position to maintain consistent risk.
+                                </div>
+
+                                <div class="volatility-input-grid">
+                                    <div class="calc-input-group">
+                                        <label class="calc-label">Account Balance ($)</label>
+                                        <input type="number" class="calc-input" id="volAccountBalance" value="25000" oninput="calculateVolatilityPosition()">
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label class="calc-label">Target Risk (%)</label>
+                                        <input type="number" class="calc-input" id="volTargetRisk" value="1" step="0.1" oninput="calculateVolatilityPosition()">
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label class="calc-label">Stock Price ($)</label>
+                                        <input type="number" class="calc-input" id="volStockPrice" value="100" step="0.01" oninput="calculateVolatilityPosition()">
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label class="calc-label">Daily ATR ($)</label>
+                                        <input type="number" class="calc-input" id="volATR" value="3" step="0.01" oninput="calculateVolatilityPosition()">
+                                    </div>
+                                </div>
+
+                                <div class="scenario-analysis">
+                                    <div class="scenario-title">Volatility Scenarios</div>
+                                    <div class="scenario-grid">
+                                        <div class="scenario-item">
+                                            <div class="scenario-label">Low Volatility</div>
+                                            <div class="scenario-value" id="lowVolPosition">$15,000</div>
+                                        </div>
+                                        <div class="scenario-item">
+                                            <div class="scenario-label">Current ATR</div>
+                                            <div class="scenario-value" id="currentVolPosition">$8,333</div>
+                                        </div>
+                                        <div class="scenario-item">
+                                            <div class="scenario-label">High Volatility</div>
+                                            <div class="scenario-value" id="highVolPosition">$5,000</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="position-size-display">
+                                    <div class="position-size-title">Recommended Position Size</div>
+                                    <div class="position-size-value" id="volPositionSize">$8,333</div>
+                                </div>
+                            </div>
+
+                            <!-- Day Trader Specific Calculator -->
+                            <div class="position-calc-content" id="daytraderCalcContent">
+                                <div class="calc-section-title">Day Trader Special Calculator</div>
+                                <div class="calc-description">
+                                    Optimized for intraday trading with multiple positions, quick scalps, and tight risk management.
+                                </div>
+
+                                <div class="calc-grid">
+                                    <div class="calc-input-group">
+                                        <label class="calc-label">Account Balance ($)</label>
+                                        <input type="number" class="calc-input" id="daytraderBalance" value="25000" oninput="calculateDaytraderPosition()">
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label class="calc-label">Max Daily Risk (%)</label>
+                                        <input type="number" class="calc-input" id="daytraderDailyRisk" value="2" step="0.1" oninput="calculateDaytraderPosition()">
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label class="calc-label">Trades per Day</label>
+                                        <input type="number" class="calc-input" id="daytraderTradesPerDay" value="5" min="1" max="20" oninput="calculateDaytraderPosition()">
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label class="calc-label">Risk per Trade (%)</label>
+                                        <input type="number" class="calc-input" id="daytraderRiskPerTrade" value="0.4" step="0.1" readonly style="background: #1e293b;">
+                                    </div>
+                                </div>
+
+                                <div class="calc-results">
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label">Daily Risk Limit</span>
+                                        <span class="calc-result-value" id="dailyRiskLimit">$500</span>
+                                    </div>
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label">Risk per Trade</span>
+                                        <span class="calc-result-value" id="riskPerTrade">$100</span>
+                                    </div>
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label">Max Position Size</span>
+                                        <span class="calc-result-value" id="maxPositionSize">$10,000</span>
+                                    </div>
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label">Buying Power Used</span>
+                                        <span class="calc-result-value" id="buyingPowerUsed">40%</span>
+                                    </div>
+                                </div>
+
+                                <div class="alert-section" id="daytraderAlert" style="display: none;">
+                                    <div class="alert-title">⚠️ Risk Warning</div>
+                                    <div class="alert-text" id="alertText">Your risk settings may be too aggressive for day trading.</div>
                                 </div>
                             </div>
                         </div>
@@ -3706,7 +3994,26 @@
                 'risk-analysis': 'Risk Analysis',
                 'position-cost': 'Position Cost',
                 'risk-ratio': 'Risk Ratio',
-                'stop-distance': 'Stop Distance'
+                'stop-distance': 'Stop Distance',
+                'day-trader-calc': 'Day Trader',
+                'risk-based-calc': 'Risk-Based',
+                'volatility-calc': 'Volatility',
+                'kelly-calc': 'Kelly Criterion',
+                'daily-risk-limit': 'Daily Risk Limit',
+                'risk-per-trade': 'Risk per Trade',
+                'max-position-size': 'Max Position Size',
+                'buying-power-used': 'Buying Power Used',
+                'target-risk': 'Target Risk (%)',
+                'daily-atr': 'Daily ATR ($)',
+                'stock-price': 'Stock Price ($)',
+                'low-volatility': 'Low Volatility',
+                'current-atr': 'Current ATR',
+                'high-volatility': 'High Volatility',
+                'trades-per-day': 'Trades per Day',
+                'max-daily-risk': 'Max Daily Risk (%)',
+                'quick-risk-presets': 'Quick Risk Presets',
+                'volatility-scenarios': 'Volatility Scenarios',
+                'risk-warning': 'Risk Warning'
             },
             ko: {
                 'dashboard': '대시보드',
@@ -3913,7 +4220,26 @@
                 'risk-analysis': '리스크 분석',
                 'position-cost': '포지션 비용',
                 'risk-ratio': '리스크 비율',
-                'stop-distance': '손절 거리'
+                'stop-distance': '손절 거리',
+                'day-trader-calc': '데이트레이더',
+'risk-based-calc': '리스크 기반',
+'volatility-calc': '변동성',
+'kelly-calc': '켈리 기준',
+'daily-risk-limit': '일일 리스크 한도',
+'risk-per-trade': '거래당 리스크',
+'max-position-size': '최대 포지션 크기',
+'buying-power-used': '매수력 사용률',
+'target-risk': '목표 리스크 (%)',
+'daily-atr': '일일 ATR ($)',
+'stock-price': '주가 ($)',
+'low-volatility': '낮은 변동성',
+'current-atr': '현재 ATR',
+'high-volatility': '높은 변동성',
+'trades-per-day': '일일 거래 횟수',
+'max-daily-risk': '최대 일일 리스크 (%)',
+'quick-risk-presets': '빠른 리스크 프리셋',
+'volatility-scenarios': '변동성 시나리오',
+'risk-warning': '리스크 경고'
             }
         };
         
@@ -6765,16 +7091,12 @@
             const winRate = parseFloat(document.getElementById('calcWinRate').value) / 100 || 0;
             const avgWin = parseFloat(document.getElementById('calcAvgWin').value) || 0;
             const avgLoss = parseFloat(document.getElementById('calcAvgLoss').value) || 0;
-            const maxDrawdownLimit = parseFloat(document.getElementById('maxDrawdownLimit').value) / 100 || 0.2;
-            const consecutiveLossLimit = parseInt(document.getElementById('consecutiveLossLimit').value) || 5;
             
             if (avgLoss === 0 || balance === 0) {
                 document.getElementById('recommendedSize').textContent = '$0';
                 document.getElementById('accountUtil').textContent = '0%';
                 document.getElementById('expectedVal').textContent = '$0';
                 document.getElementById('expectedVal').className = 'sidebar-stat-value';
-                document.getElementById('maxDrawdownRisk').textContent = '0%';
-                document.getElementById('consecutiveLossRisk').textContent = 'Low';
                 document.getElementById('kellyStatus').textContent = 'Safe';
                 document.getElementById('kellyStatus').className = 'sidebar-stat-value positive';
                 return;
@@ -6784,54 +7106,27 @@
             const p = winRate;
             const q = 1 - winRate;
             
-            let kellyFraction = Math.max(0, (b * p - q) / b);
+            const kellyFraction = Math.max(0, (b * p - q) / b);
+            const fullKelly = balance * kellyFraction;
             
-            // 연속 손실 확률 계산
-            const consecutiveLossProbability = Math.pow(q, consecutiveLossLimit) * 100;
-            
-            // Maximum Drawdown 고려한 Kelly 조정
-            const potentialLoss = kellyFraction * avgLoss;
-            const drawdownRisk = potentialLoss / balance;
-            
-            if (drawdownRisk > maxDrawdownLimit) {
-                kellyFraction = kellyFraction * (maxDrawdownLimit / drawdownRisk);
-            }
-            
-            const recommendedPosition = balance * kellyFraction * selectedKellyMultiplier;
-            const utilization = (recommendedPosition / balance) * 100;
-            const expectedValue = (p * avgWin - q * avgLoss) * (recommendedPosition / Math.max(avgWin, 1));
-            
-            // UI 업데이트
+            const recommendedPosition = fullKelly * selectedKellyMultiplier;
             document.getElementById('recommendedSize').textContent = '$' + recommendedPosition.toFixed(0);
+            
+            const utilization = (recommendedPosition / balance) * 100;
             document.getElementById('accountUtil').textContent = utilization.toFixed(1) + '%';
+            
+            const expectedValue = (p * avgWin - q * avgLoss) * (recommendedPosition / Math.max(avgWin, 1));
             document.getElementById('expectedVal').textContent = '$' + expectedValue.toFixed(0);
             document.getElementById('expectedVal').className = 'sidebar-stat-value ' + (expectedValue >= 0 ? 'positive' : 'negative');
-            document.getElementById('maxDrawdownRisk').textContent = (maxDrawdownLimit * 100).toFixed(1) + '%';
             
-            // 연속 손실 위험도
-            let riskLevel = 'Low';
-            if (consecutiveLossProbability > 15) riskLevel = 'High';
-            else if (consecutiveLossProbability > 8) riskLevel = 'Medium';
-            
-            document.getElementById('consecutiveLossRisk').textContent = riskLevel;
-            document.getElementById('consecutiveLossRisk').className = 'sidebar-stat-value ' + 
-                (riskLevel === 'Low' ? 'positive' : riskLevel === 'Medium' ? 'neutral' : 'negative');
-            
-            // Kelly 상태
             const kellyPercent = kellyFraction * 100;
-            let status = 'Safe';
-            let className = 'positive';
+            let riskLevel = 'Safe';
+            if (kellyPercent > 25) riskLevel = 'High';
+            else if (kellyPercent > 15) riskLevel = 'Medium';
             
-            if (kellyPercent > 25 || consecutiveLossProbability > 15) {
-                status = 'High Risk';
-                className = 'negative';
-            } else if (kellyPercent > 15 || consecutiveLossProbability > 8) {
-                status = 'Medium Risk';
-                className = 'neutral';
-            }
-            
-            document.getElementById('kellyStatus').textContent = status;
-            document.getElementById('kellyStatus').className = 'sidebar-stat-value ' + className;
+            document.getElementById('kellyStatus').textContent = riskLevel;
+            document.getElementById('kellyStatus').className = 'sidebar-stat-value ' + 
+                (riskLevel === 'Safe' ? 'positive' : riskLevel === 'Medium' ? 'neutral' : 'negative');
         }
 
         function selectKellyMultiplier(element) {
@@ -6842,72 +7137,6 @@
             element.classList.add('selected');
             selectedKellyMultiplier = parseFloat(element.dataset.multiplier);
             calculatePosition();
-        }
-
-        function runBacktest() {
-            const period = document.getElementById('backtestPeriod').value;
-            const multiplier = selectedKellyMultiplier;
-            
-            if (!trades || trades.length === 0) {
-                alert('거래 이력이 없어 백테스트를 실행할 수 없습니다.');
-                return;
-            }
-            
-            const backtestTrades = period === 'all' ? trades : trades.slice(-parseInt(period));
-            
-            if (backtestTrades.length < 10) {
-                document.getElementById('backtestReturn').textContent = 'N/A';
-                document.getElementById('backtestMaxDD').textContent = 'N/A';
-                document.getElementById('backtestSharpe').textContent = 'N/A';
-                return;
-            }
-            
-            let balance = 10000;
-            let peak = balance;
-            let maxDrawdown = 0;
-            let returns = [];
-            
-            for (let i = 9; i < backtestTrades.length; i++) {
-                const windowTrades = backtestTrades.slice(i - 9, i);
-                const wins = windowTrades.filter(t => t.pnl > 0);
-                const losses = windowTrades.filter(t => t.pnl < 0);
-                
-                if (losses.length === 0) continue;
-                
-                const winRate = wins.length / windowTrades.length;
-                const avgWin = wins.reduce((sum, t) => sum + t.pnl, 0) / wins.length;
-                const avgLoss = Math.abs(losses.reduce((sum, t) => sum + t.pnl, 0) / losses.length);
-                
-                const b = avgWin / avgLoss;
-                const p = winRate;
-                const q = 1 - winRate;
-                const kellyFraction = Math.max(0, (b * p - q) / b);
-                
-                const positionSize = balance * kellyFraction * multiplier;
-                const trade = backtestTrades[i];
-                const tradeReturn = (trade.pnl / Math.max(trade.amount, 1)) * (positionSize / Math.max(trade.amount, 1));
-                
-                balance += tradeReturn;
-                returns.push(tradeReturn / balance);
-                
-                if (balance > peak) peak = balance;
-                const currentDD = (peak - balance) / peak;
-                if (currentDD > maxDrawdown) maxDrawdown = currentDD;
-            }
-            
-            const totalReturn = ((balance - 10000) / 10000) * 100;
-            const avgReturn = returns.reduce((sum, r) => sum + r, 0) / returns.length;
-            const returnStd = Math.sqrt(returns.reduce((sum, r) => sum + Math.pow(r - avgReturn, 2), 0) / returns.length);
-            const sharpeRatio = returnStd > 0 ? (avgReturn / returnStd) * Math.sqrt(252) : 0;
-            
-            document.getElementById('backtestReturn').textContent = totalReturn.toFixed(1) + '%';
-            document.getElementById('backtestReturn').className = 'sidebar-stat-value ' + (totalReturn >= 0 ? 'positive' : 'negative');
-            
-            document.getElementById('backtestMaxDD').textContent = (maxDrawdown * 100).toFixed(1) + '%';
-            document.getElementById('backtestMaxDD').className = 'sidebar-stat-value ' + (maxDrawdown < 0.15 ? 'positive' : 'negative');
-            
-            document.getElementById('backtestSharpe').textContent = sharpeRatio.toFixed(2);
-            document.getElementById('backtestSharpe').className = 'sidebar-stat-value ' + (sharpeRatio > 1 ? 'positive' : sharpeRatio > 0.5 ? 'neutral' : 'negative');
         }
 
         function showPositionCalcSection(section) {
@@ -6991,6 +7220,393 @@
             
             calculatePosition();
             showToast('거래 이력에서 데이터를 불러왔습니다');
+        }
+
+        // Position Calculator Functions
+        let currentPositionCalcSection = 'kelly';
+        let selectedRiskPreset = 1;
+
+        function showPositionCalcSection(section) {
+            currentPositionCalcSection = section;
+            
+            // Update tab states
+            document.querySelectorAll('.position-calc-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Show/hide content sections
+            document.querySelectorAll('.position-calc-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            const targetContent = document.getElementById(`${section}CalcContent`);
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+            
+            // Calculate based on section
+            setTimeout(() => {
+                switch(section) {
+                    case 'kelly':
+                        calculatePosition();
+                        break;
+                    case 'risk':
+                        calculateRiskPosition();
+                        break;
+                    case 'volatility':
+                        calculateVolatilityPosition();
+                        break;
+                    case 'daytrader':
+                        calculateDaytraderPosition();
+                        break;
+                }
+            }, 100);
+        }
+
+        function calculateAllPositions() {
+            calculatePosition();
+            updateAutoAnalysis();
+        }
+
+        function calculateRiskPosition() {
+            const balance = parseFloat(document.getElementById('riskAccountBalance').value) || 0;
+            const riskPercent = parseFloat(document.getElementById('riskPercentage').value) / 100 || 0;
+            const entryPrice = parseFloat(document.getElementById('riskEntryPrice').value) || 0;
+            const stopLoss = parseFloat(document.getElementById('riskStopLoss').value) || 0;
+            
+            if (balance === 0 || entryPrice === 0 || stopLoss === 0) {
+                resetRiskResults();
+                return;
+            }
+            
+            const riskAmount = balance * riskPercent;
+            const riskPerShare = Math.abs(entryPrice - stopLoss);
+            const sharesQuantity = riskPerShare > 0 ? Math.floor(riskAmount / riskPerShare) : 0;
+            const positionSize = sharesQuantity * entryPrice;
+            const actualRiskAmount = sharesQuantity * riskPerShare;
+            
+            // Update display
+            document.getElementById('riskAmount').textContent = '$' + riskAmount.toFixed(2);
+            document.getElementById('positionSize').textContent = '$' + positionSize.toLocaleString();
+            document.getElementById('sharesQuantity').textContent = sharesQuantity.toLocaleString();
+            document.getElementById('riskPerShare').textContent = '$' + riskPerShare.toFixed(2);
+            document.getElementById('maxLoss').textContent = '-$' + actualRiskAmount.toFixed(2);
+            
+            // Update main sidebar
+            document.getElementById('recommendedSize').textContent = '$' + positionSize.toLocaleString();
+            const utilization = (positionSize / balance) * 100;
+            document.getElementById('accountUtil').textContent = utilization.toFixed(1) + '%';
+            document.getElementById('expectedVal').textContent = '-$' + actualRiskAmount.toFixed(2);
+            
+            // Risk level assessment
+            let riskLevel = 'Safe';
+            if (riskPercent > 0.03) riskLevel = 'High';
+            else if (riskPercent > 0.02) riskLevel = 'Medium';
+            
+            document.getElementById('riskLevel').textContent = riskLevel;
+            document.getElementById('riskLevel').className = 'sidebar-stat-value ' + 
+                (riskLevel === 'Safe' ? 'positive' : riskLevel === 'Medium' ? 'neutral' : 'negative');
+        }
+
+        function calculateVolatilityPosition() {
+            const balance = parseFloat(document.getElementById('volAccountBalance').value) || 0;
+            const targetRisk = parseFloat(document.getElementById('volTargetRisk').value) / 100 || 0;
+            const stockPrice = parseFloat(document.getElementById('volStockPrice').value) || 0;
+            const atr = parseFloat(document.getElementById('volATR').value) || 0;
+            
+            if (balance === 0 || stockPrice === 0 || atr === 0) {
+                document.getElementById('volPositionSize').textContent = '$0';
+                return;
+            }
+            
+            const riskAmount = balance * targetRisk;
+            const volatilityMultiplier = 2; // Use 2x ATR for stop loss
+            const stopDistance = atr * volatilityMultiplier;
+            const sharesQuantity = Math.floor(riskAmount / stopDistance);
+            const positionSize = sharesQuantity * stockPrice;
+            
+            // Calculate scenarios
+            const lowVolPosition = Math.floor(riskAmount / (atr * 0.5 * volatilityMultiplier)) * stockPrice;
+            const highVolPosition = Math.floor(riskAmount / (atr * 2 * volatilityMultiplier)) * stockPrice;
+            
+            // Update display
+            document.getElementById('volPositionSize').textContent = '$' + positionSize.toLocaleString();
+            document.getElementById('lowVolPosition').textContent = '$' + lowVolPosition.toLocaleString();
+            document.getElementById('currentVolPosition').textContent = '$' + positionSize.toLocaleString();
+            document.getElementById('highVolPosition').textContent = '$' + highVolPosition.toLocaleString();
+            
+            // Update main sidebar
+            document.getElementById('recommendedSize').textContent = '$' + positionSize.toLocaleString();
+            const utilization = (positionSize / balance) * 100;
+            document.getElementById('accountUtil').textContent = utilization.toFixed(1) + '%';
+        }
+
+        function calculateDaytraderPosition() {
+            const balance = parseFloat(document.getElementById('daytraderBalance').value) || 0;
+            const dailyRiskPercent = parseFloat(document.getElementById('daytraderDailyRisk').value) / 100 || 0;
+            const tradesPerDay = parseInt(document.getElementById('daytraderTradesPerDay').value) || 1;
+            
+            if (balance === 0) {
+                resetDaytraderResults();
+                return;
+            }
+            
+            const dailyRiskLimit = balance * dailyRiskPercent;
+            const riskPerTrade = dailyRiskLimit / tradesPerDay;
+            const riskPerTradePercent = (riskPerTrade / balance) * 100;
+            
+            // Assuming 4:1 day trading buying power
+            const buyingPower = balance * 4;
+            const maxPositionSize = Math.min(buyingPower * 0.25, riskPerTrade * 50); // Max 50:1 risk-reward assumption
+            const buyingPowerUsed = (maxPositionSize / buyingPower) * 100;
+            
+            // Update display
+            document.getElementById('daytraderRiskPerTrade').value = riskPerTradePercent.toFixed(2);
+            document.getElementById('dailyRiskLimit').textContent = '$' + dailyRiskLimit.toFixed(2);
+            document.getElementById('riskPerTrade').textContent = '$' + riskPerTrade.toFixed(2);
+            document.getElementById('maxPositionSize').textContent = '$' + maxPositionSize.toLocaleString();
+            document.getElementById('buyingPowerUsed').textContent = buyingPowerUsed.toFixed(1) + '%';
+            
+            // Update main sidebar
+            document.getElementById('recommendedSize').textContent = '$' + maxPositionSize.toLocaleString();
+            document.getElementById('accountUtil').textContent = buyingPowerUsed.toFixed(1) + '%';
+            document.getElementById('expectedVal').textContent = '$' + riskPerTrade.toFixed(2);
+            
+            // Risk assessment and alerts
+            const alertSection = document.getElementById('daytraderAlert');
+            const alertText = document.getElementById('alertText');
+            
+            if (dailyRiskPercent > 0.05) {
+                alertSection.style.display = 'block';
+                alertText.textContent = 'Daily risk above 5% is extremely dangerous for day trading. Consider reducing risk.';
+            } else if (riskPerTradePercent > 1) {
+                alertSection.style.display = 'block';
+                alertText.textContent = 'Risk per trade above 1% may be too aggressive for multiple daily trades.';
+            } else if (tradesPerDay > 10) {
+                alertSection.style.display = 'block';
+                alertText.textContent = 'Trading more than 10 times per day increases execution risk and costs.';
+            } else {
+                alertSection.style.display = 'none';
+            }
+            
+            // Risk level for sidebar
+            let riskLevel = 'Safe';
+            if (dailyRiskPercent > 0.03 || riskPerTradePercent > 0.8) riskLevel = 'High';
+            else if (dailyRiskPercent > 0.02 || riskPerTradePercent > 0.5) riskLevel = 'Medium';
+            
+            document.getElementById('riskLevel').textContent = riskLevel;
+            document.getElementById('riskLevel').className = 'sidebar-stat-value ' + 
+                (riskLevel === 'Safe' ? 'positive' : riskLevel === 'Medium' ? 'neutral' : 'negative');
+        }
+
+        function setRiskPreset(percent) {
+            selectedRiskPreset = percent;
+            
+            // Update button states
+            document.querySelectorAll('.risk-preset-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update input
+            document.getElementById('riskPercentage').value = percent;
+            calculateRiskPosition();
+        }
+
+        function updateAutoAnalysis() {
+            if (!trades || trades.length === 0) {
+                document.getElementById('recentWinRateCalc').textContent = '-';
+                document.getElementById('plRatioCalc').textContent = '-';
+                document.getElementById('avgHoldTimeCalc').textContent = '-';
+                return;
+            }
+            
+            // Use last 20 trades for analysis
+            const recentTrades = trades.slice(-20);
+            const wins = recentTrades.filter(trade => trade.pnl > 0);
+            const losses = recentTrades.filter(trade => trade.pnl < 0);
+            
+            // Win rate
+            const winRate = (wins.length / recentTrades.length) * 100;
+            document.getElementById('recentWinRateCalc').textContent = winRate.toFixed(1) + '%';
+            document.getElementById('recentWinRateCalc').className = 'sidebar-stat-value ' + 
+                (winRate >= 50 ? 'positive' : 'negative');
+            
+            // P&L Ratio
+            const avgWin = wins.length > 0 ? wins.reduce((sum, trade) => sum + trade.pnl, 0) / wins.length : 0;
+            const avgLoss = losses.length > 0 ? Math.abs(losses.reduce((sum, trade) => sum + trade.pnl, 0) / losses.length) : 0;
+            const plRatio = avgLoss > 0 ? avgWin / avgLoss : 0;
+            
+            document.getElementById('plRatioCalc').textContent = plRatio.toFixed(2);
+            document.getElementById('plRatioCalc').className = 'sidebar-stat-value ' + 
+                (plRatio >= 1 ? 'positive' : 'negative');
+            
+            // Average hold time
+            const tradesWithTime = recentTrades.filter(trade => trade.holdingTime);
+            if (tradesWithTime.length > 0) {
+                const avgHoldTime = tradesWithTime.reduce((sum, trade) => {
+                    return sum + parseInt(trade.holdingTime.replace('m', ''));
+                }, 0) / tradesWithTime.length;
+                document.getElementById('avgHoldTimeCalc').textContent = Math.round(avgHoldTime) + 'm';
+            } else {
+                document.getElementById('avgHoldTimeCalc').textContent = '-';
+            }
+        }
+
+        function resetRiskResults() {
+            document.getElementById('riskAmount').textContent = '$0';
+            document.getElementById('positionSize').textContent = '$0';
+            document.getElementById('sharesQuantity').textContent = '0';
+            document.getElementById('riskPerShare').textContent = '$0';
+            document.getElementById('maxLoss').textContent = '$0';
+        }
+
+        function resetDaytraderResults() {
+            document.getElementById('dailyRiskLimit').textContent = '$0';
+            document.getElementById('riskPerTrade').textContent = '$0';
+            document.getElementById('maxPositionSize').textContent = '$0';
+            document.getElementById('buyingPowerUsed').textContent = '0%';
+            document.getElementById('daytraderAlert').style.display = 'none';
+        }
+
+        // Enhanced autoLoadTradeData function
+        function autoLoadTradeData() {
+            if (!trades || trades.length === 0) {
+                alert(currentLanguage === 'ko' ? '거래 이력이 없습니다.' : 'No trading history available.');
+                return;
+            }
+            
+            // Use recent trades (last 30 for better sample size)
+            const recentTrades = trades.slice(-30);
+            const wins = recentTrades.filter(trade => trade.pnl > 0);
+            const losses = recentTrades.filter(trade => trade.pnl < 0);
+            
+            if (losses.length === 0) {
+                alert(currentLanguage === 'ko' ? '손실 거래가 없어 계산할 수 없습니다.' : 'No losing trades found for calculation.');
+                return;
+            }
+            
+            const winRate = (wins.length / recentTrades.length) * 100;
+            const avgWin = wins.length > 0 ? wins.reduce((sum, trade) => sum + trade.pnl, 0) / wins.length : 0;
+            const avgLoss = Math.abs(losses.reduce((sum, trade) => sum + trade.pnl, 0) / losses.length);
+            
+            // Update Kelly calculator inputs
+            document.getElementById('calcWinRate').value = winRate.toFixed(1);
+            document.getElementById('calcAvgWin').value = avgWin.toFixed(0);
+            document.getElementById('calcAvgLoss').value = avgLoss.toFixed(0);
+            
+            // Calculate all positions
+            calculateAllPositions();
+            
+            // Show success message
+            const message = currentLanguage === 'ko' ? 
+                `거래 이력에서 데이터를 불러왔습니다 (${recentTrades.length}개 거래 분석)` :
+                `Loaded data from trading history (analyzed ${recentTrades.length} trades)`;
+            showToast(message);
+        }
+
+        // Update the existing calculatePosition function
+        function calculatePosition() {
+            const balance = parseFloat(document.getElementById('calcAccountBalance').value) || 0;
+            const winRate = parseFloat(document.getElementById('calcWinRate').value) / 100 || 0;
+            const avgWin = parseFloat(document.getElementById('calcAvgWin').value) || 0;
+            const avgLoss = parseFloat(document.getElementById('calcAvgLoss').value) || 0;
+            
+            if (avgLoss === 0 || balance === 0) {
+                document.getElementById('recommendedSize').textContent = '$0';
+                document.getElementById('accountUtil').textContent = '0%';
+                document.getElementById('expectedVal').textContent = '$0';
+                document.getElementById('expectedVal').className = 'sidebar-stat-value';
+                document.getElementById('riskLevel').textContent = 'Safe';
+                document.getElementById('riskLevel').className = 'sidebar-stat-value positive';
+                return;
+            }
+            
+            // Kelly Criterion calculation
+            const b = avgWin / avgLoss;
+            const p = winRate;
+            const q = 1 - winRate;
+            
+            // Prevent negative Kelly (when edge is negative)
+            const kellyFraction = Math.max(0, (b * p - q) / b);
+            const fullKelly = balance * kellyFraction;
+            
+            // Apply selected multiplier
+            const recommendedPosition = fullKelly * selectedKellyMultiplier;
+            
+            // Safety checks for day trading
+            const maxDayTradingPosition = balance * 0.25; // Never more than 25% of account
+            const finalPosition = Math.min(recommendedPosition, maxDayTradingPosition);
+            
+            document.getElementById('recommendedSize').textContent = '$' + finalPosition.toFixed(0);
+            
+            const utilization = (finalPosition / balance) * 100;
+            document.getElementById('accountUtil').textContent = utilization.toFixed(1) + '%';
+            
+            // Expected value calculation
+            const expectedValue = (p * avgWin - q * avgLoss) * (finalPosition / Math.max(avgWin, avgLoss, 1));
+            document.getElementById('expectedVal').textContent = '$' + expectedValue.toFixed(0);
+            document.getElementById('expectedVal').className = 'sidebar-stat-value ' + (expectedValue >= 0 ? 'positive' : 'negative');
+            
+            // Risk level assessment
+            const kellyPercent = kellyFraction * 100;
+            let riskLevel = 'Safe';
+            if (kellyPercent > 25 || utilization > 25) riskLevel = 'High';
+            else if (kellyPercent > 15 || utilization > 15) riskLevel = 'Medium';
+            
+            document.getElementById('riskLevel').textContent = riskLevel;
+            document.getElementById('riskLevel').className = 'sidebar-stat-value ' + 
+                (riskLevel === 'Safe' ? 'positive' : riskLevel === 'Medium' ? 'neutral' : 'negative');
+        }
+
+        // Update existing selectKellyMultiplier function
+        function selectKellyMultiplier(element) {
+            document.querySelectorAll('.kelly-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            element.classList.add('selected');
+            selectedKellyMultiplier = parseFloat(element.dataset.multiplier);
+            calculatePosition();
+        }
+
+        // Initialize position calculator when dashboard section changes
+        function showDashboardSection(section) {
+            currentDashboardSection = section;
+            
+            // Update tab states
+            document.querySelectorAll('.dashboard-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Show/hide sections
+            const positionSection = document.getElementById('positionCalculatorSection');
+            const dashboardGrid = document.querySelector('.dashboard-grid');
+            const tradesSection = document.querySelector('.trades-section');
+            const statsOverview = document.querySelector('.stats-overview');
+            
+            if (section === 'trading') {
+                if (positionSection) positionSection.style.display = 'none';
+                if (dashboardGrid) dashboardGrid.style.display = 'grid';
+                if (tradesSection) tradesSection.style.display = 'block';
+                if (statsOverview) statsOverview.style.display = 'grid';
+            } else if (section === 'position-calc') {
+                if (positionSection) positionSection.style.display = 'block';
+                if (dashboardGrid) dashboardGrid.style.display = 'none';
+                if (tradesSection) tradesSection.style.display = 'none';
+                if (statsOverview) statsOverview.style.display = 'none';
+                
+                // Initialize with auto analysis and calculations
+                setTimeout(() => {
+                    updateAutoAnalysis();
+                    calculateAllPositions();
+                    if (currentPositionCalcSection === 'risk') calculateRiskPosition();
+                    if (currentPositionCalcSection === 'volatility') calculateVolatilityPosition();
+                    if (currentPositionCalcSection === 'daytrader') calculateDaytraderPosition();
+                }, 100);
+            }
         }
         
     </script>
