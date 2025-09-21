@@ -2400,17 +2400,12 @@
                                 </div>
 
                                 <div class="risk-preset-section">
-                                    <div class="risk-preset-title" data-lang="risk-presets">빠른 리스크 프리셋</div>
-                                    <div class="risk-preset-buttons">
+                                    <div class="risk-preset-title" data-lang="risk-presets">리스크 비율</div>
+                                    <div class="risk-preset-buttons" style="gap: 4px;">
                                         <button class="risk-preset-btn" style="background: #374151 !important; border: 1px solid #4b5563 !important; color: #e4e4e7 !important; padding: 8px 16px !important; border-radius: 6px !important; cursor: pointer !important; font-size: 13px !important; font-weight: 500 !important; transition: all 0.2s ease !important; min-width: 60px !important;" onclick="setRiskPreset(1)">1%</button>
                                         <button class="risk-preset-btn active" style="background: #3b82f6 !important; border: 1px solid #3b82f6 !important; color: white !important; padding: 8px 16px !important; border-radius: 6px !important; cursor: pointer !important; font-size: 13px !important; font-weight: 500 !important; transition: all 0.2s ease !important; min-width: 60px !important;" onclick="setRiskPreset(2)">2%</button>
                                         <button class="risk-preset-btn" style="background: #374151 !important; border: 1px solid #4b5563 !important; color: #e4e4e7 !important; padding: 8px 16px !important; border-radius: 6px !important; cursor: pointer !important; font-size: 13px !important; font-weight: 500 !important; transition: all 0.2s ease !important; min-width: 60px !important;" onclick="setRiskPreset(3)">3%</button>
                                         <button class="risk-preset-btn" style="background: #374151 !important; border: 1px solid #4b5563 !important; color: #e4e4e7 !important; padding: 8px 16px !important; border-radius: 6px !important; cursor: pointer !important; font-size: 13px !important; font-weight: 500 !important; transition: all 0.2s ease !important; min-width: 60px !important;" onclick="setRiskPreset(5)">5%</button>
-                                        <button class="risk-preset-btn" style="background: #374151 !important; border: 1px solid #4b5563 !important; color: #e4e4e7 !important; padding: 8px 16px !important; border-radius: 6px !important; cursor: pointer !important; font-size: 13px !important; font-weight: 500 !important; transition: all 0.2s ease !important; min-width: 60px !important;" onclick="toggleCustomRisk()">Custom</button>
-                                    </div>
-                                    <div class="custom-risk-input" id="customRiskInput" style="display: none; margin-top: 12px; align-items: center; gap: 8px; justify-content: center;">
-                                        <input type="number" id="customRiskValue" placeholder="%" min="0.1" max="100" step="0.1" style="width: 80px !important; background: #0f172a !important; border: 1px solid #334155 !important; color: #e4e4e7 !important; padding: 6px 8px !important; border-radius: 4px !important; font-size: 12px !important; text-align: center !important;" onchange="applyCustomRisk()">
-                                        <span style="color: #94a3b8; font-size: 12px;">%</span>
                                     </div>
                                 </div>
 
@@ -6799,7 +6794,6 @@
     event.target.style.color = 'white';
     
     document.getElementById('riskPercentage').value = percent;
-    document.getElementById('customRiskInput').style.display = 'none';
     calculateRiskPosition();
 }
 
