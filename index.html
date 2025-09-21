@@ -2139,134 +2139,6 @@
             border-color: #3b82f6;
             color: white;
         }
-
-        .risk-preset-buttons {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.risk-preset-btn {
-    background: #374151;
-    border: 1px solid #4b5563;
-    color: #e4e4e7;
-    padding: 8px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    min-width: 60px;
-}
-
-.risk-preset-btn:hover {
-    background: #4b5563;
-}
-
-.risk-preset-btn.active {
-    background: #3b82f6;
-    border-color: #3b82f6;
-    color: white;
-}
-
-.custom-risk-input {
-    display: none;
-    margin-top: 12px;
-}
-
-.custom-risk-input.active {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    justify-content: center;
-}
-
-.custom-risk-input input {
-    width: 80px;
-    background: #0f172a;
-    border: 1px solid #334155;
-    color: #e4e4e7;
-    padding: 6px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    text-align: center;
-}
-
-            .risk-preset-section {
-    background: #1e293b !important;
-    border: 1px solid #334155 !important;
-    border-radius: 8px !important;
-    padding: 16px !important;
-    margin: 20px 0 !important;
-}
-
-.risk-preset-title {
-    color: #f8fafc !important;
-    font-size: 14px !important;
-    font-weight: 600 !important;
-    margin-bottom: 12px !important;
-    text-align: center !important;
-}
-
-.risk-preset-buttons {
-    display: flex !important;
-    gap: 8px !important;
-    justify-content: center !important;
-    flex-wrap: wrap !important;
-}
-
-.risk-preset-btn {
-    background: #374151 !important;
-    border: 1px solid #4b5563 !important;
-    color: #e4e4e7 !important;
-    padding: 8px 16px !important;
-    border-radius: 6px !important;
-    cursor: pointer !important;
-    font-size: 13px !important;
-    font-weight: 500 !important;
-    transition: all 0.2s ease !important;
-    min-width: 60px !important;
-}
-
-.risk-preset-btn:hover {
-    background: #4b5563 !important;
-    border-color: #4b5563 !important;
-}
-
-.risk-preset-btn.active {
-    background: #3b82f6 !important;
-    border-color: #3b82f6 !important;
-    color: white !important;
-}
-
-.custom-risk-input {
-    display: none;
-    margin-top: 12px;
-    align-items: center;
-    gap: 8px;
-    justify-content: center;
-}
-
-.custom-risk-input.active {
-    display: flex !important;
-}
-
-.custom-risk-input input {
-    width: 80px !important;
-    background: #0f172a !important;
-    border: 1px solid #334155 !important;
-    color: #e4e4e7 !important;
-    padding: 6px 8px !important;
-    border-radius: 4px !important;
-    font-size: 12px !important;
-    text-align: center !important;
-}
-
-.custom-risk-input input:focus {
-    outline: none !important;
-    border-color: #3b82f6 !important;
-}
     </style>
 </head>
 <body>
@@ -2372,34 +2244,28 @@
             <!-- Dashboard page -->
             <div id="dashboard" class="page active">
                 <div class="page-header">
-    <div>
-        <h1 class="page-title" data-lang="dashboard-title">Trading Dashboard</h1>
-        <p class="page-subtitle" data-lang="dashboard-subtitle">Track your trades and performance</p>
-    </div>
-    <div class="page-header-info" id="tradingHeaderInfo">
-        <div class="date-range-selector">
-            <input type="date" id="dashboardStartDate" class="date-range-input">
-            <span style="color: #64748b;">to</span>
-            <input type="date" id="dashboardEndDate" class="date-range-input">
-            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="clearDashboardRange()">Clear</button>
-        </div>
-        <div class="date-navigation">
-            <button class="date-nav-btn" onclick="changeTradingDate(-1)" title="Previous day">←</button>
-            <div class="current-date-display" id="currentDateDisplay" onclick="openDatePicker()"></div>
-            <button class="date-nav-btn" onclick="changeTradingDate(1)" title="Next day">→</button>
-        </div>
-        <div class="dashboard-tabs">
-            <button class="dashboard-tab active" onclick="showDashboardSection('trading')">거래 기록</button>
-            <button class="dashboard-tab" onclick="showDashboardSection('position-calc')">Position Calculator</button>
-        </div>
-    </div>
-    <div class="page-header-info" id="calculatorHeaderInfo" style="display: none;">
-        <div class="dashboard-tabs">
-            <button class="dashboard-tab" onclick="showDashboardSection('trading')">거래 기록</button>
-            <button class="dashboard-tab active" onclick="showDashboardSection('position-calc')">Position Calculator</button>
-        </div>
-    </div>
-</div>
+                    <div>
+                        <h1 class="page-title" data-lang="dashboard-title">Trading Dashboard</h1>
+                        <p class="page-subtitle" data-lang="dashboard-subtitle">Track your trades and performance</p>
+                    </div>
+                    <div class="page-header-info">
+                        <div class="date-range-selector">
+                            <input type="date" id="dashboardStartDate" class="date-range-input">
+                            <span style="color: #64748b;">to</span>
+                            <input type="date" id="dashboardEndDate" class="date-range-input">
+                            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="clearDashboardRange()">Clear</button>
+                        </div>
+                        <div class="date-navigation">
+                            <button class="date-nav-btn" onclick="changeTradingDate(-1)" title="Previous day">←</button>
+                            <div class="current-date-display" id="currentDateDisplay" onclick="openDatePicker()"></div>
+                            <button class="date-nav-btn" onclick="changeTradingDate(1)" title="Next day">→</button>
+                        </div>
+                        <div class="dashboard-tabs">
+                            <button class="dashboard-tab active" onclick="showDashboardSection('trading')">거래 기록</button>
+                            <button class="dashboard-tab" onclick="showDashboardSection('position-calc')">Position Calculator</button>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="stats-overview">
                     <div class="stat-item">
@@ -2534,20 +2400,20 @@
                                 </div>
 
                                 <div class="risk-preset-section">
-    <div class="risk-preset-title" data-lang="risk-presets">빠른 리스크 프리셋</div>
-    <div class="risk-preset-buttons">
-        <button class="risk-preset-btn" onclick="setRiskPreset(1)">1%</button>
-        <button class="risk-preset-btn active" onclick="setRiskPreset(2)">2%</button>
-        <button class="risk-preset-btn" onclick="setRiskPreset(3)">3%</button>
-        <button class="risk-preset-btn" onclick="setRiskPreset(5)">5%</button>
-        <button class="risk-preset-btn" onclick="toggleCustomRisk()">Custom</button>
-    </div>
-    <div class="custom-risk-input" id="customRiskInput">
-        <input type="number" id="customRiskValue" placeholder="%" min="0.1" max="100" step="0.1" onchange="applyCustomRisk()">
-        <span style="color: #94a3b8; font-size: 12px;">%</span>
-    </div>
-</div>
-                                
+                                    <div class="risk-preset-title" data-lang="risk-presets">빠른 리스크 프리셋</div>
+                                    <div class="risk-preset-buttons">
+                                        <button class="risk-preset-btn" style="background: #374151 !important; border: 1px solid #4b5563 !important; color: #e4e4e7 !important; padding: 8px 16px !important; border-radius: 6px !important; cursor: pointer !important; font-size: 13px !important; font-weight: 500 !important; transition: all 0.2s ease !important; min-width: 60px !important;" onclick="setRiskPreset(1)">1%</button>
+                                        <button class="risk-preset-btn active" style="background: #3b82f6 !important; border: 1px solid #3b82f6 !important; color: white !important; padding: 8px 16px !important; border-radius: 6px !important; cursor: pointer !important; font-size: 13px !important; font-weight: 500 !important; transition: all 0.2s ease !important; min-width: 60px !important;" onclick="setRiskPreset(2)">2%</button>
+                                        <button class="risk-preset-btn" style="background: #374151 !important; border: 1px solid #4b5563 !important; color: #e4e4e7 !important; padding: 8px 16px !important; border-radius: 6px !important; cursor: pointer !important; font-size: 13px !important; font-weight: 500 !important; transition: all 0.2s ease !important; min-width: 60px !important;" onclick="setRiskPreset(3)">3%</button>
+                                        <button class="risk-preset-btn" style="background: #374151 !important; border: 1px solid #4b5563 !important; color: #e4e4e7 !important; padding: 8px 16px !important; border-radius: 6px !important; cursor: pointer !important; font-size: 13px !important; font-weight: 500 !important; transition: all 0.2s ease !important; min-width: 60px !important;" onclick="setRiskPreset(5)">5%</button>
+                                        <button class="risk-preset-btn" style="background: #374151 !important; border: 1px solid #4b5563 !important; color: #e4e4e7 !important; padding: 8px 16px !important; border-radius: 6px !important; cursor: pointer !important; font-size: 13px !important; font-weight: 500 !important; transition: all 0.2s ease !important; min-width: 60px !important;" onclick="toggleCustomRisk()">Custom</button>
+                                    </div>
+                                    <div class="custom-risk-input" id="customRiskInput" style="display: none; margin-top: 12px; align-items: center; gap: 8px; justify-content: center;">
+                                        <input type="number" id="customRiskValue" placeholder="%" min="0.1" max="100" step="0.1" style="width: 80px !important; background: #0f172a !important; border: 1px solid #334155 !important; color: #e4e4e7 !important; padding: 6px 8px !important; border-radius: 4px !important; font-size: 12px !important; text-align: center !important;" onchange="applyCustomRisk()">
+                                        <span style="color: #94a3b8; font-size: 12px;">%</span>
+                                    </div>
+                                </div>
+
                                 <div class="calc-results">
                                     <div class="calc-result-item">
                                         <span class="calc-result-label" data-lang="position-size">Position Size</span>
@@ -6727,44 +6593,41 @@
         let selectedKellyMultiplier = 0.1;
 
         function showDashboardSection(section) {
-    currentDashboardSection = section;
-    
-    // 탭 상태 업데이트
-    document.querySelectorAll('.dashboard-tab').forEach(tab => {
-        tab.classList.remove('active');
-    });
-    event.target.classList.add('active');
-    
-    // 헤더 정보 표시/숨기기
-    const tradingHeader = document.getElementById('tradingHeaderInfo');
-    const calculatorHeader = document.getElementById('calculatorHeaderInfo');
-    
-    // 섹션 표시/숨기기
-    const positionSection = document.getElementById('positionCalculatorSection');
-    const dashboardGrid = document.querySelector('.dashboard-grid');
-    const tradesSection = document.querySelector('.trades-section');
-    const statsOverview = document.querySelector('.stats-overview');
-    
-    if (section === 'trading') {
-        if (tradingHeader) tradingHeader.style.display = 'flex';
-        if (calculatorHeader) calculatorHeader.style.display = 'none';
-        if (positionSection) positionSection.style.display = 'none';
-        if (dashboardGrid) dashboardGrid.style.display = 'grid';
-        if (tradesSection) tradesSection.style.display = 'block';
-        if (statsOverview) statsOverview.style.display = 'grid';
-    } else if (section === 'position-calc') {
-        if (tradingHeader) tradingHeader.style.display = 'none';
-        if (calculatorHeader) calculatorHeader.style.display = 'flex';
-        if (positionSection) positionSection.style.display = 'block';
-        if (dashboardGrid) dashboardGrid.style.display = 'none';
-        if (tradesSection) tradesSection.style.display = 'none';
-        if (statsOverview) statsOverview.style.display = 'none';
-        
-        setTimeout(() => {
-            showCalculatorTab('risk');
-        }, 100);
-    }
-}
+            currentDashboardSection = section;
+            
+            // 탭 상태 업데이트
+            document.querySelectorAll('.dashboard-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // 섹션 표시/숨기기
+            const positionSection = document.getElementById('positionCalculatorSection');
+            const dashboardGrid = document.querySelector('.dashboard-grid');
+            const tradesSection = document.querySelector('.trades-section');
+            const statsOverview = document.querySelector('.stats-overview');
+            
+            if (section === 'trading') {
+                if (positionSection) positionSection.style.display = 'none';
+                if (dashboardGrid) dashboardGrid.style.display = 'grid';
+                if (tradesSection) tradesSection.style.display = 'block';
+                if (statsOverview) statsOverview.style.display = 'grid';
+            } else if (section === 'position-calc' || section === 'risk-calc') {
+                if (positionSection) positionSection.style.display = 'block';
+                if (dashboardGrid) dashboardGrid.style.display = 'none';
+                if (tradesSection) tradesSection.style.display = 'none';
+                if (statsOverview) statsOverview.style.display = 'none';
+                
+                // 적절한 탭 활성화
+                setTimeout(() => {
+                    if (section === 'position-calc') {
+                        showCalculatorTab('kelly');
+                    } else if (section === 'risk-calc') {
+                        showCalculatorTab('risk');
+                    }
+                }, 100);
+            }
+        }
 
         function calculatePosition() {
             const balance = parseFloat(document.getElementById('calcAccountBalance').value) || 0;
@@ -6925,31 +6788,19 @@
         function setRiskPreset(percent) {
     document.querySelectorAll('.risk-preset-btn').forEach(btn => {
         btn.classList.remove('active');
+        btn.style.background = '#374151';
+        btn.style.borderColor = '#4b5563';
+        btn.style.color = '#e4e4e7';
     });
     
     event.target.classList.add('active');
+    event.target.style.background = '#3b82f6';
+    event.target.style.borderColor = '#3b82f6';
+    event.target.style.color = 'white';
+    
     document.getElementById('riskPercentage').value = percent;
-    document.getElementById('customRiskInput').classList.remove('active');
+    document.getElementById('customRiskInput').style.display = 'none';
     calculateRiskPosition();
-}
-
-function toggleCustomRisk() {
-    document.querySelectorAll('.risk-preset-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    
-    event.target.classList.add('active');
-    const customInput = document.getElementById('customRiskInput');
-    customInput.classList.add('active');
-    document.getElementById('customRiskValue').focus();
-}
-
-function applyCustomRisk() {
-    const customValue = parseFloat(document.getElementById('customRiskValue').value);
-    if (customValue && customValue > 0 && customValue <= 100) {
-        document.getElementById('riskPercentage').value = customValue;
-        calculateRiskPosition();
-    }
 }
 
         function resetRiskCalculatorDisplay() {
@@ -6965,6 +6816,32 @@ function applyCustomRisk() {
             document.getElementById('accountUtil').textContent = '0%';
             document.getElementById('expectedVal').textContent = '$0';
         }
+
+        function toggleCustomRisk() {
+    document.querySelectorAll('.risk-preset-btn').forEach(btn => {
+        btn.classList.remove('active');
+        btn.style.background = '#374151';
+        btn.style.borderColor = '#4b5563';
+        btn.style.color = '#e4e4e7';
+    });
+    
+    event.target.classList.add('active');
+    event.target.style.background = '#3b82f6';
+    event.target.style.borderColor = '#3b82f6';
+    event.target.style.color = 'white';
+    
+    const customInput = document.getElementById('customRiskInput');
+    customInput.style.display = 'flex';
+    document.getElementById('customRiskValue').focus();
+}
+
+function applyCustomRisk() {
+    const customValue = parseFloat(document.getElementById('customRiskValue').value);
+    if (customValue && customValue > 0 && customValue <= 100) {
+        document.getElementById('riskPercentage').value = customValue;
+        calculateRiskPosition();
+    }
+}
         
     </script>
 </body>
