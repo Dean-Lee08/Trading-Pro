@@ -2139,6 +2139,34 @@
             border-color: #3b82f6;
             color: white;
         }
+
+            /* 리스크 비율 input 강제 스타일링 */
+#riskPercentage {
+    background: #0f172a !important;
+    border: 1px solid #334155 !important;
+    color: #e4e4e7 !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: textfield !important;
+    appearance: none !important;
+}
+
+#riskPercentage:focus {
+    outline: none !important;
+    border-color: #3b82f6 !important;
+    background: #0f172a !important;
+}
+
+/* number input의 화살표 버튼 스타일링 */
+#riskPercentage::-webkit-outer-spin-button,
+#riskPercentage::-webkit-inner-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0 !important;
+}
+
+/* Firefox용 number input 스타일 */
+#riskPercentage[type=number] {
+    -moz-appearance: textfield !important;
+}
     </style>
 </head>
 <body>
@@ -2387,7 +2415,7 @@
                                     </div>
                                     <div class="calc-input-group">
                                         <label class="calc-label" data-lang="risk-percentage">Risk Percentage (%)</label>
-                                        <input type="number" class="calc-input" id="riskPercentage" value="2" min="0.1" max="10" step="0.1" oninput="calculateRiskPosition()">
+                                        <input type="number" class="calc-input" id="riskPercentage" value="2" min="0.1" max="10" step="1" style="background: #0f172a !important; border: 1px solid #334155 !important; color: #e4e4e7 !important; -webkit-appearance: none !important; -moz-appearance: textfield !important; appearance: none !important;" oninput="calculateRiskPosition()">
                                     </div>
                                     <div class="calc-input-group">
                                         <label class="calc-label" data-lang="entry-price">Entry Price ($)</label>
