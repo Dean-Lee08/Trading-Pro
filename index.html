@@ -2365,19 +2365,19 @@
                                 <div class="calc-grid">
                                     <div class="calc-input-group">
                                         <label class="calc-label" data-lang="account-balance">Account Balance ($)</label>
-                                        <input type="number" class="calc-input" id="calcAccountBalance" value="10000" oninput="calculatePosition()">
+                                        <input type="number" class="calc-input" id="riskAccountBalance" value="" oninput="calculateRiskPosition()">
                                     </div>
                                     <div class="calc-input-group">
                                         <label class="calc-label" data-lang="win-rate-input">Win Rate (%)</label>
-                                        <input type="number" class="calc-input" id="calcWinRate" value="55" min="0" max="100" oninput="calculatePosition()">
+                                        <input type="number" class="calc-input" id="riskPercentage" value="" min="0.1" max="10" step="1" oninput="calculateRiskPosition()">
                                     </div>
                                     <div class="calc-input-group">
                                         <label class="calc-label" data-lang="average-win">Average Win ($)</label>
-                                        <input type="number" class="calc-input" id="calcAvgWin" value="150" oninput="calculatePosition()">
+                                        <input type="number" class="calc-input" id="riskEntryPrice" value="" step="0.01" oninput="calculateRiskPosition()">
                                     </div>
                                     <div class="calc-input-group">
                                         <label class="calc-label" data-lang="average-loss">Average Loss ($)</label>
-                                        <input type="number" class="calc-input" id="calcAvgLoss" value="100" oninput="calculatePosition()">
+                                        <input type="number" class="calc-input" id="riskStopPrice" value="" step="0.01" oninput="calculateRiskPosition()">
                                     </div>
                                 </div>
 
@@ -2428,7 +2428,7 @@
                                 </div>
 
                                 <div class="risk-preset-section">
-                                    <div class="risk-preset-title" data-lang="risk-presets">리스크 비율</div>
+                                    <div class="risk-preset-title">리스크 비율</div>
                                     <div class="risk-preset-buttons" style="gap: 4px;">
                                         <button class="risk-preset-btn" style="background: #374151 !important; border: 1px solid #4b5563 !important; color: #e4e4e7 !important; padding: 8px 16px !important; border-radius: 6px !important; cursor: pointer !important; font-size: 13px !important; font-weight: 500 !important; transition: all 0.2s ease !important; min-width: 60px !important;" onclick="setRiskPreset(1)">1%</button>
                                         <button class="risk-preset-btn active" style="background: #3b82f6 !important; border: 1px solid #3b82f6 !important; color: white !important; padding: 8px 16px !important; border-radius: 6px !important; cursor: pointer !important; font-size: 13px !important; font-weight: 500 !important; transition: all 0.2s ease !important; min-width: 60px !important;" onclick="setRiskPreset(2)">2%</button>
@@ -3579,7 +3579,6 @@
                 'breakeven-move': 'Breakeven Move',
                 'risk-amount': 'Risk Amount',
                 'kelly-strategies': 'Position Sizing Strategies',
-                'risk-presets': 'Quick Risk Presets',
                 'risk-analysis': 'Risk Analysis',
                 'position-cost': 'Position Cost',
                 'risk-ratio': 'Risk Ratio',
@@ -3587,7 +3586,7 @@
                 'kelly-calculator': 'Kelly Calculator',
 'risk-calculator': 'Risk Calculator',
 'risk-management-calculator': 'Risk Management Calculator',
-'risk-presets': 'Quick Risk Presets'
+'risk-presets': 'Risk Ratio'
             },
             ko: {
                 'dashboard': '대시보드',
@@ -3790,7 +3789,6 @@
                 'breakeven-move': '손익분기 변동',
                 'risk-amount': '리스크 금액',
                 'kelly-strategies': '포지션 사이징 전략',
-                'risk-presets': '빠른 리스크 프리셋',
                 'risk-analysis': '리스크 분석',
                 'position-cost': '포지션 비용',
                 'risk-ratio': '리스크 비율',
@@ -3798,7 +3796,7 @@
                 'kelly-calculator': '켈리 계산기',
 'risk-calculator': '리스크 계산기',
 'risk-management-calculator': '리스크 관리 계산기',
-'risk-presets': '빠른 리스크 프리셋'
+'risk-presets': '리스크 비율'
             }
         };
         
