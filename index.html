@@ -2139,170 +2139,6 @@
             border-color: #3b82f6;
             color: white;
         }
-
-        /* Enhanced Risk Preset Styles */
-        .risk-preset-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 12px;
-            margin-top: 12px;
-        }
-
-        .risk-preset-btn {
-            background: #0f172a;
-            border: 2px solid #334155;
-            border-radius: 8px;
-            padding: 16px 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .risk-preset-btn:hover {
-            border-color: #3b82f6;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
-        }
-
-        .risk-preset-btn.active {
-            border-color: #3b82f6;
-            background: rgba(59, 130, 246, 0.1);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-        }
-
-        .risk-preset-btn.active::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-        }
-
-        .risk-preset-btn.custom-btn {
-            border-color: #8b5cf6;
-        }
-
-        .risk-preset-btn.custom-btn:hover {
-            border-color: #8b5cf6;
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
-        }
-
-        .risk-preset-btn.custom-btn.active {
-            border-color: #8b5cf6;
-            background: rgba(139, 92, 246, 0.1);
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
-        }
-
-        .risk-preset-btn.custom-btn.active::before {
-            background: linear-gradient(90deg, #8b5cf6, #06b6d4);
-        }
-
-        .preset-percentage {
-            color: #e4e4e7;
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .preset-label {
-            color: #94a3b8;
-            font-size: 10px;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        /* Custom Risk Input Styles */
-        .custom-risk-input {
-            margin-top: 16px;
-            padding: 16px;
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 8px;
-        }
-
-        .custom-input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .custom-input-label {
-            color: #94a3b8;
-            font-size: 12px;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-
-        .custom-input-container {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .custom-input {
-            flex: 1;
-            background: #0f172a;
-            border: 1px solid #334155;
-            color: #e4e4e7;
-            padding: 8px 12px;
-            font-size: 14px;
-            border-radius: 6px;
-            transition: border-color 0.2s ease;
-        }
-
-        .custom-input:focus {
-            outline: none;
-            border-color: #8b5cf6;
-        }
-
-        .custom-apply-btn {
-            background: #8b5cf6;
-            border: none;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-
-        .custom-apply-btn:hover {
-            background: #7c3aed;
-        }
-
-        .custom-cancel-btn {
-            background: #374151;
-            border: 1px solid #4b5563;
-            color: #e4e4e7;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-
-        .custom-cancel-btn:hover {
-            background: #4b5563;
-        }
-
-        @media (max-width: 768px) {
-            .risk-preset-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            
-            .custom-input-container {
-                flex-direction: column;
-                align-items: stretch;
-            }
-        }
     </style>
 </head>
 <body>
@@ -2496,7 +2332,7 @@
                             
                             <!-- Kelly Calculator Content -->
                             <div id="kellyCalculator" class="calculator-content">
-                                <h2 class="calculator-title" data-lang="kelly-criterion-calculator">Kelly Criterion Calculator</h2>
+    <h2 class="calculator-title" data-lang="kelly-criterion-calculator">Kelly Criterion Calculator</h2>
                                 
                                 <div class="calc-grid">
                                     <div class="calc-input-group">
@@ -2542,7 +2378,7 @@
 
                             <!-- Risk Calculator Content -->
                             <div id="riskCalculator" class="calculator-content" style="display: none;">
-                                <h2 class="calculator-title" data-lang="risk-management-calculator">Risk Management Calculator</h2>
+    <h2 class="calculator-title" data-lang="risk-management-calculator">Risk Management Calculator</h2>
                                 
                                 <div class="calc-grid">
                                     <div class="calc-input-group">
@@ -2564,42 +2400,45 @@
                                 </div>
 
                                 <div class="risk-preset-section">
-    <div class="risk-preset-title" data-lang="risk-presets">Quick Risk Presets</div>
-    <div class="risk-preset-grid">
-        <button class="risk-preset-btn" onclick="setRiskPreset(1)">
-            <div class="preset-percentage">1%</div>
-            <div class="preset-label" data-lang="ultra-conservative">Ultra Safe</div>
-        </button>
-        <button class="risk-preset-btn active" onclick="setRiskPreset(2)">
-            <div class="preset-percentage">2%</div>
-            <div class="preset-label" data-lang="conservative">Conservative</div>
-        </button>
-        <button class="risk-preset-btn" onclick="setRiskPreset(3)">
-            <div class="preset-percentage">3%</div>
-            <div class="preset-label" data-lang="moderate">Moderate</div>
-        </button>
-        <button class="risk-preset-btn" onclick="setRiskPreset(5)">
-            <div class="preset-percentage">5%</div>
-            <div class="preset-label" data-lang="aggressive">Aggressive</div>
-        </button>
-        <button class="risk-preset-btn custom-btn" onclick="showCustomRiskInput()">
-            <div class="preset-percentage" data-lang="custom">Custom</div>
-            <div class="preset-label" data-lang="custom-risk">Custom Risk</div>
-        </button>
-    </div>
-    
-    <!-- Custom Risk Input -->
-    <div id="customRiskInput" class="custom-risk-input" style="display: none;">
-        <div class="custom-input-group">
-            <label class="custom-input-label" data-lang="custom-percentage">Custom Percentage (%)</label>
-            <div class="custom-input-container">
-                <input type="number" class="custom-input" id="customRiskValue" min="0.1" max="20" step="0.1" placeholder="2.5">
-                <button class="custom-apply-btn" onclick="applyCustomRisk()" data-lang="apply">Apply</button>
-                <button class="custom-cancel-btn" onclick="hideCustomRiskInput()" data-lang="cancel">Cancel</button>
-            </div>
-        </div>
-    </div>
-</div>
+                                    <div class="risk-preset-title" data-lang="risk-presets">Quick Risk Presets</div>
+                                    <div class="risk-preset-buttons">
+                                        <button class="risk-preset-btn" onclick="setRiskPreset(1)">1%</button>
+                                        <button class="risk-preset-btn active" onclick="setRiskPreset(2)">2%</button>
+                                        <button class="risk-preset-btn" onclick="setRiskPreset(3)">3%</button>
+                                        <button class="risk-preset-btn" onclick="setRiskPreset(5)">5%</button>
+                                    </div>
+                                </div>
+
+                                <div class="calc-results">
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label" data-lang="position-size">Position Size</span>
+                                        <span class="calc-result-value positive" id="riskPositionSize">$0</span>
+                                    </div>
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label" data-lang="shares-quantity">Shares Quantity</span>
+                                        <span class="calc-result-value neutral" id="riskSharesQuantity">0</span>
+                                    </div>
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label" data-lang="risk-per-share">Risk per Share</span>
+                                        <span class="calc-result-value neutral" id="riskPerShare">$0.00</span>
+                                    </div>
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label" data-lang="max-loss">Max Loss</span>
+                                        <span class="calc-result-value negative" id="riskMaxLoss">$0.00</span>
+                                    </div>
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label" data-lang="position-cost">Position Cost</span>
+                                        <span class="calc-result-value neutral" id="riskPositionCost">$0.00</span>
+                                    </div>
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label" data-lang="account-utilization">Account Utilization</span>
+                                        <span class="calc-result-value neutral" id="riskAccountUtil">0.00%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 
                 <div class="dashboard-grid">
                     <div class="trade-entry">
@@ -3720,15 +3559,7 @@
                 'kelly-calculator': 'Kelly Calculator',
 'risk-calculator': 'Risk Calculator',
 'risk-management-calculator': 'Risk Management Calculator',
-'kelly-description': 'Calculate optimal position size based on your historical win rate and average win/loss amounts using the Kelly Criterion formula.',
-'risk-description': 'Calculate position size based on risk percentage, entry price, and stop loss. Manage your risk per trade effectively.',
-'risk-presets': 'Quick Risk Presets',
-                'ultra-conservative': 'Ultra Safe',
-'aggressive': 'Aggressive',
-'custom': 'Custom',
-'custom-risk': 'Custom Risk',
-'custom-percentage': 'Custom Percentage (%)',
-'apply': 'Apply'
+'risk-presets': 'Quick Risk Presets'
             },
             ko: {
                 'dashboard': '대시보드',
@@ -3939,15 +3770,7 @@
                 'kelly-calculator': '켈리 계산기',
 'risk-calculator': '리스크 계산기',
 'risk-management-calculator': '리스크 관리 계산기',
-'kelly-description': '역사적 승률과 평균 승/패 금액을 기반으로 켈리 기준 공식을 사용하여 최적의 포지션 크기를 계산합니다.',
-'risk-description': '리스크 비율, 진입 가격, 손절가를 기반으로 포지션 크기를 계산합니다. 거래당 리스크를 효과적으로 관리하세요.',
-'risk-presets': '빠른 리스크 프리셋',
-                'ultra-conservative': '매우 안전',
-'aggressive': '공격적',
-'custom': '사용자 지정',
-'custom-risk': '사용자 리스크',
-'custom-percentage': '사용자 지정 비율 (%)',
-'apply': '적용'
+'risk-presets': '빠른 리스크 프리셋'
             }
         };
         
@@ -5417,13 +5240,6 @@
                     closeEditTradeModal();
                 }
             });
-
-            // Custom risk input에서 Enter 키 지원
-        document.getElementById('customRiskValue').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                applyCustomRisk();
-            }
-        });
         });
 
         // Navigation functions
@@ -6986,66 +6802,6 @@
             document.getElementById('recommendedSize').textContent = '$0';
             document.getElementById('accountUtil').textContent = '0%';
             document.getElementById('expectedVal').textContent = '$0';
-        }
-
-        // Custom Risk Input Functions
-        function showCustomRiskInput() {
-            // Remove active state from all preset buttons
-            document.querySelectorAll('.risk-preset-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // Activate custom button
-            event.target.classList.add('active');
-            
-            // Show custom input
-            document.getElementById('customRiskInput').style.display = 'block';
-            document.getElementById('customRiskValue').focus();
-        }
-
-        function hideCustomRiskInput() {
-            document.getElementById('customRiskInput').style.display = 'none';
-            
-            // Remove active state from custom button
-            document.querySelector('.custom-btn').classList.remove('active');
-            
-            // Reactivate 2% preset as default
-            const defaultBtn = document.querySelector('.risk-preset-btn[onclick="setRiskPreset(2)"]');
-            if (defaultBtn) {
-                defaultBtn.classList.add('active');
-                setRiskPreset(2);
-            }
-        }
-
-        function applyCustomRisk() {
-            const customValue = parseFloat(document.getElementById('customRiskValue').value);
-            
-            if (!customValue || customValue < 0.1 || customValue > 20) {
-                alert(currentLanguage === 'ko' ? 
-                    '0.1%에서 20% 사이의 값을 입력해주세요.' : 
-                    'Please enter a value between 0.1% and 20%.');
-                return;
-            }
-            
-            document.getElementById('riskPercentage').value = customValue;
-            calculateRiskPosition();
-            hideCustomRiskInput();
-            
-            showToast(currentLanguage === 'ko' ? 
-                `사용자 지정 리스크 ${customValue}% 적용됨` : 
-                `Custom risk ${customValue}% applied`);
-        }
-
-        // Enhanced setRiskPreset function
-        function setRiskPreset(percent) {
-            document.querySelectorAll('.risk-preset-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            event.target.classList.add('active');
-            document.getElementById('riskPercentage').value = percent;
-            document.getElementById('customRiskInput').style.display = 'none';
-            calculateRiskPosition();
         }
         
     </script>
