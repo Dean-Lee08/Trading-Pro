@@ -2261,9 +2261,10 @@
                             <button class="date-nav-btn" onclick="changeTradingDate(1)" title="Next day">→</button>
                         </div>
                         <div class="dashboard-tabs">
-                            <button class="dashboard-tab active" onclick="showDashboardSection('trading')">거래 기록</button>
-                            <button class="dashboard-tab" onclick="showDashboardSection('position-calc')">Position Calculator</button>
-                        </div>
+    <button class="dashboard-tab active" onclick="showDashboardSection('trading')">거래 기록</button>
+    <button class="dashboard-tab" onclick="showDashboardSection('position-calc')">Position Calculator</button>
+    <button class="dashboard-tab" onclick="showDashboardSection('risk-calc')">Risk Calculator</button>
+</div>
                     </div>
                 </div>
 
@@ -2324,9 +2325,16 @@
                         </div>
 
                         <div class="calculator-container">
-                            <h2 class="calculator-title">Position Calculator</h2>
+    <div class="calculator-tabs" style="display: flex; background: #0f172a; border: 1px solid #334155; border-radius: 8px; overflow: hidden; margin-bottom: 20px;">
+        <button class="position-calc-tab active" onclick="showPositionCalcSection('kelly')" style="background: #3b82f6; border: none; color: white; padding: 12px 20px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s ease; border-right: 1px solid #334155; flex: 1;">Kelly Calculator</button>
+        <button class="position-calc-tab" onclick="showPositionCalcSection('risk')" style="background: transparent; border: none; color: #94a3b8; padding: 12px 20px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s ease; flex: 1;">Risk Calculator</button>
+    </div>
                             
-                            <div id="kellyCalcSection">
+                            <div id="kellyCalcContent" class="position-calc-content" style="display: block;">
+        <h3 class="calc-section-title">Kelly Criterion Calculator</h3>
+        <div class="calc-description">
+            Calculate optimal position size based on your historical win rate and average win/loss amounts using the Kelly Criterion formula.
+        </div>
                                 <div class="calc-grid">
                                     <div class="calc-input-group">
                                         <label class="calc-label" data-lang="account-balance">Account Balance ($)</label>
@@ -2368,9 +2376,73 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="riskCalcContent" class="position-calc-content" style="display: none;">
+        <h3 class="calc-section-title">Risk Management Calculator</h3>
+        <div class="calc-description">
+            Calculate position size based on risk percentage, entry price, and stop loss. Manage your risk per trade effectively.
+        </div>
+        
+        <div class="calc-grid">
+            <div class="calc-input-group">
+                <label class="calc-label">Account Balance ($)</label>
+                <input type="number" class="calc-input" id="riskAccountBalance" value="10000" oninput="calculateRiskPosition()">
+            </div>
+            <div class="calc-input-group">
+                <label class="calc-label">Risk Percentage (%)</label>
+                <input type="number" class="calc-input" id="riskPercentage" value="2" min="0.1" max="10" step="0.1" oninput="calculateRiskPosition()">
+            </div>
+            <div class="calc-input-group">
+                <label class="calc-label">Entry Price ($)</label>
+                <input type="number" class="calc-input" id="riskEntryPrice" value="100" step="0.01" oninput="calculateRiskPosition()">
+            </div>
+            <div class="calc-input-group">
+                <label class="calc-label">Stop Loss Price ($)</label>
+                <input type="number" class="calc-input" id="riskStopPrice" value="95" step="0.01" oninput="calculateRiskPosition()">
+            </div>
+        </div>
+
+        <div class="risk-preset-section">
+            <div class="risk-preset-title">Quick Risk Presets</div>
+            <div class="risk-preset-buttons">
+                <button class="risk-preset-btn" onclick="setRiskPreset(1)">1%</button>
+                <button class="risk-preset-btn active" onclick="setRiskPreset(2)">2%</button>
+                <button class="risk-preset-btn" onclick="setRiskPreset(3)">3%</button>
+                <button class="risk-preset-btn" onclick="setRiskPreset(5)">5%</button>
+            </div>
+        </div>
+
+        <div class="calc-results">
+            <div class="calc-result-item">
+                <span class="calc-result-label">Position Size</span>
+                <span class="calc-result-value positive" id="riskPositionSize">$0</span>
+            </div>
+            <div class="calc-result-item">
+                <span class="calc-result-label">Shares Quantity</span>
+                <span class="calc-result-value neutral" id="riskSharesQuantity">0</span>
+            </div>
+            <div class="calc-result-item">
+                <span class="calc-result-label">Risk per Share</span>
+                <span class="calc-result-value neutral" id="riskPerShare">$0.00</span>
+            </div>
+            <div class="calc-result-item">
+                <span class="calc-result-label">Max Loss</span>
+                <span class="calc-result-value negative" id="riskMaxLoss">$0.00</span>
+            </div>
+            <div class="calc-result-item">
+                <span class="calc-result-label">Position Cost</span>
+                <span class="calc-result-value neutral" id="riskPositionCost">$0.00</span>
+            </div>
+            <div class="calc-result-item">
+                <span class="calc-result-label">Account Utilization</span>
+                <span class="calc-result-value neutral" id="riskAccountUtil">0.00%</span>
+            </div>
+        </div>
+    </div>
+</div>
                 
                 <div class="dashboard-grid">
                     <div class="trade-entry">
@@ -6512,34 +6584,44 @@
         let selectedKellyMultiplier = 0.1;
 
         function showDashboardSection(section) {
-            currentDashboardSection = section;
-            
-            // 탭 상태 업데이트
-            document.querySelectorAll('.dashboard-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            // 섹션 표시/숨기기
-            const positionSection = document.getElementById('positionCalculatorSection');
-            const dashboardGrid = document.querySelector('.dashboard-grid');
-            const tradesSection = document.querySelector('.trades-section');
-            const statsOverview = document.querySelector('.stats-overview');
-            
-            if (section === 'trading') {
-                if (positionSection) positionSection.style.display = 'none';
-                if (dashboardGrid) dashboardGrid.style.display = 'grid';
-                if (tradesSection) tradesSection.style.display = 'block';
-                if (statsOverview) statsOverview.style.display = 'grid';
-            } else if (section === 'position-calc') {
-                if (positionSection) positionSection.style.display = 'block';
-                if (dashboardGrid) dashboardGrid.style.display = 'none';
-                if (tradesSection) tradesSection.style.display = 'none';
-                if (statsOverview) statsOverview.style.display = 'none';
-                
-                setTimeout(() => calculatePosition(), 100);
-            }
+    currentDashboardSection = section;
+    
+    // 탭 상태 업데이트
+    document.querySelectorAll('.dashboard-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    // 섹션 표시/숨기기
+    const positionSection = document.getElementById('positionCalculatorSection');
+    const dashboardGrid = document.querySelector('.dashboard-grid');
+    const tradesSection = document.querySelector('.trades-section');
+    const statsOverview = document.querySelector('.stats-overview');
+    
+    if (section === 'trading') {
+        if (positionSection) positionSection.style.display = 'none';
+        if (dashboardGrid) dashboardGrid.style.display = 'grid';
+        if (tradesSection) tradesSection.style.display = 'block';
+        if (statsOverview) statsOverview.style.display = 'grid';
+    } else if (section === 'position-calc' || section === 'risk-calc') {
+        if (positionSection) positionSection.style.display = 'block';
+        if (dashboardGrid) dashboardGrid.style.display = 'none';
+        if (tradesSection) tradesSection.style.display = 'none';
+        if (statsOverview) statsOverview.style.display = 'none';
+        
+        if (section === 'position-calc') {
+            // Kelly Calculator 탭 활성화
+            setTimeout(() => {
+                showPositionCalcSection('kelly');
+            }, 100);
+        } else if (section === 'risk-calc') {
+            // Risk Calculator 탭 활성화
+            setTimeout(() => {
+                showPositionCalcSection('risk');
+            }, 100);
         }
+    }
+}
 
         function calculatePosition() {
             const balance = parseFloat(document.getElementById('calcAccountBalance').value) || 0;
@@ -6622,6 +6704,93 @@
             
             calculatePosition();
             showToast('거래 이력에서 데이터를 불러왔습니다');
+        }
+
+        // Position Calculator 탭 관리
+        function showPositionCalcSection(section) {
+            // 탭 상태 업데이트
+            document.querySelectorAll('.position-calc-tab').forEach(tab => {
+                tab.classList.remove('active');
+                tab.style.background = 'transparent';
+                tab.style.color = '#94a3b8';
+            });
+            
+            const activeTab = section === 'kelly' ? 
+                document.querySelectorAll('.position-calc-tab')[0] : 
+                document.querySelectorAll('.position-calc-tab')[1];
+            
+            if (activeTab) {
+                activeTab.classList.add('active');
+                activeTab.style.background = '#3b82f6';
+                activeTab.style.color = 'white';
+            }
+            
+            // 컨텐츠 섹션 표시/숨기기
+            if (section === 'kelly') {
+                document.getElementById('kellyCalcContent').style.display = 'block';
+                document.getElementById('riskCalcContent').style.display = 'none';
+                setTimeout(() => calculatePosition(), 100);
+            } else if (section === 'risk') {
+                document.getElementById('kellyCalcContent').style.display = 'none';
+                document.getElementById('riskCalcContent').style.display = 'block';
+                setTimeout(() => calculateRiskPosition(), 100);
+            }
+        }
+
+        // Risk Calculator 함수들
+        function calculateRiskPosition() {
+            const balance = parseFloat(document.getElementById('riskAccountBalance').value) || 0;
+            const riskPercent = parseFloat(document.getElementById('riskPercentage').value) || 0;
+            const entryPrice = parseFloat(document.getElementById('riskEntryPrice').value) || 0;
+            const stopPrice = parseFloat(document.getElementById('riskStopPrice').value) || 0;
+            
+            if (balance === 0 || entryPrice === 0 || stopPrice === 0 || entryPrice === stopPrice) {
+                resetRiskCalculatorDisplay();
+                return;
+            }
+            
+            const riskAmount = balance * (riskPercent / 100);
+            const riskPerShare = Math.abs(entryPrice - stopPrice);
+            const sharesQuantity = Math.floor(riskAmount / riskPerShare);
+            const positionSize = sharesQuantity * entryPrice;
+            const actualMaxLoss = sharesQuantity * riskPerShare;
+            const accountUtilization = (positionSize / balance) * 100;
+            
+            document.getElementById('riskPositionSize').textContent = '$' + positionSize.toFixed(0);
+            document.getElementById('riskSharesQuantity').textContent = sharesQuantity.toString();
+            document.getElementById('riskPerShare').textContent = '$' + riskPerShare.toFixed(2);
+            document.getElementById('riskMaxLoss').textContent = '$' + actualMaxLoss.toFixed(2);
+            document.getElementById('riskPositionCost').textContent = '$' + positionSize.toFixed(2);
+            document.getElementById('riskAccountUtil').textContent = accountUtilization.toFixed(2) + '%';
+            
+            // 색상 업데이트
+            const utilElement = document.getElementById('riskAccountUtil');
+            if (accountUtilization <= 10) {
+                utilElement.className = 'calc-result-value positive';
+            } else if (accountUtilization <= 25) {
+                utilElement.className = 'calc-result-value neutral';
+            } else {
+                utilElement.className = 'calc-result-value negative';
+            }
+        }
+
+        function setRiskPreset(percent) {
+            document.querySelectorAll('.risk-preset-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            event.target.classList.add('active');
+            document.getElementById('riskPercentage').value = percent;
+            calculateRiskPosition();
+        }
+
+        function resetRiskCalculatorDisplay() {
+            document.getElementById('riskPositionSize').textContent = '$0';
+            document.getElementById('riskSharesQuantity').textContent = '0';
+            document.getElementById('riskPerShare').textContent = '$0.00';
+            document.getElementById('riskMaxLoss').textContent = '$0.00';
+            document.getElementById('riskPositionCost').textContent = '$0.00';
+            document.getElementById('riskAccountUtil').textContent = '0.00%';
         }
         
     </script>
