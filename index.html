@@ -2335,20 +2335,28 @@
                             </div>
 
                             <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #334155;">
-                                <div class="sidebar-title-stats" style="font-size: 14px;" data-lang="auto-analysis">Auto Analysis</div>
-                                <div class="sidebar-stat">
-                                    <span class="sidebar-stat-label" data-lang="recent-win-rate">Recent Win Rate</span>
-                                    <span class="sidebar-stat-value" id="recentWinRateCalc">-</span>
-                                </div>
-                                <div class="sidebar-stat">
-                                    <span class="sidebar-stat-label" data-lang="pl-ratio">P&L Ratio</span>
-                                    <span class="sidebar-stat-value" id="plRatioCalc">-</span>
-                                </div>
-                                <div class="sidebar-stat">
-                                    <span class="sidebar-stat-label" data-lang="kelly-status">Kelly Status</span>
-                                    <span class="sidebar-stat-value positive" id="kellyStatus">Safe</span>
-                                </div>
-                            </div>
+    <div class="sidebar-title-stats" style="font-size: 14px;" data-lang="auto-analysis">자동 분석</div>
+    <div class="sidebar-stat">
+        <span class="sidebar-stat-label" data-lang="position-size">포지션 크기</span>
+        <span class="sidebar-stat-value positive" id="riskPositionSizeSidebar">$0</span>
+    </div>
+    <div class="sidebar-stat">
+        <span class="sidebar-stat-label" data-lang="shares-quantity">주식 수량</span>
+        <span class="sidebar-stat-value neutral" id="riskSharesQuantitySidebar">0</span>
+    </div>
+    <div class="sidebar-stat">
+        <span class="sidebar-stat-label" data-lang="risk-per-share">주당 리스크</span>
+        <span class="sidebar-stat-value neutral" id="riskPerShareSidebar">$0.00</span>
+    </div>
+    <div class="sidebar-stat">
+        <span class="sidebar-stat-label" data-lang="max-loss">최대 손실</span>
+        <span class="sidebar-stat-value negative" id="riskMaxLossSidebar">$0.00</span>
+    </div>
+    <div class="sidebar-stat">
+        <span class="sidebar-stat-label" data-lang="position-cost">포지션 비용</span>
+        <span class="sidebar-stat-value neutral" id="riskPositionCostSidebar">$0.00</span>
+    </div>
+</div>
                         </div>
 
                         <div class="calculator-container">
@@ -6764,50 +6772,43 @@
 
         // Risk Calculator Functions
         function calculateRiskPosition() {
-            const balance = parseFloat(document.getElementById('riskAccountBalance').value) || 0;
-            const riskPercent = parseFloat(document.getElementById('riskPercentage').value) || 0;
-            const entryPrice = parseFloat(document.getElementById('riskEntryPrice').value) || 0;
-            const stopPrice = parseFloat(document.getElementById('riskStopPrice').value) || 0;
-            
-            if (balance === 0 || entryPrice === 0 || stopPrice === 0 || entryPrice === stopPrice) {
-                resetRiskCalculatorDisplay();
-                return;
-            }
-            
-            const riskAmount = balance * (riskPercent / 100);
-            const riskPerShare = Math.abs(entryPrice - stopPrice);
-            const sharesQuantity = Math.floor(riskAmount / riskPerShare);
-            const positionSize = sharesQuantity * entryPrice;
-            const actualMaxLoss = sharesQuantity * riskPerShare;
-            const accountUtilization = (positionSize / balance) * 100;
-            
-            // Update sidebar with risk calculator values
-            document.getElementById('recommendedSize').textContent = '$' + positionSize.toFixed(0);
-            document.getElementById('accountUtil').textContent = accountUtilization.toFixed(1) + '%';
-            document.getElementById('expectedVal').textContent = '-$' + actualMaxLoss.toFixed(0);
-            
-            // Update sidebar colors
-            const utilElement = document.getElementById('accountUtil');
-            const expectedElement = document.getElementById('expectedVal');
-            
-            if (accountUtilization <= 10) {
-                utilElement.className = 'sidebar-stat-value positive';
-            } else if (accountUtilization <= 25) {
-                utilElement.className = 'sidebar-stat-value neutral';
-            } else {
-                utilElement.className = 'sidebar-stat-value negative';
-            }
-            
-            expectedElement.className = 'sidebar-stat-value negative';
-            
-            // Update detailed results
-            document.getElementById('riskPositionSize').textContent = '$' + positionSize.toFixed(0);
-            document.getElementById('riskSharesQuantity').textContent = sharesQuantity.toString();
-            document.getElementById('riskPerShare').textContent = '$' + riskPerShare.toFixed(2);
-            document.getElementById('riskMaxLoss').textContent = '$' + actualMaxLoss.toFixed(2);
-            document.getElementById('riskPositionCost').textContent = '$' + positionSize.toFixed(2);
-            document.getElementById('riskAccountUtil').textContent = accountUtilization.toFixed(2) + '%';
-        }
+    const balance = parseFloat(document.getElementById('riskAccountBalance').value) || 0;
+    const riskPercent = parseFloat(document.getElementById('riskPercentage').value) || 0;
+    const entryPrice = parseFloat(document.getElementById('riskEntryPrice').value) || 0;
+    const stopPrice = parseFloat(document.getElementById('riskStopPrice').value) || 0;
+    
+    if (balance === 0 || entryPrice === 0 || stopPrice === 0 || entryPrice === stopPrice) {
+        resetRiskCalculatorDisplay();
+        return;
+    }
+    
+    const riskAmount = balance * (riskPercent / 100);
+    const riskPerShare = Math.abs(entryPrice - stopPrice);
+    const sharesQuantity = Math.floor(riskAmount / riskPerShare);
+    const positionSize = sharesQuantity * entryPrice;
+    const actualMaxLoss = sharesQuantity * riskPerShare;
+    const accountUtilization = (positionSize / balance) * 100;
+    
+    // 기존 사이드바 업데이트 (포지션 분석)
+    document.getElementById('recommendedSize').textContent = '$' + positionSize.toFixed(0);
+    document.getElementById('accountUtil').textContent = accountUtilization.toFixed(1) + '%';
+    document.getElementById('expectedVal').textContent = '-$' + actualMaxLoss.toFixed(0);
+    
+    // 새로운 사이드바 업데이트 (자동 분석)
+    document.getElementById('riskPositionSizeSidebar').textContent = '$' + positionSize.toFixed(0);
+    document.getElementById('riskSharesQuantitySidebar').textContent = sharesQuantity.toString();
+    document.getElementById('riskPerShareSidebar').textContent = '$' + riskPerShare.toFixed(2);
+    document.getElementById('riskMaxLossSidebar').textContent = '$' + actualMaxLoss.toFixed(2);
+    document.getElementById('riskPositionCostSidebar').textContent = '$' + positionSize.toFixed(2);
+    
+    // 기존 결과 섹션 업데이트
+    document.getElementById('riskPositionSize').textContent = '$' + positionSize.toFixed(0);
+    document.getElementById('riskSharesQuantity').textContent = sharesQuantity.toString();
+    document.getElementById('riskPerShare').textContent = '$' + riskPerShare.toFixed(2);
+    document.getElementById('riskMaxLoss').textContent = '$' + actualMaxLoss.toFixed(2);
+    document.getElementById('riskPositionCost').textContent = '$' + positionSize.toFixed(2);
+    document.getElementById('riskAccountUtil').textContent = accountUtilization.toFixed(2) + '%';
+}
 
         function setRiskPreset(percent) {
     document.querySelectorAll('.risk-preset-btn').forEach(btn => {
@@ -6827,18 +6828,26 @@
 }
 
         function resetRiskCalculatorDisplay() {
-            document.getElementById('riskPositionSize').textContent = '$0';
-            document.getElementById('riskSharesQuantity').textContent = '0';
-            document.getElementById('riskPerShare').textContent = '$0.00';
-            document.getElementById('riskMaxLoss').textContent = '$0.00';
-            document.getElementById('riskPositionCost').textContent = '$0.00';
-            document.getElementById('riskAccountUtil').textContent = '0.00%';
-            
-            // Reset sidebar values
-            document.getElementById('recommendedSize').textContent = '$0';
-            document.getElementById('accountUtil').textContent = '0%';
-            document.getElementById('expectedVal').textContent = '$0';
-        }
+    // 기존 결과 섹션 초기화
+    document.getElementById('riskPositionSize').textContent = '$0';
+    document.getElementById('riskSharesQuantity').textContent = '0';
+    document.getElementById('riskPerShare').textContent = '$0.00';
+    document.getElementById('riskMaxLoss').textContent = '$0.00';
+    document.getElementById('riskPositionCost').textContent = '$0.00';
+    document.getElementById('riskAccountUtil').textContent = '0.00%';
+    
+    // 포지션 분석 사이드바 초기화
+    document.getElementById('recommendedSize').textContent = '$0';
+    document.getElementById('accountUtil').textContent = '0%';
+    document.getElementById('expectedVal').textContent = '$0';
+    
+    // 자동 분석 사이드바 초기화
+    document.getElementById('riskPositionSizeSidebar').textContent = '$0';
+    document.getElementById('riskSharesQuantitySidebar').textContent = '0';
+    document.getElementById('riskPerShareSidebar').textContent = '$0.00';
+    document.getElementById('riskMaxLossSidebar').textContent = '$0.00';
+    document.getElementById('riskPositionCostSidebar').textContent = '$0.00';
+}
 
         function toggleCustomRisk() {
     document.querySelectorAll('.risk-preset-btn').forEach(btn => {
