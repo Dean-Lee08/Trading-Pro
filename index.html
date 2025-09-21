@@ -2363,23 +2363,23 @@
     <h2 class="calculator-title" data-lang="kelly-criterion-calculator">Kelly Criterion Calculator</h2>
                                 
                                 <div class="calc-grid">
-                                    <div class="calc-input-group">
-                                        <label class="calc-label" data-lang="account-balance">Account Balance ($)</label>
-                                        <input type="number" class="calc-input" id="riskAccountBalance" value="" oninput="calculateRiskPosition()">
-                                    </div>
-                                    <div class="calc-input-group">
-                                        <label class="calc-label" data-lang="win-rate-input">Win Rate (%)</label>
-                                        <input type="number" class="calc-input" id="riskPercentage" value="" min="0.1" max="10" step="1" oninput="calculateRiskPosition()">
-                                    </div>
-                                    <div class="calc-input-group">
-                                        <label class="calc-label" data-lang="average-win">Average Win ($)</label>
-                                        <input type="number" class="calc-input" id="riskEntryPrice" value="" step="0.01" oninput="calculateRiskPosition()">
-                                    </div>
-                                    <div class="calc-input-group">
-                                        <label class="calc-label" data-lang="average-loss">Average Loss ($)</label>
-                                        <input type="number" class="calc-input" id="riskStopPrice" value="" step="0.01" oninput="calculateRiskPosition()">
-                                    </div>
-                                </div>
+    <div class="calc-input-group">
+        <label class="calc-label" data-lang="account-balance">계좌 잔고 ($)</label>
+        <input type="number" class="calc-input" id="calcAccountBalance" value="" oninput="calculatePosition()">
+    </div>
+    <div class="calc-input-group">
+        <label class="calc-label" data-lang="win-rate-input">승률 (%)</label>
+        <input type="number" class="calc-input" id="calcWinRate" value="" min="0" max="100" oninput="calculatePosition()">
+    </div>
+    <div class="calc-input-group">
+        <label class="calc-label" data-lang="average-win">평균 수익 ($)</label>
+        <input type="number" class="calc-input" id="calcAvgWin" value="" oninput="calculatePosition()">
+    </div>
+    <div class="calc-input-group">
+        <label class="calc-label" data-lang="average-loss">평균 손실 ($)</label>
+        <input type="number" class="calc-input" id="calcAvgLoss" value="" oninput="calculatePosition()">
+    </div>
+</div>
 
                                 <div class="calc-input-group">
                                     <button class="btn btn-secondary" onclick="autoLoadTradeData()" style="width: 100%;" data-lang="auto-load-trade-data">
@@ -2409,23 +2409,23 @@
     <h2 class="calculator-title" data-lang="risk-management-calculator">Risk Management Calculator</h2>
                                 
                                 <div class="calc-grid">
-                                    <div class="calc-input-group">
-                                        <label class="calc-label" data-lang="account-balance">Account Balance ($)</label>
-                                        <input type="number" class="calc-input" id="riskAccountBalance" value="10000" oninput="calculateRiskPosition()">
-                                    </div>
-                                    <div class="calc-input-group">
-                                        <label class="calc-label" data-lang="risk-percentage">Risk Percentage (%)</label>
-                                        <input type="number" class="calc-input" id="riskPercentage" value="2" min="0.1" max="10" step="1" style="background: #0f172a !important; border: 1px solid #334155 !important; color: #e4e4e7 !important; -webkit-appearance: none !important; -moz-appearance: textfield !important; appearance: none !important;" oninput="calculateRiskPosition()">
-                                    </div>
-                                    <div class="calc-input-group">
-                                        <label class="calc-label" data-lang="entry-price">Entry Price ($)</label>
-                                        <input type="number" class="calc-input" id="riskEntryPrice" value="100" step="0.01" oninput="calculateRiskPosition()">
-                                    </div>
-                                    <div class="calc-input-group">
-                                        <label class="calc-label" data-lang="stop-loss-price">Stop Loss Price ($)</label>
-                                        <input type="number" class="calc-input" id="riskStopPrice" value="95" step="0.01" oninput="calculateRiskPosition()">
-                                    </div>
-                                </div>
+    <div class="calc-input-group">
+        <label class="calc-label" data-lang="account-balance">계좌 잔고 ($)</label>
+        <input type="number" class="calc-input" id="riskAccountBalance" value="" oninput="calculateRiskPosition()">
+    </div>
+    <div class="calc-input-group">
+        <label class="calc-label" data-lang="risk-percentage">리스크 비율 (%)</label>
+        <input type="number" class="calc-input" id="riskPercentage" value="" min="0.1" max="10" step="1" oninput="calculateRiskPosition()">
+    </div>
+    <div class="calc-input-group">
+        <label class="calc-label" data-lang="entry-price">진입 가격 ($)</label>
+        <input type="number" class="calc-input" id="riskEntryPrice" value="" step="0.01" oninput="calculateRiskPosition()">
+    </div>
+    <div class="calc-input-group">
+        <label class="calc-label" data-lang="stop-loss-price">손절 가격 ($)</label>
+        <input type="number" class="calc-input" id="riskStopPrice" value="" step="0.01" oninput="calculateRiskPosition()">
+    </div>
+</div>
 
                                 <div class="risk-preset-section">
                                     <div class="risk-preset-title">리스크 비율</div>
@@ -6704,34 +6704,37 @@
         }
 
         function autoLoadTradeData() {
-            if (!trades || trades.length === 0) {
-                alert('거래 이력이 없습니다.');
-                return;
-            }
-            
-            const recentTrades = trades.slice(-20);
-            const wins = recentTrades.filter(trade => trade.pnl > 0);
-            const losses = recentTrades.filter(trade => trade.pnl < 0);
-            
-            if (losses.length === 0) {
-                alert('손실 거래가 없어 계산할 수 없습니다.');
-                return;
-            }
-            
-            const winRate = (wins.length / recentTrades.length) * 100;
-            const avgWin = wins.length > 0 ? wins.reduce((sum, trade) => sum + trade.pnl, 0) / wins.length : 0;
-            const avgLoss = Math.abs(losses.reduce((sum, trade) => sum + trade.pnl, 0) / losses.length);
-            
-            document.getElementById('calcWinRate').value = winRate.toFixed(1);
-            document.getElementById('calcAvgWin').value = avgWin.toFixed(0);
-            document.getElementById('calcAvgLoss').value = avgLoss.toFixed(0);
-            
-            document.getElementById('recentWinRateCalc').textContent = winRate.toFixed(1) + '%';
-            document.getElementById('plRatioCalc').textContent = (avgWin / avgLoss).toFixed(2);
-            
-            calculatePosition();
-            showToast('거래 이력에서 데이터를 불러왔습니다');
-        }
+    if (!trades || trades.length === 0) {
+        alert('거래 이력이 없습니다.');
+        return;
+    }
+    
+    const recentTrades = trades.slice(-20);
+    const wins = recentTrades.filter(trade => trade.pnl > 0);
+    const losses = recentTrades.filter(trade => trade.pnl < 0);
+    
+    if (losses.length === 0) {
+        alert('손실 거래가 없어 계산할 수 없습니다.');
+        return;
+    }
+    
+    const winRate = (wins.length / recentTrades.length) * 100;
+    const avgWin = wins.length > 0 ? wins.reduce((sum, trade) => sum + trade.pnl, 0) / wins.length : 0;
+    const avgLoss = Math.abs(losses.reduce((sum, trade) => sum + trade.pnl, 0) / losses.length);
+    
+    // Kelly 계산기 입력 필드에 값 설정
+    document.getElementById('calcWinRate').value = winRate.toFixed(1);
+    document.getElementById('calcAvgWin').value = avgWin.toFixed(0);
+    document.getElementById('calcAvgLoss').value = avgLoss.toFixed(0);
+    
+    // 사이드바에도 표시
+    document.getElementById('recentWinRateCalc').textContent = winRate.toFixed(1) + '%';
+    document.getElementById('plRatioCalc').textContent = (avgWin / avgLoss).toFixed(2);
+    
+    // 계산 실행
+    calculatePosition();
+    showToast('거래 이력에서 데이터를 불러왔습니다');
+}
 
         // Calculator Tab Management
         function showCalculatorTab(tabName) {
