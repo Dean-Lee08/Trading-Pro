@@ -2192,6 +2192,81 @@
     font-size: 12px;
     text-align: center;
 }
+
+            .risk-preset-section {
+    background: #1e293b !important;
+    border: 1px solid #334155 !important;
+    border-radius: 8px !important;
+    padding: 16px !important;
+    margin: 20px 0 !important;
+}
+
+.risk-preset-title {
+    color: #f8fafc !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    margin-bottom: 12px !important;
+    text-align: center !important;
+}
+
+.risk-preset-buttons {
+    display: flex !important;
+    gap: 8px !important;
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+}
+
+.risk-preset-btn {
+    background: #374151 !important;
+    border: 1px solid #4b5563 !important;
+    color: #e4e4e7 !important;
+    padding: 8px 16px !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+    min-width: 60px !important;
+}
+
+.risk-preset-btn:hover {
+    background: #4b5563 !important;
+    border-color: #4b5563 !important;
+}
+
+.risk-preset-btn.active {
+    background: #3b82f6 !important;
+    border-color: #3b82f6 !important;
+    color: white !important;
+}
+
+.custom-risk-input {
+    display: none;
+    margin-top: 12px;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+}
+
+.custom-risk-input.active {
+    display: flex !important;
+}
+
+.custom-risk-input input {
+    width: 80px !important;
+    background: #0f172a !important;
+    border: 1px solid #334155 !important;
+    color: #e4e4e7 !important;
+    padding: 6px 8px !important;
+    border-radius: 4px !important;
+    font-size: 12px !important;
+    text-align: center !important;
+}
+
+.custom-risk-input input:focus {
+    outline: none !important;
+    border-color: #3b82f6 !important;
+}
     </style>
 </head>
 <body>
@@ -2313,10 +2388,16 @@
             <div class="current-date-display" id="currentDateDisplay" onclick="openDatePicker()"></div>
             <button class="date-nav-btn" onclick="changeTradingDate(1)" title="Next day">→</button>
         </div>
+        <div class="dashboard-tabs">
+            <button class="dashboard-tab active" onclick="showDashboardSection('trading')">거래 기록</button>
+            <button class="dashboard-tab" onclick="showDashboardSection('position-calc')">Position Calculator</button>
+        </div>
     </div>
-    <div class="dashboard-tabs">
-        <button class="dashboard-tab active" onclick="showDashboardSection('trading')">거래 기록</button>
-        <button class="dashboard-tab" onclick="showDashboardSection('position-calc')">Position Calculator</button>
+    <div class="page-header-info" id="calculatorHeaderInfo" style="display: none;">
+        <div class="dashboard-tabs">
+            <button class="dashboard-tab" onclick="showDashboardSection('trading')">거래 기록</button>
+            <button class="dashboard-tab active" onclick="showDashboardSection('position-calc')">Position Calculator</button>
+        </div>
     </div>
 </div>
 
