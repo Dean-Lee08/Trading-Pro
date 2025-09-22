@@ -2216,10 +2216,6 @@
                         <label>Exit Time</label>
                         <input type="time" id="editExitTime">
                     </div>
-                    <div class="form-group" style="grid-column: 1 / -1;">
-                        <label>Notes</label>
-                        <textarea id="editNotes" placeholder="Add trade notes..."></textarea>
-                    </div>
                 </div>
                 <div class="edit-trade-actions">
                     <button type="button" class="btn btn-secondary" onclick="closeEditTradeModal()">Cancel</button>
@@ -2522,8 +2518,8 @@
                                     <input type="text" id="holdingTimeDisplay" readonly style="background: #0f172a; color: #64748b;">
                                 </div>
                                 <div class="form-group">
-                                    <label>Notes</label>
-                                    <textarea id="tradeNotes" placeholder="Add trade notes..."></textarea>
+                                    <label data-lang="amount">Amount ($)</label>
+                                    <input type="text" id="amountDisplay" readonly style="background: #0f172a; color: #94a3b8;">
                                 </div>
                             </div>
                             <div class="form-actions">
@@ -2582,6 +2578,7 @@
                                 <th data-lang="buy-price">Buy Price</th>
                                 <th data-lang="sell-price">Sell Price</th>
                                 <th data-lang="shares">Shares</th>
+                                <th data-lang="amount">Amount</th>
                                 <th data-lang="time">Time</th>
                                 <th data-lang="pnl">P&L</th>
                                 <th data-lang="return-pct">Return %</th>
@@ -3280,10 +3277,10 @@
                                 <th data-lang="buy-price">Buy Price</th>
                                 <th data-lang="sell-price">Sell Price</th>
                                 <th data-lang="shares">Shares</th>
+                                <th data-lang="amount">Amount</th>
                                 <th data-lang="time">Time</th>
                                 <th data-lang="pnl">P&L</th>
                                 <th data-lang="return-pct">Return %</th>
-                                <th>Notes</th>
                                 <th data-lang="actions">Actions</th>
                             </tr>
                         </thead>
@@ -5371,6 +5368,14 @@
             const buyPrice = parseFloat(document.getElementById('buyPrice').value) || 0;
             const sellPrice = parseFloat(document.getElementById('sellPrice').value) || 0;
             
+            // Always calculate and display amount if shares and buyPrice are available
+            if (shares && buyPrice) {
+                const amount = shares * buyPrice;
+                document.getElementById('amountDisplay').value = `$${amount.toFixed(2)}`;
+            } else {
+                document.getElementById('amountDisplay').value = '';
+            }
+            
             if (shares && buyPrice && sellPrice) {
                 const pnl = shares * (sellPrice - buyPrice);
                 const returnPct = ((sellPrice - buyPrice) / buyPrice) * 100;
@@ -5426,7 +5431,7 @@
                 entryTime: document.getElementById('entryTime').value,
                 exitTime: document.getElementById('exitTime').value,
                 holdingTime: document.getElementById('holdingTimeDisplay').value,
-                notes: document.getElementById('tradeNotes').value
+                notes: ''
             };
             
             formData.pnl = formData.shares * (formData.sellPrice - formData.buyPrice);
@@ -5451,7 +5456,7 @@
             document.getElementById('pnlDisplay').value = '';
             document.getElementById('returnPct').value = '';
             document.getElementById('holdingTimeDisplay').value = '';
-            document.getElementById('tradeNotes').value = '';
+            document.getElementById('amountDisplay').value = '';
             
             if (timeEditMode) {
                 toggleTimeEdit();
@@ -5486,7 +5491,6 @@
             document.getElementById('editSellPrice').value = trade.sellPrice;
             document.getElementById('editEntryTime').value = trade.entryTime || '';
             document.getElementById('editExitTime').value = trade.exitTime || '';
-            document.getElementById('editNotes').value = trade.notes || '';
             
             document.getElementById('editTradeModal').style.display = 'flex';
         }
@@ -5515,7 +5519,7 @@
                 sellPrice: parseFloat(document.getElementById('editSellPrice').value),
                 entryTime: document.getElementById('editEntryTime').value,
                 exitTime: document.getElementById('editExitTime').value,
-                notes: document.getElementById('editNotes').value
+                notes: trade.notes || ''
             };
             
             // Recalculate P&L and return percentage
@@ -5644,7 +5648,7 @@
             const tableBody = document.getElementById(tableBodyId);
             
             if (tradesToShow.length === 0) {
-                const colspan = tableBodyId === 'tradesTableBody' ? '9' : '10';
+                const colspan = tableBodyId === 'tradesTableBody' ? '10' : '10';
                 tableBody.innerHTML = `
                     <tr>
                         <td colspan="${colspan}">
@@ -5673,6 +5677,7 @@
             if (tableBodyId === 'tradesTableBody') {
                 tableBody.innerHTML = sortedTrades.map(trade => {
                     const shares = trade.shares || (trade.amount && trade.buyPrice ? Math.round(trade.amount / trade.buyPrice) : 0);
+                    const amount = trade.amount || (shares * trade.buyPrice);
                     return `
                         <tr>
                             <td>${new Date(trade.date).toLocaleDateString()}</td>
@@ -5680,6 +5685,7 @@
                             <td>${trade.buyPrice.toFixed(4)}</td>
                             <td>${trade.sellPrice.toFixed(4)}</td>
                             <td>${shares}</td>
+                            <td>$${amount.toFixed(2)}</td>
                             <td>${trade.holdingTime || 'N/A'}</td>
                             <td class="${trade.pnl >= 0 ? 'positive' : 'negative'}">$${trade.pnl.toFixed(2)}</td>
                             <td class="${trade.returnPct >= 0 ? 'positive' : 'negative'}">${trade.returnPct.toFixed(2)}%</td>
@@ -5693,6 +5699,7 @@
             } else {
                 tableBody.innerHTML = sortedTrades.map(trade => {
                     const shares = trade.shares || (trade.amount && trade.buyPrice ? Math.round(trade.amount / trade.buyPrice) : 0);
+                    const amount = trade.amount || (shares * trade.buyPrice);
                     return `
                         <tr>
                             <td>${new Date(trade.date).toLocaleDateString()}</td>
@@ -5700,10 +5707,10 @@
                             <td>${trade.buyPrice.toFixed(4)}</td>
                             <td>${trade.sellPrice.toFixed(4)}</td>
                             <td>${shares}</td>
+                            <td>$${amount.toFixed(2)}</td>
                             <td>${trade.holdingTime || 'N/A'}</td>
                             <td class="${trade.pnl >= 0 ? 'positive' : 'negative'}">$${trade.pnl.toFixed(2)}</td>
                             <td class="${trade.returnPct >= 0 ? 'positive' : 'negative'}">${trade.returnPct.toFixed(2)}%</td>
-                            <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${trade.notes || ''}">${trade.notes || '-'}</td>
                             <td>
                                 <button class="action-btn" onclick="editTrade(${trade.id})" title="Edit trade">✏️</button>
                                 <button class="action-btn" onclick="deleteTrade(${trade.id})" title="Delete trade">🗑️</button>
