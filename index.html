@@ -4787,21 +4787,21 @@
 
     // 1. Equity Curve
             // 일일 P&L 집계
-            const dailyPL = {};
+            const equityDailyPL = {};
             filteredTrades.forEach(trade => {
-                if (!dailyPL[trade.date]) {
-                    dailyPL[trade.date] = 0;
+                if (!equityDailyPL[trade.date]) {
+                    equityDailyPL[trade.date] = 0;
                 }
-                dailyPL[trade.date] += trade.pnl;
+                equityDailyPL[trade.date] += trade.pnl;
             });
 
             // 날짜순으로 정렬하고 누적 equity 계산
-            const sortedDates = Object.keys(dailyPL).sort();
+            const equitySortedDates = Object.keys(equityDailyPL).sort();
             const equityData = [];
             let equity = 0;
             
-            sortedDates.forEach(date => {
-                equity += dailyPL[date];
+            equitySortedDates.forEach(date => {
+                equity += equityDailyPL[date];
                 equityData.push({
                     x: date,
                     y: equity
@@ -4821,22 +4821,22 @@
 
     // 2. Drawdown Chart
             // 일일 P&L 집계
-            const dailyPL = {};
+            const drawdownDailyPL = {};
             filteredTrades.forEach(trade => {
-                if (!dailyPL[trade.date]) {
-                    dailyPL[trade.date] = 0;
+                if (!drawdownDailyPL[trade.date]) {
+                    drawdownDailyPL[trade.date] = 0;
                 }
-                dailyPL[trade.date] += trade.pnl;
+                drawdownDailyPL[trade.date] += trade.pnl;
             });
 
             // 날짜순으로 정렬하고 drawdown 계산
-            const sortedDates = Object.keys(dailyPL).sort();
+            const drawdownSortedDates = Object.keys(drawdownDailyPL).sort();
             const drawdownData = [];
             let peak = 0;
             let currentEquity = 0;
 
-            sortedDates.forEach(date => {
-                currentEquity += dailyPL[date];
+            drawdownSortedDates.forEach(date => {
+                currentEquity += drawdownDailyPL[date];
                 if (currentEquity > peak) {
                     peak = currentEquity;
                 }
@@ -4935,23 +4935,23 @@
 
     // 6. Rolling Performance (30-day)
             // 일일 P&L 집계
-            const dailyPL = {};
+            const rollingDailyPL = {};
             filteredTrades.forEach(trade => {
-                if (!dailyPL[trade.date]) {
-                    dailyPL[trade.date] = 0;
+                if (!rollingDailyPL[trade.date]) {
+                    rollingDailyPL[trade.date] = 0;
                 }
-                dailyPL[trade.date] += trade.pnl;
+                rollingDailyPL[trade.date] += trade.pnl;
             });
 
-            const sortedDates = Object.keys(dailyPL).sort();
+            const rollingSortedDates = Object.keys(rollingDailyPL).sort();
             
-            if (sortedDates.length >= 30) {
+            if (rollingSortedDates.length >= 30) {
                 const rollingData = [];
-                for (let i = 29; i < sortedDates.length; i++) {
-                    const recentDates = sortedDates.slice(i - 29, i + 1);
-                    const rollingPL = recentDates.reduce((sum, date) => sum + dailyPL[date], 0);
+                for (let i = 29; i < rollingSortedDates.length; i++) {
+                    const recentDates = rollingSortedDates.slice(i - 29, i + 1);
+                    const rollingPL = recentDates.reduce((sum, date) => sum + rollingDailyPL[date], 0);
                     rollingData.push({
-                        x: sortedDates[i],
+                        x: rollingSortedDates[i],
                         y: rollingPL
                     });
                 }
