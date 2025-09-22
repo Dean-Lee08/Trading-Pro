@@ -4642,20 +4642,30 @@
             });
 
             // Cumulative P&L Chart
+            // 먼저 일일 P&L을 집계
+            const dailyPL = {};
+            filteredTrades.forEach(trade => {
+                if (!dailyPL[trade.date]) {
+                    dailyPL[trade.date] = 0;
+                }
+                dailyPL[trade.date] += trade.pnl;
+            });
+
+            // 날짜순으로 정렬하고 누적 계산
+            const sortedDates = Object.keys(dailyPL).sort();
             const cumulativePL = [];
             let runningTotal = 0;
-            const sortedTrades = [...filteredTrades].sort((a, b) => new Date(a.date) - new Date(b.date));
             
-            sortedTrades.forEach((trade, index) => {
-                runningTotal += trade.pnl;
+            sortedDates.forEach(date => {
+                runningTotal += dailyPL[date];
                 cumulativePL.push({
-                    x: trade.date,
+                    x: date,
                     y: runningTotal
                 });
             });
 
             createBasicChart('basicCumulativePLChart', 'line', {
-                labels: cumulativePL.map(p => p.x),
+                labels: cumulativePL.map(p => new Date(p.x).toLocaleDateString()),
                 datasets: [{
                     label: 'Cumulative P&L',
                     data: cumulativePL.map(p => p.y),
@@ -4776,19 +4786,30 @@
     const sortedTrades = [...filteredTrades].sort((a, b) => new Date(a.date) - new Date(b.date));
 
     // 1. Equity Curve
+            // 일일 P&L 집계
+            const dailyPL = {};
+            filteredTrades.forEach(trade => {
+                if (!dailyPL[trade.date]) {
+                    dailyPL[trade.date] = 0;
+                }
+                dailyPL[trade.date] += trade.pnl;
+            });
+
+            // 날짜순으로 정렬하고 누적 equity 계산
+            const sortedDates = Object.keys(dailyPL).sort();
             const equityData = [];
             let equity = 0;
             
-            sortedTrades.forEach((trade, index) => {
-                equity += trade.pnl;
+            sortedDates.forEach(date => {
+                equity += dailyPL[date];
                 equityData.push({
-                    x: trade.date,
+                    x: date,
                     y: equity
                 });
             });
 
             createAdvancedChart('equityCurveChart', 'line', {
-                labels: equityData.map(p => p.x),
+                labels: equityData.map(p => new Date(p.x).toLocaleDateString()),
                 datasets: [{
                     label: 'Equity',
                     data: equityData.map(p => p.y),
@@ -4799,24 +4820,35 @@
             });
 
     // 2. Drawdown Chart
+            // 일일 P&L 집계
+            const dailyPL = {};
+            filteredTrades.forEach(trade => {
+                if (!dailyPL[trade.date]) {
+                    dailyPL[trade.date] = 0;
+                }
+                dailyPL[trade.date] += trade.pnl;
+            });
+
+            // 날짜순으로 정렬하고 drawdown 계산
+            const sortedDates = Object.keys(dailyPL).sort();
             const drawdownData = [];
             let peak = 0;
             let currentEquity = 0;
 
-            sortedTrades.forEach((trade, index) => {
-                currentEquity += trade.pnl;
+            sortedDates.forEach(date => {
+                currentEquity += dailyPL[date];
                 if (currentEquity > peak) {
                     peak = currentEquity;
                 }
                 const drawdown = peak > 0 ? ((peak - currentEquity) / Math.abs(peak)) * 100 : 0;
                 drawdownData.push({
-                    x: trade.date,
+                    x: date,
                     y: -Math.abs(drawdown)
                 });
             });
 
             createAdvancedChart('drawdownChart', 'line', {
-                labels: drawdownData.map(p => p.x),
+                labels: drawdownData.map(p => new Date(p.x).toLocaleDateString()),
                 datasets: [{
                     label: 'Drawdown %',
                     data: drawdownData.map(p => p.y),
@@ -4901,22 +4933,33 @@
         }]
     });
 
-    // 6. Rolling Performance (30-trade)
-            if (sortedTrades.length >= 30) {
+    // 6. Rolling Performance (30-day)
+            // 일일 P&L 집계
+            const dailyPL = {};
+            filteredTrades.forEach(trade => {
+                if (!dailyPL[trade.date]) {
+                    dailyPL[trade.date] = 0;
+                }
+                dailyPL[trade.date] += trade.pnl;
+            });
+
+            const sortedDates = Object.keys(dailyPL).sort();
+            
+            if (sortedDates.length >= 30) {
                 const rollingData = [];
-                for (let i = 29; i < sortedTrades.length; i++) {
-                    const recentTrades = sortedTrades.slice(i - 29, i + 1);
-                    const rollingPL = recentTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+                for (let i = 29; i < sortedDates.length; i++) {
+                    const recentDates = sortedDates.slice(i - 29, i + 1);
+                    const rollingPL = recentDates.reduce((sum, date) => sum + dailyPL[date], 0);
                     rollingData.push({
-                        x: sortedTrades[i].date,
+                        x: sortedDates[i],
                         y: rollingPL
                     });
                 }
 
                 createAdvancedChart('rollingPerformanceChart', 'line', {
-                    labels: rollingData.map(p => p.x),
+                    labels: rollingData.map(p => new Date(p.x).toLocaleDateString()),
                     datasets: [{
-                        label: '30-Trade Rolling P&L',
+                        label: '30-Day Rolling P&L',
                         data: rollingData.map(p => p.y),
                         borderColor: '#f59e0b',
                         backgroundColor: 'rgba(245, 158, 11, 0.1)',
@@ -4962,24 +5005,45 @@
     });
 
     // 9. Volatility Analysis
-            if (filteredTrades.length >= 10) {
+            // 일일 평균 수익률 계산
+            const dailyReturns = {};
+            const dailyTradeCounts = {};
+            
+            filteredTrades.forEach(trade => {
+                if (!dailyReturns[trade.date]) {
+                    dailyReturns[trade.date] = 0;
+                    dailyTradeCounts[trade.date] = 0;
+                }
+                dailyReturns[trade.date] += trade.returnPct;
+                dailyTradeCounts[trade.date]++;
+            });
+
+            // 일일 평균 수익률 계산
+            const dailyAvgReturns = {};
+            Object.keys(dailyReturns).forEach(date => {
+                dailyAvgReturns[date] = dailyReturns[date] / dailyTradeCounts[date];
+            });
+
+            const sortedDates = Object.keys(dailyAvgReturns).sort();
+            
+            if (sortedDates.length >= 10) {
                 const volatilityData = [];
-                const returns = filteredTrades.map(trade => trade.returnPct);
-                for (let i = 9; i < returns.length; i++) {
-                    const recentReturns = returns.slice(i - 9, i + 1);
+                for (let i = 9; i < sortedDates.length; i++) {
+                    const recentDates = sortedDates.slice(i - 9, i + 1);
+                    const recentReturns = recentDates.map(date => dailyAvgReturns[date]);
                     const mean = recentReturns.reduce((sum, ret) => sum + ret, 0) / recentReturns.length;
                     const variance = recentReturns.reduce((sum, ret) => sum + Math.pow(ret - mean, 2), 0) / recentReturns.length;
                     const volatility = Math.sqrt(variance);
                     volatilityData.push({
-                        x: sortedTrades[i].date,
+                        x: sortedDates[i],
                         y: volatility
                     });
                 }
 
                 createAdvancedChart('volatilityAnalysisChart', 'line', {
-                    labels: volatilityData.map(p => p.x),
+                    labels: volatilityData.map(p => new Date(p.x).toLocaleDateString()),
                     datasets: [{
-                        label: '10-Trade Rolling Volatility',
+                        label: '10-Day Rolling Volatility',
                         data: volatilityData.map(p => p.y),
                         borderColor: '#8b5cf6',
                         backgroundColor: 'rgba(139, 92, 246, 0.1)',
