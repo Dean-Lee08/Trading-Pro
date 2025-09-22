@@ -4649,15 +4649,16 @@
             sortedTrades.forEach((trade, index) => {
                 runningTotal += trade.pnl;
                 cumulativePL.push({
-                    x: index + 1,
+                    x: trade.date,
                     y: runningTotal
                 });
             });
 
             createBasicChart('basicCumulativePLChart', 'line', {
+                labels: cumulativePL.map(p => p.x),
                 datasets: [{
                     label: 'Cumulative P&L',
-                    data: cumulativePL,
+                    data: cumulativePL.map(p => p.y),
                     borderColor: '#10b981',
                     backgroundColor: 'rgba(16, 185, 129, 0.1)',
                     fill: true
@@ -4711,16 +4712,13 @@
             });
 
             const monthlyData = Object.entries(monthlyStats)
-                .sort(([a], [b]) => a.localeCompare(b))
-                .map(([month, pnl]) => ({
-                    x: month,
-                    y: pnl
-                }));
+                .sort(([a], [b]) => a.localeCompare(b));
 
             createBasicChart('basicMonthlyChart', 'line', {
+                labels: monthlyData.map(([month]) => month),
                 datasets: [{
                     label: 'Monthly P&L',
-                    data: monthlyData,
+                    data: monthlyData.map(([, pnl]) => pnl),
                     borderColor: '#3b82f6',
                     backgroundColor: 'rgba(59, 130, 246, 0.1)',
                     fill: true
@@ -4778,53 +4776,55 @@
     const sortedTrades = [...filteredTrades].sort((a, b) => new Date(a.date) - new Date(b.date));
 
     // 1. Equity Curve
-    const equityData = [];
-    let equity = 0;
-    
-    sortedTrades.forEach((trade, index) => {
-        equity += trade.pnl;
-        equityData.push({
-            x: index + 1,
-            y: equity
-        });
-    });
+            const equityData = [];
+            let equity = 0;
+            
+            sortedTrades.forEach((trade, index) => {
+                equity += trade.pnl;
+                equityData.push({
+                    x: trade.date,
+                    y: equity
+                });
+            });
 
-    createAdvancedChart('equityCurveChart', 'line', {
-        datasets: [{
-            label: 'Equity',
-            data: equityData,
-            borderColor: '#10b981',
-            backgroundColor: 'rgba(16, 185, 129, 0.1)',
-            fill: true
-        }]
-    });
+            createAdvancedChart('equityCurveChart', 'line', {
+                labels: equityData.map(p => p.x),
+                datasets: [{
+                    label: 'Equity',
+                    data: equityData.map(p => p.y),
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    fill: true
+                }]
+            });
 
     // 2. Drawdown Chart
-    const drawdownData = [];
-    let peak = 0;
-    let currentEquity = 0;
+            const drawdownData = [];
+            let peak = 0;
+            let currentEquity = 0;
 
-    sortedTrades.forEach((trade, index) => {
-        currentEquity += trade.pnl;
-        if (currentEquity > peak) {
-            peak = currentEquity;
-        }
-        const drawdown = peak > 0 ? ((peak - currentEquity) / Math.abs(peak)) * 100 : 0;
-        drawdownData.push({
-            x: index + 1,
-            y: -Math.abs(drawdown)
-        });
-    });
+            sortedTrades.forEach((trade, index) => {
+                currentEquity += trade.pnl;
+                if (currentEquity > peak) {
+                    peak = currentEquity;
+                }
+                const drawdown = peak > 0 ? ((peak - currentEquity) / Math.abs(peak)) * 100 : 0;
+                drawdownData.push({
+                    x: trade.date,
+                    y: -Math.abs(drawdown)
+                });
+            });
 
-    createAdvancedChart('drawdownChart', 'line', {
-        datasets: [{
-            label: 'Drawdown %',
-            data: drawdownData,
-            borderColor: '#ef4444',
-            backgroundColor: 'rgba(239, 68, 68, 0.1)',
-            fill: true
-        }]
-    });
+            createAdvancedChart('drawdownChart', 'line', {
+                labels: drawdownData.map(p => p.x),
+                datasets: [{
+                    label: 'Drawdown %',
+                    data: drawdownData.map(p => p.y),
+                    borderColor: '#ef4444',
+                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                    fill: true
+                }]
+            });
 
     // 3. Symbol Performance
     const symbolStats = {};
@@ -4902,26 +4902,27 @@
     });
 
     // 6. Rolling Performance (30-trade)
-    if (sortedTrades.length >= 30) {
-        const rollingData = [];
-        for (let i = 29; i < sortedTrades.length; i++) {
-            const recentTrades = sortedTrades.slice(i - 29, i + 1);
-            const rollingPL = recentTrades.reduce((sum, trade) => sum + trade.pnl, 0);
-            rollingData.push({
-                x: i + 1,
-                y: rollingPL
-            });
-        }
+            if (sortedTrades.length >= 30) {
+                const rollingData = [];
+                for (let i = 29; i < sortedTrades.length; i++) {
+                    const recentTrades = sortedTrades.slice(i - 29, i + 1);
+                    const rollingPL = recentTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+                    rollingData.push({
+                        x: sortedTrades[i].date,
+                        y: rollingPL
+                    });
+                }
 
-        createAdvancedChart('rollingPerformanceChart', 'line', {
-            datasets: [{
-                label: '30-Trade Rolling P&L',
-                data: rollingData,
-                borderColor: '#f59e0b',
-                backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                fill: true
-            }]
-        });
+                createAdvancedChart('rollingPerformanceChart', 'line', {
+                    labels: rollingData.map(p => p.x),
+                    datasets: [{
+                        label: '30-Trade Rolling P&L',
+                        data: rollingData.map(p => p.y),
+                        borderColor: '#f59e0b',
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        fill: true
+                    }]
+                });
     } else {
         const canvas = document.getElementById('rollingPerformanceChart');
         if (canvas) {
@@ -4961,29 +4962,30 @@
     });
 
     // 9. Volatility Analysis
-    if (filteredTrades.length >= 10) {
-        const volatilityData = [];
-        const returns = filteredTrades.map(trade => trade.returnPct);
-        for (let i = 9; i < returns.length; i++) {
-            const recentReturns = returns.slice(i - 9, i + 1);
-            const mean = recentReturns.reduce((sum, ret) => sum + ret, 0) / recentReturns.length;
-            const variance = recentReturns.reduce((sum, ret) => sum + Math.pow(ret - mean, 2), 0) / recentReturns.length;
-            const volatility = Math.sqrt(variance);
-            volatilityData.push({
-                x: i + 1,
-                y: volatility
-            });
-        }
+            if (filteredTrades.length >= 10) {
+                const volatilityData = [];
+                const returns = filteredTrades.map(trade => trade.returnPct);
+                for (let i = 9; i < returns.length; i++) {
+                    const recentReturns = returns.slice(i - 9, i + 1);
+                    const mean = recentReturns.reduce((sum, ret) => sum + ret, 0) / recentReturns.length;
+                    const variance = recentReturns.reduce((sum, ret) => sum + Math.pow(ret - mean, 2), 0) / recentReturns.length;
+                    const volatility = Math.sqrt(variance);
+                    volatilityData.push({
+                        x: sortedTrades[i].date,
+                        y: volatility
+                    });
+                }
 
-        createAdvancedChart('volatilityAnalysisChart', 'line', {
-            datasets: [{
-                label: '10-Trade Rolling Volatility',
-                data: volatilityData,
-                borderColor: '#8b5cf6',
-                backgroundColor: 'rgba(139, 92, 246, 0.1)',
-                fill: true
-            }]
-        });
+                createAdvancedChart('volatilityAnalysisChart', 'line', {
+                    labels: volatilityData.map(p => p.x),
+                    datasets: [{
+                        label: '10-Trade Rolling Volatility',
+                        data: volatilityData.map(p => p.y),
+                        borderColor: '#8b5cf6',
+                        backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                        fill: true
+                    }]
+                });
     } else {
         const canvas = document.getElementById('volatilityAnalysisChart');
         if (canvas) {
@@ -5108,34 +5110,50 @@
     });
 
     // 14. Win Rate by Time
-    const timeWinRate = {};
-    filteredTrades.forEach(trade => {
-        if (trade.entryTime) {
-            const hour = parseInt(trade.entryTime.split(':')[0]);
-            if (!timeWinRate[hour]) {
-                timeWinRate[hour] = { wins: 0, total: 0 };
-            }
-            timeWinRate[hour].total++;
-            if (trade.pnl > 0) timeWinRate[hour].wins++;
-        }
-    });
+            const timeWinRate = {};
+            filteredTrades.forEach(trade => {
+                if (trade.entryTime) {
+                    const hour = parseInt(trade.entryTime.split(':')[0]);
+                    if (!timeWinRate[hour]) {
+                        timeWinRate[hour] = { wins: 0, total: 0 };
+                    }
+                    timeWinRate[hour].total++;
+                    if (trade.pnl > 0) timeWinRate[hour].wins++;
+                }
+            });
 
-    const winRateData = Object.entries(timeWinRate)
-        .sort(([a], [b]) => parseInt(a) - parseInt(b))
-        .map(([hour, data]) => ({
-            x: parseInt(hour),
-            y: data.total > 0 ? (data.wins / data.total) * 100 : 0
-        }));
+            const winRateData = Object.entries(timeWinRate)
+                .sort(([a], [b]) => parseInt(a) - parseInt(b));
 
-    createAdvancedChart('winRateByTimeChart', 'line', {
-        datasets: [{
-            label: 'Win Rate by Hour (%)',
-            data: winRateData,
-            borderColor: '#10b981',
-            backgroundColor: 'rgba(16, 185, 129, 0.1)',
-            fill: true
-        }]
-    });
+            createAdvancedChart('winRateByTimeChart', 'line', {
+                labels: winRateData.map(([hour]) => hour + ':00'),
+                datasets: [{
+                    label: 'Win Rate by Hour (%)',
+                    data: winRateData.map(([, data]) => data.total > 0 ? (data.wins / data.total) * 100 : 0),
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    fill: true
+                }]
+            }, {
+                scales: {
+                    y: {
+                        min: 0,
+                        max: 100,
+                        title: {
+                            display: true,
+                            text: 'Win Rate (%)',
+                            color: '#94a3b8'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Hour of Day',
+                            color: '#94a3b8'
+                        }
+                    }
+                }
+            });
 
     // 15. Position Sizing Analysis
     const positionSizes = filteredTrades.map(trade => trade.amount);
