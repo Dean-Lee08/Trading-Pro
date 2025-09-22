@@ -4760,6 +4760,7 @@
     });
 
     const sortedTrades = [...filteredTrades].sort((a, b) => new Date(a.date) - new Date(b.date));
+    const uniqueSymbols = [...new Set(filteredTrades.map(trade => trade.symbol))];
 
     // 1. Equity Curve
             // 일일 P&L 집계
