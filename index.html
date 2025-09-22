@@ -2197,8 +2197,8 @@
                         <input type="text" id="editSymbol" required>
                     </div>
                     <div class="form-group">
-                        <label>Amount ($)</label>
-                        <input type="number" id="editAmount" step="0.01" required>
+                        <label>Shares</label>
+                        <input type="number" id="editShares" required>
                     </div>
                     <div class="form-group">
                         <label>Buy Price</label>
@@ -2487,8 +2487,8 @@
                                     <input type="text" id="symbol" placeholder="AAPL" required>
                                 </div>
                                 <div class="form-group">
-                                    <label data-lang="amount">Amount ($)</label>
-                                    <input type="number" id="amount" step="0.01" placeholder="5000" required>
+                                    <label data-lang="shares">Shares</label>
+                                    <input type="number" id="shares" placeholder="100" required oninput="calculatePnL()">
                                 </div>
                                 <div class="form-group">
                                     <label data-lang="buy-price">Buy Price</label>
@@ -2581,7 +2581,7 @@
                                 <th data-lang="symbol">Symbol</th>
                                 <th data-lang="buy-price">Buy Price</th>
                                 <th data-lang="sell-price">Sell Price</th>
-                                <th data-lang="amount">Amount</th>
+                                <th data-lang="shares">Shares</th>
                                 <th data-lang="time">Time</th>
                                 <th data-lang="pnl">P&L</th>
                                 <th data-lang="return-pct">Return %</th>
@@ -3279,7 +3279,7 @@
                                 <th data-lang="symbol">Symbol</th>
                                 <th data-lang="buy-price">Buy Price</th>
                                 <th data-lang="sell-price">Sell Price</th>
-                                <th data-lang="amount">Amount</th>
+                                <th data-lang="shares">Shares</th>
                                 <th data-lang="time">Time</th>
                                 <th data-lang="pnl">P&L</th>
                                 <th data-lang="return-pct">Return %</th>
@@ -3403,7 +3403,7 @@
                 'win-rate': 'Win Rate',
                 'record-trade': 'Record Trade',
                 'symbol': 'Symbol',
-                'amount': 'Amount ($)',
+                'shares': 'Shares',
                 'buy-price': 'Buy Price',
                 'sell-price': 'Sell Price',
                 'return-pct': 'Return %',
@@ -3613,7 +3613,7 @@
                 'win-rate': '승률',
                 'record-trade': '거래 기록',
                 'symbol': '심볼',
-                'amount': '금액 ($)',
+                'shares': '주식수',
                 'buy-price': '매수 가격',
                 'sell-price': '매도 가격',
                 'return-pct': '수익률 %',
@@ -5367,12 +5367,11 @@
 
         // Trade related functions
         function calculatePnL() {
-            const amount = parseFloat(document.getElementById('amount').value) || 0;
+            const shares = parseFloat(document.getElementById('shares').value) || 0;
             const buyPrice = parseFloat(document.getElementById('buyPrice').value) || 0;
             const sellPrice = parseFloat(document.getElementById('sellPrice').value) || 0;
             
-            if (amount && buyPrice && sellPrice) {
-                const shares = amount / buyPrice;
+            if (shares && buyPrice && sellPrice) {
                 const pnl = shares * (sellPrice - buyPrice);
                 const returnPct = ((sellPrice - buyPrice) / buyPrice) * 100;
                 
@@ -5413,12 +5412,15 @@
             event.preventDefault();
             
             const tradingDateString = formatTradingDate(currentTradingDate);
+            const shares = parseFloat(document.getElementById('shares').value);
+            const buyPrice = parseFloat(document.getElementById('buyPrice').value);
             
             const formData = {
                 id: Date.now(),
                 symbol: document.getElementById('symbol').value.toUpperCase(),
-                amount: parseFloat(document.getElementById('amount').value),
-                buyPrice: parseFloat(document.getElementById('buyPrice').value),
+                shares: shares,
+                amount: shares * buyPrice,
+                buyPrice: buyPrice,
                 sellPrice: parseFloat(document.getElementById('sellPrice').value),
                 date: tradingDateString,
                 entryTime: document.getElementById('entryTime').value,
@@ -5427,8 +5429,7 @@
                 notes: document.getElementById('tradeNotes').value
             };
             
-            const shares = formData.amount / formData.buyPrice;
-            formData.pnl = shares * (formData.sellPrice - formData.buyPrice);
+            formData.pnl = formData.shares * (formData.sellPrice - formData.buyPrice);
             formData.returnPct = ((formData.sellPrice - formData.buyPrice) / formData.buyPrice) * 100;
             
             trades.push(formData);
@@ -5479,7 +5480,8 @@
             
             document.getElementById('editTradeId').value = trade.id;
             document.getElementById('editSymbol').value = trade.symbol;
-            document.getElementById('editAmount').value = trade.amount;
+            const shares = trade.shares || (trade.amount && trade.buyPrice ? Math.round(trade.amount / trade.buyPrice) : 0);
+            document.getElementById('editShares').value = shares;
             document.getElementById('editBuyPrice').value = trade.buyPrice;
             document.getElementById('editSellPrice').value = trade.sellPrice;
             document.getElementById('editEntryTime').value = trade.entryTime || '';
@@ -5501,11 +5503,15 @@
             
             if (tradeIndex === -1) return;
             
+            const shares = parseFloat(document.getElementById('editShares').value);
+            const buyPrice = parseFloat(document.getElementById('editBuyPrice').value);
+            
             const updatedTrade = {
                 ...trades[tradeIndex],
                 symbol: document.getElementById('editSymbol').value.toUpperCase(),
-                amount: parseFloat(document.getElementById('editAmount').value),
-                buyPrice: parseFloat(document.getElementById('editBuyPrice').value),
+                shares: shares,
+                amount: shares * buyPrice,
+                buyPrice: buyPrice,
                 sellPrice: parseFloat(document.getElementById('editSellPrice').value),
                 entryTime: document.getElementById('editEntryTime').value,
                 exitTime: document.getElementById('editExitTime').value,
@@ -5513,8 +5519,7 @@
             };
             
             // Recalculate P&L and return percentage
-            const shares = updatedTrade.amount / updatedTrade.buyPrice;
-            updatedTrade.pnl = shares * (updatedTrade.sellPrice - updatedTrade.buyPrice);
+            updatedTrade.pnl = updatedTrade.shares * (updatedTrade.sellPrice - updatedTrade.buyPrice);
             updatedTrade.returnPct = ((updatedTrade.sellPrice - updatedTrade.buyPrice) / updatedTrade.buyPrice) * 100;
             
             // Calculate holding time
@@ -5559,10 +5564,12 @@
                 const saved = localStorage.getItem('tradingPlatformTrades');
                 if (saved) {
                     trades = JSON.parse(saved);
-                    // Ensure all trades have notes property
+                    // Ensure all trades have notes property and shares property
                     trades = trades.map(trade => ({
                         ...trade,
-                        notes: trade.notes || ''
+                        notes: trade.notes || '',
+                        shares: trade.shares || (trade.amount && trade.buyPrice ? Math.round(trade.amount / trade.buyPrice) : 0),
+                        amount: trade.amount || (trade.shares && trade.buyPrice ? trade.shares * trade.buyPrice : 0)
                     }));
                 } else {
                     trades = [];
@@ -5664,40 +5671,46 @@
             });
             
             if (tableBodyId === 'tradesTableBody') {
-                tableBody.innerHTML = sortedTrades.map(trade => `
-                    <tr>
-                        <td>${new Date(trade.date).toLocaleDateString()}</td>
-                        <td><strong>${trade.symbol}</strong></td>
-                        <td>${trade.buyPrice.toFixed(4)}</td>
-                        <td>${trade.sellPrice.toFixed(4)}</td>
-                        <td>$${trade.amount.toFixed(2)}</td>
-                        <td>${trade.holdingTime || 'N/A'}</td>
-                        <td class="${trade.pnl >= 0 ? 'positive' : 'negative'}">$${trade.pnl.toFixed(2)}</td>
-                        <td class="${trade.returnPct >= 0 ? 'positive' : 'negative'}">${trade.returnPct.toFixed(2)}%</td>
-                        <td>
-                            <button class="action-btn" onclick="editTrade(${trade.id})" title="Edit trade">✏️</button>
-                            <button class="action-btn" onclick="deleteTrade(${trade.id})" title="Delete trade">🗑️</button>
-                        </td>
-                    </tr>
-                `).join('');
+                tableBody.innerHTML = sortedTrades.map(trade => {
+                    const shares = trade.shares || (trade.amount && trade.buyPrice ? Math.round(trade.amount / trade.buyPrice) : 0);
+                    return `
+                        <tr>
+                            <td>${new Date(trade.date).toLocaleDateString()}</td>
+                            <td><strong>${trade.symbol}</strong></td>
+                            <td>${trade.buyPrice.toFixed(4)}</td>
+                            <td>${trade.sellPrice.toFixed(4)}</td>
+                            <td>${shares}</td>
+                            <td>${trade.holdingTime || 'N/A'}</td>
+                            <td class="${trade.pnl >= 0 ? 'positive' : 'negative'}">$${trade.pnl.toFixed(2)}</td>
+                            <td class="${trade.returnPct >= 0 ? 'positive' : 'negative'}">${trade.returnPct.toFixed(2)}%</td>
+                            <td>
+                                <button class="action-btn" onclick="editTrade(${trade.id})" title="Edit trade">✏️</button>
+                                <button class="action-btn" onclick="deleteTrade(${trade.id})" title="Delete trade">🗑️</button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
             } else {
-                tableBody.innerHTML = sortedTrades.map(trade => `
-                    <tr>
-                        <td>${new Date(trade.date).toLocaleDateString()}</td>
-                        <td><strong>${trade.symbol}</strong></td>
-                        <td>${trade.buyPrice.toFixed(4)}</td>
-                        <td>${trade.sellPrice.toFixed(4)}</td>
-                        <td>$${trade.amount.toFixed(2)}</td>
-                        <td>${trade.holdingTime || 'N/A'}</td>
-                        <td class="${trade.pnl >= 0 ? 'positive' : 'negative'}">$${trade.pnl.toFixed(2)}</td>
-                        <td class="${trade.returnPct >= 0 ? 'positive' : 'negative'}">${trade.returnPct.toFixed(2)}%</td>
-                        <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${trade.notes || ''}">${trade.notes || '-'}</td>
-                        <td>
-                            <button class="action-btn" onclick="editTrade(${trade.id})" title="Edit trade">✏️</button>
-                            <button class="action-btn" onclick="deleteTrade(${trade.id})" title="Delete trade">🗑️</button>
-                        </td>
-                    </tr>
-                `).join('');
+                tableBody.innerHTML = sortedTrades.map(trade => {
+                    const shares = trade.shares || (trade.amount && trade.buyPrice ? Math.round(trade.amount / trade.buyPrice) : 0);
+                    return `
+                        <tr>
+                            <td>${new Date(trade.date).toLocaleDateString()}</td>
+                            <td><strong>${trade.symbol}</strong></td>
+                            <td>${trade.buyPrice.toFixed(4)}</td>
+                            <td>${trade.sellPrice.toFixed(4)}</td>
+                            <td>${shares}</td>
+                            <td>${trade.holdingTime || 'N/A'}</td>
+                            <td class="${trade.pnl >= 0 ? 'positive' : 'negative'}">$${trade.pnl.toFixed(2)}</td>
+                            <td class="${trade.returnPct >= 0 ? 'positive' : 'negative'}">${trade.returnPct.toFixed(2)}%</td>
+                            <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${trade.notes || ''}">${trade.notes || '-'}</td>
+                            <td>
+                                <button class="action-btn" onclick="editTrade(${trade.id})" title="Edit trade">✏️</button>
+                                <button class="action-btn" onclick="deleteTrade(${trade.id})" title="Delete trade">🗑️</button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
             }
         }
 
@@ -6328,18 +6341,21 @@
                     return timeB.localeCompare(timeA);
                 });
                 
-                dayTradesList.innerHTML = dayTrades.map(trade => `
-                    <div class="day-trade-item">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                            <span class="trade-symbol">${trade.symbol}</span>
-                            <span class="trade-pnl ${trade.pnl >= 0 ? 'positive' : 'negative'}">$${trade.pnl.toFixed(2)}</span>
+                dayTradesList.innerHTML = dayTrades.map(trade => {
+                    const shares = trade.shares || (trade.amount && trade.buyPrice ? Math.round(trade.amount / trade.buyPrice) : 0);
+                    return `
+                        <div class="day-trade-item">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                                <span class="trade-symbol">${trade.symbol} (${shares}주)</span>
+                                <span class="trade-pnl ${trade.pnl >= 0 ? 'positive' : 'negative'}">$${trade.pnl.toFixed(2)}</span>
+                            </div>
+                            <div style="font-size: 11px; color: #64748b;">
+                                $${trade.buyPrice.toFixed(4)} → $${trade.sellPrice.toFixed(4)} | ${trade.holdingTime || 'N/A'}
+                            </div>
+                            ${trade.notes ? `<div style="font-size: 10px; color: #94a3b8; margin-top: 4px;">${trade.notes}</div>` : ''}
                         </div>
-                        <div style="font-size: 11px; color: #64748b;">
-                            $${trade.buyPrice.toFixed(4)} → $${trade.sellPrice.toFixed(4)} | ${trade.holdingTime || 'N/A'}
-                        </div>
-                        ${trade.notes ? `<div style="font-size: 10px; color: #94a3b8; margin-top: 4px;">${trade.notes}</div>` : ''}
-                    </div>
-                `).join('');
+                    `;
+                }).join('');
             }
             
             dayDetails.style.display = 'block';
