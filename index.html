@@ -5525,7 +5525,7 @@
                 sellPrice: parseFloat(document.getElementById('editSellPrice').value),
                 entryTime: document.getElementById('editEntryTime').value,
                 exitTime: document.getElementById('editExitTime').value,
-                notes: trade.notes || ''
+                notes: trades[tradeIndex].notes || ''
             };
             
             // Recalculate P&L and return percentage
@@ -5654,7 +5654,7 @@
             const tableBody = document.getElementById(tableBodyId);
             
             if (tradesToShow.length === 0) {
-                const colspan = tableBodyId === 'tradesTableBody' ? '10' : '10';
+                const colspan = '10';
                 tableBody.innerHTML = `
                     <tr>
                         <td colspan="${colspan}">
@@ -6365,7 +6365,6 @@
                             <div style="font-size: 11px; color: #64748b;">
                                 $${trade.buyPrice.toFixed(4)} → $${trade.sellPrice.toFixed(4)} | ${trade.holdingTime || 'N/A'}
                             </div>
-                            ${trade.notes ? `<div style="font-size: 10px; color: #94a3b8; margin-top: 4px;">${trade.notes}</div>` : ''}
                         </div>
                     `;
                 }).join('');
