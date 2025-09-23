@@ -2167,6 +2167,180 @@
 #riskPercentage[type=number] {
     -moz-appearance: textfield !important;
 }
+
+            /* Psychology Section Styles */
+        .psychology-section {
+            display: none;
+        }
+
+        .psychology-section.active {
+            display: block;
+        }
+
+        .psychology-main-grid {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .psychology-input-panel,
+        .psychology-analysis-panel {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .psychology-section-card {
+            background: transparent;
+        }
+
+        .psychology-section-title {
+            color: #f8fafc;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #334155;
+        }
+
+        .psychology-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .psychology-input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .psychology-label {
+            color: #94a3b8;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .psychology-input {
+            width: 100%;
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: #e4e4e7;
+            padding: 8px 12px;
+            font-size: 14px;
+            border-radius: 6px;
+            transition: border-color 0.2s ease;
+        }
+
+        .psychology-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        .psychology-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .psychology-score-display {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .psychology-score-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 4px;
+        }
+
+        .psychology-score-label {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .psychology-score-breakdown {
+            display: grid;
+            gap: 12px;
+        }
+
+        .psychology-breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #334155;
+        }
+
+        .psychology-breakdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .psychology-breakdown-label {
+            color: #94a3b8;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .psychology-breakdown-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #e4e4e7;
+        }
+
+        .psychology-history-section {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .psychology-history-table-container {
+            overflow-x: auto;
+        }
+
+        .psychology-history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+
+        .psychology-history-table th {
+            background: #334155;
+            color: #94a3b8;
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .psychology-history-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #334155;
+            font-size: 14px;
+        }
+
+        .psychology-history-table tbody tr:hover {
+            background: #334155;
+        }
+
+        @media (max-width: 768px) {
+            .psychology-main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .psychology-form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -3127,6 +3301,97 @@
                 </div>
             </div>
 
+            <!-- Psychology Section -->
+                    <div class="psychology-section" id="psychologySection">
+                        <div class="psychology-main-grid">
+                            <div class="psychology-input-panel">
+                                <div class="psychology-section-card">
+                                    <div class="psychology-section-title" data-lang="biological-rhythm">Biological Rhythm Data</div>
+                                    <div class="psychology-form-grid">
+                                        <div class="psychology-input-group">
+                                            <label class="psychology-label" data-lang="sleep-hours">Sleep Hours</label>
+                                            <input type="number" id="sleepHours" class="psychology-input" step="0.5" min="0" max="12" placeholder="7.5">
+                                        </div>
+                                        <div class="psychology-input-group">
+                                            <label class="psychology-label" data-lang="sleep-quality">Sleep Quality (1-10)</label>
+                                            <input type="number" id="sleepQuality" class="psychology-input" min="1" max="10" placeholder="8">
+                                        </div>
+                                        <div class="psychology-input-group">
+                                            <label class="psychology-label" data-lang="caffeine-intake">Caffeine (mg)</label>
+                                            <input type="number" id="caffeineIntake" class="psychology-input" min="0" max="1000" placeholder="200">
+                                        </div>
+                                        <div class="psychology-input-group">
+                                            <label class="psychology-label" data-lang="exercise-minutes">Exercise (minutes)</label>
+                                            <input type="number" id="exerciseMinutes" class="psychology-input" min="0" max="300" placeholder="30">
+                                        </div>
+                                    </div>
+                                    <div class="psychology-actions">
+                                        <button class="btn btn-primary" onclick="saveDailyPsychologyData()" data-lang="save-daily-data">Save Daily Data</button>
+                                        <button class="btn btn-secondary" onclick="clearPsychologyInputs()" data-lang="clear">Clear</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="psychology-analysis-panel">
+                                <div class="psychology-score-card">
+                                    <div class="psychology-section-title" data-lang="daily-psychology-score">Daily Psychology Score</div>
+                                    <div class="psychology-score-display">
+                                        <div class="psychology-score-number" id="dailyPsychScore">--</div>
+                                        <div class="psychology-score-label" data-lang="out-of-100">out of 100</div>
+                                    </div>
+                                    <div class="psychology-score-breakdown">
+                                        <div class="psychology-breakdown-item">
+                                            <span class="psychology-breakdown-label" data-lang="sleep-factor">Sleep Factor</span>
+                                            <span class="psychology-breakdown-value" id="sleepFactor">--</span>
+                                        </div>
+                                        <div class="psychology-breakdown-item">
+                                            <span class="psychology-breakdown-label" data-lang="energy-factor">Energy Factor</span>
+                                            <span class="psychology-breakdown-value" id="energyFactor">--</span>
+                                        </div>
+                                        <div class="psychology-breakdown-item">
+                                            <span class="psychology-breakdown-label" data-lang="focus-factor">Focus Factor</span>
+                                            <span class="psychology-breakdown-value" id="focusFactor">--</span>
+                                        </div>
+                                        <div class="psychology-breakdown-item">
+                                            <span class="psychology-breakdown-label" data-lang="recovery-factor">Recovery Factor</span>
+                                            <span class="psychology-breakdown-value" id="recoveryFactor">--</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="psychology-history-section">
+                            <div class="psychology-section-title" data-lang="psychology-history">Psychology History</div>
+                            <div class="psychology-history-table-container">
+                                <table class="psychology-history-table">
+                                    <thead>
+                                        <tr>
+                                            <th data-lang="date">Date</th>
+                                            <th data-lang="sleep-hours">Sleep</th>
+                                            <th data-lang="sleep-quality">Quality</th>
+                                            <th data-lang="caffeine-intake">Caffeine</th>
+                                            <th data-lang="exercise-minutes">Exercise</th>
+                                            <th data-lang="psychology-score">Score</th>
+                                            <th data-lang="trading-performance">Trading P&L</th>
+                                            <th data-lang="actions">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="psychologyHistoryTable">
+                                        <tr>
+                                            <td colspan="8">
+                                                <div class="empty-state">
+                                                    <div class="empty-state-icon">🧠</div>
+                                                    <div data-lang="no-psychology-data">No psychology data recorded yet</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
             <!-- Notes page -->
             <div id="notes" class="page">
                 <div class="page-header">
@@ -3337,6 +3602,8 @@
         let currentViewingNoteId = null;
         let currentTextColor = '#e4e4e7';
         let currentFont = "'Inter', sans-serif";
+        let psychologyData = [];
+        let currentAnalyticsSection = 'detail';
 
         // Chart instances
         let basicCharts = {};
@@ -3571,7 +3838,24 @@
 'risk-presets': 'Risk Ratio',
                 'trading-record': 'Trading Record',
                 'position-calculator': 'Position Calculator',
-                'amount': 'Amount ($)'
+                'amount': 'Amount ($)',
+                'psychology': 'Psychology',
+                'biological-rhythm': 'Biological Rhythm Data',
+                'sleep-hours': 'Sleep Hours',
+                'sleep-quality': 'Sleep Quality (1-10)',
+                'caffeine-intake': 'Caffeine (mg)',
+                'exercise-minutes': 'Exercise (minutes)',
+                'save-daily-data': 'Save Daily Data',
+                'daily-psychology-score': 'Daily Psychology Score',
+                'out-of-100': 'out of 100',
+                'sleep-factor': 'Sleep Factor',
+                'energy-factor': 'Energy Factor',
+                'focus-factor': 'Focus Factor',
+                'recovery-factor': 'Recovery Factor',
+                'psychology-history': 'Psychology History',
+                'psychology-score': 'Score',
+                'trading-performance': 'Trading P&L',
+                'no-psychology-data': 'No psychology data recorded yet'
             },
             ko: {
                 'dashboard': '대시보드',
@@ -3784,7 +4068,24 @@
 'risk-presets': '리스크 비율',
                 'trading-record': '거래 기록',
                 'position-calculator': '포지션 계산기',
-                'amount': '금액 ($)'
+                'amount': '금액 ($)',
+                'psychology': '심리',
+                'biological-rhythm': '생체리듬 데이터',
+                'sleep-hours': '수면시간',
+                'sleep-quality': '수면품질 (1-10)',
+                'caffeine-intake': '카페인 (mg)',
+                'exercise-minutes': '운동시간 (분)',
+                'save-daily-data': '일일 데이터 저장',
+                'daily-psychology-score': '일일 심리 점수',
+                'out-of-100': '/ 100점',
+                'sleep-factor': '수면 요소',
+                'energy-factor': '에너지 요소',
+                'focus-factor': '집중 요소',
+                'recovery-factor': '회복 요소',
+                'psychology-history': '심리 기록',
+                'psychology-score': '점수',
+                'trading-performance': '거래 손익',
+                'no-psychology-data': '아직 심리 데이터가 없습니다'
             }
         };
         
@@ -4472,11 +4773,10 @@
             document.querySelectorAll('.analytics-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
-            // event.target 대신 직접 요소 찾기
             document.querySelector(`[onclick="showAnalyticsSection('${sectionName}')"]`).classList.add('active');
             
             // Show/hide sections
-            document.querySelectorAll('.detail-section, .chart-section').forEach(section => {
+            document.querySelectorAll('.detail-section, .chart-section, .psychology-section').forEach(section => {
                 section.classList.remove('active');
             });
             
@@ -4486,6 +4786,213 @@
             } else if (sectionName === 'charts') {
                 document.getElementById('chartSection').classList.add('active');
                 setTimeout(async () => await updateAdvancedCharts(), 100);
+            } else if (sectionName === 'psychology') {
+                document.getElementById('psychologySection').classList.add('active');
+                loadTodayPsychologyData();
+                updatePsychologyHistory();
+            }
+        }
+
+        // Psychology functions (새로운 함수들 추가)
+        function saveDailyPsychologyData() {
+            const sleepHours = parseFloat(document.getElementById('sleepHours').value) || 0;
+            const sleepQuality = parseFloat(document.getElementById('sleepQuality').value) || 0;
+            const caffeineIntake = parseFloat(document.getElementById('caffeineIntake').value) || 0;
+            const exerciseMinutes = parseFloat(document.getElementById('exerciseMinutes').value) || 0;
+            
+            if (sleepHours === 0 || sleepQuality === 0) {
+                alert(currentLanguage === 'ko' ? '수면시간과 수면품질은 필수입니다.' : 'Sleep hours and sleep quality are required.');
+                return;
+            }
+            
+            const currentDate = formatTradingDate(currentTradingDate);
+            
+            // Remove existing data for the same date
+            psychologyData = psychologyData.filter(data => data.date !== currentDate);
+            
+            // Calculate psychology score
+            const psychScore = calculateDailyPsychologyScore(sleepHours, sleepQuality, caffeineIntake, exerciseMinutes);
+            
+            const psychData = {
+                date: currentDate,
+                sleepHours: sleepHours,
+                sleepQuality: sleepQuality,
+                caffeineIntake: caffeineIntake,
+                exerciseMinutes: exerciseMinutes,
+                psychologyScore: psychScore.total,
+                sleepFactor: psychScore.sleep,
+                energyFactor: psychScore.energy,
+                focusFactor: psychScore.focus,
+                recoveryFactor: psychScore.recovery
+            };
+            
+            psychologyData.push(psychData);
+            psychologyData.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            savePsychologyData();
+            updatePsychologyDisplay(psychScore);
+            updatePsychologyHistory();
+            
+            showToast(currentLanguage === 'ko' ? '심리 데이터가 저장되었습니다' : 'Psychology data saved');
+        }
+
+        function calculateDailyPsychologyScore(sleepHours, sleepQuality, caffeineIntake, exerciseMinutes) {
+            // Sleep Factor (25 points max)
+            const sleepFactor = Math.min(25, (sleepHours >= 7) ? 25 : (sleepHours * 3.57));
+            
+            // Energy Factor (25 points max) - affected by caffeine and exercise
+            const caffeineImpact = Math.max(0, 25 - (caffeineIntake / 20));
+            const exerciseBonus = Math.min(5, exerciseMinutes / 6);
+            const energyFactor = Math.min(25, caffeineImpact + exerciseBonus);
+            
+            // Focus Factor (25 points max) - sleep quality impact
+            const focusFactor = (sleepQuality / 10) * 25;
+            
+            // Recovery Factor (25 points max) - combination of sleep and exercise
+            const recoveryFactor = Math.min(25, (sleepHours >= 7 ? 15 : sleepHours * 2.14) + (exerciseMinutes / 12));
+            
+            const total = Math.round(sleepFactor + energyFactor + focusFactor + recoveryFactor);
+            
+            return {
+                total: total,
+                sleep: Math.round(sleepFactor),
+                energy: Math.round(energyFactor),
+                focus: Math.round(focusFactor),
+                recovery: Math.round(recoveryFactor)
+            };
+        }
+
+        function updatePsychologyDisplay(psychScore) {
+            document.getElementById('dailyPsychScore').textContent = psychScore.total;
+            document.getElementById('sleepFactor').textContent = psychScore.sleep + '/25';
+            document.getElementById('energyFactor').textContent = psychScore.energy + '/25';
+            document.getElementById('focusFactor').textContent = psychScore.focus + '/25';
+            document.getElementById('recoveryFactor').textContent = psychScore.recovery + '/25';
+            
+            // Update score color based on value
+            const scoreElement = document.getElementById('dailyPsychScore');
+            if (psychScore.total >= 80) {
+                scoreElement.style.color = '#10b981';
+            } else if (psychScore.total >= 60) {
+                scoreElement.style.color = '#f59e0b';
+            } else {
+                scoreElement.style.color = '#ef4444';
+            }
+        }
+
+        function loadTodayPsychologyData() {
+            const currentDate = formatTradingDate(currentTradingDate);
+            const todayData = psychologyData.find(data => data.date === currentDate);
+            
+            if (todayData) {
+                document.getElementById('sleepHours').value = todayData.sleepHours;
+                document.getElementById('sleepQuality').value = todayData.sleepQuality;
+                document.getElementById('caffeineIntake').value = todayData.caffeineIntake;
+                document.getElementById('exerciseMinutes').value = todayData.exerciseMinutes;
+                
+                const psychScore = {
+                    total: todayData.psychologyScore,
+                    sleep: todayData.sleepFactor,
+                    energy: todayData.energyFactor,
+                    focus: todayData.focusFactor,
+                    recovery: todayData.recoveryFactor
+                };
+                updatePsychologyDisplay(psychScore);
+            } else {
+                clearPsychologyInputs();
+            }
+        }
+
+        function clearPsychologyInputs() {
+            document.getElementById('sleepHours').value = '';
+            document.getElementById('sleepQuality').value = '';
+            document.getElementById('caffeineIntake').value = '';
+            document.getElementById('exerciseMinutes').value = '';
+            
+            document.getElementById('dailyPsychScore').textContent = '--';
+            document.getElementById('sleepFactor').textContent = '--';
+            document.getElementById('energyFactor').textContent = '--';
+            document.getElementById('focusFactor').textContent = '--';
+            document.getElementById('recoveryFactor').textContent = '--';
+            document.getElementById('dailyPsychScore').style.color = '#10b981';
+        }
+
+        function updatePsychologyHistory() {
+            const tableBody = document.getElementById('psychologyHistoryTable');
+            
+            if (psychologyData.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="8">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">🧠</div>
+                                <div data-lang="no-psychology-data">No psychology data recorded yet</div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                updateLanguage();
+                return;
+            }
+            
+            tableBody.innerHTML = psychologyData.map(data => {
+                const dayTrades = trades.filter(trade => trade.date === data.date);
+                const dayPL = dayTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+                const dayFees = dailyFees[data.date] || 0;
+                const netPL = dayPL - dayFees;
+                
+                return `
+                    <tr>
+                        <td>${new Date(data.date).toLocaleDateString()}</td>
+                        <td>${data.sleepHours}h</td>
+                        <td>${data.sleepQuality}/10</td>
+                        <td>${data.caffeineIntake}mg</td>
+                        <td>${data.exerciseMinutes}min</td>
+                        <td><span style="color: ${data.psychologyScore >= 80 ? '#10b981' : data.psychologyScore >= 60 ? '#f59e0b' : '#ef4444'}">${data.psychologyScore}</span></td>
+                        <td class="${netPL >= 0 ? 'positive' : 'negative'}">$${netPL.toFixed(2)}</td>
+                        <td>
+                            <button class="action-btn" onclick="deletePsychologyData('${data.date}')" title="Delete psychology data">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function deletePsychologyData(date) {
+            if (confirm(currentLanguage === 'ko' ? '이 심리 데이터를 삭제하시겠습니까?' : 'Are you sure you want to delete this psychology data?')) {
+                psychologyData = psychologyData.filter(data => data.date !== date);
+                savePsychologyData();
+                updatePsychologyHistory();
+                
+                // If deleted data is today's data, clear the inputs
+                const currentDate = formatTradingDate(currentTradingDate);
+                if (date === currentDate) {
+                    clearPsychologyInputs();
+                }
+                
+                showToast(currentLanguage === 'ko' ? '심리 데이터가 삭제되었습니다' : 'Psychology data deleted');
+            }
+        }
+
+        function savePsychologyData() {
+            try {
+                localStorage.setItem('tradingPlatformPsychologyData', JSON.stringify(psychologyData));
+            } catch (error) {
+                console.error('Error saving psychology data:', error);
+            }
+        }
+
+        function loadPsychologyData() {
+            try {
+                const saved = localStorage.getItem('tradingPlatformPsychologyData');
+                if (saved) {
+                    psychologyData = JSON.parse(saved);
+                } else {
+                    psychologyData = [];
+                }
+            } catch (error) {
+                console.error('Error loading psychology data:', error);
+                psychologyData = [];
             }
         }
 
@@ -5129,6 +5636,7 @@
             updateDetailedAnalytics();
             calculateHoldingTime();
             loadDailyFees();
+            loadPsychologyData();
             
             document.getElementById('tradeForm').addEventListener('submit', handleTradeSubmit);
             document.getElementById('editTradeForm').addEventListener('submit', handleEditTradeSubmit);
