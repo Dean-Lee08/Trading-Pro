@@ -2167,24 +2167,6 @@
 #riskPercentage[type=number] {
     -moz-appearance: textfield !important;
 }
-
-            /* Psychology Section - Minimal */
-        .psychology-section {
-    display: none;
-}
-
-.psychology-section.active {
-    display: block;
-}
-
-        .psychology-container h2 {
-            color: #f8fafc;
-            margin-bottom: 16px;
-        }
-
-        .psychology-container p {
-            color: #94a3b8;
-        }
     </style>
 </head>
 <body>
@@ -2708,8 +2690,8 @@
                             <div class="analytics-tabs">
                                 <button class="analytics-tab active" onclick="showAnalyticsSection('detail')" data-lang="detail">Detail</button>
                                 <button class="analytics-tab" onclick="showAnalyticsSection('charts')" data-lang="charts">Charts</button>
-                                <button class="analytics-tab" onclick="showAnalyticsSection('psychology')" data-lang="psychology">Psychology</button>
                             </div>
+                        </div>
                         
                         <div class="filter-controls">
                             <div class="date-range-selector">
@@ -3143,14 +3125,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Psychology Section -->
-                    <div class="psychology-section" id="psychologySection">
-                        <div style="padding: 40px; text-align: center;">
-                            <h2 style="color: #f8fafc; margin-bottom: 16px;">Psychology Analysis</h2>
-                            <p style="color: #94a3b8;">Biological rhythm tracking features coming soon...</p>
-                        </div>
-                    </div>
 
             <!-- Notes page -->
             <div id="notes" class="page">
@@ -3596,8 +3570,7 @@
 'risk-presets': 'Risk Ratio',
                 'trading-record': 'Trading Record',
                 'position-calculator': 'Position Calculator',
-                'amount': 'Amount ($)',
-                'psychology': 'Psychology',
+                'amount': 'Amount ($)'
             },
             ko: {
                 'dashboard': '대시보드',
@@ -3810,8 +3783,7 @@
 'risk-presets': '리스크 비율',
                 'trading-record': '거래 기록',
                 'position-calculator': '포지션 계산기',
-                'amount': '금액 ($)',
-                'psychology': '심리 분석'
+                'amount': '금액 ($)'
             }
         };
         
@@ -3986,43 +3958,38 @@
         }
 
         function changeTextColor(color) {
-    currentTextColor = color;
-    document.querySelectorAll('.color-option').forEach(option => {
-        option.classList.remove('active');
-    });
-    
-    // event.target 대신 색상으로 active 찾기
-    const colorMap = {
-        '#e4e4e7': 'rgb(228, 228, 231)',
-        '#10b981': 'rgb(16, 185, 129)',
-        '#ef4444': 'rgb(239, 68, 68)',
-        '#3b82f6': 'rgb(59, 130, 246)',
-        '#f59e0b': 'rgb(245, 158, 11)',
-        '#8b5cf6': 'rgb(139, 92, 246)'
-    };
-    
-    document.querySelectorAll('.color-option').forEach(option => {
-        if (colorMap[color] === option.style.backgroundColor) {
-            option.classList.add('active');
-        }
-    });
+            currentTextColor = color;
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            
+            // 색상 매핑 객체를 사용한 올바른 활성화
+            const colorMap = {
+                '#e4e4e7': 'rgb(228, 228, 231)',
+                '#10b981': 'rgb(16, 185, 129)',
+                '#ef4444': 'rgb(239, 68, 68)',
+                '#3b82f6': 'rgb(59, 130, 246)',
+                '#f59e0b': 'rgb(245, 158, 11)',
+                '#8b5cf6': 'rgb(139, 92, 246)'
+            };
+            
+            document.querySelectorAll('.color-option').forEach(option => {
+                if (colorMap[color] === option.style.backgroundColor) {
+                    option.classList.add('active');
+                }
+            });
 
-    const selection = window.getSelection();
-    
-    console.log('Selection range count:', selection.rangeCount);
-    console.log('Selected text:', selection.toString());
-    
-    if (selection.rangeCount > 0 && selection.toString().trim().length > 0) {
-        document.execCommand('styleWithCSS', false, true);
-        document.execCommand('foreColor', false, color);
-        console.log('Color applied using execCommand');
-        return;
-    }
-    
-    const editor = document.getElementById('noteContentEditor');
-    editor.style.color = color;
-    console.log('Applied color to entire editor');
-}
+            const selection = window.getSelection();
+            
+            if (selection.rangeCount > 0 && selection.toString().trim().length > 0) {
+                document.execCommand('styleWithCSS', false, true);
+                document.execCommand('foreColor', false, color);
+                return;
+            }
+            
+            const editor = document.getElementById('noteContentEditor');
+            editor.style.color = color;
+        }
 
         // Dashboard date range functions
         function clearDashboardRange() {
@@ -4504,10 +4471,11 @@
             document.querySelectorAll('.analytics-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
-            event.target.classList.add('active');
+            // event.target 대신 직접 요소 찾기
+            document.querySelector(`[onclick="showAnalyticsSection('${sectionName}')"]`).classList.add('active');
             
             // Show/hide sections
-            document.querySelectorAll('.detail-section, .chart-section, .psychology-section').forEach(section => {
+            document.querySelectorAll('.detail-section, .chart-section').forEach(section => {
                 section.classList.remove('active');
             });
             
@@ -4518,19 +4486,18 @@
                 document.getElementById('chartSection').classList.add('active');
                 setTimeout(async () => await updateAdvancedCharts(), 100);
             }
-            } else if (sectionName === 'psychology') {
-    document.getElementById('psychologySection').classList.add('active');
-}
-    
+        }
+
         async function createBasicChart(canvasId, type, data, options = {}) {
             try {
                 await waitForChart();
                 const ctx = document.getElementById(canvasId);
                 if (!ctx) return null;
 
-                // Destroy existing chart if it exists
+                // 기존 차트가 있다면 완전히 제거
                 if (basicCharts[canvasId]) {
                     basicCharts[canvasId].destroy();
+                    delete basicCharts[canvasId];
                 }
 
                 const defaultOptions = {
@@ -5682,7 +5649,8 @@
                 btn.classList.remove('active');
             });
             
-            event.target.classList.add('active');
+            // event.target 대신 직접 요소 찾기
+            document.querySelector(`[onclick="setAnalyticsPeriod('${period}')"]`).classList.add('active');
             updateDetailedAnalytics();
         }
 
@@ -6717,10 +6685,13 @@
                 tab.style.color = '#94a3b8';
             });
             
-            // Activate clicked tab
-            event.target.classList.add('active');
-            event.target.style.background = '#3b82f6';
-            event.target.style.color = 'white';
+            // Activate clicked tab - event.target 대신 직접 찾기
+            const targetTab = document.querySelector(`[onclick="showCalculatorTab('${tabName}')"]`);
+            if (targetTab) {
+                targetTab.classList.add('active');
+                targetTab.style.background = '#3b82f6';
+                targetTab.style.color = 'white';
+            }
             
             // Show/hide content
             if (tabName === 'kelly') {
@@ -6775,21 +6746,25 @@
 }
 
         function setRiskPreset(percent) {
-    document.querySelectorAll('.risk-preset-btn').forEach(btn => {
-        btn.classList.remove('active');
-        btn.style.background = '#374151';
-        btn.style.borderColor = '#4b5563';
-        btn.style.color = '#e4e4e7';
-    });
-    
-    event.target.classList.add('active');
-    event.target.style.background = '#3b82f6';
-    event.target.style.borderColor = '#3b82f6';
-    event.target.style.color = 'white';
-    
-    document.getElementById('riskPercentage').value = percent;
-    calculateRiskPosition();
-}
+            document.querySelectorAll('.risk-preset-btn').forEach(btn => {
+                btn.classList.remove('active');
+                btn.style.background = '#374151';
+                btn.style.borderColor = '#4b5563';
+                btn.style.color = '#e4e4e7';
+            });
+            
+            // event.target 대신 직접 찾기
+            const targetBtn = document.querySelector(`[onclick="setRiskPreset(${percent})"]`);
+            if (targetBtn) {
+                targetBtn.classList.add('active');
+                targetBtn.style.background = '#3b82f6';
+                targetBtn.style.borderColor = '#3b82f6';
+                targetBtn.style.color = 'white';
+            }
+            
+            document.getElementById('riskPercentage').value = percent;
+            calculateRiskPosition();
+        }
 
         function resetRiskCalculatorDisplay() {
     // 기존 결과 섹션 초기화
