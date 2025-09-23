@@ -2168,263 +2168,24 @@
     -moz-appearance: textfield !important;
 }
 
-            /* Psychology Section Styles */
+            /* Psychology Section - Minimal */
         .psychology-section {
             display: none;
+            padding: 40px;
+            text-align: center;
         }
 
         .psychology-section.active {
             display: block;
         }
 
-        .psychology-main-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            margin-top: 20px;
-        }
-
-        /* Biological Data Card */
-        .biological-data-card {
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .bio-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #334155;
-        }
-
-        .bio-card-header h3 {
+        .psychology-container h2 {
             color: #f8fafc;
-            font-size: 18px;
-            font-weight: 600;
-            margin: 0;
+            margin-bottom: 16px;
         }
 
-        .bio-date {
-            color: #64748b;
-            font-size: 14px;
-        }
-
-        .bio-input-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-            margin-bottom: 20px;
-        }
-
-        .bio-input-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .bio-input-group label {
+        .psychology-container p {
             color: #94a3b8;
-            font-size: 12px;
-            font-weight: 500;
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-
-        .bio-input-group input {
-            background: #1e293b;
-            border: 1px solid #334155;
-            color: #e4e4e7;
-            padding: 10px 12px;
-            font-size: 14px;
-            border-radius: 6px;
-            transition: border-color 0.2s ease;
-        }
-
-        .bio-input-group input:focus {
-            outline: none;
-            border-color: #3b82f6;
-        }
-
-        .bio-actions {
-            display: flex;
-            gap: 12px;
-            justify-content: flex-end;
-        }
-
-        /* Psychology Score Card */
-        .psych-score-card {
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 20px;
-        }
-
-        .psych-score-header {
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #334155;
-        }
-
-        .psych-score-header h3 {
-            color: #f8fafc;
-            font-size: 18px;
-            font-weight: 600;
-            margin: 0;
-        }
-
-        .psych-score-display {
-            display: flex;
-            align-items: center;
-            gap: 24px;
-        }
-
-        .score-circle {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: conic-gradient(from 0deg, #3b82f6 0deg, #1e293b 0deg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            border: 3px solid #334155;
-            position: relative;
-        }
-
-        .score-number {
-            color: #f8fafc;
-            font-size: 28px;
-            font-weight: 700;
-        }
-
-        .score-label {
-            color: #64748b;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        .score-breakdown {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .score-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 12px;
-            background: #1e293b;
-            border-radius: 6px;
-            border-left: 3px solid #3b82f6;
-        }
-
-        .score-item-label {
-            color: #94a3b8;
-            font-size: 13px;
-            font-weight: 500;
-        }
-
-        .score-item-value {
-            color: #e4e4e7;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        /* Biology Trends Card */
-        .bio-trends-card {
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .bio-trends-header {
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #334155;
-        }
-
-        .bio-trends-header h3 {
-            color: #f8fafc;
-            font-size: 18px;
-            font-weight: 600;
-            margin: 0;
-        }
-
-        .bio-trends-content {
-            height: 250px;
-        }
-
-        /* Biology Performance Card */
-        .bio-performance-card {
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 20px;
-        }
-
-        .bio-performance-header {
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #334155;
-        }
-
-        .bio-performance-header h3 {
-            color: #f8fafc;
-            font-size: 18px;
-            font-weight: 600;
-            margin: 0;
-        }
-
-        .bio-performance-stats {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .bio-stat-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 16px;
-            background: #1e293b;
-            border-radius: 8px;
-            border-left: 3px solid #10b981;
-        }
-
-        .bio-stat-label {
-            color: #94a3b8;
-            font-size: 13px;
-            font-weight: 500;
-        }
-
-        .bio-stat-value {
-            color: #e4e4e7;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        @media (max-width: 768px) {
-            .psychology-main-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .bio-input-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .psych-score-display {
-                flex-direction: column;
-                gap: 16px;
-            }
         }
     </style>
 </head>
@@ -3388,110 +3149,9 @@
 
             <!-- Psychology Section -->
                     <div class="psychology-section" id="psychologySection">
-                        <div class="psychology-main-grid">
-                            <div class="psychology-left">
-                                <!-- Biological Rhythm Data Entry -->
-                                <div class="biological-data-card">
-                                    <div class="bio-card-header">
-                                        <h3 data-lang="biological-data">Biological Data</h3>
-                                        <span class="bio-date" id="bioDataDate"></span>
-                                    </div>
-                                    
-                                    <div class="bio-data-form">
-                                        <div class="bio-input-grid">
-                                            <div class="bio-input-group">
-                                                <label data-lang="sleep-hours">Sleep Hours</label>
-                                                <input type="number" id="sleepHours" step="0.5" min="0" max="24" placeholder="7.5">
-                                            </div>
-                                            <div class="bio-input-group">
-                                                <label data-lang="caffeine-mg">Caffeine (mg)</label>
-                                                <input type="number" id="caffeineAmount" step="25" min="0" max="1000" placeholder="200">
-                                            </div>
-                                            <div class="bio-input-group">
-                                                <label data-lang="alcohol-drinks">Alcohol (drinks)</label>
-                                                <input type="number" id="alcoholAmount" step="0.5" min="0" max="20" placeholder="0">
-                                            </div>
-                                            <div class="bio-input-group">
-                                                <label data-lang="exercise-minutes">Exercise (min)</label>
-                                                <input type="number" id="exerciseMinutes" step="15" min="0" max="300" placeholder="30">
-                                            </div>
-                                            <div class="bio-input-group">
-                                                <label data-lang="meditation-minutes">Meditation (min)</label>
-                                                <input type="number" id="meditationMinutes" step="5" min="0" max="120" placeholder="0">
-                                            </div>
-                                            <div class="bio-input-group">
-                                                <label data-lang="screen-time">Screen Time (hrs)</label>
-                                                <input type="number" id="screenTime" step="0.5" min="0" max="24" placeholder="2">
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="bio-actions">
-                                            <button class="btn btn-primary" onclick="saveBiologicalData()" data-lang="save-bio-data">Save Data</button>
-                                            <button class="btn btn-secondary" onclick="resetBioForm()" data-lang="reset">Reset</button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Psychological Health Score -->
-                                <div class="psych-score-card">
-                                    <div class="psych-score-header">
-                                        <h3 data-lang="daily-psych-score">Daily Psychology Score</h3>
-                                    </div>
-                                    <div class="psych-score-display">
-                                        <div class="score-circle">
-                                            <span class="score-number" id="dailyPsychScore">--</span>
-                                            <span class="score-label">/100</span>
-                                        </div>
-                                        <div class="score-breakdown">
-                                            <div class="score-item">
-                                                <span class="score-item-label" data-lang="sleep-factor">Sleep</span>
-                                                <span class="score-item-value" id="sleepFactor">--</span>
-                                            </div>
-                                            <div class="score-item">
-                                                <span class="score-item-label" data-lang="stress-factor">Stress</span>
-                                                <span class="score-item-value" id="stressFactor">--</span>
-                                            </div>
-                                            <div class="score-item">
-                                                <span class="score-item-label" data-lang="wellness-factor">Wellness</span>
-                                                <span class="score-item-value" id="wellnessFactor">--</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="psychology-right">
-                                <!-- Biological Trends Chart -->
-                                <div class="bio-trends-card">
-                                    <div class="bio-trends-header">
-                                        <h3 data-lang="biological-trends">Biological Trends (7 Days)</h3>
-                                    </div>
-                                    <div class="bio-trends-content">
-                                        <canvas id="biologicalTrendsChart" class="chart-canvas"></canvas>
-                                    </div>
-                                </div>
-
-                                <!-- Trading Performance vs Biology -->
-                                <div class="bio-performance-card">
-                                    <div class="bio-performance-header">
-                                        <h3 data-lang="bio-performance">Biology vs Performance</h3>
-                                    </div>
-                                    <div class="bio-performance-stats">
-                                        <div class="bio-stat-item">
-                                            <span class="bio-stat-label" data-lang="sleep-correlation">Sleep-Performance</span>
-                                            <span class="bio-stat-value" id="sleepCorrelation">--</span>
-                                        </div>
-                                        <div class="bio-stat-item">
-                                            <span class="bio-stat-label" data-lang="caffeine-correlation">Caffeine-Performance</span>
-                                            <span class="bio-stat-value" id="caffeineCorrelation">--</span>
-                                        </div>
-                                        <div class="bio-stat-item">
-                                            <span class="bio-stat-label" data-lang="exercise-correlation">Exercise-Performance</span>
-                                            <span class="bio-stat-value" id="exerciseCorrelation">--</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="psychology-container">
+                            <h2>Psychology Analysis - Coming Soon</h2>
+                            <p>Biological rhythm tracking and psychological analysis features will be available here.</p>
                         </div>
                     </div>
 
@@ -3709,9 +3369,6 @@
         // Chart instances
         let basicCharts = {};
         let advancedCharts = {};
-
-        // Psychology related variables
-        let biologicalData = {};
 
         // Chart.js loading helper
         function waitForChart() {
@@ -3943,24 +3600,7 @@
                 'trading-record': 'Trading Record',
                 'position-calculator': 'Position Calculator',
                 'amount': 'Amount ($)',
-                'psychology': 'Psychology',
-                'biological-data': 'Biological Data',
-                'sleep-hours': 'Sleep Hours',
-                'caffeine-mg': 'Caffeine (mg)',
-                'alcohol-drinks': 'Alcohol (drinks)',
-                'exercise-minutes': 'Exercise (min)',
-                'meditation-minutes': 'Meditation (min)',
-                'screen-time': 'Screen Time (hrs)',
-                'save-bio-data': 'Save Data',
-                'daily-psych-score': 'Daily Psychology Score',
-                'sleep-factor': 'Sleep',
-                'stress-factor': 'Stress',
-                'wellness-factor': 'Wellness',
-                'biological-trends': 'Biological Trends (7 Days)',
-                'bio-performance': 'Biology vs Performance',
-                'sleep-correlation': 'Sleep-Performance',
-                'caffeine-correlation': 'Caffeine-Performance',
-                'exercise-correlation': 'Exercise-Performance'
+                'psychology': 'Psychology'
             },
             ko: {
                 'dashboard': '대시보드',
@@ -4174,24 +3814,7 @@
                 'trading-record': '거래 기록',
                 'position-calculator': '포지션 계산기',
                 'amount': '금액 ($)',
-                'psychology': '심리 분석',
-                'biological-data': '생체 리듬 데이터',
-                'sleep-hours': '수면 시간',
-                'caffeine-mg': '카페인 (mg)',
-                'alcohol-drinks': '음주량 (잔)',
-                'exercise-minutes': '운동 시간 (분)',
-                'meditation-minutes': '명상 시간 (분)',
-                'screen-time': '스크린 타임 (시간)',
-                'save-bio-data': '데이터 저장',
-                'daily-psych-score': '일일 심리 점수',
-                'sleep-factor': '수면',
-                'stress-factor': '스트레스',
-                'wellness-factor': '웰니스',
-                'biological-trends': '생체 리듬 추세 (7일)',
-                'bio-performance': '생체리듬 vs 성과',
-                'sleep-correlation': '수면-성과',
-                'caffeine-correlation': '카페인-성과',
-                'exercise-correlation': '운동-성과'
+                'psychology': '심리 분석'
             }
         };
         
@@ -4887,7 +4510,7 @@
             event.target.classList.add('active');
             
             // Show/hide sections
-            document.querySelectorAll('.detail-section, .chart-section, .psychology-section').forEach(section => {
+            document.querySelectorAll('.detail-section, .chart-section, .psychology-section')
                 section.classList.remove('active');
             });
             
@@ -4897,16 +4520,10 @@
             } else if (sectionName === 'charts') {
                 document.getElementById('chartSection').classList.add('active');
                 setTimeout(async () => await updateAdvancedCharts(), 100);
+            }
+            
             } else if (sectionName === 'psychology') {
                 document.getElementById('psychologySection').classList.add('active');
-                updateBioDataDate();
-                loadTodaysBioData();
-                calculateDailyPsychScore();
-                setTimeout(async () => {
-                    await updateBiologicalTrends();
-                    calculateBioPerformanceCorrelation();
-                }, 100);
-            }
         }
 
         async function createBasicChart(canvasId, type, data, options = {}) {
@@ -5548,7 +5165,6 @@
             updateDetailedAnalytics();
             calculateHoldingTime();
             loadDailyFees();
-            loadBiologicalData();
             
             document.getElementById('tradeForm').addEventListener('submit', handleTradeSubmit);
             document.getElementById('editTradeForm').addEventListener('submit', handleEditTradeSubmit);
@@ -7178,270 +6794,6 @@
     document.getElementById('riskPercentage').value = percent;
     calculateRiskPosition();
 }
-
-        // Load biological data from storage
-        function loadBiologicalData() {
-            try {
-                const saved = localStorage.getItem('tradingPlatformBiologicalData');
-                if (saved) {
-                    biologicalData = JSON.parse(saved);
-                } else {
-                    biologicalData = {};
-                }
-            } catch (error) {
-                console.error('Error loading biological data:', error);
-                biologicalData = {};
-            }
-        }
-
-        // Save biological data to storage
-        function saveBiologicalDataToStorage() {
-            try {
-                localStorage.setItem('tradingPlatformBiologicalData', JSON.stringify(biologicalData));
-            } catch (error) {
-                console.error('Error saving biological data:', error);
-            }
-        }
-
-        // Update biological data date display
-        function updateBioDataDate() {
-            const currentDate = formatTradingDate(currentTradingDate);
-            document.getElementById('bioDataDate').textContent = new Date(currentDate).toLocaleDateString(
-                currentLanguage === 'ko' ? 'ko-KR' : 'en-US',
-                { month: 'short', day: 'numeric', year: 'numeric' }
-            );
-        }
-
-        // Load today's biological data
-        function loadTodaysBioData() {
-            const currentDate = formatTradingDate(currentTradingDate);
-            const todayData = biologicalData[currentDate] || {};
-            
-            document.getElementById('sleepHours').value = todayData.sleepHours || '';
-            document.getElementById('caffeineAmount').value = todayData.caffeineAmount || '';
-            document.getElementById('alcoholAmount').value = todayData.alcoholAmount || '';
-            document.getElementById('exerciseMinutes').value = todayData.exerciseMinutes || '';
-            document.getElementById('meditationMinutes').value = todayData.meditationMinutes || '';
-            document.getElementById('screenTime').value = todayData.screenTime || '';
-        }
-
-        // Save biological data
-        function saveBiologicalData() {
-            const currentDate = formatTradingDate(currentTradingDate);
-            
-            const bioData = {
-                sleepHours: parseFloat(document.getElementById('sleepHours').value) || 0,
-                caffeineAmount: parseFloat(document.getElementById('caffeineAmount').value) || 0,
-                alcoholAmount: parseFloat(document.getElementById('alcoholAmount').value) || 0,
-                exerciseMinutes: parseFloat(document.getElementById('exerciseMinutes').value) || 0,
-                meditationMinutes: parseFloat(document.getElementById('meditationMinutes').value) || 0,
-                screenTime: parseFloat(document.getElementById('screenTime').value) || 0,
-                timestamp: new Date().toISOString()
-            };
-            
-            biologicalData[currentDate] = bioData;
-            saveBiologicalDataToStorage();
-            calculateDailyPsychScore();
-            updateBiologicalTrends();
-            calculateBioPerformanceCorrelation();
-            
-            showToast(currentLanguage === 'ko' ? '생체 데이터 저장됨' : 'Biological data saved');
-        }
-
-        // Reset biological form
-        function resetBioForm() {
-            document.getElementById('sleepHours').value = '';
-            document.getElementById('caffeineAmount').value = '';
-            document.getElementById('alcoholAmount').value = '';
-            document.getElementById('exerciseMinutes').value = '';
-            document.getElementById('meditationMinutes').value = '';
-            document.getElementById('screenTime').value = '';
-        }
-
-        // Calculate daily psychology score
-        function calculateDailyPsychScore() {
-            const currentDate = formatTradingDate(currentTradingDate);
-            const todayData = biologicalData[currentDate];
-            
-            if (!todayData) {
-                document.getElementById('dailyPsychScore').textContent = '--';
-                document.getElementById('sleepFactor').textContent = '--';
-                document.getElementById('stressFactor').textContent = '--';
-                document.getElementById('wellnessFactor').textContent = '--';
-                return;
-            }
-            
-            // Sleep factor (0-25 points)
-            const sleepFactor = todayData.sleepHours >= 7 ? 25 : Math.max(0, todayData.sleepHours * 3.57);
-            
-            // Stress factor (0-25 points) - lower caffeine and screen time is better
-            const stressFactor = Math.max(0, 25 - (todayData.caffeineAmount / 20 + todayData.screenTime * 2 + todayData.alcoholAmount * 3));
-            
-            // Wellness factor (0-25 points) - exercise and meditation boost score
-            const wellnessFactor = Math.min(25, (todayData.exerciseMinutes / 6) + (todayData.meditationMinutes / 2.4));
-            
-            // Base factor (25 points) - can be reduced by discipline metrics later
-            const baseFactor = 25;
-            
-            const totalScore = Math.round(sleepFactor + stressFactor + wellnessFactor + baseFactor);
-            
-            document.getElementById('dailyPsychScore').textContent = Math.min(100, totalScore);
-            document.getElementById('sleepFactor').textContent = Math.round(sleepFactor);
-            document.getElementById('stressFactor').textContent = Math.round(stressFactor);
-            document.getElementById('wellnessFactor').textContent = Math.round(wellnessFactor);
-            
-            // Update score circle gradient
-            const scoreElement = document.querySelector('.score-circle');
-            const percentage = Math.min(100, totalScore);
-            const degrees = (percentage / 100) * 360;
-            scoreElement.style.background = `conic-gradient(from 0deg, #3b82f6 ${degrees}deg, #1e293b ${degrees}deg)`;
-        }
-
-        // Update biological trends chart
-        async function updateBiologicalTrends() {
-            const last7Days = [];
-            const currentDate = new Date(currentTradingDate);
-            
-            for (let i = 6; i >= 0; i--) {
-                const date = new Date(currentDate);
-                date.setDate(date.getDate() - i);
-                const dateStr = formatTradingDate(date);
-                last7Days.push(dateStr);
-            }
-            
-            const sleepData = last7Days.map(date => biologicalData[date]?.sleepHours || 0);
-            const caffeineData = last7Days.map(date => biologicalData[date]?.caffeineAmount || 0);
-            const exerciseData = last7Days.map(date => biologicalData[date]?.exerciseMinutes || 0);
-            
-            const labels = last7Days.map(date => new Date(date).toLocaleDateString('en-US', { weekday: 'short' }));
-            
-            await createBasicChart('biologicalTrendsChart', 'line', {
-                labels: labels,
-                datasets: [
-                    {
-                        label: 'Sleep Hours',
-                        data: sleepData,
-                        borderColor: '#10b981',
-                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                        yAxisID: 'y'
-                    },
-                    {
-                        label: 'Caffeine (mg/10)',
-                        data: caffeineData.map(val => val / 10),
-                        borderColor: '#f59e0b',
-                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                        yAxisID: 'y'
-                    },
-                    {
-                        label: 'Exercise (min/10)',
-                        data: exerciseData.map(val => val / 10),
-                        borderColor: '#3b82f6',
-                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                        yAxisID: 'y'
-                    }
-                ]
-            }, {
-                scales: {
-                    y: {
-                        type: 'linear',
-                        display: true,
-                        position: 'left',
-                        ticks: { color: '#94a3b8' },
-                        grid: { color: '#334155' }
-                    }
-                }
-            });
-        }
-
-        // Calculate biology-performance correlation
-        function calculateBioPerformanceCorrelation() {
-            const last30Days = [];
-            const currentDate = new Date(currentTradingDate);
-            
-            for (let i = 29; i >= 0; i--) {
-                const date = new Date(currentDate);
-                date.setDate(date.getDate() - i);
-                const dateStr = formatTradingDate(date);
-                last30Days.push(dateStr);
-            }
-            
-            const bioPerformanceData = last30Days.map(date => {
-                const bioData = biologicalData[date];
-                const dayTrades = trades.filter(trade => trade.date === date);
-                const dayPL = dayTrades.reduce((sum, trade) => sum + trade.pnl, 0);
-                
-                return {
-                    date,
-                    sleep: bioData?.sleepHours || 0,
-                    caffeine: bioData?.caffeineAmount || 0,
-                    exercise: bioData?.exerciseMinutes || 0,
-                    performance: dayPL
-                };
-            }).filter(day => day.sleep > 0 && Math.abs(day.performance) > 0);
-            
-            if (bioPerformanceData.length < 5) {
-                document.getElementById('sleepCorrelation').textContent = 'N/A';
-                document.getElementById('caffeineCorrelation').textContent = 'N/A';
-                document.getElementById('exerciseCorrelation').textContent = 'N/A';
-                return;
-            }
-            
-            // Calculate simple correlation coefficients
-            const sleepCorr = calculateCorrelation(
-                bioPerformanceData.map(d => d.sleep),
-                bioPerformanceData.map(d => d.performance)
-            );
-            
-            const caffeineCorr = calculateCorrelation(
-                bioPerformanceData.map(d => d.caffeine),
-                bioPerformanceData.map(d => d.performance)
-            );
-            
-            const exerciseCorr = calculateCorrelation(
-                bioPerformanceData.map(d => d.exercise),
-                bioPerformanceData.map(d => d.performance)
-            );
-            
-            document.getElementById('sleepCorrelation').textContent = sleepCorr.toFixed(3);
-            document.getElementById('caffeineCorrelation').textContent = caffeineCorr.toFixed(3);
-            document.getElementById('exerciseCorrelation').textContent = exerciseCorr.toFixed(3);
-            
-            // Update colors based on correlation strength
-            updateCorrelationColor('sleepCorrelation', sleepCorr);
-            updateCorrelationColor('caffeineCorrelation', caffeineCorr);
-            updateCorrelationColor('exerciseCorrelation', exerciseCorr);
-        }
-
-        // Helper function to calculate correlation
-        function calculateCorrelation(x, y) {
-            if (x.length !== y.length || x.length === 0) return 0;
-            
-            const n = x.length;
-            const sumX = x.reduce((a, b) => a + b, 0);
-            const sumY = y.reduce((a, b) => a + b, 0);
-            const sumXY = x.reduce((sum, xi, i) => sum + xi * y[i], 0);
-            const sumXX = x.reduce((sum, xi) => sum + xi * xi, 0);
-            const sumYY = y.reduce((sum, yi) => sum + yi * yi, 0);
-            
-            const numerator = n * sumXY - sumX * sumY;
-            const denominator = Math.sqrt((n * sumXX - sumX * sumX) * (n * sumYY - sumY * sumY));
-            
-            return denominator === 0 ? 0 : numerator / denominator;
-        }
-
-        // Update correlation color based on strength
-        function updateCorrelationColor(elementId, correlation) {
-            const element = document.getElementById(elementId);
-            const absCorr = Math.abs(correlation);
-            
-            if (absCorr > 0.5) {
-                element.style.color = '#10b981'; // Strong correlation - green
-            } else if (absCorr > 0.3) {
-                element.style.color = '#f59e0b'; // Moderate correlation - yellow
-            } else {
-                element.style.color = '#64748b'; // Weak correlation - gray
-            }
-        }
 
         function resetRiskCalculatorDisplay() {
     // 기존 결과 섹션 초기화
