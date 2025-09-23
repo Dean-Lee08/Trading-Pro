@@ -2170,14 +2170,12 @@
 
             /* Psychology Section - Minimal */
         .psychology-section {
-            display: none;
-            padding: 40px;
-            text-align: center;
-        }
+    display: none;
+}
 
-        .psychology-section.active {
-            display: block;
-        }
+.psychology-section.active {
+    display: block;
+}
 
         .psychology-container h2 {
             color: #f8fafc;
@@ -2712,7 +2710,6 @@
                                 <button class="analytics-tab" onclick="showAnalyticsSection('charts')" data-lang="charts">Charts</button>
                                 <button class="analytics-tab" onclick="showAnalyticsSection('psychology')" data-lang="psychology">Psychology</button>
                             </div>
-                        </div>
                         
                         <div class="filter-controls">
                             <div class="date-range-selector">
@@ -3149,9 +3146,9 @@
 
             <!-- Psychology Section -->
                     <div class="psychology-section" id="psychologySection">
-                        <div class="psychology-container">
-                            <h2>Psychology Analysis - Coming Soon</h2>
-                            <p>Biological rhythm tracking and psychological analysis features will be available here.</p>
+                        <div style="padding: 40px; text-align: center;">
+                            <h2 style="color: #f8fafc; margin-bottom: 16px;">Psychology Analysis</h2>
+                            <p style="color: #94a3b8;">Biological rhythm tracking features coming soon...</p>
                         </div>
                     </div>
 
@@ -4510,7 +4507,7 @@
             event.target.classList.add('active');
             
             // Show/hide sections
-            document.querySelectorAll('.detail-section, .chart-section, .psychology-section')
+            document.querySelectorAll('.detail-section, .chart-section, .psychology-section').forEach(section => {
                 section.classList.remove('active');
             });
             
@@ -4521,11 +4518,10 @@
                 document.getElementById('chartSection').classList.add('active');
                 setTimeout(async () => await updateAdvancedCharts(), 100);
             }
-            
             } else if (sectionName === 'psychology') {
-                document.getElementById('psychologySection').classList.add('active');
-        }
-
+    document.getElementById('psychologySection').classList.add('active');
+}
+    
         async function createBasicChart(canvasId, type, data, options = {}) {
             try {
                 await waitForChart();
