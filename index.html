@@ -4081,7 +4081,8 @@
                 'emotional-readiness': 'Emotional Readiness',
                 'psychology-insights': 'Psychology Insights & Recommendations',
                 'no-psychology-data': 'No psychology data available. Fill in today\'s data to get insights.',
-                'start-time': 'Start Time'
+                'start-time': 'Start Time',
+                'reset-psychology-data': 'Reset Data'
             },
             ko: {
                 'dashboard': '대시보드',
@@ -4329,7 +4330,8 @@
                 'emotional-readiness': '감정적 준비도',
                 'psychology-insights': '심리 인사이트 및 권장사항',
                 'no-psychology-data': '심리 데이터가 없습니다. 오늘의 데이터를 입력하여 인사이트를 받아보세요.',
-                'start-time': '시작 시간'
+                'start-time': '시작 시간',
+                'reset-psychology-data': '데이터 초기화',
             }
         };
         
@@ -7408,6 +7410,33 @@ function applyCustomRisk() {
             updatePsychologyMetrics();
             generatePsychologyInsights();
             showToast(currentLanguage === 'ko' ? '심리 데이터가 저장되었습니다' : 'Psychology data saved');
+        }
+
+        function resetPsychologyData() {
+            const confirmMessage = currentLanguage === 'ko' ? 
+                '심리 데이터를 초기화하시겠습니까?' : 
+                'Are you sure you want to reset psychology data?';
+            
+            if (confirm(confirmMessage)) {
+                // 모든 입력 필드 초기화
+                document.getElementById('sleepHours').value = '';
+                document.getElementById('sleepQuality').value = '3';
+                document.getElementById('energyLevel').value = '3';
+                document.getElementById('actualStartTime').value = '';
+                document.getElementById('tradingEnvironment').value = 'home-quiet';
+                document.getElementById('psychAccountBalance').value = '';
+                document.getElementById('dailyTarget').value = '';
+                document.getElementById('maxDailyLoss').value = '';
+                document.getElementById('preMarketMood').value = '3';
+                document.getElementById('confidenceLevel').value = '3';
+                document.getElementById('stressLevel').value = '3';
+                document.getElementById('focusLevel').value = '3';
+                
+                // 메트릭 초기화
+                resetPsychologyMetrics();
+                
+                showToast(currentLanguage === 'ko' ? '심리 데이터가 초기화되었습니다' : 'Psychology data has been reset');
+            }
         }
 
         function loadPsychologyData() {
