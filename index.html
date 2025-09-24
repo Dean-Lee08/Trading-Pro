@@ -3365,10 +3365,40 @@
 
             <!-- Psychology page -->
             <div id="psychology" class="page">
-                <div class="page-header">
-                    <div>
-                        <h1 class="page-title" data-lang="psychology-title">Trading Psychology</h1>
-                        <p class="page-subtitle" data-lang="psychology-subtitle">Analyze and optimize your trading psychology</p>
+                <!-- Psychology Metrics (상단으로 이동) -->
+                <div class="psychology-container">
+                    <h2 class="psychology-header" data-lang="psychology-metrics">Psychology Metrics</h2>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px;">
+                        <div id="dailyPsychScoreCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="daily-psych-score">Daily Score</div>
+                            <div id="dailyPsychScore" style="color: #f8fafc; font-size: 24px; font-weight: 700; margin-bottom: 4px;">0</div>
+                            <div id="dailyPsychStatus" style="color: #64748b; font-size: 11px;">No data</div>
+                        </div>
+                        
+                        <div id="sleepFactorCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="sleep-factor">Sleep</div>
+                            <div id="sleepFactor" style="color: #f8fafc; font-size: 24px; font-weight: 700; margin-bottom: 4px;">0</div>
+                            <div id="sleepFactorStatus" style="color: #64748b; font-size: 11px;">No data</div>
+                        </div>
+                        
+                        <div id="stressFactorCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="stress-factor">Stress</div>
+                            <div id="stressFactor" style="color: #f8fafc; font-size: 24px; font-weight: 700; margin-bottom: 4px;">0</div>
+                            <div id="stressFactorStatus" style="color: #64748b; font-size: 11px;">No data</div>
+                        </div>
+                        
+                        <div id="environmentFactorCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="environment-factor">Environment</div>
+                            <div id="environmentFactor" style="color: #f8fafc; font-size: 24px; font-weight: 700; margin-bottom: 4px;">0</div>
+                            <div id="environmentFactorStatus" style="color: #64748b; font-size: 11px;">No data</div>
+                        </div>
+                        
+                        <div id="emotionalReadinessCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="emotional-readiness">Emotions</div>
+                            <div id="emotionalReadiness" style="color: #f8fafc; font-size: 24px; font-weight: 700; margin-bottom: 4px;">0</div>
+                            <div id="emotionalReadinessStatus" style="color: #64748b; font-size: 11px;">No data</div>
+                        </div>
                     </div>
                 </div>
 
@@ -3400,12 +3430,6 @@
                                 </select>
                             </div>
                             
-                            <div style="margin-bottom: 16px;">
-                                <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="caffeine-intake">Caffeine (mg)</label>
-                                <input type="number" id="caffeineIntake" min="0" max="1000" placeholder="200"
-                                       style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                            </div>
-                            
                             <div>
                                 <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="energy-level">Energy Level</label>
                                 <select id="energyLevel" style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
@@ -3418,25 +3442,13 @@
                             </div>
                         </div>
                         
-                        <!-- Environment Section -->
+                        <!-- Time & Environment Section -->
                         <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
                             <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="time-environment">Time & Environment</h3>
                             
                             <div style="margin-bottom: 16px;">
-                                <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="planned-start-time">Planned Start</label>
-                                <input type="time" id="plannedStartTime" value="09:30"
-                                       style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                            </div>
-                            
-                            <div style="margin-bottom: 16px;">
-                                <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="actual-start-time">Actual Start</label>
+                                <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="start-time">Start Time</label>
                                 <input type="time" id="actualStartTime"
-                                       style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                            </div>
-                            
-                            <div style="margin-bottom: 16px;">
-                                <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="market-delay">Market Delay (min)</label>
-                                <input type="number" id="marketDelay" min="0" max="300" placeholder="15"
                                        style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
                             </div>
                             
@@ -3452,7 +3464,7 @@
                             </div>
                         </div>
                         
-                        <!-- Pressure Section -->
+                        <!-- Economic Pressure Section -->
                         <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
                             <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="economic-pressure">Economic Pressure</h3>
                             
@@ -3460,17 +3472,6 @@
                                 <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="account-balance-psych">Account Balance ($)</label>
                                 <input type="number" id="psychAccountBalance" min="0" placeholder="10000"
                                        style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                            </div>
-                            
-                            <div style="margin-bottom: 16px;">
-                                <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="pressure-level">Pressure Level</label>
-                                <select id="pressureLevel" style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                                    <option value="1">Very Low</option>
-                                    <option value="2">Low</option>
-                                    <option value="3" selected>Normal</option>
-                                    <option value="4">High</option>
-                                    <option value="5">Very High</option>
-                                </select>
                             </div>
                             
                             <div style="margin-bottom: 16px;">
@@ -3536,9 +3537,14 @@
                         </div>
                     </div>
                     
-                    <button onclick="savePsychologyData()" 
-                            style="background: #3b82f6; border: none; color: white; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500; display: block; margin: 0 auto;" 
-                            data-lang="save-psychology-data">Save Psychology Data</button>
+                    <div style="display: flex; gap: 12px; justify-content: center;">
+                        <button onclick="savePsychologyData()" 
+                                style="background: #3b82f6; border: none; color: white; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;" 
+                                data-lang="save-psychology-data">Save Psychology Data</button>
+                        <button onclick="resetPsychologyData()" 
+                                style="background: #ef4444; border: none; color: white; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;" 
+                                data-lang="reset-psychology-data">Reset Data</button>
+                    </div>
                 </div>
                 
                 <!-- Psychology Metrics -->
@@ -4074,7 +4080,8 @@
                 'pressure-index': 'Pressure Index',
                 'emotional-readiness': 'Emotional Readiness',
                 'psychology-insights': 'Psychology Insights & Recommendations',
-                'no-psychology-data': 'No psychology data available. Fill in today\'s data to get insights.'
+                'no-psychology-data': 'No psychology data available. Fill in today\'s data to get insights.',
+                'start-time': 'Start Time'
             },
             ko: {
                 'dashboard': '대시보드',
@@ -4321,7 +4328,8 @@
                 'pressure-index': '압박 지수',
                 'emotional-readiness': '감정적 준비도',
                 'psychology-insights': '심리 인사이트 및 권장사항',
-                'no-psychology-data': '심리 데이터가 없습니다. 오늘의 데이터를 입력하여 인사이트를 받아보세요.'
+                'no-psychology-data': '심리 데이터가 없습니다. 오늘의 데이터를 입력하여 인사이트를 받아보세요.',
+                'start-time': '시작 시간'
             }
         };
         
