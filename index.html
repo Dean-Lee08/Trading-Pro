@@ -2189,9 +2189,15 @@
 
         .psychology-input-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
             margin-bottom: 24px;
+        }
+        
+        @media (max-width: 1200px) {
+            .psychology-input-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .psychology-input-group {
@@ -2242,9 +2248,21 @@
 
         .psychology-metrics-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
             margin-top: 24px;
+        }
+        
+        @media (max-width: 1024px) {
+            .psychology-metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .psychology-metrics-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .psychology-metric-card {
@@ -2369,6 +2387,18 @@
             .psychology-metrics-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+        }
+
+            .psychology-input-field input[type="number"],
+        .psychology-input-field input[type="time"] {
+            -webkit-appearance: none;
+            -moz-appearance: textfield;
+        }
+        
+        .psychology-input-field input[type="number"]::-webkit-outer-spin-button,
+        .psychology-input-field input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
         }
     </style>
 </head>
@@ -5706,9 +5736,11 @@
             }
 
             if (pageId === 'psychology') {
-                loadPsychologyData();
-                updatePsychologyMetrics();
-                generatePsychologyInsights();
+                setTimeout(() => {
+                    loadPsychologyData();
+                    updatePsychologyMetrics();
+                    generatePsychologyInsights();
+                }, 100);
             }
             
             if (window.innerWidth <= 768) {
@@ -7401,6 +7433,7 @@ function applyCustomRisk() {
             
             if (!todayData) {
                 resetPsychologyMetrics();
+                generatePsychologyInsights();
                 return;
             }
             
@@ -7427,6 +7460,8 @@ function applyCustomRisk() {
             // Calculate Daily Psychology Score (0-100)
             const dailyScore = sleepFactor + stressFactor + environmentFactor + pressureIndex + emotionalReadiness;
             updateMetricCard('dailyPsychScoreCard', 'dailyPsychScore', 'dailyPsychStatus', dailyScore, 100);
+
+            generatePsychologyInsights();
         }
 
         function calculateSleepFactor(sleepHours, sleepQuality) {
