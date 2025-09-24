@@ -38,10 +38,12 @@
             height: 100vh;
             overflow-y: auto;
             transition: all 0.3s ease;
+            transform: translateX(0);
         }
 
         .sidebar.collapsed {
             width: 70px;
+            transform: translateX(0);
         }
 
         .sidebar-header {
@@ -49,23 +51,38 @@
             border-bottom: 1px solid #334155;
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: center;
         }
 
-        .sidebar-title {
-            color: #f8fafc;
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 4px;
+        .sidebar.collapsed .sidebar-header {
+            padding: 0 12px 24px 12px;
         }
 
-        .sidebar-subtitle {
-            color: #64748b;
-            font-size: 13px;
+        .sidebar-brand {
+            flex: 1;
         }
 
-        .nav-menu {
-            padding: 24px 0;
+        .sidebar.collapsed .sidebar-brand {
+            display: none;
+        }
+
+        .sidebar-toggle {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 8px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-toggle:hover {
+            background: #334155;
+            color: #e4e4e7;
         }
 
         .nav-item {
@@ -82,23 +99,38 @@
             background: none;
             width: 100%;
             text-align: left;
+            position: relative;
         }
 
-        .nav-item:hover {
-            background: #334155;
+        .sidebar.collapsed .nav-item {
+            padding: 12px;
+            justify-content: center;
+        }
+
+        .nav-item-text {
+            transition: all 0.3s ease;
+        }
+
+        .sidebar.collapsed .nav-item-text {
+            opacity: 0;
+            visibility: hidden;
+            position: absolute;
+            left: 60px;
+            background: #1e293b;
             color: #e4e4e7;
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid #334155;
+            white-space: nowrap;
+            z-index: 1000;
+            transform: translateX(-10px);
+            pointer-events: none;
         }
 
-        .nav-item.active {
-            background: #3b82f6;
-            color: white;
-        }
-
-        .nav-item-icon {
-            margin-right: 12px;
-            font-size: 16px;
-            width: 20px;
-            text-align: center;
+        .sidebar.collapsed .nav-item:hover .nav-item-text {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
         }
 
         .main-content {
@@ -106,6 +138,10 @@
             margin-left: 260px;
             min-height: 100vh;
             transition: margin-left 0.3s ease;
+        }
+
+        .main-content.expanded {
+            margin-left: 70px;
         }
 
         .page {
@@ -2466,36 +2502,39 @@
                     <div class="sidebar-title">TradingPro</div>
                     <div class="sidebar-subtitle">Advanced Trading Journal</div>
                 </div>
+                <button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle sidebar">
+                    <span id="sidebarToggleIcon">◀</span>
+                </button>
             </div>
             
             <div class="nav-menu">
                 <button class="nav-item active" onclick="showPage('dashboard')">
                     <span class="nav-item-icon">📊</span>
-                    <span data-lang="dashboard">Dashboard</span>
+                    <span class="nav-item-text" data-lang="dashboard">Dashboard</span>
                 </button>
                 <button class="nav-item" onclick="showPage('calendar')">
                     <span class="nav-item-icon">📅</span>
-                    <span data-lang="calendar">Calendar View</span>
+                    <span class="nav-item-text" data-lang="calendar">Calendar View</span>
                 </button>
                 <button class="nav-item" onclick="showPage('analysis')">
                     <span class="nav-item-icon">📈</span>
-                    <span data-lang="analytics">Analytics</span>
+                    <span class="nav-item-text" data-lang="analytics">Analytics</span>
                 </button>
                 <button class="nav-item" onclick="showPage('psychology')">
                     <span class="nav-item-icon">🧠</span>
-                    <span data-lang="psychology">Psychology</span>
+                    <span class="nav-item-text" data-lang="psychology">Psychology</span>
                 </button>
                 <button class="nav-item" onclick="showPage('notes')">
                     <span class="nav-item-icon">📝</span>
-                    <span data-lang="notes">Notes</span>
+                    <span class="nav-item-text" data-lang="notes">Notes</span>
                 </button>
                 <button class="nav-item" onclick="showPage('trades')">
                     <span class="nav-item-icon">📋</span>
-                    <span data-lang="tradelist">Trade List</span>
+                    <span class="nav-item-text" data-lang="tradelist">Trade List</span>
                 </button>
                 <button class="nav-item" onclick="showPage('settings')">
                     <span class="nav-item-icon">⚙️</span>
-                    <span data-lang="settings">Settings</span>
+                    <span class="nav-item-text" data-lang="settings">Settings</span>
                 </button>
             </div>
         </nav>
@@ -2507,7 +2546,7 @@
                 <div class="page-header">
                     <div>
                         <h1 class="page-title" data-lang="dashboard-title">Trading Dashboard</h1>
-                        <p class="page-subtitle" data-lang="dashboard-subtitle">Track your trades and performance</p>
+                        
                     </div>
                     <div class="page-header-info">
                         <div class="date-range-selector">
@@ -2841,7 +2880,7 @@
                 <div class="page-header">
                     <div>
                         <h1 class="page-title" data-lang="calendar-title">Calendar View</h1>
-                        <p class="page-subtitle" data-lang="calendar-subtitle">Visualize your trading performance over time</p>
+
                     </div>
                 </div>
 
@@ -3368,7 +3407,7 @@
                 <div class="page-header">
                     <div>
                         <h1 class="page-title" data-lang="psychology-title">Trading Psychology</h1>
-                        <p class="page-subtitle" data-lang="psychology-subtitle">Analyze and optimize your trading psychology</p>
+                        
                     </div>
                 </div>
 
@@ -3600,7 +3639,7 @@
                 <div class="page-header">
                     <div>
                         <h1 class="page-title" data-lang="notes-title">Trading Notes</h1>
-                        <p class="page-subtitle" data-lang="notes-subtitle">Document your trading insights and thoughts</p>
+                        
                     </div>
                     <div class="notes-controls">
                         <button class="btn btn-primary" onclick="showNoteEditor()" data-lang="new-note">New Note</button>
@@ -3699,7 +3738,7 @@
                 <div class="page-header">
                     <div>
                         <h1 class="page-title" data-lang="tradelist-title">Trade List</h1>
-                        <p class="page-subtitle" data-lang="tradelist-subtitle">Complete list of all your trades</p>
+
                     </div>
                     <div class="date-range-selector">
                         <input type="date" id="tradesStartDate" class="date-range-input">
@@ -3748,7 +3787,7 @@
                 <div class="page-header">
                     <div>
                         <h1 class="page-title" data-lang="settings-title">Settings</h1>
-                        <p class="page-subtitle" data-lang="settings-subtitle">Configure your trading journal preferences</p>
+                        
                     </div>
                 </div>
 
@@ -3806,6 +3845,7 @@
         let currentTextColor = '#e4e4e7';
         let currentFont = "'Inter', sans-serif";
         let psychologyData = {};
+        let sidebarCollapsed = false;
 
         // Chart instances
         let basicCharts = {};
@@ -5760,8 +5800,24 @@
             }
         }
 
+        let sidebarCollapsed = false;
+
         function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const toggleIcon = document.getElementById('sidebarToggleIcon');
+            
+            sidebarCollapsed = !sidebarCollapsed;
+            
+            if (sidebarCollapsed) {
+                sidebar.classList.add('collapsed');
+                mainContent.classList.add('expanded');
+                toggleIcon.textContent = '▶';
+            } else {
+                sidebar.classList.remove('collapsed');
+                mainContent.classList.remove('expanded');
+                toggleIcon.textContent = '◀';
+            }
         }
 
         // Time related functions
