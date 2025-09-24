@@ -7618,134 +7618,60 @@ function applyCustomRisk() {
             });
         }
 
-        function generatePsychologyInsights() {
+        function generatePsychologyAnalysis() {
             const currentDate = formatTradingDate(currentTradingDate);
             const todayData = psychologyData[currentDate];
-            const insightsList = document.getElementById('psychologyInsightsList');
+            const analysisList = document.getElementById('psychologyAnalysisList');
             
             if (!todayData) {
-                insightsList.innerHTML = `
+                analysisList.innerHTML = `
                     <div class="psychology-insight-item">
                         <div class="psychology-insight-text">${currentLanguage === 'ko' ? 
-                            '심리 데이터가 없습니다. 오늘의 데이터를 입력하여 인사이트를 받아보세요.' : 
-                            'No psychology data available. Fill in today\'s data to get insights.'}</div>
+                            '심리 데이터를 입력하여 분석을 확인하세요.' : 
+                            'Enter your psychology data to see analysis.'}</div>
                     </div>
                 `;
                 return;
             }
             
-            const insights = [];
+            const analysis = [];
             
-            // Sleep insights
+            // 간단한 분석 내용만
             if (todayData.sleepHours < 6) {
-                insights.push({
-                    type: 'danger',
+                analysis.push({
                     text: currentLanguage === 'ko' ? 
-                        `수면 부족 경고: ${todayData.sleepHours}시간 수면은 거래 성과에 부정적 영향을 줄 수 있습니다. 7-8시간 수면을 권장합니다.` :
-                        `Sleep Warning: ${todayData.sleepHours} hours of sleep may negatively impact trading performance. 7-8 hours recommended.`
-                });
-            } else if (todayData.sleepHours >= 8 && todayData.sleepQuality >= 4) {
-                insights.push({
-                    type: 'good',
-                    text: currentLanguage === 'ko' ? 
-                        '수면 상태 양호: 충분한 수면과 좋은 수면 질로 최적의 거래 준비가 되었습니다.' :
-                        'Sleep Status Good: Adequate sleep and good quality prepare you for optimal trading.'
+                        `수면 부족: ${todayData.sleepHours}시간` :
+                        `Sleep Deficit: ${todayData.sleepHours} hours`
                 });
             }
             
-            // Caffeine insights
-            if (todayData.caffeineIntake > 400) {
-                insights.push({
-                    type: 'warning',
+            if (todayData.stressLevel >= 4) {
+                analysis.push({
                     text: currentLanguage === 'ko' ? 
-                        `카페인 과다: ${todayData.caffeineIntake}mg은 과다 섭취입니다. 불안감과 충동적 거래를 유발할 수 있습니다.` :
-                        `Caffeine Excess: ${todayData.caffeineIntake}mg is excessive. May cause anxiety and impulsive trading.`
+                        '높은 스트레스 수준이 감지됨' :
+                        'High stress level detected'
                 });
             }
             
-            // Stress and pressure insights
-            if (todayData.stressLevel >= 4 && todayData.pressureLevel >= 4) {
-                insights.push({
-                    type: 'danger',
+            if (todayData.focusLevel <= 2) {
+                analysis.push({
                     text: currentLanguage === 'ko' ? 
-                        '고스트레스 + 고압박 상태: 감정적 의사결정 위험이 높습니다. 포지션 크기를 줄이고 휴식을 고려하세요.' :
-                        'High Stress + High Pressure: High risk of emotional decisions. Consider reducing position size and taking breaks.'
+                        '집중력 저하 상태' :
+                        'Low focus state'
                 });
             }
             
-            // Target vs balance ratio warning
-            if (todayData.accountBalance && todayData.dailyTarget) {
-                const targetRatio = (todayData.dailyTarget / todayData.accountBalance) * 100;
-                if (targetRatio > 5) {
-                    insights.push({
-                        type: 'warning',
-                        text: currentLanguage === 'ko' ? 
-                            `일일 목표 과다: 계좌 대비 ${targetRatio.toFixed(1)}%의 목표는 과도한 위험을 의미합니다. 2-3% 이하를 권장합니다.` :
-                            `Daily Target Too High: ${targetRatio.toFixed(1)}% of account is excessive risk. Recommend 2-3% or less.`
-                    });
-                }
-            }
-            
-            // Environment insights
-            if (todayData.tradingEnvironment === 'cafe' || todayData.tradingEnvironment === 'home-noisy') {
-                insights.push({
-                    type: 'warning',
+            if (analysis.length === 0) {
+                analysis.push({
                     text: currentLanguage === 'ko' ? 
-                        '거래 환경 주의: 소음이 있는 환경은 집중력을 저해할 수 있습니다. 조용한 환경을 찾아보세요.' :
-                        'Trading Environment Warning: Noisy environments may impair focus. Consider finding a quieter space.'
+                        '심리 상태 양호' :
+                        'Psychology state is good'
                 });
             }
             
-            // Focus and confidence insights
-            if (todayData.focusLevel <= 2 && todayData.confidenceLevel <= 2) {
-                insights.push({
-                    type: 'danger',
-                    text: currentLanguage === 'ko' ? 
-                        '집중력 및 자신감 부족: 오늘은 거래를 피하거나 매우 작은 포지션만 고려하세요.' :
-                        'Low Focus & Confidence: Consider avoiding trading today or using very small positions only.'
-                });
-            }
-            
-            // Time delay insights
-            if (todayData.marketDelay > 30) {
-                insights.push({
-                    type: 'warning',
-                    text: currentLanguage === 'ko' ? 
-                        `시장 지연: ${todayData.marketDelay}분 지연은 초기 모멘텀을 놓칠 수 있습니다. 계획된 전략을 재검토하세요.` :
-                        `Market Delay: ${todayData.marketDelay} minute delay may cause you to miss initial momentum. Review planned strategy.`
-                });
-            }
-            
-            // Good condition insights
-            const totalScore = calculateSleepFactor(todayData.sleepHours, todayData.sleepQuality) +
-                            calculateStressFactor(todayData.caffeineIntake, todayData.stressLevel, todayData.energyLevel) +
-                            calculateEnvironmentFactor(todayData.tradingEnvironment, todayData.focusLevel) +
-                            calculatePressureIndex(todayData.pressureLevel, todayData.accountBalance, todayData.dailyTarget) +
-                            calculateEmotionalReadiness(todayData.preMarketMood, todayData.confidenceLevel);
-            
-            if (totalScore >= 80) {
-                insights.push({
-                    type: 'good',
-                    text: currentLanguage === 'ko' ? 
-                        '최적 거래 조건: 모든 심리적 요인이 양호합니다. 계획된 전략을 자신 있게 실행하세요.' :
-                        'Optimal Trading Conditions: All psychological factors are favorable. Execute your planned strategy with confidence.'
-                });
-            }
-            
-            // Default insight if no specific insights
-            if (insights.length === 0) {
-                insights.push({
-                    type: 'good',
-                    text: currentLanguage === 'ko' ? 
-                        '심리적 준비 상태 양호: 특별한 주의사항은 없습니다. 계획된 거래 전략을 따르세요.' :
-                        'Psychological Readiness Good: No specific warnings. Follow your planned trading strategy.'
-                });
-            }
-            
-            // Render insights
-            insightsList.innerHTML = insights.map(insight => `
-                <div class="psychology-insight-item ${insight.type === 'danger' ? 'danger' : insight.type === 'warning' ? 'warning' : ''}">
-                    <div class="psychology-insight-text">${insight.text}</div>
+            analysisList.innerHTML = analysis.map(item => `
+                <div class="psychology-insight-item">
+                    <div class="psychology-insight-text">${item.text}</div>
                 </div>
             `).join('');
         }
