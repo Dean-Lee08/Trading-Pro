@@ -5800,25 +5800,23 @@
             }
         }
 
-        let sidebarCollapsed = false;
-
         function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const mainContent = document.getElementById('mainContent');
-            const toggleIcon = document.getElementById('sidebarToggleIcon');
-            
-            sidebarCollapsed = !sidebarCollapsed;
-            
-            if (sidebarCollapsed) {
-                sidebar.classList.add('collapsed');
-                mainContent.classList.add('expanded');
-                toggleIcon.textContent = '▶';
-            } else {
-                sidebar.classList.remove('collapsed');
-                mainContent.classList.remove('expanded');
-                toggleIcon.textContent = '◀';
-            }
-        }
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('mainContent');
+    const toggleIcon = document.getElementById('sidebarToggleIcon');
+    
+    if (!window.sidebarCollapsed) {
+        window.sidebarCollapsed = true;
+        sidebar.classList.add('collapsed');
+        mainContent.classList.add('expanded');
+        toggleIcon.textContent = '▶';
+    } else {
+        window.sidebarCollapsed = false;
+        sidebar.classList.remove('collapsed');
+        mainContent.classList.remove('expanded');
+        toggleIcon.textContent = '◀';
+    }
+}
 
         // Time related functions
         function toggleTimeEdit() {
