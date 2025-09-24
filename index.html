@@ -2169,14 +2169,6 @@
 }
 
             /* Psychology Section Styles */
-        .psychology-section {
-            display: none;
-        }
-
-        .psychology-section.active {
-            display: block;
-        }
-
         .psychology-container {
             background: #1e293b;
             border: 1px solid #334155;
@@ -2458,6 +2450,10 @@
                 <button class="nav-item" onclick="showPage('analysis')">
                     <span class="nav-item-icon">📈</span>
                     <span data-lang="analytics">Analytics</span>
+                </button>
+                <button class="nav-item" onclick="showPage('psychology')">
+                    <span class="nav-item-icon">🧠</span>
+                    <span data-lang="psychology">Psychology</span>
                 </button>
                 <button class="nav-item" onclick="showPage('notes')">
                     <span class="nav-item-icon">📝</span>
@@ -2899,10 +2895,9 @@
                     <div class="analytics-header">
                         <div class="analytics-title-section">
                             <div class="analytics-tabs">
-                        <button class="analytics-tab active" onclick="showAnalyticsSection('detail')" data-lang="detail">Detail</button>
-                        <button class="analytics-tab" onclick="showAnalyticsSection('charts')" data-lang="charts">Charts</button>
-                        <button class="analytics-tab" onclick="showAnalyticsSection('psychology')" data-lang="psychology">Psychology</button>
-                    </div>
+                                <button class="analytics-tab active" onclick="showAnalyticsSection('detail')" data-lang="detail">Detail</button>
+                                <button class="analytics-tab" onclick="showAnalyticsSection('charts')" data-lang="charts">Charts</button>
+                            </div>
                         </div>
                         
                         <div class="filter-controls">
@@ -3338,218 +3333,225 @@
                 </div>
             </div>
 
-            <!-- Psychology Section -->
-                    <div class="psychology-section" id="psychologySection">
-                        <!-- Daily Psychology Input -->
-                        <div class="psychology-container">
-                            <div class="psychology-header" data-lang="daily-psychology-input">Daily Psychology Input</div>
+            <!-- Psychology page -->
+            <div id="psychology" class="page">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title" data-lang="psychology-title">Trading Psychology</h1>
+                        <p class="page-subtitle" data-lang="psychology-subtitle">Analyze and optimize your trading psychology</p>
+                    </div>
+                </div>
+
+                <!-- Daily Psychology Input -->
+                <div class="psychology-container">
+                    <div class="psychology-header" data-lang="daily-psychology-input">Daily Psychology Input</div>
+                    
+                    <div class="psychology-input-grid">
+                        <!-- 생체 리듬 데이터 -->
+                        <div class="psychology-input-group">
+                            <div class="psychology-input-title" data-lang="biological-rhythm">Biological Rhythm</div>
                             
-                            <div class="psychology-input-grid">
-                                <!-- 생체 리듬 데이터 -->
-                                <div class="psychology-input-group">
-                                    <div class="psychology-input-title" data-lang="biological-rhythm">Biological Rhythm</div>
-                                    
-                                    <div class="psychology-input-field">
-                                        <label data-lang="sleep-hours">Sleep Hours</label>
-                                        <input type="number" id="sleepHours" step="0.5" min="0" max="24" placeholder="7.5">
-                                    </div>
-                                    
-                                    <div class="psychology-input-field">
-                                        <label data-lang="sleep-quality">Sleep Quality</label>
-                                        <select id="sleepQuality">
-                                            <option value="1">Poor</option>
-                                            <option value="2">Fair</option>
-                                            <option value="3" selected>Good</option>
-                                            <option value="4">Very Good</option>
-                                            <option value="5">Excellent</option>
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="psychology-input-field">
-                                        <label data-lang="caffeine-intake">Caffeine Intake (mg)</label>
-                                        <input type="number" id="caffeineIntake" min="0" max="1000" placeholder="200">
-                                    </div>
-                                    
-                                    <div class="psychology-input-field">
-                                        <label data-lang="energy-level">Energy Level</label>
-                                        <select id="energyLevel">
-                                            <option value="1">Very Low</option>
-                                            <option value="2">Low</option>
-                                            <option value="3" selected>Normal</option>
-                                            <option value="4">High</option>
-                                            <option value="5">Very High</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                
-                                <!-- 시간 기반 환경 요인 -->
-                                <div class="psychology-input-group">
-                                    <div class="psychology-input-title" data-lang="time-environment">Time & Environment</div>
-                                    
-                                    <div class="psychology-input-field">
-                                        <label data-lang="planned-start-time">Planned Start Time</label>
-                                        <input type="time" id="plannedStartTime" value="09:30">
-                                    </div>
-                                    
-                                    <div class="psychology-input-field">
-                                        <label data-lang="actual-start-time">Actual Start Time</label>
-                                        <input type="time" id="actualStartTime">
-                                    </div>
-                                    
-                                    <div class="psychology-input-field">
-                                        <label data-lang="market-delay">Market Open Delay (min)</label>
-                                        <input type="number" id="marketDelay" min="0" max="300" placeholder="15">
-                                    </div>
-                                    
-                                    <div class="psychology-input-field">
-                                        <label data-lang="trading-environment">Trading Environment</label>
-                                        <select id="tradingEnvironment">
-                                            <option value="home-quiet">Home (Quiet)</option>
-                                            <option value="home-noisy">Home (Noisy)</option>
-                                            <option value="office">Office</option>
-                                            <option value="cafe">Cafe</option>
-                                            <option value="other">Other</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                
-                                <!-- 경제적 압박 요인 -->
-                                <div class="psychology-input-group">
-                                    <div class="psychology-input-title" data-lang="economic-pressure">Economic Pressure</div>
-                                    
-                                    <div class="psychology-input-field">
-                                        <label data-lang="account-balance-psych">Account Balance ($)</label>
-                                        <input type="number" id="psychAccountBalance" min="0" placeholder="10000">
-                                    </div>
-                                    
-                                    <div class="psychology-input-field">
-                                        <label data-lang="pressure-level">Financial Pressure Level</label>
-                                        <select id="pressureLevel">
-                                            <option value="1">Very Low</option>
-                                            <option value="2">Low</option>
-                                            <option value="3" selected>Normal</option>
-                                            <option value="4">High</option>
-                                            <option value="5">Very High</option>
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="psychology-input-field">
-                                        <label data-lang="daily-target">Daily P&L Target ($)</label>
-                                        <input type="number" id="dailyTarget" placeholder="100">
-                                    </div>
-                                    
-                                    <div class="psychology-input-field">
-                                        <label data-lang="max-daily-loss">Max Daily Loss Limit ($)</label>
-                                        <input type="number" id="maxDailyLoss" placeholder="200">
-                                    </div>
-                                </div>
-                                
-                                <!-- 감정 상태 -->
-                                <div class="psychology-input-group">
-                                    <div class="psychology-input-title" data-lang="emotional-state">Emotional State</div>
-                                    
-                                    <div class="psychology-input-field">
-                                        <label data-lang="pre-market-mood">Pre-Market Mood</label>
-                                        <select id="preMarketMood">
-                                            <option value="1">Very Negative</option>
-                                            <option value="2">Negative</option>
-                                            <option value="3" selected>Neutral</option>
-                                            <option value="4">Positive</option>
-                                            <option value="5">Very Positive</option>
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="psychology-input-field">
-                                        <label data-lang="confidence-level">Confidence Level</label>
-                                        <select id="confidenceLevel">
-                                            <option value="1">Very Low</option>
-                                            <option value="2">Low</option>
-                                            <option value="3" selected>Normal</option>
-                                            <option value="4">High</option>
-                                            <option value="5">Very High</option>
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="psychology-input-field">
-                                        <label data-lang="stress-level">Stress Level</label>
-                                        <select id="stressLevel">
-                                            <option value="1">Very Low</option>
-                                            <option value="2">Low</option>
-                                            <option value="3" selected>Normal</option>
-                                            <option value="4">High</option>
-                                            <option value="5">Very High</option>
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="psychology-input-field">
-                                        <label data-lang="focus-level">Focus Level</label>
-                                        <select id="focusLevel">
-                                            <option value="1">Very Poor</option>
-                                            <option value="2">Poor</option>
-                                            <option value="3" selected>Normal</option>
-                                            <option value="4">Good</option>
-                                            <option value="5">Excellent</option>
-                                        </select>
-                                    </div>
-                                </div>
+                            <div class="psychology-input-field">
+                                <label data-lang="sleep-hours">Sleep Hours</label>
+                                <input type="number" id="sleepHours" step="0.5" min="0" max="24" placeholder="7.5">
                             </div>
                             
-                            <button class="psychology-save-btn" onclick="savePsychologyData()" data-lang="save-psychology-data">Save Psychology Data</button>
-                        </div>
-                        
-                        <!-- Psychology Metrics -->
-                        <div class="psychology-container">
-                            <div class="psychology-header" data-lang="psychology-metrics">Psychology Metrics</div>
+                            <div class="psychology-input-field">
+                                <label data-lang="sleep-quality">Sleep Quality</label>
+                                <select id="sleepQuality">
+                                    <option value="1">Poor</option>
+                                    <option value="2">Fair</option>
+                                    <option value="3" selected>Good</option>
+                                    <option value="4">Very Good</option>
+                                    <option value="5">Excellent</option>
+                                </select>
+                            </div>
                             
-                            <div class="psychology-metrics-grid">
-                                <div class="psychology-metric-card" id="dailyPsychScoreCard">
-                                    <div class="psychology-metric-label" data-lang="daily-psych-score">Daily Psychology Score</div>
-                                    <div class="psychology-metric-value" id="dailyPsychScore">0</div>
-                                    <div class="psychology-metric-status" id="dailyPsychStatus">No data</div>
-                                </div>
-                                
-                                <div class="psychology-metric-card" id="sleepFactorCard">
-                                    <div class="psychology-metric-label" data-lang="sleep-factor">Sleep Factor</div>
-                                    <div class="psychology-metric-value" id="sleepFactor">0</div>
-                                    <div class="psychology-metric-status" id="sleepFactorStatus">No data</div>
-                                </div>
-                                
-                                <div class="psychology-metric-card" id="stressFactorCard">
-                                    <div class="psychology-metric-label" data-lang="stress-factor">Stress Factor</div>
-                                    <div class="psychology-metric-value" id="stressFactor">0</div>
-                                    <div class="psychology-metric-status" id="stressFactorStatus">No data</div>
-                                </div>
-                                
-                                <div class="psychology-metric-card" id="environmentFactorCard">
-                                    <div class="psychology-metric-label" data-lang="environment-factor">Environment Factor</div>
-                                    <div class="psychology-metric-value" id="environmentFactor">0</div>
-                                    <div class="psychology-metric-status" id="environmentFactorStatus">No data</div>
-                                </div>
-                                
-                                <div class="psychology-metric-card" id="pressureIndexCard">
-                                    <div class="psychology-metric-label" data-lang="pressure-index">Pressure Index</div>
-                                    <div class="psychology-metric-value" id="pressureIndex">0</div>
-                                    <div class="psychology-metric-status" id="pressureIndexStatus">No data</div>
-                                </div>
-                                
-                                <div class="psychology-metric-card" id="emotionalReadinessCard">
-                                    <div class="psychology-metric-label" data-lang="emotional-readiness">Emotional Readiness</div>
-                                    <div class="psychology-metric-value" id="emotionalReadiness">0</div>
-                                    <div class="psychology-metric-status" id="emotionalReadinessStatus">No data</div>
-                                </div>
+                            <div class="psychology-input-field">
+                                <label data-lang="caffeine-intake">Caffeine Intake (mg)</label>
+                                <input type="number" id="caffeineIntake" min="0" max="1000" placeholder="200">
+                            </div>
+                            
+                            <div class="psychology-input-field">
+                                <label data-lang="energy-level">Energy Level</label>
+                                <select id="energyLevel">
+                                    <option value="1">Very Low</option>
+                                    <option value="2">Low</option>
+                                    <option value="3" selected>Normal</option>
+                                    <option value="4">High</option>
+                                    <option value="5">Very High</option>
+                                </select>
                             </div>
                         </div>
                         
-                        <!-- Psychology Insights -->
-                        <div class="psychology-insights">
-                            <div class="psychology-insights-title" data-lang="psychology-insights">Psychology Insights & Recommendations</div>
-                            <div id="psychologyInsightsList">
-                                <div class="psychology-insight-item">
-                                    <div class="psychology-insight-text" data-lang="no-psychology-data">No psychology data available. Fill in today's data to get insights.</div>
-                                </div>
+                        <!-- 시간 기반 환경 요인 -->
+                        <div class="psychology-input-group">
+                            <div class="psychology-input-title" data-lang="time-environment">Time & Environment</div>
+                            
+                            <div class="psychology-input-field">
+                                <label data-lang="planned-start-time">Planned Start Time</label>
+                                <input type="time" id="plannedStartTime" value="09:30">
+                            </div>
+                            
+                            <div class="psychology-input-field">
+                                <label data-lang="actual-start-time">Actual Start Time</label>
+                                <input type="time" id="actualStartTime">
+                            </div>
+                            
+                            <div class="psychology-input-field">
+                                <label data-lang="market-delay">Market Open Delay (min)</label>
+                                <input type="number" id="marketDelay" min="0" max="300" placeholder="15">
+                            </div>
+                            
+                            <div class="psychology-input-field">
+                                <label data-lang="trading-environment">Trading Environment</label>
+                                <select id="tradingEnvironment">
+                                    <option value="home-quiet">Home (Quiet)</option>
+                                    <option value="home-noisy">Home (Noisy)</option>
+                                    <option value="office">Office</option>
+                                    <option value="cafe">Cafe</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- 경제적 압박 요인 -->
+                        <div class="psychology-input-group">
+                            <div class="psychology-input-title" data-lang="economic-pressure">Economic Pressure</div>
+                            
+                            <div class="psychology-input-field">
+                                <label data-lang="account-balance-psych">Account Balance ($)</label>
+                                <input type="number" id="psychAccountBalance" min="0" placeholder="10000">
+                            </div>
+                            
+                            <div class="psychology-input-field">
+                                <label data-lang="pressure-level">Financial Pressure Level</label>
+                                <select id="pressureLevel">
+                                    <option value="1">Very Low</option>
+                                    <option value="2">Low</option>
+                                    <option value="3" selected>Normal</option>
+                                    <option value="4">High</option>
+                                    <option value="5">Very High</option>
+                                </select>
+                            </div>
+                            
+                            <div class="psychology-input-field">
+                                <label data-lang="daily-target">Daily P&L Target ($)</label>
+                                <input type="number" id="dailyTarget" placeholder="100">
+                            </div>
+                            
+                            <div class="psychology-input-field">
+                                <label data-lang="max-daily-loss">Max Daily Loss Limit ($)</label>
+                                <input type="number" id="maxDailyLoss" placeholder="200">
+                            </div>
+                        </div>
+                        
+                        <!-- 감정 상태 -->
+                        <div class="psychology-input-group">
+                            <div class="psychology-input-title" data-lang="emotional-state">Emotional State</div>
+                            
+                            <div class="psychology-input-field">
+                                <label data-lang="pre-market-mood">Pre-Market Mood</label>
+                                <select id="preMarketMood">
+                                    <option value="1">Very Negative</option>
+                                    <option value="2">Negative</option>
+                                    <option value="3" selected>Neutral</option>
+                                    <option value="4">Positive</option>
+                                    <option value="5">Very Positive</option>
+                                </select>
+                            </div>
+                            
+                            <div class="psychology-input-field">
+                                <label data-lang="confidence-level">Confidence Level</label>
+                                <select id="confidenceLevel">
+                                    <option value="1">Very Low</option>
+                                    <option value="2">Low</option>
+                                    <option value="3" selected>Normal</option>
+                                    <option value="4">High</option>
+                                    <option value="5">Very High</option>
+                                </select>
+                            </div>
+                            
+                            <div class="psychology-input-field">
+                                <label data-lang="stress-level">Stress Level</label>
+                                <select id="stressLevel">
+                                    <option value="1">Very Low</option>
+                                    <option value="2">Low</option>
+                                    <option value="3" selected>Normal</option>
+                                    <option value="4">High</option>
+                                    <option value="5">Very High</option>
+                                </select>
+                            </div>
+                            
+                            <div class="psychology-input-field">
+                                <label data-lang="focus-level">Focus Level</label>
+                                <select id="focusLevel">
+                                    <option value="1">Very Poor</option>
+                                    <option value="2">Poor</option>
+                                    <option value="3" selected>Normal</option>
+                                    <option value="4">Good</option>
+                                    <option value="5">Excellent</option>
+                                </select>
                             </div>
                         </div>
                     </div>
+                    
+                    <button class="psychology-save-btn" onclick="savePsychologyData()" data-lang="save-psychology-data">Save Psychology Data</button>
+                </div>
+                
+                <!-- Psychology Metrics -->
+                <div class="psychology-container">
+                    <div class="psychology-header" data-lang="psychology-metrics">Psychology Metrics</div>
+                    
+                    <div class="psychology-metrics-grid">
+                        <div class="psychology-metric-card" id="dailyPsychScoreCard">
+                            <div class="psychology-metric-label" data-lang="daily-psych-score">Daily Psychology Score</div>
+                            <div class="psychology-metric-value" id="dailyPsychScore">0</div>
+                            <div class="psychology-metric-status" id="dailyPsychStatus">No data</div>
+                        </div>
+                        
+                        <div class="psychology-metric-card" id="sleepFactorCard">
+                            <div class="psychology-metric-label" data-lang="sleep-factor">Sleep Factor</div>
+                            <div class="psychology-metric-value" id="sleepFactor">0</div>
+                            <div class="psychology-metric-status" id="sleepFactorStatus">No data</div>
+                        </div>
+                        
+                        <div class="psychology-metric-card" id="stressFactorCard">
+                            <div class="psychology-metric-label" data-lang="stress-factor">Stress Factor</div>
+                            <div class="psychology-metric-value" id="stressFactor">0</div>
+                            <div class="psychology-metric-status" id="stressFactorStatus">No data</div>
+                        </div>
+                        
+                        <div class="psychology-metric-card" id="environmentFactorCard">
+                            <div class="psychology-metric-label" data-lang="environment-factor">Environment Factor</div>
+                            <div class="psychology-metric-value" id="environmentFactor">0</div>
+                            <div class="psychology-metric-status" id="environmentFactorStatus">No data</div>
+                        </div>
+                        
+                        <div class="psychology-metric-card" id="pressureIndexCard">
+                            <div class="psychology-metric-label" data-lang="pressure-index">Pressure Index</div>
+                            <div class="psychology-metric-value" id="pressureIndex">0</div>
+                            <div class="psychology-metric-status" id="pressureIndexStatus">No data</div>
+                        </div>
+                        
+                        <div class="psychology-metric-card" id="emotionalReadinessCard">
+                            <div class="psychology-metric-label" data-lang="emotional-readiness">Emotional Readiness</div>
+                            <div class="psychology-metric-value" id="emotionalReadiness">0</div>
+                            <div class="psychology-metric-status" id="emotionalReadinessStatus">No data</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Psychology Insights -->
+                <div class="psychology-insights">
+                    <div class="psychology-insights-title" data-lang="psychology-insights">Psychology Insights & Recommendations</div>
+                    <div id="psychologyInsightsList">
+                        <div class="psychology-insight-item">
+                            <div class="psychology-insight-text" data-lang="no-psychology-data">No psychology data available. Fill in today's data to get insights.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- Notes page -->
             <div id="notes" class="page">
@@ -3998,6 +4000,8 @@
                 'position-calculator': 'Position Calculator',
                 'amount': 'Amount ($)',
                 'psychology': 'Psychology',
+                'psychology-title': 'Trading Psychology',
+                'psychology-subtitle': 'Analyze and optimize your trading psychology',
                 'daily-psychology-input': 'Daily Psychology Input',
                 'biological-rhythm': 'Biological Rhythm',
                 'sleep-hours': 'Sleep Hours',
@@ -4243,6 +4247,8 @@
                 'position-calculator': '포지션 계산기',
                 'amount': '금액 ($)',
                 'psychology': '심리',
+                'psychology-title': '트레이딩 심리',
+                'psychology-subtitle': '거래 심리를 분석하고 최적화하세요',
                 'daily-psychology-input': '일일 심리 입력',
                 'biological-rhythm': '생체 리듬',
                 'sleep-hours': '수면 시간',
@@ -4961,10 +4967,11 @@
             document.querySelectorAll('.analytics-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
+            // event.target 대신 직접 요소 찾기
             document.querySelector(`[onclick="showAnalyticsSection('${sectionName}')"]`).classList.add('active');
             
             // Show/hide sections
-            document.querySelectorAll('.detail-section, .chart-section, .psychology-section').forEach(section => {
+            document.querySelectorAll('.detail-section, .chart-section').forEach(section => {
                 section.classList.remove('active');
             });
             
@@ -4974,12 +4981,6 @@
             } else if (sectionName === 'charts') {
                 document.getElementById('chartSection').classList.add('active');
                 setTimeout(async () => await updateAdvancedCharts(), 100);
-            } else if (sectionName === 'psychology') {
-                document.getElementById('psychologySection').classList.add('active');
-                setTimeout(() => {
-                    loadPsychologyData();
-                    updatePsychologyMetrics();
-                }, 100);
             }
         }
 
@@ -5702,6 +5703,12 @@
             
             if (pageId === 'notes') {
                 renderAllNotesSections();
+            }
+
+            if (pageId === 'psychology') {
+                loadPsychologyData();
+                updatePsychologyMetrics();
+                generatePsychologyInsights();
             }
             
             if (window.innerWidth <= 768) {
@@ -7420,8 +7427,6 @@ function applyCustomRisk() {
             // Calculate Daily Psychology Score (0-100)
             const dailyScore = sleepFactor + stressFactor + environmentFactor + pressureIndex + emotionalReadiness;
             updateMetricCard('dailyPsychScoreCard', 'dailyPsychScore', 'dailyPsychStatus', dailyScore, 100);
-            
-            generatePsychologyInsights();
         }
 
         function calculateSleepFactor(sleepHours, sleepQuality) {
@@ -7679,6 +7684,7 @@ function applyCustomRisk() {
                 </div>
             `).join('');
         }
+        
     </script>
 </body>
 </html>
