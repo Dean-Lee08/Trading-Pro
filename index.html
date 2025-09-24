@@ -50,6 +50,7 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
+            position: relative;
         }
 
         .sidebar-title {
@@ -1702,48 +1703,47 @@
 
         .mobile-menu-toggle {
             display: block;
-            position: fixed;
-            top: 20px;
-            left: 280px;
-            z-index: 1001;
-            background: #3b82f6;
+            position: absolute;
+            top: 24px;
+            right: 20px;
+            z-index: 1002;
+            background: #475569;
             color: white;
             border: none;
-            padding: 8px;
+            padding: 6px;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 14px;
             transition: all 0.2s ease;
-            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .mobile-menu-toggle:hover {
-            background: #2563eb;
+            background: #3b82f6;
         }
 
         .hamburger-icon {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            width: 16px;
-            height: 12px;
+            width: 14px;
+            height: 10px;
         }
 
         .hamburger-line {
             width: 100%;
-            height: 2px;
+            height: 1.5px;
             background: white;
             border-radius: 1px;
             transition: all 0.3s ease;
         }
 
         .mobile-menu-toggle.open .hamburger-line:nth-child(1) {
-            transform: rotate(45deg) translate(4px, 4px);
+            transform: rotate(45deg) translate(3px, 3px);
         }
 
         .mobile-menu-toggle.open .hamburger-line:nth-child(2) {
@@ -1751,7 +1751,7 @@
         }
 
         .mobile-menu-toggle.open .hamburger-line:nth-child(3) {
-            transform: rotate(-45deg) translate(4px, -4px);
+            transform: rotate(-45deg) translate(3px, -3px);
         }
 
         .sidebar.collapsed {
@@ -2453,13 +2453,6 @@
 </head>
 <body>
     <div class="toast-notification" id="toastNotification">Data saved successfully!</div>
-    <button class="mobile-menu-toggle" onclick="toggleSidebar()" id="mobileMenuToggle">
-        <div class="hamburger-icon">
-            <div class="hamburger-line"></div>
-            <div class="hamburger-line"></div>
-            <div class="hamburger-line"></div>
-        </div>
-    </button>
     
     <!-- Date picker modal -->
     <div class="date-picker-modal" id="datePickerModal">
@@ -2521,6 +2514,14 @@
                     <div class="sidebar-title">TradingPro</div>
                     <div class="sidebar-subtitle">Advanced Trading Journal</div>
                 </div>
+                <button class="mobile-menu-toggle" onclick="toggleSidebar()" id="mobileMenuToggle">
+                    <div class="hamburger-icon">
+                        <div class="hamburger-line"></div>
+                        <div class="hamburger-line"></div>
+                        <div class="hamburger-line"></div>
+                    </div>
+                </button>
+            </div>
             </div>
             
             <div class="nav-menu">
