@@ -3365,50 +3365,37 @@
 
             <!-- Psychology page -->
             <div id="psychology" class="page">
-                <div class="page-header">
-                    <div>
-                        <h1 class="page-title" data-lang="psychology-title">Trading Psychology</h1>
-                        <p class="page-subtitle" data-lang="psychology-subtitle">Analyze and optimize your trading psychology</p>
-                    </div>
-                </div>
-
-                <!-- Psychology Metrics -->
+                <!-- Psychology Metrics (상단으로 이동) -->
                 <div class="psychology-container">
                     <h2 class="psychology-header" data-lang="psychology-metrics">Psychology Metrics</h2>
                     
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px;">
                         <div id="dailyPsychScoreCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="daily-psych-score">Daily Psychology Score</div>
+                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="daily-psych-score">Daily Score</div>
                             <div id="dailyPsychScore" style="color: #f8fafc; font-size: 24px; font-weight: 700; margin-bottom: 4px;">0</div>
                             <div id="dailyPsychStatus" style="color: #64748b; font-size: 11px;">No data</div>
                         </div>
                         
                         <div id="sleepFactorCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="sleep-factor">Sleep Factor</div>
+                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="sleep-factor">Sleep</div>
                             <div id="sleepFactor" style="color: #f8fafc; font-size: 24px; font-weight: 700; margin-bottom: 4px;">0</div>
                             <div id="sleepFactorStatus" style="color: #64748b; font-size: 11px;">No data</div>
                         </div>
                         
                         <div id="stressFactorCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="stress-factor">Stress Factor</div>
+                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="stress-factor">Stress</div>
                             <div id="stressFactor" style="color: #f8fafc; font-size: 24px; font-weight: 700; margin-bottom: 4px;">0</div>
                             <div id="stressFactorStatus" style="color: #64748b; font-size: 11px;">No data</div>
                         </div>
                         
                         <div id="environmentFactorCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="environment-factor">Environment Factor</div>
+                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="environment-factor">Environment</div>
                             <div id="environmentFactor" style="color: #f8fafc; font-size: 24px; font-weight: 700; margin-bottom: 4px;">0</div>
                             <div id="environmentFactorStatus" style="color: #64748b; font-size: 11px;">No data</div>
                         </div>
                         
-                        <div id="pressureIndexCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="pressure-index">Pressure Index</div>
-                            <div id="pressureIndex" style="color: #f8fafc; font-size: 24px; font-weight: 700; margin-bottom: 4px;">0</div>
-                            <div id="pressureIndexStatus" style="color: #64748b; font-size: 11px;">No data</div>
-                        </div>
-                        
                         <div id="emotionalReadinessCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="emotional-readiness">Emotional Readiness</div>
+                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="emotional-readiness">Emotions</div>
                             <div id="emotionalReadiness" style="color: #f8fafc; font-size: 24px; font-weight: 700; margin-bottom: 4px;">0</div>
                             <div id="emotionalReadinessStatus" style="color: #64748b; font-size: 11px;">No data</div>
                         </div>
@@ -3419,7 +3406,9 @@
                 <div class="psychology-container">
                     <h2 class="psychology-header" data-lang="daily-psychology-input">Daily Psychology Input</h2>
                     
+                    <!-- Simple Form Layout -->
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 24px;">
+                        
                         <!-- Biological Section -->
                         <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
                             <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="biological-rhythm">Biological Rhythm</h3>
@@ -3558,10 +3547,53 @@
                     </div>
                 </div>
                 
-                <!-- Psychology Analysis -->
+                <!-- Psychology Metrics -->
+                <div class="psychology-container">
+                    <h2 class="psychology-header" data-lang="psychology-metrics">Psychology Metrics</h2>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                        <div id="dailyPsychScoreCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="daily-psych-score">Daily Score</div>
+                            <div id="dailyPsychScore" style="color: #f8fafc; font-size: 24px; font-weight: 700; margin-bottom: 4px;">0</div>
+                            <div id="dailyPsychStatus" style="color: #64748b; font-size: 11px;">No data</div>
+                        </div>
+                        
+                        <div id="sleepFactorCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="sleep-factor">Sleep</div>
+                            <div id="sleepFactor" style="color: #f8fafc; font-size: 24px; font-weight: 700; margin-bottom: 4px;">0</div>
+                            <div id="sleepFactorStatus" style="color: #64748b; font-size: 11px;">No data</div>
+                        </div>
+                        
+                        <div id="stressFactorCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="stress-factor">Stress</div>
+                            <div id="stressFactor" style="color: #f8fafc; font-size: 24px; font-weight: 700; margin-bottom: 4px;">0</div>
+                            <div id="stressFactorStatus" style="color: #64748b; font-size: 11px;">No data</div>
+                        </div>
+                        
+                        <div id="environmentFactorCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="environment-factor">Environment</div>
+                            <div id="environmentFactor" style="color: #f8fafc; font-size: 24px; font-weight: 700; margin-bottom: 4px;">0</div>
+                            <div id="environmentFactorStatus" style="color: #64748b; font-size: 11px;">No data</div>
+                        </div>
+                        
+                        <div id="pressureIndexCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="pressure-index">Pressure</div>
+                            <div id="pressureIndex" style="color: #f8fafc; font-size: 24px; font-weight: 700; margin-bottom: 4px;">0</div>
+                            <div id="pressureIndexStatus" style="color: #64748b; font-size: 11px;">No data</div>
+                        </div>
+                        
+                        <div id="emotionalReadinessCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="emotional-readiness">Emotions</div>
+                            <div id="emotionalReadiness" style="color: #f8fafc; font-size: 24px; font-weight: 700; margin-bottom: 4px;">0</div>
+                            <div id="emotionalReadinessStatus" style="color: #64748b; font-size: 11px;">No data</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Insights -->
                 <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 24px; margin-top: 24px;">
                     <h2 style="color: #f8fafc; font-size: 16px; font-weight: 600; margin-bottom: 16px; text-align: center;" data-lang="psychology-analysis">Psychology Analysis</h2>
-                    <div id="psychologyInsightsList">
+                    <div id="psychologyAnalysisList">
                         <div style="background: #0f172a; border-left: 4px solid #3b82f6; padding: 12px 16px; border-radius: 0 6px 6px 0;">
                             <div style="color: #e4e4e7; font-size: 14px; line-height: 1.5;" data-lang="no-psychology-data">Enter your psychology data to see analysis.</div>
                         </div>
@@ -7408,61 +7440,42 @@ function applyCustomRisk() {
         }
 
         function loadPsychologyData() {
-    try {
-        const saved = localStorage.getItem('tradingPlatformPsychologyData');
-        if (saved) {
-            psychologyData = JSON.parse(saved);
-        } else {
-            psychologyData = {};
+            try {
+                const saved = localStorage.getItem('tradingPlatformPsychologyData');
+                if (saved) {
+                    psychologyData = JSON.parse(saved);
+                } else {
+                    psychologyData = {};
+                }
+            } catch (error) {
+                console.error('Error loading psychology data:', error);
+                psychologyData = {};
+            }
+
+            // Load today's data if available
+            const currentDate = formatTradingDate(currentTradingDate);
+            const todayData = psychologyData[currentDate];
+            
+            if (todayData) {
+                document.getElementById('sleepHours').value = todayData.sleepHours || '';
+                document.getElementById('sleepQuality').value = todayData.sleepQuality || 3;
+                document.getElementById('caffeineIntake').value = todayData.caffeineIntake || '';
+                document.getElementById('energyLevel').value = todayData.energyLevel || 3;
+                document.getElementById('plannedStartTime').value = todayData.plannedStartTime || '09:30';
+                document.getElementById('actualStartTime').value = todayData.actualStartTime || '';
+                document.getElementById('marketDelay').value = todayData.marketDelay || '';
+                document.getElementById('tradingEnvironment').value = todayData.tradingEnvironment || 'home-quiet';
+                document.getElementById('psychAccountBalance').value = todayData.accountBalance || '';
+                document.getElementById('pressureLevel').value = todayData.pressureLevel || 3;
+                document.getElementById('dailyTarget').value = todayData.dailyTarget || '';
+                document.getElementById('maxDailyLoss').value = todayData.maxDailyLoss || '';
+                document.getElementById('preMarketMood').value = todayData.preMarketMood || 3;
+                document.getElementById('confidenceLevel').value = todayData.confidenceLevel || 3;
+                document.getElementById('stressLevel').value = todayData.stressLevel || 3;
+                document.getElementById('focusLevel').value = todayData.focusLevel || 3;
+            }
         }
-    } catch (error) {
-        console.error('Error loading psychology data:', error);
-        psychologyData = {};
-    }
 
-    // Load today's data if available
-    const currentDate = formatTradingDate(currentTradingDate);
-    const todayData = psychologyData[currentDate];
-
-    if (todayData) {
-        const sleepHours = document.getElementById('sleepHours');
-        if (sleepHours) sleepHours.value = todayData.sleepHours || '';
-
-        const sleepQuality = document.getElementById('sleepQuality');
-        if (sleepQuality) sleepQuality.value = todayData.sleepQuality || 3;
-
-        const energyLevel = document.getElementById('energyLevel');
-        if (energyLevel) energyLevel.value = todayData.energyLevel || 3;
-
-        const actualStartTime = document.getElementById('actualStartTime');
-        if (actualStartTime) actualStartTime.value = todayData.actualStartTime || '';
-
-        const tradingEnvironment = document.getElementById('tradingEnvironment');
-        if (tradingEnvironment) tradingEnvironment.value = todayData.tradingEnvironment || 'home-quiet';
-
-        const psychAccountBalance = document.getElementById('psychAccountBalance');
-        if (psychAccountBalance) psychAccountBalance.value = todayData.accountBalance || '';
-
-        const dailyTarget = document.getElementById('dailyTarget');
-        if (dailyTarget) dailyTarget.value = todayData.dailyTarget || '';
-
-        const maxDailyLoss = document.getElementById('maxDailyLoss');
-        if (maxDailyLoss) maxDailyLoss.value = todayData.maxDailyLoss || '';
-
-        const preMarketMood = document.getElementById('preMarketMood');
-        if (preMarketMood) preMarketMood.value = todayData.preMarketMood || 3;
-
-        const confidenceLevel = document.getElementById('confidenceLevel');
-        if (confidenceLevel) confidenceLevel.value = todayData.confidenceLevel || 3;
-
-        const stressLevel = document.getElementById('stressLevel');
-        if (stressLevel) stressLevel.value = todayData.stressLevel || 3;
-
-        const focusLevel = document.getElementById('focusLevel');
-        if (focusLevel) focusLevel.value = todayData.focusLevel || 3;
-    }
-}
-        
         function updatePsychologyMetrics() {
             const currentDate = formatTradingDate(currentTradingDate);
             const todayData = psychologyData[currentDate];
