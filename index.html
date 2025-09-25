@@ -7440,41 +7440,60 @@ function applyCustomRisk() {
         }
 
         function loadPsychologyData() {
-            try {
-                const saved = localStorage.getItem('tradingPlatformPsychologyData');
-                if (saved) {
-                    psychologyData = JSON.parse(saved);
-                } else {
-                    psychologyData = {};
-                }
-            } catch (error) {
-                console.error('Error loading psychology data:', error);
-                psychologyData = {};
-            }
-
-            // Load today's data if available
-            const currentDate = formatTradingDate(currentTradingDate);
-            const todayData = psychologyData[currentDate];
-            
-            if (todayData) {
-                document.getElementById('sleepHours').value = todayData.sleepHours || '';
-                document.getElementById('sleepQuality').value = todayData.sleepQuality || 3;
-                document.getElementById('caffeineIntake').value = todayData.caffeineIntake || '';
-                document.getElementById('energyLevel').value = todayData.energyLevel || 3;
-                document.getElementById('plannedStartTime').value = todayData.plannedStartTime || '09:30';
-                document.getElementById('actualStartTime').value = todayData.actualStartTime || '';
-                document.getElementById('marketDelay').value = todayData.marketDelay || '';
-                document.getElementById('tradingEnvironment').value = todayData.tradingEnvironment || 'home-quiet';
-                document.getElementById('psychAccountBalance').value = todayData.accountBalance || '';
-                document.getElementById('pressureLevel').value = todayData.pressureLevel || 3;
-                document.getElementById('dailyTarget').value = todayData.dailyTarget || '';
-                document.getElementById('maxDailyLoss').value = todayData.maxDailyLoss || '';
-                document.getElementById('preMarketMood').value = todayData.preMarketMood || 3;
-                document.getElementById('confidenceLevel').value = todayData.confidenceLevel || 3;
-                document.getElementById('stressLevel').value = todayData.stressLevel || 3;
-                document.getElementById('focusLevel').value = todayData.focusLevel || 3;
-            }
+    try {
+        const saved = localStorage.getItem('tradingPlatformPsychologyData');
+        if (saved) {
+            psychologyData = JSON.parse(saved);
+        } else {
+            psychologyData = {};
         }
+    } catch (error) {
+        console.error('Error loading psychology data:', error);
+        psychologyData = {};
+    }
+
+    // Load today's data if available
+    const currentDate = formatTradingDate(currentTradingDate);
+    const todayData = psychologyData[currentDate];
+
+    if (todayData) {
+        const sleepHours = document.getElementById('sleepHours');
+        if (sleepHours) sleepHours.value = todayData.sleepHours || '';
+
+        const sleepQuality = document.getElementById('sleepQuality');
+        if (sleepQuality) sleepQuality.value = todayData.sleepQuality || 3;
+
+        const energyLevel = document.getElementById('energyLevel');
+        if (energyLevel) energyLevel.value = todayData.energyLevel || 3;
+
+        const actualStartTime = document.getElementById('actualStartTime');
+        if (actualStartTime) actualStartTime.value = todayData.actualStartTime || '';
+
+        const tradingEnvironment = document.getElementById('tradingEnvironment');
+        if (tradingEnvironment) tradingEnvironment.value = todayData.tradingEnvironment || 'home-quiet';
+
+        const psychAccountBalance = document.getElementById('psychAccountBalance');
+        if (psychAccountBalance) psychAccountBalance.value = todayData.accountBalance || '';
+
+        const dailyTarget = document.getElementById('dailyTarget');
+        if (dailyTarget) dailyTarget.value = todayData.dailyTarget || '';
+
+        const maxDailyLoss = document.getElementById('maxDailyLoss');
+        if (maxDailyLoss) maxDailyLoss.value = todayData.maxDailyLoss || '';
+
+        const preMarketMood = document.getElementById('preMarketMood');
+        if (preMarketMood) preMarketMood.value = todayData.preMarketMood || 3;
+
+        const confidenceLevel = document.getElementById('confidenceLevel');
+        if (confidenceLevel) confidenceLevel.value = todayData.confidenceLevel || 3;
+
+        const stressLevel = document.getElementById('stressLevel');
+        if (stressLevel) stressLevel.value = todayData.stressLevel || 3;
+
+        const focusLevel = document.getElementById('focusLevel');
+        if (focusLevel) focusLevel.value = todayData.focusLevel || 3;
+    }
+}
 
         function updatePsychologyMetrics() {
             const currentDate = formatTradingDate(currentTradingDate);
