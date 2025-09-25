@@ -6647,97 +6647,104 @@
 
         // Calendar related functions
         function renderCalendar() {
-            const grid = document.getElementById('calendarGrid');
-            const year = calendarDate.getFullYear();
-            const month = calendarDate.getMonth();
-            
-            const monthNames = currentLanguage === 'ko' ? 
-                ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'] :
-                ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-            
-            document.getElementById('calendarTitle').textContent = `${monthNames[month]} ${year}`;
-            
-            const firstDay = new Date(year, month, 1);
-            const startDate = new Date(firstDay);
-            startDate.setDate(startDate.getDate() - firstDay.getDay());
-            
-            const existingDays = grid.querySelectorAll('.calendar-day');
-            existingDays.forEach(day => day.remove());
-            
-            updateCalendarStats();
-            updateWeeklySummary();
-            
-            for (let i = 0; i < 42; i++) {
-                const currentDate = new Date(startDate);
-                currentDate.setDate(startDate.getDate() + i);
-                
-                const dayElement = document.createElement('div');
-                dayElement.className = 'calendar-day';
-                
-                const estDate = getESTTradingDate(currentDate);
-                const dateString = formatTradingDate(estDate);
-                dayElement.dataset.date = dateString;
-                
-                const isCurrentMonth = currentDate.getMonth() === month;
-                const isToday = currentDate.toDateString() === new Date().toDateString();
-                
-                if (!isCurrentMonth) {
-                    dayElement.classList.add('other-month');
-                }
-                
-                if (isToday) {
-                    dayElement.classList.add('today');
-                }
-                
-                const dayNumber = document.createElement('div');
-                dayNumber.className = 'calendar-day-number';
-                dayNumber.textContent = estDate.getDate();
-                dayElement.appendChild(dayNumber);
-                
-                const dayTrades = trades.filter(trade => trade.date === dateString);
-                
-                if (dayTrades.length > 0) {
-                    const tradePnL = dayTrades.reduce((sum, trade) => sum + trade.pnl, 0);
-                    const dailyFee = dailyFees[dateString] || 0;
-                    const totalPnL = tradePnL - dailyFee;
-                    
-                    const pnlElement = document.createElement('div');
-                    pnlElement.className = `calendar-day-pnl ${totalPnL > 0 ? 'positive' : totalPnL < 0 ? 'negative' : 'neutral'}`;
-                    pnlElement.textContent = `$${totalPnL.toFixed(0)}`;
-                    dayElement.appendChild(pnlElement);
-                    
-                    const tradesElement = document.createElement('div');
-                    tradesElement.className = 'calendar-day-trades';
-                    const tradeText = currentLanguage === 'ko' ? '거래' : 'trade';
-                    tradesElement.textContent = `${dayTrades.length} ${tradeText}${dayTrades.length !== 1 && currentLanguage !== 'ko' ? 's' : ''}`;
-                    dayElement.appendChild(tradesElement);
-                }
-                
-                dayElement.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    selectCalendarDay(dateString, dayTrades);
-                });
-                
-                dayElement.addEventListener('mousedown', function(e) {
-                    e.preventDefault();
-                    startRangeSelection(dateString);
-                });
-                
-                dayElement.addEventListener('mouseenter', function() {
-                    if (isSelecting) {
-                        updateRangeSelection(dateString);
-                    }
-                });
-                
-                grid.appendChild(dayElement);
+    try {
+        const grid = document.getElementById('calendarGrid');
+        if (!grid) return;
+
+        // 기존 날짜 셀(.calendar-day) 완전 삭제 (중첩 방지)
+        Array.from(grid.querySelectorAll('.calendar-day')).forEach(day => day.remove());
+
+        // 현재 연/월
+        const year = calendarDate.getFullYear();
+        const month = calendarDate.getMonth();
+        const monthNames = currentLanguage === 'ko'
+            ? ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월']
+            : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        document.getElementById('calendarTitle').textContent = `${monthNames[month]} ${year}`;
+
+        // 캘린더 통계/요약 등 업데이트
+        updateCalendarStats();
+        updateWeeklySummary();
+
+        // 1일이 무슨 요일인지 계산하여 6주(42칸) 그리드 생성
+        const firstDay = new Date(year, month, 1);
+        const startDate = new Date(firstDay);
+        startDate.setDate(startDate.getDate() - firstDay.getDay());
+
+        for (let i = 0; i < 42; i++) {
+            const currentDate = new Date(startDate);
+            currentDate.setDate(startDate.getDate() + i);
+
+            const dayElement = document.createElement('div');
+            dayElement.className = 'calendar-day';
+
+            const estDate = getESTTradingDate(currentDate);
+            const dateString = formatTradingDate(estDate);
+            dayElement.dataset.date = dateString;
+
+            const isCurrentMonth = currentDate.getMonth() === month;
+            const isToday = (new Date().toDateString() === currentDate.toDateString());
+
+            if (!isCurrentMonth) dayElement.classList.add('other-month');
+            if (isToday) dayElement.classList.add('today');
+
+            // 날짜 숫자
+            const dayNumber = document.createElement('div');
+            dayNumber.className = 'calendar-day-number';
+            dayNumber.textContent = estDate.getDate();
+            dayElement.appendChild(dayNumber);
+
+            // 해당 날짜 거래내역 표시
+            const dayTrades = (trades || []).filter(trade => trade.date === dateString);
+
+            if (dayTrades.length > 0) {
+                const tradePnL = dayTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+                const dailyFee = dailyFees[dateString] || 0;
+                const totalPnL = tradePnL - dailyFee;
+
+                const pnlElement = document.createElement('div');
+                pnlElement.className = `calendar-day-pnl ${totalPnL > 0 ? 'positive' : totalPnL < 0 ? 'negative' : 'neutral'}`;
+                pnlElement.textContent = `$${totalPnL.toFixed(0)}`;
+                dayElement.appendChild(pnlElement);
+
+                const tradesElement = document.createElement('div');
+                tradesElement.className = 'calendar-day-trades';
+                const tradeText = currentLanguage === 'ko' ? '거래' : 'trade';
+                tradesElement.textContent = `${dayTrades.length} ${tradeText}${dayTrades.length !== 1 && currentLanguage !== 'ko' ? 's' : ''}`;
+                dayElement.appendChild(tradesElement);
             }
-            
+
+            // 이벤트 할당
+            dayElement.addEventListener('click', function(e) {
+                e.stopPropagation();
+                selectCalendarDay(dateString, dayTrades);
+            });
+            dayElement.addEventListener('mousedown', function(e) {
+                e.preventDefault();
+                startRangeSelection(dateString);
+            });
+            dayElement.addEventListener('mouseenter', function() {
+                if (isSelecting) {
+                    updateRangeSelection(dateString);
+                }
+            });
+
+            grid.appendChild(dayElement);
+        }
+
+        // 마우스 업 이벤트(한번만 등록)
+        if (!window._calendarMouseUpBound) {
             document.addEventListener('mouseup', function() {
                 if (isSelecting) {
                     endRangeSelection();
                 }
             });
+            window._calendarMouseUpBound = true;
         }
+    } catch (err) {
+        console.error('[Calendar Render Error]', err);
+    }
+}
 
         function selectCalendarDay(dateString, dayTrades) {
             selectedCalendarDay = dateString;
