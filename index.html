@@ -5645,6 +5645,7 @@
             updateDetailedAnalytics();
             calculateHoldingTime();
             loadDailyFees();
+            generateFactBasedInsights();
             
             document.getElementById('tradeForm').addEventListener('submit', handleTradeSubmit);
             document.getElementById('editTradeForm').addEventListener('submit', handleEditTradeSubmit);
@@ -5729,7 +5730,7 @@
                 setTimeout(() => {
                     loadPsychologyData();
                     updatePsychologyMetrics();
-                    generatePsychologyInsights();
+                    generateFactBasedInsights();
                 }, 100);
             }
             
