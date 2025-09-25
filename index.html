@@ -6780,22 +6780,41 @@
                     </div>
                 `;
             } else {
-                dayTrades.sort((a, b) => {
-                    const timeA = a.exitTime || '23:59';
-                    const timeB = b.exitTime || '23:59';
-                    return timeB.localeCompare(timeA);
+                // 티커별로 거래를 집계
+                const tickerStats = {};
+                
+                dayTrades.forEach(trade => {
+                    const symbol = trade.symbol;
+                    if (!tickerStats[symbol]) {
+                        tickerStats[symbol] = {
+                            totalShares: 0,
+                            totalCost: 0,
+                            totalPnL: 0,
+                            tradeCount: 0
+                        };
+                    }
+                    
+                    const shares = trade.shares || (trade.amount && trade.buyPrice ? Math.round(trade.amount / trade.buyPrice) : 0);
+                    tickerStats[symbol].totalShares += shares;
+                    tickerStats[symbol].totalCost += shares * trade.buyPrice;
+                    tickerStats[symbol].totalPnL += trade.pnl;
+                    tickerStats[symbol].tradeCount++;
                 });
                 
-                dayTradesList.innerHTML = dayTrades.map(trade => {
-                    const shares = trade.shares || (trade.amount && trade.buyPrice ? Math.round(trade.amount / trade.buyPrice) : 0);
+                // 티커별 정보를 P/L 순으로 정렬
+                const sortedTickers = Object.entries(tickerStats)
+                    .sort((a, b) => b[1].totalPnL - a[1].totalPnL);
+                
+                dayTradesList.innerHTML = sortedTickers.map(([symbol, stats]) => {
+                    const avgCostBasis = stats.totalCost / stats.totalShares;
                     return `
                         <div class="day-trade-item">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                                <span class="trade-symbol">${trade.symbol} (${shares}주)</span>
-                                <span class="trade-pnl ${trade.pnl >= 0 ? 'positive' : 'negative'}">$${trade.pnl.toFixed(2)}</span>
+                                <span class="trade-symbol">${symbol}</span>
+                                <span class="trade-pnl ${stats.totalPnL >= 0 ? 'positive' : 'negative'}">$${stats.totalPnL.toFixed(2)}</span>
                             </div>
                             <div style="font-size: 11px; color: #64748b;">
-                                $${trade.buyPrice.toFixed(4)} → $${trade.sellPrice.toFixed(4)} | ${trade.holdingTime || 'N/A'}
+                                ${currentLanguage === 'ko' ? 'Cost Basis' : 'Cost Basis'}: $${avgCostBasis.toFixed(2)} | ${stats.tradeCount} ${currentLanguage === 'ko' ? '거래' : 'trade'}${stats.tradeCount !== 1 && currentLanguage !== 'ko' ? 's' : ''}
                             </div>
                         </div>
                     `;
