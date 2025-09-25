@@ -7339,7 +7339,7 @@ function applyCustomRisk() {
     }
 }
 
-        // Psychology functions
+        // Psychology functions - 장기 데이터 축적 기반 시스템
         function savePsychologyData() {
             const currentDate = formatTradingDate(currentTradingDate);
             
@@ -7350,18 +7350,14 @@ function applyCustomRisk() {
                 // Biological data
                 sleepHours: parseFloat(document.getElementById('sleepHours').value) || 0,
                 sleepQuality: parseInt(document.getElementById('sleepQuality').value) || 3,
-                caffeineIntake: parseFloat(document.getElementById('caffeineIntake').value) || 0,
                 energyLevel: parseInt(document.getElementById('energyLevel').value) || 3,
                 
                 // Time & environment
-                plannedStartTime: document.getElementById('plannedStartTime').value || '09:30',
                 actualStartTime: document.getElementById('actualStartTime').value || '',
-                marketDelay: parseInt(document.getElementById('marketDelay').value) || 0,
                 tradingEnvironment: document.getElementById('tradingEnvironment').value || 'home-quiet',
                 
                 // Economic pressure
                 accountBalance: parseFloat(document.getElementById('psychAccountBalance').value) || 0,
-                pressureLevel: parseInt(document.getElementById('pressureLevel').value) || 3,
                 dailyTarget: parseFloat(document.getElementById('dailyTarget').value) || 0,
                 maxDailyLoss: parseFloat(document.getElementById('maxDailyLoss').value) || 0,
                 
@@ -7375,8 +7371,9 @@ function applyCustomRisk() {
             psychologyData[currentDate] = data;
             localStorage.setItem('tradingPlatformPsychologyData', JSON.stringify(psychologyData));
             
+            // 장기 데이터 기반 분석 실행
             updatePsychologyMetrics();
-            generatePsychologyInsights();
+            generateFactBasedInsights();
             showToast(currentLanguage === 'ko' ? '심리 데이터가 저장되었습니다' : 'Psychology data saved');
         }
 
@@ -7450,37 +7447,408 @@ function applyCustomRisk() {
             
             if (!todayData) {
                 resetPsychologyMetrics();
-                generatePsychologyInsights();
+                generateFactBasedInsights();
                 return;
             }
             
-            // Calculate Sleep Factor (0-25 points)
-            const sleepFactor = calculateSleepFactor(todayData.sleepHours, todayData.sleepQuality);
-            updateMetricCard('sleepFactorCard', 'sleepFactor', 'sleepFactorStatus', sleepFactor, 25);
+            // 장기 데이터 기반 성과 분석
+            const performanceAnalysis = analyzeLongTermPerformance();
             
-            // Calculate Stress Factor (0-25 points)
-            const stressFactor = calculateStressFactor(todayData.caffeineIntake, todayData.stressLevel, todayData.energyLevel);
-            updateMetricCard('stressFactorCard', 'stressFactor', 'stressFactorStatus', stressFactor, 25);
+            // 수면과 성과 상관관계
+            const sleepPerformance = calculateSleepPerformanceCorrelation();
+            updateFactBasedMetricCard('sleepFactorCard', 'sleepFactor', 'sleepFactorStatus', 
+                sleepPerformance, todayData.sleepHours);
             
-            // Calculate Environment Factor (0-25 points)
-            const environmentFactor = calculateEnvironmentFactor(todayData.tradingEnvironment, todayData.focusLevel);
-            updateMetricCard('environmentFactorCard', 'environmentFactor', 'environmentFactorStatus', environmentFactor, 25);
+            // 스트레스와 성과 상관관계
+            const stressPerformance = calculateStressPerformanceCorrelation();
+            updateFactBasedMetricCard('stressFactorCard', 'stressFactor', 'stressFactorStatus', 
+                stressPerformance, todayData.stressLevel);
             
-            // Calculate Pressure Index (0-25 points)
-            const pressureIndex = calculatePressureIndex(todayData.pressureLevel, todayData.accountBalance, todayData.dailyTarget);
-            updateMetricCard('pressureIndexCard', 'pressureIndex', 'pressureIndexStatus', pressureIndex, 25);
+            // 환경과 성과 상관관계
+            const environmentPerformance = calculateEnvironmentPerformanceCorrelation();
+            updateFactBasedMetricCard('environmentFactorCard', 'environmentFactor', 'environmentFactorStatus', 
+                environmentPerformance, todayData.tradingEnvironment);
             
-            // Calculate Emotional Readiness (0-25 points)
-            const emotionalReadiness = calculateEmotionalReadiness(todayData.preMarketMood, todayData.confidenceLevel);
-            updateMetricCard('emotionalReadinessCard', 'emotionalReadiness', 'emotionalReadinessStatus', emotionalReadiness, 25);
+            // 경제적 압박과 성과 상관관계
+            const pressurePerformance = calculatePressurePerformanceCorrelation();
+            updateFactBasedMetricCard('pressureIndexCard', 'pressureIndex', 'pressureIndexStatus', 
+                pressurePerformance, todayData.dailyTarget, todayData.accountBalance);
             
-            // Calculate Daily Psychology Score (0-100)
-            const dailyScore = sleepFactor + stressFactor + environmentFactor + pressureIndex + emotionalReadiness;
-            updateMetricCard('dailyPsychScoreCard', 'dailyPsychScore', 'dailyPsychStatus', dailyScore, 100);
+            // 감정 상태와 성과 상관관계
+            const emotionalPerformance = calculateEmotionalPerformanceCorrelation();
+            updateFactBasedMetricCard('emotionalReadinessCard', 'emotionalReadiness', 'emotionalReadinessStatus', 
+                emotionalPerformance, todayData.confidenceLevel, todayData.preMarketMood);
+            
+            // 전체 심리 건강도 (실제 성과 기반)
+            const overallScore = calculateOverallPsychologyScore(performanceAnalysis);
+            updateFactBasedMetricCard('dailyPsychScoreCard', 'dailyPsychScore', 'dailyPsychStatus', 
+                overallScore, null);
 
-            generatePsychologyInsights();
+            generateFactBasedInsights();
         }
 
+        function analyzeLongTermPerformance() {
+            const psychDates = Object.keys(psychologyData);
+            const analysis = {
+                sleepCorrelation: {},
+                stressCorrelation: {},
+                environmentCorrelation: {},
+                pressureCorrelation: {},
+                emotionalCorrelation: {},
+                totalSamples: 0
+            };
+            
+            psychDates.forEach(date => {
+                const psychData = psychologyData[date];
+                const dayTrades = trades.filter(trade => trade.date === date);
+                
+                if (dayTrades.length > 0) {
+                    const dayPnL = dayTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+                    const dayFee = dailyFees[date] || 0;
+                    const netPnL = dayPnL - dayFee;
+                    const winRate = dayTrades.filter(trade => trade.pnl > 0).length / dayTrades.length;
+                    
+                    analysis.totalSamples++;
+                    
+                    // 수면 시간별 성과 그룹핑
+                    const sleepRange = getSleepRange(psychData.sleepHours);
+                    if (!analysis.sleepCorrelation[sleepRange]) {
+                        analysis.sleepCorrelation[sleepRange] = { totalPnL: 0, totalWinRate: 0, count: 0 };
+                    }
+                    analysis.sleepCorrelation[sleepRange].totalPnL += netPnL;
+                    analysis.sleepCorrelation[sleepRange].totalWinRate += winRate;
+                    analysis.sleepCorrelation[sleepRange].count++;
+                    
+                    // 스트레스 레벨별 성과 그룹핑
+                    const stressLevel = psychData.stressLevel;
+                    if (!analysis.stressCorrelation[stressLevel]) {
+                        analysis.stressCorrelation[stressLevel] = { totalPnL: 0, totalWinRate: 0, count: 0 };
+                    }
+                    analysis.stressCorrelation[stressLevel].totalPnL += netPnL;
+                    analysis.stressCorrelation[stressLevel].totalWinRate += winRate;
+                    analysis.stressCorrelation[stressLevel].count++;
+                    
+                    // 환경별 성과 그룹핑
+                    const env = psychData.tradingEnvironment;
+                    if (!analysis.environmentCorrelation[env]) {
+                        analysis.environmentCorrelation[env] = { totalPnL: 0, totalWinRate: 0, count: 0 };
+                    }
+                    analysis.environmentCorrelation[env].totalPnL += netPnL;
+                    analysis.environmentCorrelation[env].totalWinRate += winRate;
+                    analysis.environmentCorrelation[env].count++;
+                    
+                    // 목표 대비 압박 레벨별 성과
+                    const pressureRatio = psychData.dailyTarget && psychData.accountBalance ? 
+                        (psychData.dailyTarget / psychData.accountBalance) * 100 : 0;
+                    const pressureRange = getPressureRange(pressureRatio);
+                    if (!analysis.pressureCorrelation[pressureRange]) {
+                        analysis.pressureCorrelation[pressureRange] = { totalPnL: 0, totalWinRate: 0, count: 0 };
+                    }
+                    analysis.pressureCorrelation[pressureRange].totalPnL += netPnL;
+                    analysis.pressureCorrelation[pressureRange].totalWinRate += winRate;
+                    analysis.pressureCorrelation[pressureRange].count++;
+                    
+                    // 감정 상태별 성과 (신뢰도 + 기분)
+                    const emotionalScore = (psychData.confidenceLevel + psychData.preMarketMood) / 2;
+                    const emotionalRange = getEmotionalRange(emotionalScore);
+                    if (!analysis.emotionalCorrelation[emotionalRange]) {
+                        analysis.emotionalCorrelation[emotionalRange] = { totalPnL: 0, totalWinRate: 0, count: 0 };
+                    }
+                    analysis.emotionalCorrelation[emotionalRange].totalPnL += netPnL;
+                    analysis.emotionalCorrelation[emotionalRange].totalWinRate += winRate;
+                    analysis.emotionalCorrelation[emotionalRange].count++;
+                }
+            });
+            
+            // 평균값 계산
+            Object.keys(analysis.sleepCorrelation).forEach(range => {
+                const data = analysis.sleepCorrelation[range];
+                data.avgPnL = data.totalPnL / data.count;
+                data.avgWinRate = data.totalWinRate / data.count;
+            });
+            
+            Object.keys(analysis.stressCorrelation).forEach(level => {
+                const data = analysis.stressCorrelation[level];
+                data.avgPnL = data.totalPnL / data.count;
+                data.avgWinRate = data.totalWinRate / data.count;
+            });
+            
+            Object.keys(analysis.environmentCorrelation).forEach(env => {
+                const data = analysis.environmentCorrelation[env];
+                data.avgPnL = data.totalPnL / data.count;
+                data.avgWinRate = data.totalWinRate / data.count;
+            });
+            
+            Object.keys(analysis.pressureCorrelation).forEach(range => {
+                const data = analysis.pressureCorrelation[range];
+                data.avgPnL = data.totalPnL / data.count;
+                data.avgWinRate = data.totalWinRate / data.count;
+            });
+            
+            Object.keys(analysis.emotionalCorrelation).forEach(range => {
+                const data = analysis.emotionalCorrelation[range];
+                data.avgPnL = data.totalPnL / data.count;
+                data.avgWinRate = data.totalWinRate / data.count;
+            });
+            
+            return analysis;
+        }
+
+        function getSleepRange(hours) {
+            if (hours < 5) return '< 5h';
+            if (hours < 6) return '5-6h';
+            if (hours < 7) return '6-7h';
+            if (hours < 8) return '7-8h';
+            return '8h+';
+        }
+        
+        function getPressureRange(ratio) {
+            if (ratio < 1) return 'Low (< 1%)';
+            if (ratio < 3) return 'Medium (1-3%)';
+            if (ratio < 5) return 'High (3-5%)';
+            return 'Extreme (> 5%)';
+        }
+        
+        function getEmotionalRange(score) {
+            if (score < 2.5) return 'Low';
+            if (score < 3.5) return 'Medium';
+            return 'High';
+        }
+
+        function calculateSleepPerformanceCorrelation() {
+            const analysis = analyzeLongTermPerformance();
+            const sleepData = analysis.sleepCorrelation;
+            
+            if (Object.keys(sleepData).length < 2) {
+                return { score: 50, confidence: 'Low', bestRange: 'Unknown', sampleSize: 0 };
+            }
+            
+            // 최적 수면 시간 범위 찾기
+            let bestRange = '';
+            let bestAvgPnL = -Infinity;
+            let bestWinRate = 0;
+            
+            Object.entries(sleepData).forEach(([range, data]) => {
+                if (data.count >= 3 && data.avgPnL > bestAvgPnL) {
+                    bestAvgPnL = data.avgPnL;
+                    bestWinRate = data.avgWinRate;
+                    bestRange = range;
+                }
+            });
+            
+            const totalSamples = Object.values(sleepData).reduce((sum, data) => sum + data.count, 0);
+            const confidence = totalSamples >= 10 ? 'High' : totalSamples >= 5 ? 'Medium' : 'Low';
+            
+            // 성과 점수 계산 (0-100)
+            const score = Math.min(100, Math.max(0, 50 + (bestAvgPnL / 100) + (bestWinRate * 25)));
+            
+            return {
+                score: Math.round(score),
+                confidence,
+                bestRange,
+                bestAvgPnL: bestAvgPnL.toFixed(2),
+                bestWinRate: (bestWinRate * 100).toFixed(1),
+                sampleSize: totalSamples,
+                breakdown: sleepData
+            };
+        }
+        
+        function calculateStressPerformanceCorrelation() {
+            const analysis = analyzeLongTermPerformance();
+            const stressData = analysis.stressCorrelation;
+            
+            if (Object.keys(stressData).length < 2) {
+                return { score: 50, confidence: 'Low', bestLevel: 'Unknown', sampleSize: 0 };
+            }
+            
+            let bestLevel = '';
+            let bestAvgPnL = -Infinity;
+            let bestWinRate = 0;
+            
+            Object.entries(stressData).forEach(([level, data]) => {
+                if (data.count >= 3 && data.avgPnL > bestAvgPnL) {
+                    bestAvgPnL = data.avgPnL;
+                    bestWinRate = data.avgWinRate;
+                    bestLevel = level;
+                }
+            });
+            
+            const totalSamples = Object.values(stressData).reduce((sum, data) => sum + data.count, 0);
+            const confidence = totalSamples >= 10 ? 'High' : totalSamples >= 5 ? 'Medium' : 'Low';
+            const score = Math.min(100, Math.max(0, 50 + (bestAvgPnL / 100) + (bestWinRate * 25)));
+            
+            return {
+                score: Math.round(score),
+                confidence,
+                bestLevel,
+                bestAvgPnL: bestAvgPnL.toFixed(2),
+                bestWinRate: (bestWinRate * 100).toFixed(1),
+                sampleSize: totalSamples,
+                breakdown: stressData
+            };
+        }
+        
+        function calculateEnvironmentPerformanceCorrelation() {
+            const analysis = analyzeLongTermPerformance();
+            const envData = analysis.environmentCorrelation;
+            
+            if (Object.keys(envData).length < 2) {
+                return { score: 50, confidence: 'Low', bestEnv: 'Unknown', sampleSize: 0 };
+            }
+            
+            let bestEnv = '';
+            let bestAvgPnL = -Infinity;
+            let bestWinRate = 0;
+            
+            Object.entries(envData).forEach(([env, data]) => {
+                if (data.count >= 2 && data.avgPnL > bestAvgPnL) {
+                    bestAvgPnL = data.avgPnL;
+                    bestWinRate = data.avgWinRate;
+                    bestEnv = env;
+                }
+            });
+            
+            const totalSamples = Object.values(envData).reduce((sum, data) => sum + data.count, 0);
+            const confidence = totalSamples >= 8 ? 'High' : totalSamples >= 4 ? 'Medium' : 'Low';
+            const score = Math.min(100, Math.max(0, 50 + (bestAvgPnL / 100) + (bestWinRate * 25)));
+            
+            return {
+                score: Math.round(score),
+                confidence,
+                bestEnv,
+                bestAvgPnL: bestAvgPnL.toFixed(2),
+                bestWinRate: (bestWinRate * 100).toFixed(1),
+                sampleSize: totalSamples,
+                breakdown: envData
+            };
+        }
+        
+        function calculatePressurePerformanceCorrelation() {
+            const analysis = analyzeLongTermPerformance();
+            const pressureData = analysis.pressureCorrelation;
+            
+            if (Object.keys(pressureData).length < 2) {
+                return { score: 50, confidence: 'Low', bestRange: 'Unknown', sampleSize: 0 };
+            }
+            
+            let bestRange = '';
+            let bestAvgPnL = -Infinity;
+            let bestWinRate = 0;
+            
+            Object.entries(pressureData).forEach(([range, data]) => {
+                if (data.count >= 3 && data.avgPnL > bestAvgPnL) {
+                    bestAvgPnL = data.avgPnL;
+                    bestWinRate = data.avgWinRate;
+                    bestRange = range;
+                }
+            });
+            
+            const totalSamples = Object.values(pressureData).reduce((sum, data) => sum + data.count, 0);
+            const confidence = totalSamples >= 10 ? 'High' : totalSamples >= 5 ? 'Medium' : 'Low';
+            const score = Math.min(100, Math.max(0, 50 + (bestAvgPnL / 100) + (bestWinRate * 25)));
+            
+            return {
+                score: Math.round(score),
+                confidence,
+                bestRange,
+                bestAvgPnL: bestAvgPnL.toFixed(2),
+                bestWinRate: (bestWinRate * 100).toFixed(1),
+                sampleSize: totalSamples,
+                breakdown: pressureData
+            };
+        }
+        
+        function calculateEmotionalPerformanceCorrelation() {
+            const analysis = analyzeLongTermPerformance();
+            const emotionalData = analysis.emotionalCorrelation;
+            
+            if (Object.keys(emotionalData).length < 2) {
+                return { score: 50, confidence: 'Low', bestRange: 'Unknown', sampleSize: 0 };
+            }
+            
+            let bestRange = '';
+            let bestAvgPnL = -Infinity;
+            let bestWinRate = 0;
+            
+            Object.entries(emotionalData).forEach(([range, data]) => {
+                if (data.count >= 3 && data.avgPnL > bestAvgPnL) {
+                    bestAvgPnL = data.avgPnL;
+                    bestWinRate = data.avgWinRate;
+                    bestRange = range;
+                }
+            });
+            
+            const totalSamples = Object.values(emotionalData).reduce((sum, data) => sum + data.count, 0);
+            const confidence = totalSamples >= 10 ? 'High' : totalSamples >= 5 ? 'Medium' : 'Low';
+            const score = Math.min(100, Math.max(0, 50 + (bestAvgPnL / 100) + (bestWinRate * 25)));
+            
+            return {
+                score: Math.round(score),
+                confidence,
+                bestRange,
+                bestAvgPnL: bestAvgPnL.toFixed(2),
+                bestWinRate: (bestWinRate * 100).toFixed(1),
+                sampleSize: totalSamples,
+                breakdown: emotionalData
+            };
+        }
+        
+        function calculateOverallPsychologyScore(analysis) {
+            if (analysis.totalSamples < 5) {
+                return { score: 0, confidence: 'Insufficient Data' };
+            }
+            
+            const sleepPerf = calculateSleepPerformanceCorrelation();
+            const stressPerf = calculateStressPerformanceCorrelation();
+            const envPerf = calculateEnvironmentPerformanceCorrelation();
+            const pressurePerf = calculatePressurePerformanceCorrelation();
+            const emotionalPerf = calculateEmotionalPerformanceCorrelation();
+            
+            const avgScore = (sleepPerf.score + stressPerf.score + envPerf.score + pressurePerf.score + emotionalPerf.score) / 5;
+            const confidence = analysis.totalSamples >= 20 ? 'High' : analysis.totalSamples >= 10 ? 'Medium' : 'Low';
+            
+            return {
+                score: Math.round(avgScore),
+                confidence,
+                sampleSize: analysis.totalSamples
+            };
+        }
+
+        function updateFactBasedMetricCard(cardId, valueId, statusId, performanceData, ...currentValues) {
+            const card = document.getElementById(cardId);
+            const valueElement = document.getElementById(valueId);
+            const statusElement = document.getElementById(statusId);
+            
+            if (!performanceData || performanceData.sampleSize === 0) {
+                valueElement.textContent = '--';
+                statusElement.textContent = 'No Data';
+                card.className = 'psychology-metric-card';
+                return;
+            }
+            
+            valueElement.textContent = performanceData.score;
+            
+            let status, cardClass;
+            const confidence = performanceData.confidence;
+            
+            if (performanceData.score >= 75) {
+                status = `${currentLanguage === 'ko' ? '우수' : 'Excellent'} (${confidence})`;
+                cardClass = 'good';
+            } else if (performanceData.score >= 60) {
+                status = `${currentLanguage === 'ko' ? '양호' : 'Good'} (${confidence})`;
+                cardClass = 'good';
+            } else if (performanceData.score >= 45) {
+                status = `${currentLanguage === 'ko' ? '보통' : 'Average'} (${confidence})`;
+                cardClass = 'warning';
+            } else {
+                status = `${currentLanguage === 'ko' ? '개선필요' : 'Needs Improvement'} (${confidence})`;
+                cardClass = 'danger';
+            }
+            
+            statusElement.textContent = status;
+            card.className = `psychology-metric-card ${cardClass}`;
+        }
+        
         function calculateSleepFactor(sleepHours, sleepQuality) {
             if (!sleepHours) return 0;
             
