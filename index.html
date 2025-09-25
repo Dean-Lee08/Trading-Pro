@@ -2400,6 +2400,112 @@
             -webkit-appearance: none;
             margin: 0;
         }
+
+            .psychology-controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .psychology-history-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .psychology-history-content {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 900px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .psychology-history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .psychology-history-title {
+            color: #f8fafc;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .psychology-history-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .psychology-history-item {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: grid;
+            grid-template-columns: 120px 1fr auto;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .psychology-history-item:hover {
+            border-color: #3b82f6;
+            background: #1e293b;
+        }
+
+        .psychology-history-date {
+            color: #e4e4e7;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .psychology-history-summary {
+            color: #94a3b8;
+            font-size: 13px;
+            display: flex;
+            gap: 16px;
+        }
+
+        .psychology-history-performance {
+            color: #64748b;
+            font-size: 12px;
+            text-align: right;
+        }
+
+        .psychology-date-indicator {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .psychology-date-status {
+            color: #94a3b8;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .psychology-current-date {
+            color: #e4e4e7;
+            font-size: 14px;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -3370,6 +3476,22 @@
                         <h1 class="page-title" data-lang="psychology-title">Trading Psychology</h1>
                         <p class="page-subtitle" data-lang="psychology-subtitle">Analyze and optimize your trading psychology</p>
                     </div>
+                    <div class="page-header-info">
+                        <div class="date-navigation">
+                            <button class="date-nav-btn" onclick="changePsychologyDate(-1)" title="Previous day">←</button>
+                            <div class="current-date-display" id="psychologyDateDisplay" onclick="openPsychologyDatePicker()"></div>
+                            <button class="date-nav-btn" onclick="changePsychologyDate(1)" title="Next day">→</button>
+                        </div>
+                        <div class="psychology-controls">
+                            <button class="btn btn-secondary" onclick="showPsychologyHistory()" data-lang="view-history">View History</button>
+                            <button class="btn btn-primary" onclick="copyFromPreviousDay()" data-lang="copy-previous">Copy Previous</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="psychology-date-indicator">
+                    <div class="psychology-date-status">Current Date Status</div>
+                    <div class="psychology-current-date">Today</div>
                 </div>
 
                 <!-- Psychology Metrics -->
@@ -3750,6 +3872,19 @@
                 </div>
             </div>
         </main>
+    </div>
+
+    <!-- Psychology History Modal -->
+    <div class="psychology-history-modal" id="psychologyHistoryModal">
+        <div class="psychology-history-content">
+            <div class="psychology-history-header">
+                <h2 class="psychology-history-title" data-lang="psychology-history">Psychology History</h2>
+                <button class="btn btn-secondary" onclick="closePsychologyHistory()">Close</button>
+            </div>
+            <div class="psychology-history-list" id="psychologyHistoryList">
+                <!-- History items will be populated here -->
+            </div>
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
@@ -5645,6 +5780,8 @@
             updateDetailedAnalytics();
             calculateHoldingTime();
             loadDailyFees();
+            currentPsychologyDate = new Date();
+            updatePsychologyDateDisplay();
             
             document.getElementById('tradeForm').addEventListener('submit', handleTradeSubmit);
             document.getElementById('editTradeForm').addEventListener('submit', handleEditTradeSubmit);
@@ -7342,7 +7479,7 @@ function applyCustomRisk() {
         // Psychology functions
         // Psychology functions - Performance-Based Analysis System
         function savePsychologyData() {
-            const currentDate = formatTradingDate(currentTradingDate);
+            const currentDate = formatTradingDate(currentPsychologyDate); // currentTradingDate 대신 currentPsychologyDate 사용
             
             const data = {
                 date: currentDate,
@@ -7364,6 +7501,7 @@ function applyCustomRisk() {
             psychologyData[currentDate] = data;
             localStorage.setItem('tradingPlatformPsychologyData', JSON.stringify(psychologyData));
             
+            updatePsychologyDateStatus();
             updatePsychologyMetrics();
             generatePerformanceBasedInsights();
             showToast(currentLanguage === 'ko' ? '심리 데이터가 저장되었습니다' : 'Psychology data saved');
@@ -7756,6 +7894,204 @@ function applyCustomRisk() {
                     <div class="psychology-insight-text">${insight.text}</div>
                 </div>
             `).join('');
+        }
+
+        // Psychology Date Management Functions
+        let currentPsychologyDate = new Date();
+
+        function updatePsychologyDateDisplay() {
+            const dateStr = currentPsychologyDate.toLocaleDateString(currentLanguage === 'ko' ? 'ko-KR' : 'en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+            document.getElementById('psychologyDateDisplay').textContent = dateStr;
+            
+            // 현재 날짜 상태 표시 업데이트
+            updatePsychologyDateStatus();
+        }
+
+        function updatePsychologyDateStatus() {
+            const currentDate = formatTradingDate(currentPsychologyDate);
+            const hasData = psychologyData[currentDate];
+            const hasTrades = trades.some(trade => trade.date === currentDate);
+            
+            // 날짜 상태 인디케이터가 있다면 업데이트
+            const indicator = document.querySelector('.psychology-date-indicator');
+            if (indicator) {
+                const statusElement = indicator.querySelector('.psychology-date-status');
+                const dateElement = indicator.querySelector('.psychology-current-date');
+                
+                if (statusElement && dateElement) {
+                    statusElement.textContent = hasData ? 
+                        (currentLanguage === 'ko' ? '데이터 있음' : 'Data Available') : 
+                        (currentLanguage === 'ko' ? '데이터 없음' : 'No Data');
+                    dateElement.textContent = currentPsychologyDate.toLocaleDateString(
+                        currentLanguage === 'ko' ? 'ko-KR' : 'en-US'
+                    );
+                }
+            }
+        }
+
+        function changePsychologyDate(direction) {
+            const newDate = new Date(currentPsychologyDate);
+            newDate.setDate(newDate.getDate() + direction);
+            currentPsychologyDate = newDate;
+            
+            updatePsychologyDateDisplay();
+            loadPsychologyDataForDate();
+            updatePsychologyMetrics();
+        }
+
+        function openPsychologyDatePicker() {
+            const modal = document.getElementById('datePickerModal');
+            const input = document.getElementById('datePickerInput');
+            
+            const dateString = currentPsychologyDate.getFullYear() + '-' + 
+                String(currentPsychologyDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                String(currentPsychologyDate.getDate()).padStart(2, '0');
+            
+            input.value = dateString;
+            modal.style.display = 'flex';
+            
+            // 기존 날짜 picker 적용 함수 수정 필요
+            window.currentDatePickerCallback = applyPsychologySelectedDate;
+        }
+
+        function applyPsychologySelectedDate() {
+            const input = document.getElementById('datePickerInput');
+            if (input.value) {
+                currentPsychologyDate = new Date(input.value + 'T12:00:00');
+                updatePsychologyDateDisplay();
+                loadPsychologyDataForDate();
+                updatePsychologyMetrics();
+                closeDatePicker();
+            }
+        }
+
+        function loadPsychologyDataForDate() {
+            const currentDate = formatTradingDate(currentPsychologyDate);
+            const todayData = psychologyData[currentDate];
+            
+            // 모든 필드 초기화
+            document.getElementById('sleepHours').value = '';
+            document.getElementById('sleepQuality').value = '3';
+            document.getElementById('energyLevel').value = '3';
+            document.getElementById('actualStartTime').value = '';
+            document.getElementById('tradingEnvironment').value = 'home-quiet';
+            document.getElementById('psychAccountBalance').value = '';
+            document.getElementById('dailyTarget').value = '';
+            document.getElementById('maxDailyLoss').value = '';
+            document.getElementById('preMarketMood').value = '3';
+            document.getElementById('confidenceLevel').value = '3';
+            document.getElementById('stressLevel').value = '3';
+            document.getElementById('focusLevel').value = '3';
+            
+            // 데이터가 있으면 로드
+            if (todayData) {
+                document.getElementById('sleepHours').value = todayData.sleepHours || '';
+                document.getElementById('sleepQuality').value = todayData.sleepQuality || 3;
+                document.getElementById('energyLevel').value = todayData.energyLevel || 3;
+                document.getElementById('actualStartTime').value = todayData.actualStartTime || '';
+                document.getElementById('tradingEnvironment').value = todayData.tradingEnvironment || 'home-quiet';
+                document.getElementById('psychAccountBalance').value = todayData.accountBalance || '';
+                document.getElementById('dailyTarget').value = todayData.dailyTarget || '';
+                document.getElementById('maxDailyLoss').value = todayData.maxDailyLoss || '';
+                document.getElementById('preMarketMood').value = todayData.preMarketMood || 3;
+                document.getElementById('confidenceLevel').value = todayData.confidenceLevel || 3;
+                document.getElementById('stressLevel').value = todayData.stressLevel || 3;
+                document.getElementById('focusLevel').value = todayData.focusLevel || 3;
+            }
+        }
+
+        function copyFromPreviousDay() {
+            const previousDate = new Date(currentPsychologyDate);
+            previousDate.setDate(previousDate.getDate() - 1);
+            const previousDateStr = formatTradingDate(previousDate);
+            const previousData = psychologyData[previousDateStr];
+            
+            if (!previousData) {
+                alert(currentLanguage === 'ko' ? '이전 날짜의 데이터가 없습니다.' : 'No data available for previous day.');
+                return;
+            }
+            
+            if (confirm(currentLanguage === 'ko' ? '이전 날짜의 데이터를 복사하시겠습니까?' : 'Copy data from previous day?')) {
+                document.getElementById('sleepHours').value = previousData.sleepHours || '';
+                document.getElementById('sleepQuality').value = previousData.sleepQuality || 3;
+                document.getElementById('energyLevel').value = previousData.energyLevel || 3;
+                document.getElementById('actualStartTime').value = previousData.actualStartTime || '';
+                document.getElementById('tradingEnvironment').value = previousData.tradingEnvironment || 'home-quiet';
+                document.getElementById('psychAccountBalance').value = previousData.accountBalance || '';
+                document.getElementById('dailyTarget').value = previousData.dailyTarget || '';
+                document.getElementById('maxDailyLoss').value = previousData.maxDailyLoss || '';
+                document.getElementById('preMarketMood').value = previousData.preMarketMood || 3;
+                document.getElementById('confidenceLevel').value = previousData.confidenceLevel || 3;
+                document.getElementById('stressLevel').value = previousData.stressLevel || 3;
+                document.getElementById('focusLevel').value = previousData.focusLevel || 3;
+                
+                showToast(currentLanguage === 'ko' ? '이전 데이터가 복사되었습니다' : 'Previous data copied');
+            }
+        }
+
+        function showPsychologyHistory() {
+            const modal = document.getElementById('psychologyHistoryModal');
+            const historyList = document.getElementById('psychologyHistoryList');
+            
+            const psychDates = Object.keys(psychologyData).sort().reverse();
+            
+            if (psychDates.length === 0) {
+                historyList.innerHTML = `
+                    <div style="text-align: center; color: #64748b; padding: 40px;">
+                        ${currentLanguage === 'ko' ? '저장된 심리 데이터가 없습니다.' : 'No psychology data saved yet.'}
+                    </div>
+                `;
+            } else {
+                historyList.innerHTML = psychDates.map(dateStr => {
+                    const data = psychologyData[dateStr];
+                    const dayTrades = trades.filter(trade => trade.date === dateStr);
+                    const dayPnL = dayTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+                    const dayFee = dailyFees[dateStr] || 0;
+                    const netPnL = dayPnL - dayFee;
+                    
+                    const date = new Date(dateStr);
+                    const formattedDate = date.toLocaleDateString(currentLanguage === 'ko' ? 'ko-KR' : 'en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric'
+                    });
+                    
+                    return `
+                        <div class="psychology-history-item" onclick="loadPsychologyHistoryDate('${dateStr}')">
+                            <div class="psychology-history-date">${formattedDate}</div>
+                            <div class="psychology-history-summary">
+                                <span>💤 ${data.sleepHours}h</span>
+                                <span>😌 ${data.stressLevel}/5</span>
+                                <span>🎯 ${data.confidenceLevel}/5</span>
+                                <span>📊 ${dayTrades.length} trades</span>
+                            </div>
+                            <div class="psychology-history-performance">
+                                <div class="${netPnL >= 0 ? 'positive' : 'negative'}">$${netPnL.toFixed(2)}</div>
+                                <div>${dayTrades.length > 0 ? ((dayTrades.filter(t => t.pnl > 0).length / dayTrades.length) * 100).toFixed(0) : 0}% win</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+            
+            modal.style.display = 'flex';
+        }
+
+        function loadPsychologyHistoryDate(dateStr) {
+            currentPsychologyDate = new Date(dateStr + 'T12:00:00');
+            updatePsychologyDateDisplay();
+            loadPsychologyDataForDate();
+            updatePsychologyMetrics();
+            closePsychologyHistory();
+            showToast(currentLanguage === 'ko' ? `${dateStr} 데이터 로드됨` : `${dateStr} data loaded`);
+        }
+
+        function closePsychologyHistory() {
+            document.getElementById('psychologyHistoryModal').style.display = 'none';
         }
         
     </script>
