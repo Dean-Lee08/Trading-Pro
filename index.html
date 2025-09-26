@@ -673,191 +673,6 @@
             user-select: none;
         }
 
-        /* Calendar Week P/L Column */
-        .calendar-week-pnl {
-            background: #0f172a;
-            border: 1px solid #334155;
-            padding: 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 90px;
-            font-size: 12px;
-            color: #94a3b8;
-        }
-
-        .week-pnl-value {
-            font-weight: 700;
-            font-size: 13px;
-            margin-bottom: 2px;
-        }
-
-        .week-pnl-value.positive { color: #10b981; }
-        .week-pnl-value.negative { color: #ef4444; }
-        .week-pnl-value.neutral { color: #64748b; }
-
-        .week-trades-count {
-            font-size: 10px;
-            color: #64748b;
-        }
-
-        .calendar-grid.expanded {
-            grid-template-columns: repeat(8, 1fr);
-        }
-
-        /* Annual Heatmap */
-        .annual-heatmap-container {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 20px;
-            margin-top: 24px;
-        }
-
-        .annual-heatmap-title {
-            color: #f8fafc;
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            text-align: center;
-        }
-
-        .annual-heatmap-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-        }
-
-        .month-heatmap {
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 8px;
-            padding: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .month-heatmap:hover {
-            background: #1e293b;
-            border-color: #475569;
-        }
-
-        .month-heatmap.current-month {
-            border-color: #3b82f6;
-            background: rgba(59, 130, 246, 0.1);
-        }
-
-        .month-heatmap-header {
-            color: #e4e4e7;
-            font-size: 12px;
-            font-weight: 600;
-            text-align: center;
-            margin-bottom: 8px;
-        }
-
-        .month-mini-calendar {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 1px;
-        }
-
-        .mini-day {
-            width: 16px;
-            height: 16px;
-            border-radius: 2px;
-            background: #334155;
-        }
-
-        .mini-day.trading-day {
-            background: #10b981;
-        }
-
-        .mini-day.loss-day {
-            background: #ef4444;
-        }
-
-        .mini-day.neutral-day {
-            background: #f59e0b;
-        }
-
-        .month-stats {
-            margin-top: 8px;
-            text-align: center;
-        }
-
-        .month-pnl {
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .month-trades {
-            font-size: 10px;
-            color: #64748b;
-            margin-top: 2px;
-        }
-
-        /* Month Details Modal */
-        .month-details-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-
-        .month-details-content {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 24px;
-            max-width: 600px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .month-details-header {
-            color: #f8fafc;
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .month-details-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .month-detail-stat {
-            background: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 6px;
-            padding: 12px;
-            text-align: center;
-        }
-
-        .month-detail-stat-value {
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .month-detail-stat-label {
-            font-size: 11px;
-            color: #94a3b8;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
         .calendar-day-header {
             background: #334155;
             color: #94a3b8;
@@ -2001,14 +1816,6 @@
             .advanced-charts-grid {
                 grid-template-columns: 1fr;
             }
-
-            .annual-heatmap-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-
-            .calendar-week-pnl {
-                display: none;
-            }
         }
 
         /* Dashboard Tabs */
@@ -2692,36 +2499,6 @@
                     <span data-lang="settings">Settings</span>
                 </button>
             </div>
-
-            <!-- Month Details Modal -->
-    <div class="month-details-modal" id="monthDetailsModal">
-        <div class="month-details-content">
-            <div class="month-details-header" id="monthDetailsTitle">Month Details</div>
-            
-            <div class="month-details-stats">
-                <div class="month-detail-stat">
-                    <div class="month-detail-stat-value" id="monthDetailPnl">$0.00</div>
-                    <div class="month-detail-stat-label" data-lang="total-pl">Total P/L</div>
-                </div>
-                <div class="month-detail-stat">
-                    <div class="month-detail-stat-value neutral" id="monthDetailTrades">0</div>
-                    <div class="month-detail-stat-label" data-lang="total-trades">Total Trades</div>
-                </div>
-                <div class="month-detail-stat">
-                    <div class="month-detail-stat-value" id="monthDetailWinRate">0%</div>
-                    <div class="month-detail-stat-label" data-lang="win-rate">Win Rate</div>
-                </div>
-            </div>
-            
-            <div style="margin-bottom: 16px;">
-                <button class="btn btn-primary" onclick="navigateToMonth()" style="width: 100%;" data-lang="view-full-month">View Full Month Calendar</button>
-            </div>
-            
-            <div style="display: flex; justify-content: center;">
-                <button class="btn btn-secondary" onclick="closeMonthDetails()" data-lang="close">Close</button>
-            </div>
-        </div>
-    </div>
         </nav>
 
         <!-- Main content -->
@@ -3121,27 +2898,21 @@
                                 <div class="calendar-day-header">Thu</div>
                                 <div class="calendar-day-header">Fri</div>
                                 <div class="calendar-day-header">Sat</div>
-                                <div class="calendar-day-header" id="weekPnlHeader" style="display: none;">Week P/L</div>
                             </div>
                         </div>
 
                         <!-- Right sidebar -->
                         <div class="calendar-sidebar">
                             <div class="sidebar-title-calendar" data-lang="weekly-pl">Weekly P/L</div>
+                            <div class="weekly-summary" id="weeklySummary">
+                                <!-- Weekly data will be displayed here -->
+                            </div>
                             
                             <!-- Day details section -->
                             <div class="day-details" id="dayDetails" style="display: none;">
                                 <div class="day-details-title" id="dayDetailsTitle">Selected Day</div>
                                 <div id="dayTradesList">
                                     <!-- Individual trades for selected day -->
-
-                                    <!-- Annual Heatmap -->
-                    <div class="annual-heatmap-container">
-                        <div class="annual-heatmap-title" id="annualHeatmapTitle">2024 Trading Overview</div>
-                        <div class="annual-heatmap-grid" id="annualHeatmapGrid">
-                            <!-- Month heatmaps will be generated here -->
-                        </div>
-                    </div>
                                 </div>
                             </div>
                         </div>
@@ -4240,9 +4011,9 @@
                 'risk-ratio': 'Risk Ratio',
                 'stop-distance': 'Stop Distance',
                 'kelly-calculator': 'Kelly Calculator',
-                'risk-calculator': 'Risk Calculator',
-                'risk-management-calculator': 'Risk Management Calculator',
-                'risk-presets': 'Risk Ratio',
+'risk-calculator': 'Risk Calculator',
+'risk-management-calculator': 'Risk Management Calculator',
+'risk-presets': 'Risk Ratio',
                 'trading-record': 'Trading Record',
                 'position-calculator': 'Position Calculator',
                 'amount': 'Amount ($)',
@@ -4282,12 +4053,7 @@
                 'no-psychology-data': 'No psychology data available. Fill in today\'s data to get insights.',
                 'start-time': 'Start Time',
                 'reset-psychology-data': 'Reset Data',
-                'psychology-analysis': 'Psychology Analysis',
-                'annual-trading-overview': 'Annual Trading Overview',
-                'week-pnl': 'Week P/L',
-                'view-full-month': 'View Full Month Calendar',
-                'month-details': 'Month Details',
-                'close': 'Close'
+                'psychology-analysis': 'Psychology Analysis'
             },
             ko: {
                 'dashboard': '대시보드',
@@ -4495,9 +4261,9 @@
                 'risk-ratio': '리스크 비율',
                 'stop-distance': '손절 거리',
                 'kelly-calculator': '켈리 계산기',
-                'risk-calculator': '리스크 계산기',
-                'risk-management-calculator': '리스크 관리 계산기',
-                'risk-presets': '리스크 비율',
+'risk-calculator': '리스크 계산기',
+'risk-management-calculator': '리스크 관리 계산기',
+'risk-presets': '리스크 비율',
                 'trading-record': '거래 기록',
                 'position-calculator': '포지션 계산기',
                 'amount': '금액 ($)',
@@ -4537,12 +4303,7 @@
                 'no-psychology-data': '심리 데이터가 없습니다. 오늘의 데이터를 입력하여 인사이트를 받아보세요.',
                 'start-time': '시작 시간',
                 'reset-psychology-data': '데이터 초기화',
-                'psychology-analysis': '심리 분석',
-                'annual-trading-overview': '연간 거래 개요',
-                'week-pnl': '주간 손익',
-                'view-full-month': '전체 월 캘린더 보기',
-                'month-details': '월별 상세',
-                'close': '닫기'
+                'psychology-analysis': '심리 분석'
             }
         };
         
@@ -5940,12 +5701,6 @@
                     closeEditTradeModal();
                 }
             });
-
-            document.getElementById('monthDetailsModal').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    closeMonthDetails();
-                }
-            });
         });
 
         // Navigation functions
@@ -6909,112 +6664,75 @@
             const startDate = new Date(firstDay);
             startDate.setDate(startDate.getDate() - firstDay.getDay());
             
-            const existingDays = grid.querySelectorAll('.calendar-day, .calendar-week-pnl');
+            const existingDays = grid.querySelectorAll('.calendar-day');
             existingDays.forEach(day => day.remove());
             
-            const showWeekPnl = window.innerWidth > 768;
-            const header = document.getElementById('weekPnlHeader');
-            
-            if (showWeekPnl) {
-                grid.classList.add('expanded');
-                if (header) header.style.display = 'block';
-            } else {
-                grid.classList.remove('expanded');
-                if (header) header.style.display = 'none';
-            }
-            
             updateCalendarStats();
+            updateWeeklySummary();
             
-            for (let week = 0; week < 6; week++) {
-                let weekTrades = [];
-                let weekPnl = 0;
+            for (let i = 0; i < 42; i++) {
+                const currentDate = new Date(startDate);
+                currentDate.setDate(startDate.getDate() + i);
                 
-                for (let day = 0; day < 7; day++) {
-                    const currentDate = new Date(startDate);
-                    currentDate.setDate(startDate.getDate() + (week * 7) + day);
-                    
-                    const dayElement = document.createElement('div');
-                    dayElement.className = 'calendar-day';
-                    
-                    const estDate = getESTTradingDate(currentDate);
-                    const dateString = formatTradingDate(estDate);
-                    dayElement.dataset.date = dateString;
-                    
-                    const isCurrentMonth = currentDate.getMonth() === month;
-                    const isToday = currentDate.toDateString() === new Date().toDateString();
-                    
-                    if (!isCurrentMonth) {
-                        dayElement.classList.add('other-month');
-                    }
-                    
-                    if (isToday) {
-                        dayElement.classList.add('today');
-                    }
-                    
-                    const dayNumber = document.createElement('div');
-                    dayNumber.className = 'calendar-day-number';
-                    dayNumber.textContent = estDate.getDate();
-                    dayElement.appendChild(dayNumber);
-                    
-                    const dayTrades = trades.filter(trade => trade.date === dateString);
-                    weekTrades = weekTrades.concat(dayTrades);
-                    
-                    if (dayTrades.length > 0) {
-                        const tradePnL = dayTrades.reduce((sum, trade) => sum + trade.pnl, 0);
-                        const dailyFee = dailyFees[dateString] || 0;
-                        const totalPnL = tradePnL - dailyFee;
-                        weekPnl += totalPnL;
-                        
-                        const pnlElement = document.createElement('div');
-                        pnlElement.className = `calendar-day-pnl ${totalPnL > 0 ? 'positive' : totalPnL < 0 ? 'negative' : 'neutral'}`;
-                        pnlElement.textContent = `$${totalPnL.toFixed(0)}`;
-                        dayElement.appendChild(pnlElement);
-                        
-                        const tradesElement = document.createElement('div');
-                        tradesElement.className = 'calendar-day-trades';
-                        const tradeText = currentLanguage === 'ko' ? '거래' : 'trade';
-                        tradesElement.textContent = `${dayTrades.length} ${tradeText}${dayTrades.length !== 1 && currentLanguage !== 'ko' ? 's' : ''}`;
-                        dayElement.appendChild(tradesElement);
-                    }
-                    
-                    dayElement.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        selectCalendarDay(dateString, dayTrades);
-                    });
-                    
-                    dayElement.addEventListener('mousedown', function(e) {
-                        e.preventDefault();
-                        startRangeSelection(dateString);
-                    });
-                    
-                    dayElement.addEventListener('mouseenter', function() {
-                        if (isSelecting) {
-                            updateRangeSelection(dateString);
-                        }
-                    });
-                    
-                    grid.appendChild(dayElement);
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                
+                const estDate = getESTTradingDate(currentDate);
+                const dateString = formatTradingDate(estDate);
+                dayElement.dataset.date = dateString;
+                
+                const isCurrentMonth = currentDate.getMonth() === month;
+                const isToday = currentDate.toDateString() === new Date().toDateString();
+                
+                if (!isCurrentMonth) {
+                    dayElement.classList.add('other-month');
                 }
                 
-                if (showWeekPnl) {
-                    const weekPnlElement = document.createElement('div');
-                    weekPnlElement.className = 'calendar-week-pnl';
-                    
-                    if (weekTrades.length > 0) {
-                        const weekPnlValue = document.createElement('div');
-                        weekPnlValue.className = `week-pnl-value ${weekPnl > 0 ? 'positive' : weekPnl < 0 ? 'negative' : 'neutral'}`;
-                        weekPnlValue.textContent = `$${weekPnl.toFixed(0)}`;
-                        weekPnlElement.appendChild(weekPnlValue);
-                        
-                        const weekTradesCount = document.createElement('div');
-                        weekTradesCount.className = 'week-trades-count';
-                        const tradeText = currentLanguage === 'ko' ? '거래' : 'trades';
-                        weekTradesCount.textContent = `${weekTrades.length} ${tradeText}`;
-                        weekPnlElement.appendChild(weekTradesCount);
-                    }
-                    
-                    grid.appendChild(weekPnlElement);
+                if (isToday) {
+                    dayElement.classList.add('today');
                 }
+                
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'calendar-day-number';
+                dayNumber.textContent = estDate.getDate();
+                dayElement.appendChild(dayNumber);
+                
+                const dayTrades = trades.filter(trade => trade.date === dateString);
+                
+                if (dayTrades.length > 0) {
+                    const tradePnL = dayTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+                    const dailyFee = dailyFees[dateString] || 0;
+                    const totalPnL = tradePnL - dailyFee;
+                    
+                    const pnlElement = document.createElement('div');
+                    pnlElement.className = `calendar-day-pnl ${totalPnL > 0 ? 'positive' : totalPnL < 0 ? 'negative' : 'neutral'}`;
+                    pnlElement.textContent = `$${totalPnL.toFixed(0)}`;
+                    dayElement.appendChild(pnlElement);
+                    
+                    const tradesElement = document.createElement('div');
+                    tradesElement.className = 'calendar-day-trades';
+                    const tradeText = currentLanguage === 'ko' ? '거래' : 'trade';
+                    tradesElement.textContent = `${dayTrades.length} ${tradeText}${dayTrades.length !== 1 && currentLanguage !== 'ko' ? 's' : ''}`;
+                    dayElement.appendChild(tradesElement);
+                }
+                
+                dayElement.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    selectCalendarDay(dateString, dayTrades);
+                });
+                
+                dayElement.addEventListener('mousedown', function(e) {
+                    e.preventDefault();
+                    startRangeSelection(dateString);
+                });
+                
+                dayElement.addEventListener('mouseenter', function() {
+                    if (isSelecting) {
+                        updateRangeSelection(dateString);
+                    }
+                });
+                
+                grid.appendChild(dayElement);
             }
             
             document.addEventListener('mouseup', function() {
@@ -7022,8 +6740,6 @@
                     endRangeSelection();
                 }
             });
-            
-            renderAnnualHeatmap();
         }
 
         function selectCalendarDay(dateString, dayTrades) {
@@ -7153,6 +6869,58 @@
                     }
                 });
             }
+        }
+
+        function updateWeeklySummary() {
+            const summaryContainer = document.getElementById('weeklySummary');
+            const year = calendarDate.getFullYear();
+            const month = calendarDate.getMonth();
+            
+            const weeks = getWeeksInMonth(year, month);
+            
+            summaryContainer.innerHTML = weeks.map((week, index) => {
+                const weekTrades = trades.filter(trade => {
+                    const tradeDate = new Date(trade.date);
+                    return tradeDate >= week.start && tradeDate <= week.end;
+                });
+                
+                const tradePL = weekTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+                const weekDates = [...new Set(weekTrades.map(trade => trade.date))];
+                const weekFees = weekDates.reduce((sum, date) => sum + (dailyFees[date] || 0), 0);
+                const totalPL = tradePL - weekFees;
+                const tradeCount = weekTrades.length;
+                
+                const weekLabel = currentLanguage === 'ko' ? `${index + 1}주차` : `Week ${index + 1}`;
+                
+                return `
+                    <div class="weekly-item">
+                        <span class="weekly-label">${weekLabel}</span>
+                        <span class="weekly-value ${totalPL >= 0 ? 'positive' : 'negative'}">
+                            $${totalPL.toFixed(2)} (${tradeCount})
+                        </span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getWeeksInMonth(year, month) {
+            const weeks = [];
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            
+            let currentDate = new Date(firstDay);
+            currentDate.setDate(currentDate.getDate() - currentDate.getDay());
+            
+            while (currentDate <= lastDay) {
+                const weekStart = new Date(currentDate);
+                const weekEnd = new Date(currentDate);
+                weekEnd.setDate(weekEnd.getDate() + 6);
+                
+                weeks.push({ start: weekStart, end: weekEnd });
+                currentDate.setDate(currentDate.getDate() + 7);
+            }
+            
+            return weeks;
         }
 
         function changeMonth(direction) {
@@ -8009,159 +7777,6 @@ function applyCustomRisk() {
                 </div>
             `).join('');
         }
-
-        // Annual Heatmap Functions
-        function renderAnnualHeatmap() {
-            const currentYear = calendarDate.getFullYear();
-            const heatmapGrid = document.getElementById('annualHeatmapGrid');
-            const heatmapTitle = document.getElementById('annualHeatmapTitle');
-            
-            if (!heatmapGrid || !heatmapTitle) return;
-            
-            const titleText = currentLanguage === 'ko' ? `${currentYear}년 거래 개요` : `${currentYear} Trading Overview`;
-            heatmapTitle.textContent = titleText;
-            heatmapGrid.innerHTML = '';
-            
-            const monthNames = currentLanguage === 'ko' ? 
-                ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'] :
-                ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            
-            for (let month = 0; month < 12; month++) {
-                const monthContainer = document.createElement('div');
-                monthContainer.className = 'month-heatmap';
-                
-                if (month === calendarDate.getMonth() && currentYear === calendarDate.getFullYear()) {
-                    monthContainer.classList.add('current-month');
-                }
-                
-                monthContainer.onclick = () => showMonthDetails(currentYear, month);
-                
-                const monthHeader = document.createElement('div');
-                monthHeader.className = 'month-heatmap-header';
-                monthHeader.textContent = monthNames[month];
-                monthContainer.appendChild(monthHeader);
-                
-                const miniCalendar = document.createElement('div');
-                miniCalendar.className = 'month-mini-calendar';
-                
-                const firstDay = new Date(currentYear, month, 1);
-                const daysInMonth = new Date(currentYear, month + 1, 0).getDate();
-                const startPadding = firstDay.getDay();
-                
-                for (let i = 0; i < startPadding; i++) {
-                    const emptyDay = document.createElement('div');
-                    emptyDay.className = 'mini-day';
-                    miniCalendar.appendChild(emptyDay);
-                }
-                
-                let monthPnl = 0;
-                let monthTrades = 0;
-                
-                for (let day = 1; day <= daysInMonth; day++) {
-                    const date = new Date(currentYear, month, day);
-                    const dateString = formatTradingDate(date);
-                    const dayTrades = trades.filter(trade => trade.date === dateString);
-                    
-                    const dayElement = document.createElement('div');
-                    dayElement.className = 'mini-day';
-                    
-                    if (dayTrades.length > 0) {
-                        const tradePnL = dayTrades.reduce((sum, trade) => sum + trade.pnl, 0);
-                        const dailyFee = dailyFees[dateString] || 0;
-                        const totalPnL = tradePnL - dailyFee;
-                        
-                        monthPnl += totalPnL;
-                        monthTrades += dayTrades.length;
-                        
-                        if (totalPnL > 0) {
-                            dayElement.classList.add('trading-day');
-                        } else if (totalPnL < 0) {
-                            dayElement.classList.add('loss-day');
-                        } else {
-                            dayElement.classList.add('neutral-day');
-                        }
-                    }
-                    
-                    miniCalendar.appendChild(dayElement);
-                }
-                
-                monthContainer.appendChild(miniCalendar);
-                
-                const monthStats = document.createElement('div');
-                monthStats.className = 'month-stats';
-                
-                const monthPnlElement = document.createElement('div');
-                monthPnlElement.className = `month-pnl ${monthPnl > 0 ? 'positive' : monthPnl < 0 ? 'negative' : 'neutral'}`;
-                monthPnlElement.textContent = `$${monthPnl.toFixed(0)}`;
-                monthStats.appendChild(monthPnlElement);
-                
-                const monthTradesElement = document.createElement('div');
-                monthTradesElement.className = 'month-trades';
-                const tradeText = currentLanguage === 'ko' ? '거래' : 'trades';
-                monthTradesElement.textContent = `${monthTrades} ${tradeText}`;
-                monthStats.appendChild(monthTradesElement);
-                
-                monthContainer.appendChild(monthStats);
-                heatmapGrid.appendChild(monthContainer);
-            }
-        }
-
-        // Month Details Modal Functions
-        let selectedMonthYear = null;
-        let selectedMonth = null;
-
-        function showMonthDetails(year, month) {
-            selectedMonthYear = year;
-            selectedMonth = month;
-            
-            const monthNames = currentLanguage === 'ko' ? 
-                ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'] :
-                ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-            
-            document.getElementById('monthDetailsTitle').textContent = `${monthNames[month]} ${year}`;
-            
-            const monthStr = `${year}-${String(month + 1).padStart(2, '0')}`;
-            const monthTrades = trades.filter(trade => trade.date.startsWith(monthStr));
-            
-            const tradePnL = monthTrades.reduce((sum, trade) => sum + trade.pnl, 0);
-            const uniqueDates = [...new Set(monthTrades.map(trade => trade.date))];
-            const totalFees = uniqueDates.reduce((sum, date) => sum + (dailyFees[date] || 0), 0);
-            const totalPnL = tradePnL - totalFees;
-            
-            const wins = monthTrades.filter(trade => trade.pnl > 0);
-            const winRate = monthTrades.length > 0 ? (wins.length / monthTrades.length) * 100 : 0;
-            
-            document.getElementById('monthDetailPnl').textContent = `$${totalPnL.toFixed(2)}`;
-            document.getElementById('monthDetailPnl').className = `month-detail-stat-value ${totalPnL >= 0 ? 'positive' : 'negative'}`;
-            
-            document.getElementById('monthDetailTrades').textContent = monthTrades.length;
-            
-            document.getElementById('monthDetailWinRate').textContent = `${winRate.toFixed(1)}%`;
-            document.getElementById('monthDetailWinRate').className = `month-detail-stat-value ${winRate >= 50 ? 'positive' : 'negative'}`;
-            
-            document.getElementById('monthDetailsModal').style.display = 'flex';
-        }
-
-        function closeMonthDetails() {
-            document.getElementById('monthDetailsModal').style.display = 'none';
-            selectedMonthYear = null;
-            selectedMonth = null;
-        }
-
-        function navigateToMonth() {
-            if (selectedMonthYear && selectedMonth !== null) {
-                calendarDate = new Date(selectedMonthYear, selectedMonth, 1);
-                renderCalendar();
-                closeMonthDetails();
-            }
-        }
-
-        // Window resize handler
-        window.addEventListener('resize', function() {
-            if (document.getElementById('calendar').classList.contains('active')) {
-                renderCalendar();
-            }
-        });
         
     </script>
 </body>
