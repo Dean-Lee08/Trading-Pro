@@ -8554,21 +8554,18 @@ function applyCustomRisk() {
         function renderWeekDetailsPage() {
             const startIndex = (currentWeekDetailsPage - 1) * weekDetailsItemsPerPage;
             const endIndex = startIndex + weekDetailsItemsPerPage;
-            const totalPages = Math.ceil(currentWeekTrades.length / weekDetailsItemsPerPage);
             
-            // 티커별로 거래 집계
+            // 전체 주간 거래를 티커별로 집계 (개별 거래가 아닌 티커별로)
             const tickerStats = {};
-            const pageTrabes = currentWeekTrades.slice(startIndex, endIndex);
             
-            pageTrabes.forEach(trade => {
+            currentWeekTrades.forEach(trade => {
                 const symbol = trade.symbol;
                 if (!tickerStats[symbol]) {
                     tickerStats[symbol] = {
                         totalShares: 0,
                         totalCost: 0,
                         totalPnL: 0,
-                        tradeCount: 0,
-                        dates: new Set()
+                        tradeCount: 0
                     };
                 }
                 
@@ -8577,44 +8574,29 @@ function applyCustomRisk() {
                 tickerStats[symbol].totalCost += shares * trade.buyPrice;
                 tickerStats[symbol].totalPnL += trade.pnl;
                 tickerStats[symbol].tradeCount++;
-                tickerStats[symbol].dates.add(trade.date);
             });
             
-            // 티커별 정보를 P/L 순으로 정렬
+            // 티커별로 정렬한 후 페이지네이션 적용
             const sortedTickers = Object.entries(tickerStats)
                 .sort((a, b) => b[1].totalPnL - a[1].totalPnL);
             
+            const totalPages = Math.ceil(sortedTickers.length / weekDetailsItemsPerPage);
+            const pageTickers = sortedTickers.slice(startIndex, endIndex);
+            
             const weekDetailsContent = document.getElementById('weekDetailsContent');
-            weekDetailsContent.innerHTML = sortedTickers.map(([symbol, stats]) => {
+            weekDetailsContent.innerHTML = pageTickers.map(([symbol, stats]) => {
                 const avgCostBasis = stats.totalCost / stats.totalShares;
-                const costBasisLabel = currentLanguage === 'ko' ? '평균단가' : 'Cost Basis';
-                const tradeLabel = currentLanguage === 'ko' ? '거래' : 'trade';
-                const tradesLabel = currentLanguage === 'ko' ? '거래' : 'trades';
-                const countLabel = stats.tradeCount === 1 ? tradeLabel : tradesLabel;
+                const tradeText = currentLanguage === 'ko' ? '거래' : 'trade';
+                const tradesText = currentLanguage === 'ko' ? '거래' : 'trades';
                 
                 return `
-                    <div class="week-trade-item">
-                        <div class="week-trade-header">
-                            <span class="week-trade-symbol">${symbol}</span>
-                            <span class="week-trade-pnl ${stats.totalPnL >= 0 ? 'positive' : 'negative'}">$${stats.totalPnL.toFixed(2)}</span>
+                    <div class="day-trade-item">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                            <span class="trade-symbol">${symbol}</span>
+                            <span class="trade-pnl ${stats.totalPnL >= 0 ? 'positive' : 'negative'}">$${stats.totalPnL.toFixed(2)}</span>
                         </div>
-                        <div class="week-trade-details">
-                            <div class="week-trade-detail-item">
-                                <span>${costBasisLabel}:</span>
-                                <span>$${avgCostBasis.toFixed(2)}</span>
-                            </div>
-                            <div class="week-trade-detail-item">
-                                <span>${currentLanguage === 'ko' ? '거래 수' : 'Trade Count'}:</span>
-                                <span>${stats.tradeCount} ${countLabel}</span>
-                            </div>
-                            <div class="week-trade-detail-item">
-                                <span>${currentLanguage === 'ko' ? '총 주식' : 'Total Shares'}:</span>
-                                <span>${stats.totalShares}</span>
-                            </div>
-                            <div class="week-trade-detail-item">
-                                <span>${currentLanguage === 'ko' ? '거래일' : 'Trading Days'}:</span>
-                                <span>${stats.dates.size}</span>
-                            </div>
+                        <div style="font-size: 11px; color: #64748b;">
+                            ${currentLanguage === 'ko' ? 'Cost Basis' : 'Cost Basis'}: $${avgCostBasis.toFixed(2)} | ${stats.tradeCount} ${stats.tradeCount !== 1 && currentLanguage !== 'ko' ? tradesText : tradeText}
                         </div>
                     </div>
                 `;
