@@ -6152,17 +6152,35 @@
 
         // Navigation functions
         function showPage(pageId) {
+            // 1. 모든 페이지 섹션 숨기기
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
             });
             
+            // 2. 모든 내비게이션 항목에서 active 클래스 제거
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
             });
             
-            document.getElementById(pageId).classList.add('active');
-            event.target.closest('.nav-item').classList.add('active');
+            // ★ 핵심 수정 1: pageId에 'Page' 접미사를 붙여 올바른 HTML ID를 찾도록 수정 (예: 'dashboard' -> 'dashboardPage')
+            const activePage = document.getElementById(pageId + 'Page');
+            if (activePage) {
+                activePage.classList.add('active');
+            }
             
+            // ★ 핵심 수정 2: 네비게이션 항목 활성화 (event 객체 의존성을 제거하고 pageId로 탐색)
+            // (1) 클릭된 네비게이션 항목을 찾아서 활성화합니다.
+            const activeNavItem = document.querySelector(`.nav-menu .nav-item[onclick*="'${pageId}'"]`);
+            if (activeNavItem) {
+                activeNavItem.classList.add('active');
+            }
+            // (2) 만약 showPage가 버튼 클릭이 아닌 다른 코드에서 호출될 경우를 대비하여 event.target 코드는 제거하거나 조건부 처리하는 것이 좋습니다.
+            // 하지만 사용자님의 기존 코드 구조를 최대한 유지하기 위해 event가 존재하는 경우만 처리합니다.
+            if (typeof event !== 'undefined' && event.target) {
+                 event.target.closest('.nav-item')?.classList.add('active');
+            }
+
+            // 3. 페이지별 특수 로직 (기존 로직 유지)
             if (pageId === 'analysis') {
                 updateDetailedAnalytics();
                 if (currentAnalyticsSection === 'detail') {
@@ -6178,11 +6196,12 @@
 
             if (pageId === 'psychology') {
                 setTimeout(() => {
-    loadPsychologyData();
-    updatePsychologyMetrics();
-}, 100);
+                    loadPsychologyData();
+                    updatePsychologyMetrics();
+                }, 100);
             }
             
+            // 4. 모바일 사이드바 닫기 로직 (기존 로직 유지)
             if (window.innerWidth <= 768) {
                 document.getElementById('sidebar').classList.remove('open');
             }
