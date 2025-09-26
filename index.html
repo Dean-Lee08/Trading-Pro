@@ -2606,6 +2606,159 @@
             -webkit-appearance: none;
             margin: 0;
         }
+
+        /* Week Details Pagination */
+        .week-details-container {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .week-details-pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 12px 0;
+            padding: 8px 0;
+            border-top: 1px solid #334155;
+        }
+
+        .week-details-page-info {
+            color: #94a3b8;
+            font-size: 12px;
+        }
+
+        .week-details-nav {
+            display: flex;
+            gap: 8px;
+        }
+
+        .week-details-nav button {
+            background: #374151;
+            border: 1px solid #4b5563;
+            color: #e4e4e7;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: all 0.2s ease;
+        }
+
+        .week-details-nav button:hover {
+            background: #4b5563;
+        }
+
+        .week-details-nav button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Enhanced Week Trade Item */
+        .week-trade-item {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .week-trade-item:hover {
+            background: #1e293b;
+            border-color: #475569;
+        }
+
+        .week-trade-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .week-trade-symbol {
+            font-weight: 600;
+            font-size: 14px;
+            color: #e4e4e7;
+        }
+
+        .week-trade-pnl {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .week-trade-details {
+            font-size: 11px;
+            color: #64748b;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .week-trade-detail-item {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Monthly heatmap UI improvements */
+        .month-mini-calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            margin: 8px 0;
+        }
+
+        .mini-day {
+            width: 14px;
+            height: 14px;
+            border-radius: 2px;
+            background: #334155;
+            margin: 0 auto;
+        }
+
+        .month-heatmap {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 16px 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .month-heatmap:hover {
+            background: #1e293b;
+            border-color: #475569;
+            transform: translateY(-1px);
+        }
+
+        .month-heatmap.current-month {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .month-heatmap-header {
+            color: #e4e4e7;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .month-stats {
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        .month-pnl {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .month-trades {
+            font-size: 10px;
+            color: #64748b;
+        }
     </style>
 </head>
 <body>
@@ -3197,6 +3350,23 @@
                                     <span class="weekly-value negative" id="selectedWeekWorstDay">$0.00</span>
                                 </div>
                             </div>
+
+                            <!-- Week Details Container with Pagination -->
+                            <div class="week-details-container" id="weekDetailsContainer" style="display: none;">
+                                <div class="day-details-title" data-lang="week-trade-details">Week Trade Details</div>
+                                
+                                <div class="week-details-pagination" id="weekDetailsPagination">
+                                    <div class="week-details-page-info" id="weekDetailsPageInfo">Page 1 of 1</div>
+                                    <div class="week-details-nav">
+                                        <button id="weekDetailsPrevBtn" onclick="changeWeekDetailsPage(-1)" disabled>◀</button>
+                                        <button id="weekDetailsNextBtn" onclick="changeWeekDetailsPage(1)" disabled>▶</button>
+                                    </div>
+                                </div>
+                                
+                                <div id="weekDetailsContent">
+                                    <!-- Week trade details will be rendered here -->
+                                </div>
+                            </div>
                            
                             <!-- Day details section -->
                             <div class="day-details" id="dayDetails" style="display: none;">
@@ -3206,7 +3376,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
 
                     <!-- Annual Heatmap moved here - below main calendar -->
                     <div class="annual-heatmap-container">
@@ -8109,6 +8278,7 @@ function applyCustomRisk() {
 
         // Annual Heatmap Functions
         // Annual Heatmap Functions
+        // Annual Heatmap Functions with improved UI
         function renderAnnualHeatmap() {
             const currentYear = calendarDate.getFullYear();
             const heatmapGrid = document.getElementById('annualHeatmapGrid');
@@ -8146,9 +8316,11 @@ function applyCustomRisk() {
                 const daysInMonth = new Date(currentYear, month + 1, 0).getDate();
                 const startPadding = firstDay.getDay();
                 
+                // Add empty days for proper alignment
                 for (let i = 0; i < startPadding; i++) {
                     const emptyDay = document.createElement('div');
                     emptyDay.className = 'mini-day';
+                    emptyDay.style.opacity = '0.3';
                     miniCalendar.appendChild(emptyDay);
                 }
                 
@@ -8308,6 +8480,164 @@ function applyCustomRisk() {
 
         function closeWeekDetails() {
             document.getElementById('weekDetailsModal').style.display = 'none';
+        }
+
+        // Week details pagination variables
+        let currentWeekTrades = [];
+        let currentWeekDetailsPage = 1;
+        const weekDetailsItemsPerPage = 5;
+
+        // Enhanced showWeekDetails function
+        function showWeekDetails(weekNumber, weekTrades, weekPnl) {
+            const year = calendarDate.getFullYear();
+            const month = calendarDate.getMonth();
+            const monthNames = currentLanguage === 'ko' ? 
+                ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'] :
+                ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            
+            // Store current week trades for pagination
+            currentWeekTrades = weekTrades;
+            currentWeekDetailsPage = 1;
+            
+            // 주간 통계 계산
+            const wins = weekTrades.filter(trade => trade.pnl > 0);
+            const winRate = weekTrades.length > 0 ? (wins.length / weekTrades.length) * 100 : 0;
+            
+            // 일별 P/L 계산
+            const dailyStats = {};
+            weekTrades.forEach(trade => {
+                if (!dailyStats[trade.date]) {
+                    dailyStats[trade.date] = 0;
+                }
+                dailyStats[trade.date] += trade.pnl;
+            });
+            
+            // 수수료 적용
+            Object.keys(dailyStats).forEach(date => {
+                const fee = dailyFees[date] || 0;
+                dailyStats[date] -= fee;
+            });
+            
+            const dailyPLs = Object.values(dailyStats);
+            const bestDay = dailyPLs.length > 0 ? Math.max(...dailyPLs) : 0;
+            const worstDay = dailyPLs.length > 0 ? Math.min(...dailyPLs) : 0;
+            
+            // 사이드바 업데이트
+            const weekText = currentLanguage === 'ko' ? 
+                `${monthNames[month]} ${weekNumber}주차` : 
+                `Week ${weekNumber} of ${monthNames[month]}`;
+                
+            document.getElementById('selectedWeekLabel').textContent = weekText;
+            document.getElementById('selectedWeekTrades').textContent = weekTrades.length;
+            
+            document.getElementById('selectedWeekPnl').textContent = `$${weekPnl.toFixed(2)}`;
+            document.getElementById('selectedWeekPnl').className = `weekly-value ${weekPnl >= 0 ? 'positive' : 'negative'}`;
+            
+            document.getElementById('selectedWeekWinRate').textContent = `${winRate.toFixed(1)}%`;
+            document.getElementById('selectedWeekWinRate').className = `weekly-value ${winRate >= 50 ? 'positive' : 'negative'}`;
+            
+            document.getElementById('selectedWeekBestDay').textContent = `$${bestDay.toFixed(2)}`;
+            document.getElementById('selectedWeekWorstDay').textContent = `$${worstDay.toFixed(2)}`;
+            
+            // Show week details if there are trades
+            if (weekTrades.length > 0) {
+                document.getElementById('weekDetailsContainer').style.display = 'block';
+                renderWeekDetailsPage();
+            } else {
+                document.getElementById('weekDetailsContainer').style.display = 'none';
+            }
+            
+            // Day details 숨기기
+            document.getElementById('dayDetails').style.display = 'none';
+        }
+
+        function renderWeekDetailsPage() {
+            const startIndex = (currentWeekDetailsPage - 1) * weekDetailsItemsPerPage;
+            const endIndex = startIndex + weekDetailsItemsPerPage;
+            const totalPages = Math.ceil(currentWeekTrades.length / weekDetailsItemsPerPage);
+            
+            // 티커별로 거래 집계
+            const tickerStats = {};
+            const pageTrabes = currentWeekTrades.slice(startIndex, endIndex);
+            
+            pageTrabes.forEach(trade => {
+                const symbol = trade.symbol;
+                if (!tickerStats[symbol]) {
+                    tickerStats[symbol] = {
+                        totalShares: 0,
+                        totalCost: 0,
+                        totalPnL: 0,
+                        tradeCount: 0,
+                        dates: new Set()
+                    };
+                }
+                
+                const shares = trade.shares || (trade.amount && trade.buyPrice ? Math.round(trade.amount / trade.buyPrice) : 0);
+                tickerStats[symbol].totalShares += shares;
+                tickerStats[symbol].totalCost += shares * trade.buyPrice;
+                tickerStats[symbol].totalPnL += trade.pnl;
+                tickerStats[symbol].tradeCount++;
+                tickerStats[symbol].dates.add(trade.date);
+            });
+            
+            // 티커별 정보를 P/L 순으로 정렬
+            const sortedTickers = Object.entries(tickerStats)
+                .sort((a, b) => b[1].totalPnL - a[1].totalPnL);
+            
+            const weekDetailsContent = document.getElementById('weekDetailsContent');
+            weekDetailsContent.innerHTML = sortedTickers.map(([symbol, stats]) => {
+                const avgCostBasis = stats.totalCost / stats.totalShares;
+                const costBasisLabel = currentLanguage === 'ko' ? '평균단가' : 'Cost Basis';
+                const tradeLabel = currentLanguage === 'ko' ? '거래' : 'trade';
+                const tradesLabel = currentLanguage === 'ko' ? '거래' : 'trades';
+                const countLabel = stats.tradeCount === 1 ? tradeLabel : tradesLabel;
+                
+                return `
+                    <div class="week-trade-item">
+                        <div class="week-trade-header">
+                            <span class="week-trade-symbol">${symbol}</span>
+                            <span class="week-trade-pnl ${stats.totalPnL >= 0 ? 'positive' : 'negative'}">$${stats.totalPnL.toFixed(2)}</span>
+                        </div>
+                        <div class="week-trade-details">
+                            <div class="week-trade-detail-item">
+                                <span>${costBasisLabel}:</span>
+                                <span>$${avgCostBasis.toFixed(2)}</span>
+                            </div>
+                            <div class="week-trade-detail-item">
+                                <span>${currentLanguage === 'ko' ? '거래 수' : 'Trade Count'}:</span>
+                                <span>${stats.tradeCount} ${countLabel}</span>
+                            </div>
+                            <div class="week-trade-detail-item">
+                                <span>${currentLanguage === 'ko' ? '총 주식' : 'Total Shares'}:</span>
+                                <span>${stats.totalShares}</span>
+                            </div>
+                            <div class="week-trade-detail-item">
+                                <span>${currentLanguage === 'ko' ? '거래일' : 'Trading Days'}:</span>
+                                <span>${stats.dates.size}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Update pagination
+            const pageInfo = document.getElementById('weekDetailsPageInfo');
+            const pageLabel = currentLanguage === 'ko' ? '페이지' : 'Page';
+            const ofLabel = currentLanguage === 'ko' ? '/' : 'of';
+            pageInfo.textContent = `${pageLabel} ${currentWeekDetailsPage} ${ofLabel} ${totalPages}`;
+            
+            document.getElementById('weekDetailsPrevBtn').disabled = currentWeekDetailsPage === 1;
+            document.getElementById('weekDetailsNextBtn').disabled = currentWeekDetailsPage === totalPages;
+        }
+
+        function changeWeekDetailsPage(direction) {
+            const totalPages = Math.ceil(currentWeekTrades.length / weekDetailsItemsPerPage);
+            const newPage = currentWeekDetailsPage + direction;
+            
+            if (newPage >= 1 && newPage <= totalPages) {
+                currentWeekDetailsPage = newPage;
+                renderWeekDetailsPage();
+            }
         }
         
     </script>
