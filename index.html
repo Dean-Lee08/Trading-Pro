@@ -6162,47 +6162,56 @@
                 item.classList.remove('active');
             });
             
-            // ★ 핵심 수정: pageId에 'Page' 접미사를 붙이는 로직을 제거하고,
-            // HTML ID와 정확히 일치하는 pageId로 요소를 찾아 활성화합니다.
+            // 3. 페이지 섹션 활성화 (ID 불일치 최종 해결)
+            // 사용자님의 피드백에 따라 'Page' 접미사를 사용하지 않고 순수한 ID로 찾습니다.
             const activePage = document.getElementById(pageId); 
             
             if (activePage) {
                 activePage.classList.add('active');
             } else {
-                console.error(`Error: Could not find page element with ID: ${pageId}`);
+                // 페이지를 찾지 못할 경우를 대비하여 콘솔에 오류를 출력하여 디버깅을 돕습니다.
+                console.error(`ERROR: Page element with ID '${pageId}' was not found. Check HTML ID.`);
             }
             
-            // 3. 네비게이션 항목 활성화 (가장 안정적인 pageId 기반 검색 유지)
-            // onclick 속성에 pageId가 포함된 요소를 찾아 활성화합니다.
+            // 4. 네비게이션 항목 활성화 (가장 안정적인 pageId 기반 검색 유지)
             const activeNavItem = document.querySelector(`.nav-menu .nav-item[onclick*="'${pageId}'"]`);
             if (activeNavItem) {
                 activeNavItem.classList.add('active');
             }
 
-            // 4. 페이지별 특수 로직 (기존 로직 유지)
-            if (pageId === 'analysis') {
-                if (typeof updateDetailedAnalytics === 'function') {
-                    updateDetailedAnalytics();
+            // 5. 페이지별 특수 로직 (실행 중단 오류 방지 로직 적용)
+            try {
+                if (pageId === 'analysis') {
+                    if (typeof updateDetailedAnalytics === 'function') {
+                        updateDetailedAnalytics();
+                    }
+                    if (typeof currentAnalyticsSection !== 'undefined' && currentAnalyticsSection === 'detail') {
+                        if (typeof updateBasicCharts === 'function') {
+                            setTimeout(updateBasicCharts, 100);
+                        }
+                    } else {
+                        if (typeof updateAdvancedCharts === 'function') {
+                            setTimeout(updateAdvancedCharts, 100);
+                        }
+                    }
                 }
-                if (typeof currentAnalyticsSection !== 'undefined' && currentAnalyticsSection === 'detail') {
-                    setTimeout(updateBasicCharts, 100);
-                } else {
-                    setTimeout(updateAdvancedCharts, 100);
+                
+                if (pageId === 'notes' && typeof renderAllNotesSections === 'function') {
+                    renderAllNotesSections();
                 }
-            }
-            
-            if (pageId === 'notes' && typeof renderAllNotesSections === 'function') {
-                renderAllNotesSections();
-            }
 
-            if (pageId === 'psychology') {
-                setTimeout(() => {
-                    if (typeof loadPsychologyData === 'function') loadPsychologyData();
-                    if (typeof updatePsychologyMetrics === 'function') updatePsychologyMetrics();
-                }, 100);
+                if (pageId === 'psychology') {
+                    setTimeout(() => {
+                        if (typeof loadPsychologyData === 'function') loadPsychologyData();
+                        if (typeof updatePsychologyMetrics === 'function') updatePsychologyMetrics();
+                    }, 100);
+                }
+            } catch (e) {
+                // 특수 로직 실행 중 오류가 발생해도 페이지 전환은 막지 않습니다.
+                console.error("Error during page-specific function calls:", e);
             }
             
-            // 5. 모바일 사이드바 닫기 로직 (기존 로직 유지)
+            // 6. 모바일 사이드바 닫기 로직 (기존 로직 유지)
             if (window.innerWidth <= 768) {
                 document.getElementById('sidebar')?.classList.remove('open');
             }
