@@ -109,14 +109,14 @@
         }
 
         .page {
-            display: none !important;
+            display: none;
             padding: 24px;
             max-width: 1400px;
             margin: 0 auto;
         }
 
         .page.active {
-            display: block !important;
+            display: block;
         }
 
         .page-header {
@@ -677,11 +677,11 @@
         .calendar-week-pnl {
             background: #0f172a;
             border: 1px solid #334155;
-            padding: 12px 8px;
+            padding: 8px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: center;
             min-height: 90px;
             font-size: 12px;
             color: #94a3b8;
@@ -694,33 +694,23 @@
             border-color: #475569;
         }
 
-        .week-pnl-header {
-            font-weight: 600;
-            font-size: 11px;
-            color: #94a3b8;
-            margin-bottom: 4px;
-            text-transform: uppercase;
-        }
-
         .week-pnl-value {
             font-weight: 700;
-            font-size: 14px;
-            margin-bottom: 3px;
+            font-size: 13px;
+            margin-bottom: 2px;
         }
+
+        .week-pnl-value.positive { color: #10b981; }
+        .week-pnl-value.negative { color: #ef4444; }
+        .week-pnl-value.neutral { color: #64748b; }
 
         .week-trades-count {
-            font-size: 10px;
-            color: #64748b;
-            margin-bottom: 4px;
-        }
-
-        .week-win-rate {
             font-size: 10px;
             color: #64748b;
         }
 
         .calendar-grid.expanded {
-            grid-template-columns: repeat(7, 1fr) 120px;
+            grid-template-columns: repeat(8, 1fr);
         }
 
         /* Annual Heatmap */
@@ -730,6 +720,7 @@
             border-radius: 12px;
             padding: 20px;
             margin-top: 24px;
+            grid-column: 1 / -1; /* 전체 그리드 컬럼 차지 */
         }
 
         .annual-heatmap-title {
@@ -2615,51 +2606,6 @@
             -webkit-appearance: none;
             margin: 0;
         }
-
-        /* Week Summary 개선 */
-        .calendar-grid.expanded {
-            grid-template-columns: repeat(7, 1fr) 100px;
-        }
-
-        .calendar-week-pnl {
-            background: #0f172a;
-            border: 1px solid #334155;
-            padding: 8px 4px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            min-height: 90px;
-            font-size: 11px;
-            color: #94a3b8;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .calendar-week-pnl:hover {
-            background: #1e293b;
-            border-color: #475569;
-        }
-
-        .week-pnl-header {
-            font-weight: 600;
-            font-size: 9px;
-            color: #94a3b8;
-            margin-bottom: 2px;
-            text-transform: uppercase;
-        }
-
-        .week-pnl-value {
-            font-weight: 700;
-            font-size: 12px;
-            margin-bottom: 2px;
-        }
-
-        .week-trades-count, .week-win-rate {
-            font-size: 9px;
-            color: #64748b;
-            margin-bottom: 1px;
-        }
     </style>
 </head>
 <body>
@@ -2797,23 +2743,23 @@
                     <span class="nav-item-icon">📅</span>
                     <span data-lang="calendar">Calendar View</span>
                 </button>
-                <button class="nav-item" onclick="showPage('analysis')" id="nav-analysis">
+                <button class="nav-item" onclick="showPage('analysis')">
                     <span class="nav-item-icon">📈</span>
                     <span data-lang="analytics">Analytics</span>
                 </button>
-                <button class="nav-item" onclick="showPage('psychology')" id="nav-psychology">
+                <button class="nav-item" onclick="showPage('psychology')">
                     <span class="nav-item-icon">🧠</span>
                     <span data-lang="psychology">Psychology</span>
                 </button>
-                <button class="nav-item" onclick="showPage('notes')" id="nav-notes">
+                <button class="nav-item" onclick="showPage('notes')">
                     <span class="nav-item-icon">📝</span>
                     <span data-lang="notes">Notes</span>
                 </button>
-                <button class="nav-item" onclick="showPage('trades')" id="nav-trades">
+                <button class="nav-item" onclick="showPage('trades')">
                     <span class="nav-item-icon">📋</span>
                     <span data-lang="tradelist">Trade List</span>
                 </button>
-                <button class="nav-item" onclick="showPage('settings')" id="nav-settings">
+                <button class="nav-item" onclick="showPage('settings')">
                     <span class="nav-item-icon">⚙️</span>
                     <span data-lang="settings">Settings</span>
                 </button>
@@ -3217,14 +3163,41 @@
                                 <div class="calendar-day-header">Thu</div>
                                 <div class="calendar-day-header">Fri</div>
                                 <div class="calendar-day-header">Sat</div>
-                                <div class="calendar-day-header" id="weekPnlHeader" style="display: none;" data-lang="week-summary">Week Summary</div>
+                                <div class="calendar-day-header" id="weekPnlHeader" style="display: none;">Week P/L</div>
                             </div>
                         </div>
 
                         <!-- Right sidebar -->
                         <div class="calendar-sidebar">
-                            <div class="sidebar-title-calendar" data-lang="day-details">Day Details</div>
+                            <div class="sidebar-title-calendar" data-lang="weekly-summary">Weekly Summary</div>
                             
+                            <div class="weekly-summary" id="weeklySummary">
+                                <div class="weekly-item">
+                                    <span class="weekly-label" data-lang="selected-week">Selected Week</span>
+                                    <span class="weekly-value neutral" id="selectedWeekLabel">-</span>
+                                </div>
+                                <div class="weekly-item">
+                                    <span class="weekly-label" data-lang="week-trades">Week Trades</span>
+                                    <span class="weekly-value neutral" id="selectedWeekTrades">0</span>
+                                </div>
+                                <div class="weekly-item">
+                                    <span class="weekly-label" data-lang="week-pnl">Week P/L</span>
+                                    <span class="weekly-value" id="selectedWeekPnl">$0.00</span>
+                                </div>
+                                <div class="weekly-item">
+                                    <span class="weekly-label" data-lang="week-win-rate">Week Win Rate</span>
+                                    <span class="weekly-value" id="selectedWeekWinRate">0%</span>
+                                </div>
+                                <div class="weekly-item">
+                                    <span class="weekly-label" data-lang="week-best-day">Best Day</span>
+                                    <span class="weekly-value positive" id="selectedWeekBestDay">$0.00</span>
+                                </div>
+                                <div class="weekly-item">
+                                    <span class="weekly-label" data-lang="week-worst-day">Worst Day</span>
+                                    <span class="weekly-value negative" id="selectedWeekWorstDay">$0.00</span>
+                                </div>
+                            </div>
+                           
                             <!-- Day details section -->
                             <div class="day-details" id="dayDetails" style="display: none;">
                                 <div class="day-details-title" id="dayDetailsTitle">Selected Day</div>
@@ -3234,8 +3207,8 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Annual Heatmap - 캘린더 하단 -->
+
+                    <!-- Annual Heatmap moved here - below main calendar -->
                     <div class="annual-heatmap-container">
                         <div class="annual-heatmap-title" id="annualHeatmapTitle">2024 Trading Overview</div>
                         <div class="annual-heatmap-grid" id="annualHeatmapGrid">
@@ -3243,7 +3216,8 @@
                         </div>
                     </div>
                 </div>
-                
+            </div>
+
             <!-- Enhanced Analytics page -->
             <div id="analysis" class="page">
                 <div class="analytics-container">
@@ -4382,8 +4356,7 @@
                 'week-pnl': 'Week P/L',
                 'view-full-month': 'View Full Month Calendar',
                 'month-details': 'Month Details',
-                'close': 'Close',
-                'week-summary': 'Week Summary'
+                'close': 'Close'
             },
             ko: {
                 'dashboard': '대시보드',
@@ -4638,8 +4611,7 @@
                 'week-pnl': '주간 손익',
                 'view-full-month': '전체 월 캘린더 보기',
                 'month-details': '월별 상세',
-                'close': '닫기',
-                'week-summary': '주간 요약'
+                'close': '닫기'
             }
         };
         
@@ -4769,10 +4741,7 @@
             document.querySelectorAll('.notes-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
-            const targetTab = document.querySelector(`[onclick="showNotesSection('${section}')"]`);
-            if (targetTab) {
-                targetTab.classList.add('active');
-            }
+            event.target.classList.add('active');
             
             // 모든 섹션 숨기기
             document.querySelectorAll('.note-section').forEach(noteSection => {
@@ -5323,7 +5292,7 @@
 }
 
         // Analytics section management
-       function showAnalyticsSection(sectionName) {
+        function showAnalyticsSection(sectionName) {
             currentAnalyticsSection = sectionName;
             
             // Update tab states
@@ -5331,10 +5300,7 @@
                 tab.classList.remove('active');
             });
             // event.target 대신 직접 요소 찾기
-            const targetTab = document.querySelector(`[onclick="showAnalyticsSection('${sectionName}')"]`);
-            if (targetTab) {
-                targetTab.classList.add('active');
-            }
+            document.querySelector(`[onclick="showAnalyticsSection('${sectionName}')"]`).classList.add('active');
             
             // Show/hide sections
             document.querySelectorAll('.detail-section, .chart-section').forEach(section => {
@@ -5963,12 +5929,13 @@
 
         // Page initialization
         document.addEventListener('DOMContentLoaded', async function() {
-            await waitForChart();
-            const savedLanguage = localStorage.getItem('tradingPlatformLanguage');
-            if (savedLanguage) {
-                currentLanguage = savedLanguage;
-                document.getElementById('settingsLanguageSelect').value = currentLanguage;
-            }
+    await waitForChart();
+    const savedLanguage = localStorage.getItem('tradingPlatformLanguage');
+    if (savedLanguage) {
+        currentLanguage = savedLanguage;
+        // document.getElementById('languageSelect').value = currentLanguage; // 이 줄 삭제
+        document.getElementById('settingsLanguageSelect').value = currentLanguage;
+    }
             
             // Load daily fees
             const savedFees = localStorage.getItem('tradingPlatformDailyFees');
@@ -6054,95 +6021,43 @@
                     closeWeekDetails();
                 }
             });
-
-            // 모든 페이지가 올바르게 로드되도록 보장
-            setTimeout(() => {
-                // 기본적으로 dashboard 페이지만 활성화
-                document.querySelectorAll('.page').forEach(page => {
-                    page.classList.remove('active');
-                });
-                document.getElementById('dashboard').classList.add('active');
-                
-                // 기본적으로 dashboard 네비게이션만 활성화
-                document.querySelectorAll('.nav-item').forEach(item => {
-                    item.classList.remove('active');
-                });
-                const dashboardNav = document.querySelector(`[onclick="showPage('dashboard')"]`);
-                if (dashboardNav) {
-                    dashboardNav.classList.add('active');
-                }
-            }, 100);
         });
 
         // Navigation functions
         function showPage(pageId) {
-            console.log('Showing page:', pageId); // 디버깅용
-            
-            // 모든 페이지 숨기기
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
             });
             
-            // 모든 네비게이션 아이템 비활성화
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
             });
             
-            // 선택된 페이지 보이기
-            const targetPage = document.getElementById(pageId);
-            if (targetPage) {
-                targetPage.classList.add('active');
-            }
+            document.getElementById(pageId).classList.add('active');
+            event.target.closest('.nav-item').classList.add('active');
             
-            // 해당 네비게이션 아이템 활성화
-            const targetNavItem = document.querySelector(`[onclick="showPage('${pageId}')"]`);
-            if (targetNavItem) {
-                targetNavItem.classList.add('active');
-            }
-            
-            // 페이지별 특별 처리
             if (pageId === 'analysis') {
-                setTimeout(() => {
-                    updateDetailedAnalytics();
-                    if (currentAnalyticsSection === 'detail') {
-                        setTimeout(updateBasicCharts, 100);
-                    } else {
-                        setTimeout(updateAdvancedCharts, 100);
-                    }
-                }, 50);
+                updateDetailedAnalytics();
+                if (currentAnalyticsSection === 'detail') {
+                    setTimeout(updateBasicCharts, 100);
+                } else {
+                    setTimeout(updateAdvancedCharts, 100);
+                }
             }
             
             if (pageId === 'notes') {
-                setTimeout(() => {
-                    renderAllNotesSections();
-                }, 50);
+                renderAllNotesSections();
             }
 
             if (pageId === 'psychology') {
                 setTimeout(() => {
-                    loadPsychologyData();
-                    updatePsychologyMetrics();
-                }, 50);
+    loadPsychologyData();
+    updatePsychologyMetrics();
+}, 100);
             }
             
-            if (pageId === 'trades') {
-                setTimeout(() => {
-                    updateAllTradesList();
-                }, 50);
-            }
-            
-            if (pageId === 'calendar') {
-                setTimeout(() => {
-                    renderCalendar();
-                }, 50);
-            }
-            
-            // 모바일에서 사이드바 닫기
             if (window.innerWidth <= 768) {
-                const sidebar = document.getElementById('sidebar');
-                if (sidebar) {
-                    sidebar.classList.remove('open');
-                }
+                document.getElementById('sidebar').classList.remove('open');
             }
         }
 
@@ -6583,10 +6498,7 @@
             });
             
             // event.target 대신 직접 요소 찾기
-            const targetBtn = document.querySelector(`[onclick="setAnalyticsPeriod('${period}')"]`);
-            if (targetBtn) {
-                targetBtn.classList.add('active');
-            }
+            document.querySelector(`[onclick="setAnalyticsPeriod('${period}')"]`).classList.add('active');
             updateDetailedAnalytics();
         }
 
@@ -7166,39 +7078,16 @@
                     if (weekTrades.length > 0) {
                         weekPnlElement.onclick = () => showWeekDetails(week + 1, weekTrades, weekPnl);
                         
-                        // 헤더
-                        const weekHeader = document.createElement('div');
-                        weekHeader.className = 'week-pnl-header';
-                        weekHeader.textContent = currentLanguage === 'ko' ? `${week + 1}주차` : `Week ${week + 1}`;
-                        weekPnlElement.appendChild(weekHeader);
-                        
-                        // P/L 값
                         const weekPnlValue = document.createElement('div');
                         weekPnlValue.className = `week-pnl-value ${weekPnl > 0 ? 'positive' : weekPnl < 0 ? 'negative' : 'neutral'}`;
                         weekPnlValue.textContent = `$${weekPnl.toFixed(0)}`;
                         weekPnlElement.appendChild(weekPnlValue);
                         
-                        // 거래 수
                         const weekTradesCount = document.createElement('div');
                         weekTradesCount.className = 'week-trades-count';
                         const tradeText = currentLanguage === 'ko' ? '거래' : 'trades';
                         weekTradesCount.textContent = `${weekTrades.length} ${tradeText}`;
                         weekPnlElement.appendChild(weekTradesCount);
-                        
-                        // 승률
-                        const wins = weekTrades.filter(trade => trade.pnl > 0);
-                        const winRate = weekTrades.length > 0 ? (wins.length / weekTrades.length) * 100 : 0;
-                        const weekWinRate = document.createElement('div');
-                        weekWinRate.className = 'week-win-rate';
-                        weekWinRate.textContent = `${winRate.toFixed(0)}%`;
-                        weekPnlElement.appendChild(weekWinRate);
-                        
-                    } else {
-                        // 빈 주차
-                        const weekHeader = document.createElement('div');
-                        weekHeader.className = 'week-pnl-header';
-                        weekHeader.textContent = currentLanguage === 'ko' ? `${week + 1}주차` : `Week ${week + 1}`;
-                        weekPnlElement.appendChild(weekHeader);
                     }
                     
                     grid.appendChild(weekPnlElement);
@@ -8199,6 +8088,7 @@ function applyCustomRisk() {
         }
 
         // Annual Heatmap Functions
+        // Annual Heatmap Functions
         function renderAnnualHeatmap() {
             const currentYear = calendarDate.getFullYear();
             const heatmapGrid = document.getElementById('annualHeatmapGrid');
@@ -8344,7 +8234,7 @@ function applyCustomRisk() {
             }
         }
 
-        // Week Details Functions
+        // 기존 showWeekDetails 함수를 완전히 교체
         function showWeekDetails(weekNumber, weekTrades, weekPnl) {
             const year = calendarDate.getFullYear();
             const month = calendarDate.getMonth();
@@ -8352,49 +8242,48 @@ function applyCustomRisk() {
                 ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'] :
                 ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
             
-            const weekText = currentLanguage === 'ko' ? `${monthNames[month]} ${weekNumber}주차` : `Week ${weekNumber} of ${monthNames[month]}`;
-            document.getElementById('weekDetailsTitle').textContent = weekText;
-            
+            // 주간 통계 계산
             const wins = weekTrades.filter(trade => trade.pnl > 0);
             const winRate = weekTrades.length > 0 ? (wins.length / weekTrades.length) * 100 : 0;
             
-            document.getElementById('weekDetailPnl').textContent = `$${weekPnl.toFixed(2)}`;
-            document.getElementById('weekDetailPnl').className = `month-detail-stat-value ${weekPnl >= 0 ? 'positive' : 'negative'}`;
+            // 일별 P/L 계산
+            const dailyStats = {};
+            weekTrades.forEach(trade => {
+                if (!dailyStats[trade.date]) {
+                    dailyStats[trade.date] = 0;
+                }
+                dailyStats[trade.date] += trade.pnl;
+            });
             
-            document.getElementById('weekDetailTrades').textContent = weekTrades.length;
+            // 수수료 적용
+            Object.keys(dailyStats).forEach(date => {
+                const fee = dailyFees[date] || 0;
+                dailyStats[date] -= fee;
+            });
             
-            document.getElementById('weekDetailWinRate').textContent = `${winRate.toFixed(1)}%`;
-            document.getElementById('weekDetailWinRate').className = `month-detail-stat-value ${winRate >= 50 ? 'positive' : 'negative'}`;
+            const dailyPLs = Object.values(dailyStats);
+            const bestDay = dailyPLs.length > 0 ? Math.max(...dailyPLs) : 0;
+            const worstDay = dailyPLs.length > 0 ? Math.min(...dailyPLs) : 0;
             
-            const tradesList = document.getElementById('weekTradesList');
-            if (weekTrades.length > 0) {
-                const tradesBySymbol = {};
-                weekTrades.forEach(trade => {
-                    if (!tradesBySymbol[trade.symbol]) {
-                        tradesBySymbol[trade.symbol] = [];
-                    }
-                    tradesBySymbol[trade.symbol].push(trade);
-                });
+            // 사이드바 업데이트
+            const weekText = currentLanguage === 'ko' ? 
+                `${monthNames[month]} ${weekNumber}주차` : 
+                `Week ${weekNumber} of ${monthNames[month]}`;
                 
-                tradesList.innerHTML = Object.entries(tradesBySymbol).map(([symbol, trades]) => {
-                    const symbolPnl = trades.reduce((sum, trade) => sum + trade.pnl, 0);
-                    return `
-                        <div style="background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 8px; margin-bottom: 8px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                                <span style="font-weight: 600; color: #e4e4e7;">${symbol}</span>
-                                <span class="${symbolPnl >= 0 ? 'positive' : 'negative'}" style="font-weight: 600;">$${symbolPnl.toFixed(2)}</span>
-                            </div>
-                            <div style="font-size: 11px; color: #64748b;">
-                                ${trades.length} trades | Avg: $${(symbolPnl / trades.length).toFixed(2)}
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            } else {
-                tradesList.innerHTML = '<div style="text-align: center; color: #64748b;">No trades this week</div>';
-            }
+            document.getElementById('selectedWeekLabel').textContent = weekText;
+            document.getElementById('selectedWeekTrades').textContent = weekTrades.length;
             
-            document.getElementById('weekDetailsModal').style.display = 'flex';
+            document.getElementById('selectedWeekPnl').textContent = `$${weekPnl.toFixed(2)}`;
+            document.getElementById('selectedWeekPnl').className = `weekly-value ${weekPnl >= 0 ? 'positive' : 'negative'}`;
+            
+            document.getElementById('selectedWeekWinRate').textContent = `${winRate.toFixed(1)}%`;
+            document.getElementById('selectedWeekWinRate').className = `weekly-value ${winRate >= 50 ? 'positive' : 'negative'}`;
+            
+            document.getElementById('selectedWeekBestDay').textContent = `$${bestDay.toFixed(2)}`;
+            document.getElementById('selectedWeekWorstDay').textContent = `$${worstDay.toFixed(2)}`;
+            
+            // Day details 숨기기
+            document.getElementById('dayDetails').style.display = 'none';
         }
 
         function closeWeekDetails() {
