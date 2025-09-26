@@ -3162,32 +3162,31 @@
                                 <div class="calendar-day-header">Thu</div>
                                 <div class="calendar-day-header">Fri</div>
                                 <div class="calendar-day-header">Sat</div>
-                                <div class="calendar-day-header" id="weekPnlHeader" style="display: none;">Week P/L</div>
+                                <div class="calendar-day-header" id="weekPnlHeader" style="display: none;" data-lang="week-summary">Week Summary</div>
                             </div>
                         </div>
 
                         <!-- Right sidebar -->
                         <div class="calendar-sidebar">
-                            <div class="sidebar-title-calendar" data-lang="weekly-pl">Weekly P/L</div>
+                            <div class="sidebar-title-calendar" data-lang="day-details">Day Details</div>
                            
                             <!-- Day details section -->
-                            <div class="day-details" id="dayDetails" style="display: none;">
-                                <div class="day-details-title" id="dayDetailsTitle">Selected Day</div>
-                                <div id="dayTradesList">
-                                    <!-- Individual trades for selected day -->
-                                </div>
+                        <div class="day-details" id="dayDetails" style="display: none;">
+                            <div class="day-details-title" id="dayDetailsTitle">Selected Day</div>
+                            <div id="dayTradesList">
+                                <!-- Individual trades for selected day -->
                             </div>
-
-                            <div class="annual-heatmap-container">
-                        <div class="annual-heatmap-title" id="annualHeatmapTitle">2024 Trading Overview</div>
-                        <div class="annual-heatmap-grid" id="annualHeatmapGrid">
-                            <!-- Month heatmaps will be generated here -->
-                        </div>
-                    </div>
                         </div>
                     </div>
                 </div>
-            </div>
+
+                            <!-- Annual Heatmap - 캘린더 하단으로 이동 -->
+                <div class="annual-heatmap-container">
+                    <div class="annual-heatmap-title" id="annualHeatmapTitle">2024 Trading Overview</div>
+                    <div class="annual-heatmap-grid" id="annualHeatmapGrid">
+                        <!-- Month heatmaps will be generated here -->
+                    </div>
+                </div>
 
             <!-- Enhanced Analytics page -->
             <div id="analysis" class="page">
@@ -4327,7 +4326,8 @@
                 'week-pnl': 'Week P/L',
                 'view-full-month': 'View Full Month Calendar',
                 'month-details': 'Month Details',
-                'close': 'Close'
+                'close': 'Close',
+                'week-summary': 'Week Summary'
             },
             ko: {
                 'dashboard': '대시보드',
@@ -4582,7 +4582,8 @@
                 'week-pnl': '주간 손익',
                 'view-full-month': '전체 월 캘린더 보기',
                 'month-details': '월별 상세',
-                'close': '닫기'
+                'close': '닫기',
+                'week-summary': '주간 요약'
             }
         };
         
@@ -7049,16 +7050,39 @@
                     if (weekTrades.length > 0) {
                         weekPnlElement.onclick = () => showWeekDetails(week + 1, weekTrades, weekPnl);
                         
+                        // 헤더
+                        const weekHeader = document.createElement('div');
+                        weekHeader.className = 'week-pnl-header';
+                        weekHeader.textContent = currentLanguage === 'ko' ? `${week + 1}주차` : `Week ${week + 1}`;
+                        weekPnlElement.appendChild(weekHeader);
+                        
+                        // P/L 값
                         const weekPnlValue = document.createElement('div');
                         weekPnlValue.className = `week-pnl-value ${weekPnl > 0 ? 'positive' : weekPnl < 0 ? 'negative' : 'neutral'}`;
                         weekPnlValue.textContent = `$${weekPnl.toFixed(0)}`;
                         weekPnlElement.appendChild(weekPnlValue);
                         
+                        // 거래 수
                         const weekTradesCount = document.createElement('div');
                         weekTradesCount.className = 'week-trades-count';
                         const tradeText = currentLanguage === 'ko' ? '거래' : 'trades';
                         weekTradesCount.textContent = `${weekTrades.length} ${tradeText}`;
                         weekPnlElement.appendChild(weekTradesCount);
+                        
+                        // 승률
+                        const wins = weekTrades.filter(trade => trade.pnl > 0);
+                        const winRate = weekTrades.length > 0 ? (wins.length / weekTrades.length) * 100 : 0;
+                        const weekWinRate = document.createElement('div');
+                        weekWinRate.className = 'week-win-rate';
+                        weekWinRate.textContent = `${winRate.toFixed(0)}%`;
+                        weekPnlElement.appendChild(weekWinRate);
+                        
+                    } else {
+                        // 빈 주차
+                        const weekHeader = document.createElement('div');
+                        weekHeader.className = 'week-pnl-header';
+                        weekHeader.textContent = currentLanguage === 'ko' ? `${week + 1}주차` : `Week ${week + 1}`;
+                        weekPnlElement.appendChild(weekHeader);
                     }
                     
                     grid.appendChild(weekPnlElement);
