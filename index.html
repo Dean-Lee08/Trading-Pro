@@ -2797,23 +2797,23 @@
                     <span class="nav-item-icon">📅</span>
                     <span data-lang="calendar">Calendar View</span>
                 </button>
-                <button class="nav-item" onclick="showPage('analysis')">
+                <button class="nav-item" onclick="showPage('analysis')" id="nav-analysis">
                     <span class="nav-item-icon">📈</span>
                     <span data-lang="analytics">Analytics</span>
                 </button>
-                <button class="nav-item" onclick="showPage('psychology')">
+                <button class="nav-item" onclick="showPage('psychology')" id="nav-psychology">
                     <span class="nav-item-icon">🧠</span>
                     <span data-lang="psychology">Psychology</span>
                 </button>
-                <button class="nav-item" onclick="showPage('notes')">
+                <button class="nav-item" onclick="showPage('notes')" id="nav-notes">
                     <span class="nav-item-icon">📝</span>
                     <span data-lang="notes">Notes</span>
                 </button>
-                <button class="nav-item" onclick="showPage('trades')">
+                <button class="nav-item" onclick="showPage('trades')" id="nav-trades">
                     <span class="nav-item-icon">📋</span>
                     <span data-lang="tradelist">Trade List</span>
                 </button>
-                <button class="nav-item" onclick="showPage('settings')">
+                <button class="nav-item" onclick="showPage('settings')" id="nav-settings">
                     <span class="nav-item-icon">⚙️</span>
                     <span data-lang="settings">Settings</span>
                 </button>
@@ -5957,13 +5957,12 @@
 
         // Page initialization
         document.addEventListener('DOMContentLoaded', async function() {
-    await waitForChart();
-    const savedLanguage = localStorage.getItem('tradingPlatformLanguage');
-    if (savedLanguage) {
-        currentLanguage = savedLanguage;
-        // document.getElementById('languageSelect').value = currentLanguage; // 이 줄 삭제
-        document.getElementById('settingsLanguageSelect').value = currentLanguage;
-    }
+            await waitForChart();
+            const savedLanguage = localStorage.getItem('tradingPlatformLanguage');
+            if (savedLanguage) {
+                currentLanguage = savedLanguage;
+                document.getElementById('settingsLanguageSelect').value = currentLanguage;
+            }
             
             // Load daily fees
             const savedFees = localStorage.getItem('tradingPlatformDailyFees');
@@ -6049,43 +6048,93 @@
                     closeWeekDetails();
                 }
             });
+
+            // 모든 페이지가 올바르게 로드되도록 보장
+            setTimeout(() => {
+                // 기본적으로 dashboard 페이지만 활성화
+                document.querySelectorAll('.page').forEach(page => {
+                    page.classList.remove('active');
+                });
+                document.getElementById('dashboard').classList.add('active');
+                
+                // 기본적으로 dashboard 네비게이션만 활성화
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                const dashboardNav = document.querySelector(`[onclick="showPage('dashboard')"]`);
+                if (dashboardNav) {
+                    dashboardNav.classList.add('active');
+                }
+            }, 100);
         });
 
         // Navigation functions
         function showPage(pageId) {
+            // 모든 페이지 숨기기
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
             });
             
+            // 모든 네비게이션 아이템 비활성화
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
             });
             
-            document.getElementById(pageId).classList.add('active');
-            event.target.closest('.nav-item').classList.add('active');
+            // 선택된 페이지 보이기
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
             
+            // 해당 네비게이션 아이템 활성화
+            const targetNavItem = document.querySelector(`[onclick="showPage('${pageId}')"]`);
+            if (targetNavItem) {
+                targetNavItem.classList.add('active');
+            }
+            
+            // 페이지별 특별 처리
             if (pageId === 'analysis') {
-                updateDetailedAnalytics();
-                if (currentAnalyticsSection === 'detail') {
-                    setTimeout(updateBasicCharts, 100);
-                } else {
-                    setTimeout(updateAdvancedCharts, 100);
-                }
+                setTimeout(() => {
+                    updateDetailedAnalytics();
+                    if (currentAnalyticsSection === 'detail') {
+                        setTimeout(updateBasicCharts, 100);
+                    } else {
+                        setTimeout(updateAdvancedCharts, 100);
+                    }
+                }, 50);
             }
             
             if (pageId === 'notes') {
-                renderAllNotesSections();
+                setTimeout(() => {
+                    renderAllNotesSections();
+                }, 50);
             }
 
             if (pageId === 'psychology') {
                 setTimeout(() => {
-    loadPsychologyData();
-    updatePsychologyMetrics();
-}, 100);
+                    loadPsychologyData();
+                    updatePsychologyMetrics();
+                }, 50);
             }
             
+            if (pageId === 'trades') {
+                setTimeout(() => {
+                    updateAllTradesList();
+                }, 50);
+            }
+            
+            if (pageId === 'calendar') {
+                setTimeout(() => {
+                    renderCalendar();
+                }, 50);
+            }
+            
+            // 모바일에서 사이드바 닫기
             if (window.innerWidth <= 768) {
-                document.getElementById('sidebar').classList.remove('open');
+                const sidebar = document.getElementById('sidebar');
+                if (sidebar) {
+                    sidebar.classList.remove('open');
+                }
             }
         }
 
