@@ -6162,29 +6162,31 @@
                 item.classList.remove('active');
             });
             
-            // 3. 페이지 섹션 활성화 (ID 불일치 최종 해결)
-            // 사용자님의 피드백에 따라 'Page' 접미사를 사용하지 않고 순수한 ID로 찾습니다.
+            // 3. 페이지 섹션 활성화 (ID 불일치 문제 없음 - 사용자 피드백 반영)
+            // HTML ID와 정확히 일치하는 pageId로 요소를 찾습니다.
             const activePage = document.getElementById(pageId); 
             
             if (activePage) {
                 activePage.classList.add('active');
             } else {
-                // 페이지를 찾지 못할 경우를 대비하여 콘솔에 오류를 출력하여 디버깅을 돕습니다.
                 console.error(`ERROR: Page element with ID '${pageId}' was not found. Check HTML ID.`);
             }
             
-            // 4. 네비게이션 항목 활성화 (가장 안정적인 pageId 기반 검색 유지)
+            // 4. 네비게이션 항목 활성화 (event 객체 의존성 제거)
+            // onclick 속성에 pageId가 포함된 요소를 안전하게 찾아 활성화합니다.
             const activeNavItem = document.querySelector(`.nav-menu .nav-item[onclick*="'${pageId}'"]`);
             if (activeNavItem) {
                 activeNavItem.classList.add('active');
             }
 
-            // 5. 페이지별 특수 로직 (실행 중단 오류 방지 로직 적용)
+            // 5. 페이지별 특수 로직 (함수가 정의되지 않아도 스크립트 실행이 중단되지 않도록 방어 로직 적용)
             try {
                 if (pageId === 'analysis') {
+                    // 함수가 정의되어 있을 때만 호출하여 오류를 방지
                     if (typeof updateDetailedAnalytics === 'function') {
                         updateDetailedAnalytics();
                     }
+                    // 나머지 차트 로직에도 방어 로직 적용
                     if (typeof currentAnalyticsSection !== 'undefined' && currentAnalyticsSection === 'detail') {
                         if (typeof updateBasicCharts === 'function') {
                             setTimeout(updateBasicCharts, 100);
@@ -6206,12 +6208,15 @@
                         if (typeof updatePsychologyMetrics === 'function') updatePsychologyMetrics();
                     }, 100);
                 }
+                
+                // 'tradelist'나 'settings'에는 일반적으로 특수 로직이 없습니다.
+                
             } catch (e) {
-                // 특수 로직 실행 중 오류가 발생해도 페이지 전환은 막지 않습니다.
+                // 특수 로직 실행 중 예상치 못한 오류가 발생해도 페이지 전환은 막지 않음
                 console.error("Error during page-specific function calls:", e);
             }
             
-            // 6. 모바일 사이드바 닫기 로직 (기존 로직 유지)
+            // 6. 모바일 사이드바 닫기 로직
             if (window.innerWidth <= 768) {
                 document.getElementById('sidebar')?.classList.remove('open');
             }
