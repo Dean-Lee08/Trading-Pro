@@ -109,14 +109,14 @@
         }
 
         .page {
-            display: none;
+            display: none !important;
             padding: 24px;
             max-width: 1400px;
             margin: 0 auto;
         }
 
         .page.active {
-            display: block;
+            display: block !important;
         }
 
         .page-header {
@@ -4769,7 +4769,10 @@
             document.querySelectorAll('.notes-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
-            event.target.classList.add('active');
+            const targetTab = document.querySelector(`[onclick="showNotesSection('${section}')"]`);
+            if (targetTab) {
+                targetTab.classList.add('active');
+            }
             
             // 모든 섹션 숨기기
             document.querySelectorAll('.note-section').forEach(noteSection => {
@@ -5320,7 +5323,7 @@
 }
 
         // Analytics section management
-        function showAnalyticsSection(sectionName) {
+       function showAnalyticsSection(sectionName) {
             currentAnalyticsSection = sectionName;
             
             // Update tab states
@@ -5328,7 +5331,10 @@
                 tab.classList.remove('active');
             });
             // event.target 대신 직접 요소 찾기
-            document.querySelector(`[onclick="showAnalyticsSection('${sectionName}')"]`).classList.add('active');
+            const targetTab = document.querySelector(`[onclick="showAnalyticsSection('${sectionName}')"]`);
+            if (targetTab) {
+                targetTab.classList.add('active');
+            }
             
             // Show/hide sections
             document.querySelectorAll('.detail-section, .chart-section').forEach(section => {
@@ -6070,6 +6076,8 @@
 
         // Navigation functions
         function showPage(pageId) {
+            console.log('Showing page:', pageId); // 디버깅용
+            
             // 모든 페이지 숨기기
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
@@ -6575,7 +6583,10 @@
             });
             
             // event.target 대신 직접 요소 찾기
-            document.querySelector(`[onclick="setAnalyticsPeriod('${period}')"]`).classList.add('active');
+            const targetBtn = document.querySelector(`[onclick="setAnalyticsPeriod('${period}')"]`);
+            if (targetBtn) {
+                targetBtn.classList.add('active');
+            }
             updateDetailedAnalytics();
         }
 
