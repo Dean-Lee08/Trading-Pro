@@ -2607,50 +2607,62 @@
             margin: 0;
         }
 
-        /* Week Details Pagination */
+        /* Week Details Container 스타일 개선 */
         .week-details-container {
-            max-height: 400px;
-            overflow-y: auto;
             margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #334155;
         }
 
         .week-details-pagination {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin: 12px 0;
-            padding: 8px 0;
-            border-top: 1px solid #334155;
+            margin-bottom: 16px;
+            padding: 8px 12px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 6px;
         }
 
         .week-details-page-info {
             color: #94a3b8;
             font-size: 12px;
+            font-weight: 500;
         }
 
         .week-details-nav {
             display: flex;
-            gap: 8px;
+            gap: 6px;
         }
 
         .week-details-nav button {
             background: #374151;
             border: 1px solid #4b5563;
             color: #e4e4e7;
-            padding: 4px 8px;
+            padding: 6px 10px;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 11px;
+            font-size: 12px;
+            font-weight: 500;
             transition: all 0.2s ease;
+            min-width: 32px;
         }
 
         .week-details-nav button:hover {
             background: #4b5563;
+            border-color: #6b7280;
         }
 
         .week-details-nav button:disabled {
-            opacity: 0.5;
+            opacity: 0.4;
             cursor: not-allowed;
+            background: #1f2937;
+        }
+
+        .week-details-nav button:disabled:hover {
+            background: #1f2937;
+            border-color: #374151;
         }
 
         /* Enhanced Week Trade Item */
@@ -3358,8 +3370,8 @@
                                 <div class="week-details-pagination" id="weekDetailsPagination">
                                     <div class="week-details-page-info" id="weekDetailsPageInfo">Page 1 of 1</div>
                                     <div class="week-details-nav">
-                                        <button id="weekDetailsPrevBtn" onclick="changeWeekDetailsPage(-1)" disabled>◀</button>
-                                        <button id="weekDetailsNextBtn" onclick="changeWeekDetailsPage(1)" disabled>▶</button>
+                                        <button id="weekDetailsPrevBtn" onclick="changeWeekDetailsPage(-1)" disabled>‹</button>
+                                        <button id="weekDetailsNextBtn" onclick="changeWeekDetailsPage(1)" disabled>›</button>
                                     </div>
                                 </div>
                                 
@@ -8555,7 +8567,7 @@ function applyCustomRisk() {
             const startIndex = (currentWeekDetailsPage - 1) * weekDetailsItemsPerPage;
             const endIndex = startIndex + weekDetailsItemsPerPage;
             
-            // 전체 주간 거래를 티커별로 집계 (개별 거래가 아닌 티커별로)
+            // 전체 주간 거래를 티커별로 집계
             const tickerStats = {};
             
             currentWeekTrades.forEach(trade => {
@@ -8584,41 +8596,56 @@ function applyCustomRisk() {
             const pageTickers = sortedTickers.slice(startIndex, endIndex);
             
             const weekDetailsContent = document.getElementById('weekDetailsContent');
-            weekDetailsContent.innerHTML = pageTickers.map(([symbol, stats]) => {
-                const avgCostBasis = stats.totalCost / stats.totalShares;
-                const tradeText = currentLanguage === 'ko' ? '거래' : 'trade';
-                const tradesText = currentLanguage === 'ko' ? '거래' : 'trades';
-                
-                return `
-                    <div class="day-trade-item">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                            <span class="trade-symbol">${symbol}</span>
-                            <span class="trade-pnl ${stats.totalPnL >= 0 ? 'positive' : 'negative'}">$${stats.totalPnL.toFixed(2)}</span>
-                        </div>
-                        <div style="font-size: 11px; color: #64748b;">
-                            ${currentLanguage === 'ko' ? 'Cost Basis' : 'Cost Basis'}: $${avgCostBasis.toFixed(2)} | ${stats.tradeCount} ${stats.tradeCount !== 1 && currentLanguage !== 'ko' ? tradesText : tradeText}
+            
+            if (pageTickers.length === 0) {
+                weekDetailsContent.innerHTML = `
+                    <div class="empty-state">
+                        <div style="color: #64748b; font-size: 12px;">
+                            ${currentLanguage === 'ko' ? '이 주에 거래가 없습니다' : 'No trades this week'}
                         </div>
                     </div>
                 `;
-            }).join('');
+            } else {
+                weekDetailsContent.innerHTML = pageTickers.map(([symbol, stats]) => {
+                    const avgCostBasis = stats.totalCost / stats.totalShares;
+                    
+                    return `
+                        <div class="day-trade-item">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                                <span class="trade-symbol">${symbol}</span>
+                                <span class="trade-pnl ${stats.totalPnL >= 0 ? 'positive' : 'negative'}">$${stats.totalPnL.toFixed(2)}</span>
+                            </div>
+                            <div style="font-size: 11px; color: #64748b;">
+                                ${currentLanguage === 'ko' ? 'Cost Basis' : 'Cost Basis'}: $${avgCostBasis.toFixed(2)} | ${stats.tradeCount} ${currentLanguage === 'ko' ? '거래' : 'trade'}${stats.tradeCount !== 1 && currentLanguage !== 'ko' ? 's' : ''}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
             
-            // Update pagination
+            // Update pagination info
             const pageInfo = document.getElementById('weekDetailsPageInfo');
-            const pageLabel = currentLanguage === 'ko' ? '페이지' : 'Page';
-            const ofLabel = currentLanguage === 'ko' ? '/' : 'of';
-            pageInfo.textContent = `${pageLabel} ${currentWeekDetailsPage} ${ofLabel} ${totalPages}`;
+            if (totalPages > 0) {
+                const pageLabel = currentLanguage === 'ko' ? '페이지' : 'Page';
+                const ofLabel = currentLanguage === 'ko' ? '/' : 'of';
+                pageInfo.textContent = `${pageLabel} ${currentWeekDetailsPage} ${ofLabel} ${totalPages}`;
+            } else {
+                pageInfo.textContent = currentLanguage === 'ko' ? '페이지 0 / 0' : 'Page 0 of 0';
+            }
             
-            document.getElementById('weekDetailsPrevBtn').disabled = currentWeekDetailsPage === 1;
-            document.getElementById('weekDetailsNextBtn').disabled = currentWeekDetailsPage === totalPages;
-        }
-
-        function changeWeekDetailsPage(direction) {
-            const totalPages = Math.ceil(currentWeekTrades.length / weekDetailsItemsPerPage);
-            const newPage = currentWeekDetailsPage + direction;
+            // Update pagination buttons
+            const prevBtn = document.getElementById('weekDetailsPrevBtn');
+            const nextBtn = document.getElementById('weekDetailsNextBtn');
             
-            if (newPage >= 1 && newPage <= totalPages) {
-                currentWeekDetailsPage = newPage;
-                renderWeekDetailsPage();
+            prevBtn.disabled = currentWeekDetailsPage === 1 || totalPages === 0;
+            nextBtn.disabled = currentWeekDetailsPage === totalPages || totalPages === 0;
+            
+            // Show/hide pagination if only one page
+            const pagination = document.getElementById('weekDetailsPagination');
+            if (totalPages <= 1) {
+                pagination.style.display = 'none';
+            } else {
+                pagination.style.display = 'flex';
             }
         }
         
