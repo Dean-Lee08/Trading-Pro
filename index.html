@@ -6657,24 +6657,26 @@
                 dailyStats[trade.date].tradePL += trade.pnl;
             });
 
-            // Apply daily fees
+            // Apply daily fees and determine win/loss days
+            const dailyPLsWithFees = [];
             Object.keys(dailyStats).forEach(date => {
                 const fee = dailyFees[date] || 0;
                 const netDailyPL = dailyStats[date].tradePL - fee;
+                dailyPLsWithFees.push(netDailyPL);
+                
                 if (netDailyPL > 0) dailyStats[date].winDays = 1;
                 else if (netDailyPL < 0) dailyStats[date].lossDays = 1;
             });
 
-            const dailyPLs = Object.values(dailyStats).map(data => data.tradePL - (dailyFees[Object.keys(dailyStats)[Object.values(dailyStats).indexOf(data)]] || 0));
             const winDays = Object.values(dailyStats).filter(data => data.winDays > 0).length;
             const lossDays = Object.values(dailyStats).filter(data => data.lossDays > 0).length;
-            const bestTradingDay = dailyPLs.length > 0 ? Math.max(...dailyPLs) : 0;
-            const worstTradingDay = dailyPLs.length > 0 ? Math.min(...dailyPLs) : 0;
-            const avgDailyPL = dailyPLs.length > 0 ? dailyPLs.reduce((sum, pnl) => sum + pnl, 0) / dailyPLs.length : 0;
+            const bestTradingDay = dailyPLsWithFees.length > 0 ? Math.max(...dailyPLsWithFees) : 0;
+            const worstTradingDay = dailyPLsWithFees.length > 0 ? Math.min(...dailyPLsWithFees) : 0;
+            const avgDailyPL = dailyPLsWithFees.length > 0 ? dailyPLsWithFees.reduce((sum, pnl) => sum + pnl, 0) / dailyPLsWithFees.length : 0;
             const avgDailyFees = uniqueDatesForFees.length > 0 ? totalDailyFees / uniqueDatesForFees.length : 0;
 
-            document.getElementById('detailDailyPerWin').textContent = winDays > 0 ? `$${(dailyPLs.filter(pnl => pnl > 0).reduce((sum, pnl) => sum + pnl, 0) / winDays).toFixed(2)}` : '$0.00';
-            document.getElementById('detailDailyPerLoss').textContent = lossDays > 0 ? `$${(dailyPLs.filter(pnl => pnl < 0).reduce((sum, pnl) => sum + pnl, 0) / lossDays).toFixed(2)}` : '$0.00';
+            document.getElementById('detailDailyPerWin').textContent = winDays > 0 ? `$${(dailyPLsWithFees.filter(pnl => pnl > 0).reduce((sum, pnl) => sum + pnl, 0) / winDays).toFixed(2)}` : '$0.00';
+            document.getElementById('detailDailyPerLoss').textContent = lossDays > 0 ? `$${(dailyPLsWithFees.filter(pnl => pnl < 0).reduce((sum, pnl) => sum + pnl, 0) / lossDays).toFixed(2)}` : '$0.00';
             document.getElementById('detailDailyPerFees').textContent = `$${avgDailyFees.toFixed(2)}`;
             document.getElementById('detailBestTradingDay').textContent = `$${bestTradingDay.toFixed(2)}`;
             document.getElementById('detailWorstTradingDay').textContent = `$${worstTradingDay.toFixed(2)}`;
@@ -8134,86 +8136,34 @@ function applyCustomRisk() {
                 
                 monthContainer.onclick = () => showMonthDetails(currentYear, month);
                 
-                // 월 헤더
                 const monthHeader = document.createElement('div');
                 monthHeader.className = 'month-heatmap-header';
                 monthHeader.textContent = monthNames[month];
                 monthContainer.appendChild(monthHeader);
                 
-                // 요일 헤더 추가
-                const weekDayHeader = document.createElement('div');
-                weekDayHeader.style.cssText = `
-                    display: grid;
-                    grid-template-columns: repeat(7, 1fr);
-                    gap: 1px;
-                    margin-bottom: 2px;
-                    font-size: 8px;
-                    color: #64748b;
-                    text-align: center;
-                `;
-                
-                const dayAbbrs = currentLanguage === 'ko' ? 
-                    ['일', '월', '화', '수', '목', '금', '토'] :
-                    ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-                
-                dayAbbrs.forEach(day => {
-                    const dayHeader = document.createElement('div');
-                    dayHeader.textContent = day;
-                    dayHeader.style.cssText = 'padding: 1px;';
-                    weekDayHeader.appendChild(dayHeader);
-                });
-                
-                monthContainer.appendChild(weekDayHeader);
-                
-                // 달력 그리드
                 const miniCalendar = document.createElement('div');
                 miniCalendar.className = 'month-mini-calendar';
-                miniCalendar.style.cssText = `
-                    display: grid;
-                    grid-template-columns: repeat(7, 1fr);
-                    gap: 1px;
-                    height: 80px;
-                `;
                 
                 const firstDay = new Date(currentYear, month, 1);
                 const daysInMonth = new Date(currentYear, month + 1, 0).getDate();
                 const startPadding = firstDay.getDay();
                 
-                let monthPnl = 0;
-                let monthTrades = 0;
-                
-                // 빈 셀 추가 (월 시작 전)
                 for (let i = 0; i < startPadding; i++) {
                     const emptyDay = document.createElement('div');
-                    emptyDay.style.cssText = `
-                        width: 12px;
-                        height: 12px;
-                        background: transparent;
-                        border-radius: 1px;
-                    `;
+                    emptyDay.className = 'mini-day';
                     miniCalendar.appendChild(emptyDay);
                 }
                 
-                // 실제 날짜들
+                let monthPnl = 0;
+                let monthTrades = 0;
+                
                 for (let day = 1; day <= daysInMonth; day++) {
                     const date = new Date(currentYear, month, day);
                     const dateString = formatTradingDate(date);
                     const dayTrades = trades.filter(trade => trade.date === dateString);
                     
                     const dayElement = document.createElement('div');
-                    dayElement.style.cssText = `
-                        width: 12px;
-                        height: 12px;
-                        border-radius: 1px;
-                        background: #334155;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-size: 6px;
-                        color: #94a3b8;
-                        cursor: pointer;
-                        transition: all 0.2s ease;
-                    `;
+                    dayElement.className = 'mini-day';
                     
                     if (dayTrades.length > 0) {
                         const tradePnL = dayTrades.reduce((sum, trade) => sum + trade.pnl, 0);
@@ -8224,39 +8174,21 @@ function applyCustomRisk() {
                         monthTrades += dayTrades.length;
                         
                         if (totalPnL > 0) {
-                            dayElement.style.background = '#10b981';
-                            dayElement.style.color = 'white';
+                            dayElement.classList.add('trading-day');
                         } else if (totalPnL < 0) {
-                            dayElement.style.background = '#ef4444';
-                            dayElement.style.color = 'white';
+                            dayElement.classList.add('loss-day');
                         } else {
-                            dayElement.style.background = '#f59e0b';
-                            dayElement.style.color = 'white';
+                            dayElement.classList.add('neutral-day');
                         }
-                        
-                        dayElement.textContent = day;
-                        dayElement.title = `${day}일: $${totalPnL.toFixed(0)} (${dayTrades.length} trades)`;
                     }
-                    
-                    dayElement.addEventListener('mouseenter', function() {
-                        this.style.transform = 'scale(1.2)';
-                        this.style.zIndex = '10';
-                    });
-                    
-                    dayElement.addEventListener('mouseleave', function() {
-                        this.style.transform = 'scale(1)';
-                        this.style.zIndex = '1';
-                    });
                     
                     miniCalendar.appendChild(dayElement);
                 }
                 
                 monthContainer.appendChild(miniCalendar);
                 
-                // 월 통계
                 const monthStats = document.createElement('div');
                 monthStats.className = 'month-stats';
-                monthStats.style.marginTop = '6px';
                 
                 const monthPnlElement = document.createElement('div');
                 monthPnlElement.className = `month-pnl ${monthPnl > 0 ? 'positive' : monthPnl < 0 ? 'negative' : 'neutral'}`;
@@ -8355,22 +8287,6 @@ function applyCustomRisk() {
             const bestDay = dailyPLs.length > 0 ? Math.max(...dailyPLs) : 0;
             const worstDay = dailyPLs.length > 0 ? Math.min(...dailyPLs) : 0;
             
-            // 모달 제목 설정
-            const weekText = currentLanguage === 'ko' ? 
-                `${monthNames[month]} ${weekNumber}주차` : 
-                `Week ${weekNumber} of ${monthNames[month]}`;
-            
-            document.getElementById('weekDetailsTitle').textContent = weekText;
-            
-            // 주간 통계 업데이트
-            document.getElementById('weekDetailPnl').textContent = `$${weekPnl.toFixed(2)}`;
-            document.getElementById('weekDetailPnl').className = `month-detail-stat-value ${weekPnl >= 0 ? 'positive' : 'negative'}`;
-            
-            document.getElementById('weekDetailTrades').textContent = weekTrades.length;
-            
-            document.getElementById('weekDetailWinRate').textContent = `${winRate.toFixed(1)}%`;
-            document.getElementById('weekDetailWinRate').className = `month-detail-stat-value ${winRate >= 50 ? 'positive' : 'negative'}`;
-            
             // 티커별 통계 계산
             const tickerStats = {};
             weekTrades.forEach(trade => {
@@ -8391,36 +8307,11 @@ function applyCustomRisk() {
                 tickerStats[symbol].tradeCount++;
             });
             
-            // 티커별 정보를 P/L 순으로 정렬
-            const sortedTickers = Object.entries(tickerStats)
-                .sort((a, b) => b[1].totalPnL - a[1].totalPnL);
-            
-            const weekTradesList = document.getElementById('weekTradesList');
-            if (sortedTickers.length === 0) {
-                weekTradesList.innerHTML = `
-                    <div style="text-align: center; color: #64748b; padding: 20px;">
-                        ${currentLanguage === 'ko' ? '이 주에 거래가 없습니다' : 'No trades this week'}
-                    </div>
-                `;
-            } else {
-                weekTradesList.innerHTML = sortedTickers.map(([symbol, stats]) => {
-                    const avgCostBasis = stats.totalCost / stats.totalShares;
-                    return `
-                        <div style="background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 12px; margin-bottom: 8px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                                <span style="font-weight: 600; color: #e4e4e7; font-size: 14px;">${symbol}</span>
-                                <span style="font-weight: 600; font-size: 14px;" class="${stats.totalPnL >= 0 ? 'positive' : 'negative'}">$${stats.totalPnL.toFixed(2)}</span>
-                            </div>
-                            <div style="font-size: 11px; color: #64748b; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                                <div>${currentLanguage === 'ko' ? '평균단가' : 'Cost Basis'}: $${avgCostBasis.toFixed(2)}</div>
-                                <div>${stats.tradeCount} ${currentLanguage === 'ko' ? '거래' : 'trade'}${stats.tradeCount !== 1 && currentLanguage !== 'ko' ? 's' : ''}</div>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            }
-            
-            // 사이드바도 동시에 업데이트
+            // 주간요약 칸 업데이트
+            const weekText = currentLanguage === 'ko' ? 
+                `${monthNames[month]} ${weekNumber}주차` : 
+                `Week ${weekNumber} of ${monthNames[month]}`;
+                
             document.getElementById('selectedWeekLabel').textContent = weekText;
             document.getElementById('selectedWeekTrades').textContent = weekTrades.length;
             document.getElementById('selectedWeekPnl').textContent = `$${weekPnl.toFixed(2)}`;
@@ -8430,8 +8321,59 @@ function applyCustomRisk() {
             document.getElementById('selectedWeekBestDay').textContent = `$${bestDay.toFixed(2)}`;
             document.getElementById('selectedWeekWorstDay').textContent = `$${worstDay.toFixed(2)}`;
             
-            // 모달 표시
-            document.getElementById('weekDetailsModal').style.display = 'flex';
+            // 기존 주간요약 내용을 티커별 상세로 교체
+            const weeklySummary = document.getElementById('weeklySummary');
+            
+            // 티커별 정보를 P/L 순으로 정렬
+            const sortedTickers = Object.entries(tickerStats)
+                .sort((a, b) => b[1].totalPnL - a[1].totalPnL);
+            
+            // 기존 주간요약 뒤에 상세 정보 추가
+            let existingWeekDetails = document.getElementById('weekTickerDetails');
+            if (existingWeekDetails) {
+                existingWeekDetails.remove();
+            }
+            
+            if (sortedTickers.length > 0) {
+                const weekDetailsDiv = document.createElement('div');
+                weekDetailsDiv.id = 'weekTickerDetails';
+                weekDetailsDiv.style.cssText = `
+                    margin-top: 16px;
+                    padding-top: 16px;
+                    border-top: 1px solid #334155;
+                `;
+                
+                const detailsTitle = document.createElement('div');
+                detailsTitle.style.cssText = `
+                    color: #f8fafc;
+                    font-size: 14px;
+                    font-weight: 600;
+                    margin-bottom: 12px;
+                    text-align: center;
+                `;
+                detailsTitle.textContent = currentLanguage === 'ko' ? '주간 티커 상세' : 'Week Ticker Details';
+                weekDetailsDiv.appendChild(detailsTitle);
+                
+                const tickerList = document.createElement('div');
+                tickerList.innerHTML = sortedTickers.map(([symbol, stats]) => {
+                    const avgCostBasis = stats.totalCost / stats.totalShares;
+                    return `
+                        <div style="margin-bottom: 8px; padding: 8px; background: #0f172a; border-radius: 4px; border: 1px solid #334155;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                                <span style="font-weight: 600; color: #e4e4e7; font-size: 12px;">${symbol}</span>
+                                <span style="font-weight: 600; font-size: 12px;" class="${stats.totalPnL >= 0 ? 'positive' : 'negative'}">$${stats.totalPnL.toFixed(2)}</span>
+                            </div>
+                            <div style="font-size: 10px; color: #64748b; display: flex; justify-content: space-between;">
+                                <span>${currentLanguage === 'ko' ? '평균' : 'Avg'}: $${avgCostBasis.toFixed(2)}</span>
+                                <span>${stats.tradeCount} ${currentLanguage === 'ko' ? '거래' : 'trades'}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                weekDetailsDiv.appendChild(tickerList);
+                weeklySummary.parentNode.appendChild(weekDetailsDiv);
+            }
             
             // Day details 숨기기
             document.getElementById('dayDetails').style.display = 'none';
