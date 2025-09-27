@@ -113,10 +113,27 @@
             padding: 24px;
             max-width: 1400px;
             margin: 0 auto;
+            min-height: calc(100vh - 48px);
         }
 
         .page.active {
-            display: block;
+            display: block !important;
+        }
+
+        .psychology-section {
+            display: none;
+        }
+
+        .psychology-section.active {
+            display: block !important;
+        }
+
+        .note-section {
+            display: none;
+        }
+
+        .note-section.active {
+            display: block !important;
         }
 
         .page-header {
@@ -3743,16 +3760,16 @@
                 </div>
 
                 <!-- Daily Input Section -->
-                <div id="psychologyInputSection" class="psychology-section active">
-                    <div class="psychology-container">
-                        <h2 class="psychology-header" data-lang="daily-data-input">Daily Data Input</h2>
-                        
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 24px;">
+        <div id="psychologyInputSection" class="psychology-section active">
+            <div class="psychology-container">
+                <h2 class="psychology-header" data-lang="daily-data-input">Daily Data Input</h2>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 24px;">
                     <!-- Biological Data -->
                     <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
                         <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="biological-data">Biological Data</h3>
                         
-                        <div>
+                        <div style="margin-bottom: 16px;">
                             <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="sleep-hours">Sleep Hours</label>
                             <input type="number" id="sleepHours" step="0.5" min="0" max="12" placeholder="7.5" 
                                    style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
@@ -3853,399 +3870,352 @@
                         </div>
                     </div>
                 </div>
-
-                        <!-- Performance Chart Section for Daily Input -->
-                <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 24px; margin-top: 24px;">
+                
+                <!-- Action Buttons -->
+                <div style="display: flex; gap: 12px; justify-content: center; margin-bottom: 24px;">
+                    <button class="psychology-save-btn" onclick="savePsychologyData()" data-lang="save-psychology-data">Save Psychology Data</button>
+                    <button class="psychology-save-btn" onclick="calculateDailyScore()" style="background: #3b82f6;" data-lang="calculate-score">Calculate Daily Score</button>
+                    <button class="psychology-save-btn" onclick="resetPsychologyData()" style="background: #ef4444;" data-lang="reset-psychology-data">Reset Data</button>
+                </div>
+                
+                <!-- Enhanced Visual Dashboard - 여기가 Daily Input 섹션에만 나타나는 유일한 대시보드 -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 32px;">
+                    <!-- Sleep Performance Card -->
+                    <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid #334155; border-radius: 12px; padding: 20px; position: relative; overflow: hidden;">
+                        <div style="position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%); pointer-events: none;"></div>
+                        <div style="position: relative; z-index: 1;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                                <h3 style="color: #10b981; font-size: 16px; font-weight: 600;" data-lang="sleep-performance">Sleep Performance</h3>
+                                <div style="width: 40px; height: 40px; background: rgba(16, 185, 129, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                    <span style="font-size: 20px;">🛌</span>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px;">
+                                <span id="sleepHoursDisplay" style="font-size: 28px; font-weight: 700; color: #e4e4e7;">0</span>
+                                <span style="color: #94a3b8; font-size: 14px;">hours</span>
+                            </div>
+                            <div id="sleepQualityIndicator" style="height: 4px; background: #334155; border-radius: 2px; overflow: hidden;">
+                                <div id="sleepQualityBar" style="height: 100%; background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981); width: 0%; transition: width 0.3s ease;"></div>
+                            </div>
+                            <div id="sleepStatus" style="color: #94a3b8; font-size: 12px; margin-top: 8px;">No data</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Environment Card -->
+                    <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid #334155; border-radius: 12px; padding: 20px; position: relative; overflow: hidden;">
+                        <div style="position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%); pointer-events: none;"></div>
+                        <div style="position: relative; z-index: 1;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                                <h3 style="color: #3b82f6; font-size: 16px; font-weight: 600;" data-lang="environment-score">Environment Score</h3>
+                                <div style="width: 40px; height: 40px; background: rgba(59, 130, 246, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                    <span style="font-size: 20px;">🏢</span>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                                <div style="width: 60px; height: 60px; position: relative;">
+                                    <svg style="width: 100%; height: 100%; transform: rotate(-90deg);">
+                                        <circle cx="30" cy="30" r="25" stroke="#334155" stroke-width="4" fill="none"></circle>
+                                        <circle id="environmentCircle" cx="30" cy="30" r="25" stroke="#3b82f6" stroke-width="4" fill="none" 
+                                                stroke-dasharray="157" stroke-dashoffset="157" style="transition: stroke-dashoffset 0.5s ease;"></circle>
+                                    </svg>
+                                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                                        <span id="environmentScore" style="font-size: 14px; font-weight: 700; color: #e4e4e7;">0</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div id="environmentType" style="color: #e4e4e7; font-size: 14px; font-weight: 600;">-</div>
+                                    <div id="environmentStatus" style="color: #94a3b8; font-size: 12px;">No data</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Emotional State Card -->
+                    <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid #334155; border-radius: 12px; padding: 20px; position: relative; overflow: hidden;">
+                        <div style="position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%); pointer-events: none;"></div>
+                        <div style="position: relative; z-index: 1;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                                <h3 style="color: #8b5cf6; font-size: 16px; font-weight: 600;" data-lang="emotional-readiness">Emotional Readiness</h3>
+                                <div style="width: 40px; height: 40px; background: rgba(139, 92, 246, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                    <span style="font-size: 20px;">🧠</span>
+                                </div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px;">
+                                <div style="text-align: center;">
+                                    <div id="stressDisplay" style="font-size: 18px; font-weight: 700; color: #e4e4e7;">3</div>
+                                    <div style="color: #94a3b8; font-size: 10px;">Stress</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div id="confidenceDisplay" style="font-size: 18px; font-weight: 700; color: #e4e4e7;">3</div>
+                                    <div style="color: #94a3b8; font-size: 10px;">Confidence</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div id="focusDisplay" style="font-size: 18px; font-weight: 700; color: #e4e4e7;">3</div>
+                                    <div style="color: #94a3b8; font-size: 10px;">Focus</div>
+                                </div>
+                            </div>
+                            <div id="emotionalStatus" style="color: #94a3b8; font-size: 12px; text-align: center;">No data</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Risk Assessment Card -->
+                    <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid #334155; border-radius: 12px; padding: 20px; position: relative; overflow: hidden;">
+                        <div style="position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(245, 158, 11, 0.1) 0%, transparent 70%); pointer-events: none;"></div>
+                        <div style="position: relative; z-index: 1;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                                <h3 style="color: #f59e0b; font-size: 16px; font-weight: 600;" data-lang="risk-assessment">Risk Assessment</h3>
+                                <div style="width: 40px; height: 40px; background: rgba(245, 158, 11, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                    <span style="font-size: 20px;">⚠️</span>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 12px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                    <span style="color: #94a3b8; font-size: 12px;">Target Risk</span>
+                                    <span id="targetRiskPercent" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">0%</span>
+                                </div>
+                                <div style="background: #334155; height: 6px; border-radius: 3px; overflow: hidden;">
+                                    <div id="targetRiskBar" style="height: 100%; background: linear-gradient(90deg, #10b981, #f59e0b, #ef4444); width: 0%; transition: width 0.3s ease;"></div>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 8px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                    <span style="color: #94a3b8; font-size: 12px;">Max Loss Risk</span>
+                                    <span id="maxLossRiskPercent" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">0%</span>
+                                </div>
+                                <div style="background: #334155; height: 6px; border-radius: 3px; overflow: hidden;">
+                                    <div id="maxLossRiskBar" style="height: 100%; background: linear-gradient(90deg, #10b981, #f59e0b, #ef4444); width: 0%; transition: width 0.3s ease;"></div>
+                                </div>
+                            </div>
+                            <div id="riskStatus" style="color: #94a3b8; font-size: 12px; text-align: center;">No data</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Performance Chart Section -->
+                <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 24px; margin-bottom: 24px;">
                     <h3 style="color: #f8fafc; font-size: 18px; font-weight: 600; margin-bottom: 20px; text-align: center;" data-lang="psychology-performance-chart">Psychology vs Performance Analysis</h3>
                     <div style="height: 300px; display: flex; align-items: center; justify-content: center;">
                         <canvas id="psychologyPerformanceChart" style="max-width: 100%; max-height: 100%;"></canvas>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                        <!-- Metrics Dashboard Section -->
-                <div id="psychologyMetricsSection" class="psychology-section">
-                    <div class="psychology-container">
-                        <h2 class="psychology-header" data-lang="psychology-dashboard">Psychology Dashboard</h2>
+        <!-- Metrics Dashboard Section -->
+        <div id="psychologyMetricsSection" class="psychology-section">
+            <div class="psychology-container">
+                <h2 class="psychology-header" data-lang="psychology-dashboard">Psychology Metrics Dashboard</h2>
+                <div style="text-align: center; color: #94a3b8; padding: 40px 20px;">
+                    <p>Metrics dashboard will display aggregated psychology performance data</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bias Analysis Section -->
+        <div id="psychologyBiasSection" class="psychology-section">
+            <div class="psychology-container">
+                <h2 class="psychology-header" data-lang="bias-analysis-title">Quantified Bias Analysis</h2>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 24px;">
+                    <!-- Overconfidence Bias -->
+                    <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px;">
+                        <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="overconfidence-bias">Overconfidence Bias</h3>
                         
-                        <!-- Visual Dashboard Cards -->
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 32px;">
-                            <!-- Sleep Performance Card -->
-                            <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid #334155; border-radius: 12px; padding: 20px; position: relative; overflow: hidden;">
-                                <div style="position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%); pointer-events: none;"></div>
-                                <div style="position: relative; z-index: 1;">
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                                        <h3 style="color: #10b981; font-size: 16px; font-weight: 600;" data-lang="sleep-performance">Sleep Performance</h3>
-                                        <div style="width: 40px; height: 40px; background: rgba(16, 185, 129, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                                            <span style="font-size: 20px;">🛌</span>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px;">
-                                        <span id="sleepHoursDisplay" style="font-size: 28px; font-weight: 700; color: #e4e4e7;">0</span>
-                                        <span style="color: #94a3b8; font-size: 14px;">hours</span>
-                                    </div>
-                                    <div id="sleepQualityIndicator" style="height: 4px; background: #334155; border-radius: 2px; overflow: hidden;">
-                                        <div id="sleepQualityBar" style="height: 100%; background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981); width: 0%; transition: width 0.3s ease;"></div>
-                                    </div>
-                                    <div id="sleepStatus" style="color: #94a3b8; font-size: 12px; margin-top: 8px;">No data</div>
-                                </div>
+                        <div style="margin-bottom: 16px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="color: #94a3b8; font-size: 13px;" data-lang="calibration-error">Calibration Error</span>
+                                <span id="calibrationError" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0.0%</span>
                             </div>
-                            
-                            <!-- Environment Card -->
-                            <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid #334155; border-radius: 12px; padding: 20px; position: relative; overflow: hidden;">
-                                <div style="position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%); pointer-events: none;"></div>
-                                <div style="position: relative; z-index: 1;">
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                                        <h3 style="color: #3b82f6; font-size: 16px; font-weight: 600;" data-lang="environment-score">Environment Score</h3>
-                                        <div style="width: 40px; height: 40px; background: rgba(59, 130, 246, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                                            <span style="font-size: 20px;">🏢</span>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-                                        <div style="width: 60px; height: 60px; position: relative;">
-                                            <svg style="width: 100%; height: 100%; transform: rotate(-90deg);">
-                                                <circle cx="30" cy="30" r="25" stroke="#334155" stroke-width="4" fill="none"></circle>
-                                                <circle id="environmentCircle" cx="30" cy="30" r="25" stroke="#3b82f6" stroke-width="4" fill="none" 
-                                                        stroke-dasharray="157" stroke-dashoffset="157" style="transition: stroke-dashoffset 0.5s ease;"></circle>
-                                            </svg>
-                                            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-                                                <span id="environmentScore" style="font-size: 14px; font-weight: 700; color: #e4e4e7;">0</span>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div id="environmentType" style="color: #e4e4e7; font-size: 14px; font-weight: 600;">-</div>
-                                            <div id="environmentStatus" style="color: #94a3b8; font-size: 12px;">No data</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Emotional State Card -->
-                            <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid #334155; border-radius: 12px; padding: 20px; position: relative; overflow: hidden;">
-                                <div style="position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%); pointer-events: none;"></div>
-                                <div style="position: relative; z-index: 1;">
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                                        <h3 style="color: #8b5cf6; font-size: 16px; font-weight: 600;" data-lang="emotional-readiness">Emotional Readiness</h3>
-                                        <div style="width: 40px; height: 40px; background: rgba(139, 92, 246, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                                            <span style="font-size: 20px;">🧠</span>
-                                        </div>
-                                    </div>
-                                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px;">
-                                        <div style="text-align: center;">
-                                            <div id="stressDisplay" style="font-size: 18px; font-weight: 700; color: #e4e4e7;">3</div>
-                                            <div style="color: #94a3b8; font-size: 10px;">Stress</div>
-                                        </div>
-                                        <div style="text-align: center;">
-                                            <div id="confidenceDisplay" style="font-size: 18px; font-weight: 700; color: #e4e4e7;">3</div>
-                                            <div style="color: #94a3b8; font-size: 10px;">Confidence</div>
-                                        </div>
-                                        <div style="text-align: center;">
-                                            <div id="focusDisplay" style="font-size: 18px; font-weight: 700; color: #e4e4e7;">3</div>
-                                            <div style="color: #94a3b8; font-size: 10px;">Focus</div>
-                                        </div>
-                                    </div>
-                                    <div id="emotionalStatus" style="color: #94a3b8; font-size: 12px; text-align: center;">No data</div>
-                                </div>
-                            </div>
-                            
-                            <!-- Risk Assessment Card -->
-                            <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid #334155; border-radius: 12px; padding: 20px; position: relative; overflow: hidden;">
-                                <div style="position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(245, 158, 11, 0.1) 0%, transparent 70%); pointer-events: none;"></div>
-                                <div style="position: relative; z-index: 1;">
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                                        <h3 style="color: #f59e0b; font-size: 16px; font-weight: 600;" data-lang="risk-assessment">Risk Assessment</h3>
-                                        <div style="width: 40px; height: 40px; background: rgba(245, 158, 11, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                                            <span style="font-size: 20px;">⚠️</span>
-                                        </div>
-                                    </div>
-                                    <div style="margin-bottom: 12px;">
-                                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                                            <span style="color: #94a3b8; font-size: 12px;">Target Risk</span>
-                                            <span id="targetRiskPercent" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">0%</span>
-                                        </div>
-                                        <div style="background: #334155; height: 6px; border-radius: 3px; overflow: hidden;">
-                                            <div id="targetRiskBar" style="height: 100%; background: linear-gradient(90deg, #10b981, #f59e0b, #ef4444); width: 0%; transition: width 0.3s ease;"></div>
-                                        </div>
-                                    </div>
-                                    <div style="margin-bottom: 8px;">
-                                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                                            <span style="color: #94a3b8; font-size: 12px;">Max Loss Risk</span>
-                                            <span id="maxLossRiskPercent" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">0%</span>
-                                        </div>
-                                        <div style="background: #334155; height: 6px; border-radius: 3px; overflow: hidden;">
-                                            <div id="maxLossRiskBar" style="height: 100%; background: linear-gradient(90deg, #10b981, #f59e0b, #ef4444); width: 0%; transition: width 0.3s ease;"></div>
-                                        </div>
-                                    </div>
-                                    <div id="riskStatus" style="color: #94a3b8; font-size: 12px; text-align: center;">No data</div>
-                                </div>
+                            <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
+                                <div id="calibrationErrorBar" style="height: 100%; background: #10b981; width: 0%; transition: width 0.3s ease;"></div>
                             </div>
                         </div>
                         
-                        <!-- Performance Chart Section -->
-                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 24px; margin-bottom: 24px;">
-                            <h3 style="color: #f8fafc; font-size: 18px; font-weight: 600; margin-bottom: 20px; text-align: center;" data-lang="psychology-performance-chart">Psychology vs Performance Analysis</h3>
-                            <div style="height: 300px; display: flex; align-items: center; justify-content: center;">
-                                <canvas id="psychologyPerformanceChart" style="max-width: 100%; max-height: 100%;"></canvas>
+                        <div style="margin-bottom: 16px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="color: #94a3b8; font-size: 13px;" data-lang="overtrading-index">Overtrading Index</span>
+                                <span id="overtradingIndex" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0%</span>
+                            </div>
+                            <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
+                                <div id="overtradingBar" style="height: 100%; background: #f59e0b; width: 0%; transition: width 0.3s ease;"></div>
                             </div>
                         </div>
                         
-                        <!-- Weekly Bias Risk Assessment -->
-                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
-                            <h3 style="color: #f8fafc; font-size: 18px; margin-bottom: 16px; text-align: center;" data-lang="weekly-bias-risk">Weekly Bias Risk Assessment</h3>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
-                                <div id="overconfidenceRiskCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="overconfidence-risk">Overconfidence Risk</div>
-                                    <div id="overconfidenceRisk" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">Low</div>
-                                    <div id="overconfidenceDetails" style="color: #64748b; font-size: 11px;">Calibration Error: 0.0%</div>
-                                </div>
-                                
-                                <div id="lossAversionRiskCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="loss-aversion-risk">Loss Aversion Risk</div>
-                                    <div id="lossAversionRisk" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">Low</div>
-                                    <div id="lossAversionDetails" style="color: #64748b; font-size: 11px;">Disposition Ratio: 0.0</div>
-                                </div>
-                                
-                                <div id="anchoringRiskCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="anchoring-risk">Anchoring Risk</div>
-                                    <div id="anchoringRisk" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">Low</div>
-                                    <div id="anchoringDetails" style="color: #64748b; font-size: 11px;">Entry Price Dependency: 0%</div>
-                                </div>
+                        <div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="color: #94a3b8; font-size: 13px;" data-lang="position-deviation">Position Size Deviation</span>
+                                <span id="positionDeviation" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0.0</span>
+                            </div>
+                            <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
+                                <div id="positionDeviationBar" style="height: 100%; background: #3b82f6; width: 0%; transition: width 0.3s ease;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Loss Aversion -->
+                    <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px;">
+                        <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="loss-aversion-bias">Loss Aversion Bias</h3>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="color: #94a3b8; font-size: 13px;" data-lang="disposition-ratio">Disposition Ratio</span>
+                                <span id="dispositionRatio" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">1.0</span>
+                            </div>
+                            <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
+                                <div id="dispositionBar" style="height: 100%; background: #ef4444; width: 0%; transition: width 0.3s ease;"></div>
                             </div>
                         </div>
                         
-                        <!-- Performance Correlation -->
-                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px;">
-                            <h3 style="color: #f8fafc; font-size: 18px; margin-bottom: 16px; text-align: center;" data-lang="performance-correlation">Performance Correlation Analysis</h3>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="sleep-performance">Sleep vs Performance</div>
-                                    <div id="sleepCorrelation" style="color: #f8fafc; font-size: 18px; font-weight: 700;">+0.00</div>
-                                </div>
-                                
-                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="caffeine-performance">Caffeine vs Performance</div>
-                                    <div id="caffeineCorrelation" style="color: #f8fafc; font-size: 18px; font-weight: 700;">+0.00</div>
-                                </div>
-                                
-                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="timing-performance">Timing vs Performance</div>
-                                    <div id="timingCorrelation" style="color: #f8fafc; font-size: 18px; font-weight: 700;">+0.00</div>
-                                </div>
-                                
-                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="confidence-performance">Confidence vs Performance</div>
-                                    <div id="confidenceCorrelation" style="color: #f8fafc; font-size: 18px; font-weight: 700;">+0.00</div>
-                                </div>
+                        <div style="margin-bottom: 16px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="color: #94a3b8; font-size: 13px;" data-lang="stop-loss-execution">Stop Loss Execution Rate</span>
+                                <span id="stopLossRate" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0%</span>
+                            </div>
+                            <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
+                                <div id="stopLossBar" style="height: 100%; background: #10b981; width: 0%; transition: width 0.3s ease;"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="color: #94a3b8; font-size: 13px;" data-lang="stop-loss-modification">Stop Loss Modification Rate</span>
+                                <span id="stopLossModRate" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0%</span>
+                            </div>
+                            <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
+                                <div id="stopLossModBar" style="height: 100%; background: #8b5cf6; width: 0%; transition: width 0.3s ease;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Anchoring Bias -->
+                    <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px;">
+                        <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="anchoring-bias">Anchoring Bias</h3>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="color: #94a3b8; font-size: 13px;" data-lang="entry-price-dependency">Entry Price Dependency</span>
+                                <span id="entryPriceDep" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0%</span>
+                            </div>
+                            <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
+                                <div id="entryPriceBar" style="height: 100%; background: #06b6d4; width: 0%; transition: width 0.3s ease;"></div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="color: #94a3b8; font-size: 13px;" data-lang="round-number-bias">Round Number Bias</span>
+                                <span id="roundNumberBias" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0%</span>
+                            </div>
+                            <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
+                                <div id="roundNumberBar" style="height: 100%; background: #f59e0b; width: 0%; transition: width 0.3s ease;"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="color: #94a3b8; font-size: 13px;" data-lang="recent-high-anchor">Recent High Anchor</span>
+                                <span id="recentHighAnchor" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0%</span>
+                            </div>
+                            <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
+                                <div id="recentHighBar" style="height: 100%; background: #ef4444; width: 0%; transition: width 0.3s ease;"></div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Bias Analysis Section -->
-                <div id="psychologyBiasSection" class="psychology-section">
-                    <div class="psychology-container">
-                        <h2 class="psychology-header" data-lang="bias-analysis-title">Quantified Bias Analysis</h2>
-                        
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 24px;">
-                            <!-- Overconfidence Bias -->
-                            <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px;">
-                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="overconfidence-bias">Overconfidence Bias</h3>
-                                
-                                <div style="margin-bottom: 16px;">
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                        <span style="color: #94a3b8; font-size: 13px;" data-lang="calibration-error">Calibration Error</span>
-                                        <span id="calibrationError" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0.0%</span>
-                                    </div>
-                                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
-                                        <div id="calibrationErrorBar" style="height: 100%; background: #10b981; width: 0%; transition: width 0.3s ease;"></div>
-                                    </div>
-                                </div>
-                                
-                                <div style="margin-bottom: 16px;">
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                        <span style="color: #94a3b8; font-size: 13px;" data-lang="overtrading-index">Overtrading Index</span>
-                                        <span id="overtradingIndex" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0%</span>
-                                    </div>
-                                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
-                                        <div id="overtradingBar" style="height: 100%; background: #f59e0b; width: 0%; transition: width 0.3s ease;"></div>
-                                    </div>
-                                </div>
-                                
-                                <div>
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                        <span style="color: #94a3b8; font-size: 13px;" data-lang="position-deviation">Position Size Deviation</span>
-                                        <span id="positionDeviation" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0.0</span>
-                                    </div>
-                                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
-                                        <div id="positionDeviationBar" style="height: 100%; background: #3b82f6; width: 0%; transition: width 0.3s ease;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Loss Aversion -->
-                            <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px;">
-                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="loss-aversion-bias">Loss Aversion Bias</h3>
-                                
-                                <div style="margin-bottom: 16px;">
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                        <span style="color: #94a3b8; font-size: 13px;" data-lang="disposition-ratio">Disposition Ratio</span>
-                                        <span id="dispositionRatio" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">1.0</span>
-                                    </div>
-                                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
-                                        <div id="dispositionBar" style="height: 100%; background: #ef4444; width: 0%; transition: width 0.3s ease;"></div>
-                                    </div>
-                                </div>
-                                
-                                <div style="margin-bottom: 16px;">
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                        <span style="color: #94a3b8; font-size: 13px;" data-lang="stop-loss-execution">Stop Loss Execution Rate</span>
-                                        <span id="stopLossRate" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0%</span>
-                                    </div>
-                                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
-                                        <div id="stopLossBar" style="height: 100%; background: #10b981; width: 0%; transition: width 0.3s ease;"></div>
-                                    </div>
-                                </div>
-                                
-                                <div>
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                        <span style="color: #94a3b8; font-size: 13px;" data-lang="stop-loss-modification">Stop Loss Modification Rate</span>
-                                        <span id="stopLossModRate" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0%</span>
-                                    </div>
-                                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
-                                        <div id="stopLossModBar" style="height: 100%; background: #8b5cf6; width: 0%; transition: width 0.3s ease;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Anchoring Bias -->
-                            <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px;">
-                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="anchoring-bias">Anchoring Bias</h3>
-                                
-                                <div style="margin-bottom: 16px;">
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                        <span style="color: #94a3b8; font-size: 13px;" data-lang="entry-price-dependency">Entry Price Dependency</span>
-                                        <span id="entryPriceDep" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0%</span>
-                                    </div>
-                                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
-                                        <div id="entryPriceBar" style="height: 100%; background: #06b6d4; width: 0%; transition: width 0.3s ease;"></div>
-                                    </div>
-                                </div>
-                                
-                                <div style="margin-bottom: 16px;">
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                        <span style="color: #94a3b8; font-size: 13px;" data-lang="round-number-bias">Round Number Bias</span>
-                                        <span id="roundNumberBias" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0%</span>
-                                    </div>
-                                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
-                                        <div id="roundNumberBar" style="height: 100%; background: #f59e0b; width: 0%; transition: width 0.3s ease;"></div>
-                                    </div>
-                                </div>
-                                
-                                <div>
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                        <span style="color: #94a3b8; font-size: 13px;" data-lang="recent-high-anchor">Recent High Anchor</span>
-                                        <span id="recentHighAnchor" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0%</span>
-                                    </div>
-                                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
-                                        <div id="recentHighBar" style="height: 100%; background: #ef4444; width: 0%; transition: width 0.3s ease;"></div>
-                                    </div>
-                                </div>
-                            </div>
+                
+                <!-- Weekly Risk Summary -->
+                <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-top: 24px;">
+                    <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="weekly-risk-summary">Weekly Risk Summary</h3>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                        <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="overall-bias-risk">Overall Bias Risk</div>
+                            <div id="overallBiasRisk" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">Low</div>
+                            <div id="overallBiasScore" style="color: #64748b; font-size: 11px;">Score: 0/100</div>
                         </div>
                         
-                        <!-- Weekly Risk Summary -->
-                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-top: 24px;">
-                            <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="weekly-risk-summary">Weekly Risk Summary</h3>
-                            
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="overall-bias-risk">Overall Bias Risk</div>
-                                    <div id="overallBiasRisk" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">Low</div>
-                                    <div id="overallBiasScore" style="color: #64748b; font-size: 11px;">Score: 0/100</div>
-                                </div>
-                                
-                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="risk-trend">Risk Trend</div>
-                                    <div id="riskTrend" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">Stable</div>
-                                    <div id="riskTrendDetails" style="color: #64748b; font-size: 11px;">Last 7 days</div>
-                                </div>
-                                
-                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="action-needed">Action Needed</div>
-                                    <div id="actionNeeded" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">None</div>
-                                    <div id="actionDetails" style="color: #64748b; font-size: 11px;">All metrics normal</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Pattern Insights Section -->
-                <div id="psychologyPatternsSection" class="psychology-section">
-                    <div class="psychology-container">
-                        <h2 class="psychology-header" data-lang="pattern-insights-title">Pattern Insights & Recommendations</h2>
-                        
-                        <!-- Time-Based Performance -->
-                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
-                            <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="time-based-performance">Time-Based Performance Analysis</h3>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="best-trading-hour">Best Trading Hour</div>
-                                    <div id="bestTradingHour" style="color: #10b981; font-size: 18px; font-weight: 700; margin-bottom: 4px;">--:--</div>
-                                    <div id="bestHourPerformance" style="color: #64748b; font-size: 11px;">Win Rate: --%</div>
-                                </div>
-                                
-                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="worst-trading-hour">Worst Trading Hour</div>
-                                    <div id="worstTradingHour" style="color: #ef4444; font-size: 18px; font-weight: 700; margin-bottom: 4px;">--:--</div>
-                                    <div id="worstHourPerformance" style="color: #64748b; font-size: 11px;">Win Rate: --%</div>
-                                </div>
-                                
-                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="optimal-sleep-range">Optimal Sleep Range</div>
-                                    <div id="optimalSleepRange" style="color: #3b82f6; font-size: 18px; font-weight: 700; margin-bottom: 4px;">-.- hours</div>
-                                    <div id="sleepRangePerformance" style="color: #64748b; font-size: 11px;">Avg P&L: $--</div>
-                                </div>
-                                
-                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="delay-impact">Start Delay Impact</div>
-                                    <div id="delayImpact" style="color: #f59e0b; font-size: 18px; font-weight: 700; margin-bottom: 4px;">--min</div>
-                                    <div id="delayPerformance" style="color: #64748b; font-size: 11px;">Performance drop: --%</div>
-                                </div>
-                            </div>
+                        <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="risk-trend">Risk Trend</div>
+                            <div id="riskTrend" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">Stable</div>
+                            <div id="riskTrendDetails" style="color: #64748b; font-size: 11px;">Last 7 days</div>
                         </div>
                         
-                        <!-- Consecutive Trades Pattern -->
-                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
-                            <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="consecutive-pattern">Consecutive Trades Pattern</h3>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
-                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
-                                    <div style="color: #94a3b8; font-size: 14px; margin-bottom: 12px;" data-lang="after-losses">Performance After Losses</div>
-                                    <div style="color: #e4e4e7; font-size: 13px; margin-bottom: 8px;">After 1 loss: <span id="after1Loss" style="font-weight: 600;">--%</span></div>
-                                    <div style="color: #e4e4e7; font-size: 13px; margin-bottom: 8px;">After 2 losses: <span id="after2Losses" style="font-weight: 600;">--%</span></div>
-                                    <div style="color: #e4e4e7; font-size: 13px;">After 3+ losses: <span id="after3Losses" style="font-weight: 600;">--%</span></div>
-                                </div>
-                                
-                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
-                                    <div style="color: #94a3b8; font-size: 14px; margin-bottom: 12px;" data-lang="after-wins">Performance After Wins</div>
-                                    <div style="color: #e4e4e7; font-size: 13px; margin-bottom: 8px;">After 1 win: <span id="after1Win" style="font-weight: 600;">--%</span></div>
-                                    <div style="color: #e4e4e7; font-size: 13px; margin-bottom: 8px;">After 2 wins: <span id="after2Wins" style="font-weight: 600;">--%</span></div>
-                                    <div style="color: #e4e4e7; font-size: 13px;">After 3+ wins: <span id="after3Wins" style="font-weight: 600;">--%</span></div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- AI-Generated Insights -->
-                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px;">
-                            <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="ai-insights">AI-Generated Insights</h3>
-                            <div id="aiInsightsList" style="display: grid; gap: 12px;">
-                                <div style="background: #0f172a; border-left: 4px solid #3b82f6; padding: 12px 16px; border-radius: 0 6px 6px 0;">
-                                    <div style="color: #e4e4e7; font-size: 14px; line-height: 1.5;" data-lang="no-insights">Collect more psychology data to generate personalized insights.</div>
-                                </div>
-                            </div>
+                        <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="action-needed">Action Needed</div>
+                            <div id="actionNeeded" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">None</div>
+                            <div id="actionDetails" style="color: #64748b; font-size: 11px;">All metrics normal</div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Pattern Insights Section -->
+        <div id="psychologyPatternsSection" class="psychology-section">
+            <div class="psychology-container">
+                <h2 class="psychology-header" data-lang="pattern-insights-title">Pattern Insights & Recommendations</h2>
+                
+                <!-- Time-Based Performance -->
+                <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                    <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="time-based-performance">Time-Based Performance Analysis</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                        <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="best-trading-hour">Best Trading Hour</div>
+                            <div id="bestTradingHour" style="color: #10b981; font-size: 18px; font-weight: 700; margin-bottom: 4px;">--:--</div>
+                            <div id="bestHourPerformance" style="color: #64748b; font-size: 11px;">Win Rate: --%</div>
+                        </div>
+                        
+                        <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="worst-trading-hour">Worst Trading Hour</div>
+                            <div id="worstTradingHour" style="color: #ef4444; font-size: 18px; font-weight: 700; margin-bottom: 4px;">--:--</div>
+                            <div id="worstHourPerformance" style="color: #64748b; font-size: 11px;">Win Rate: --%</div>
+                        </div>
+                        
+                        <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="optimal-sleep-range">Optimal Sleep Range</div>
+                            <div id="optimalSleepRange" style="color: #3b82f6; font-size: 18px; font-weight: 700; margin-bottom: 4px;">-.- hours</div>
+                            <div id="sleepRangePerformance" style="color: #64748b; font-size: 11px;">Avg P&L: $--</div>
+                        </div>
+                        
+                        <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="delay-impact">Start Delay Impact</div>
+                            <div id="delayImpact" style="color: #f59e0b; font-size: 18px; font-weight: 700; margin-bottom: 4px;">--min</div>
+                            <div id="delayPerformance" style="color: #64748b; font-size: 11px;">Performance drop: --%</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Consecutive Trades Pattern -->
+                <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                    <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="consecutive-pattern">Consecutive Trades Pattern</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+                        <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
+                            <div style="color: #94a3b8; font-size: 14px; margin-bottom: 12px;" data-lang="after-losses">Performance After Losses</div>
+                            <div style="color: #e4e4e7; font-size: 13px; margin-bottom: 8px;">After 1 loss: <span id="after1Loss" style="font-weight: 600;">--%</span></div>
+                            <div style="color: #e4e4e7; font-size: 13px; margin-bottom: 8px;">After 2 losses: <span id="after2Losses" style="font-weight: 600;">--%</span></div>
+                            <div style="color: #e4e4e7; font-size: 13px;">After 3+ losses: <span id="after3Losses" style="font-weight: 600;">--%</span></div>
+                        </div>
+                        
+                        <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
+                            <div style="color: #94a3b8; font-size: 14px; margin-bottom: 12px;" data-lang="after-wins">Performance After Wins</div>
+                            <div style="color: #e4e4e7; font-size: 13px; margin-bottom: 8px;">After 1 win: <span id="after1Win" style="font-weight: 600;">--%</span></div>
+                            <div style="color: #e4e4e7; font-size: 13px; margin-bottom: 8px;">After 2 wins: <span id="after2Wins" style="font-weight: 600;">--%</span></div>
+                            <div style="color: #e4e4e7; font-size: 13px;">After 3+ wins: <span id="after3Wins" style="font-weight: 600;">--%</span></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- AI-Generated Insights -->
+                <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px;">
+                    <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="ai-insights">AI-Generated Insights</h3>
+                    <div id="aiInsightsList" style="display: grid; gap: 12px;">
+                        <div style="background: #0f172a; border-left: 4px solid #3b82f6; padding: 12px 16px; border-radius: 0 6px 6px 0;">
+                            <div style="color: #e4e4e7; font-size: 14px; line-height: 1.5;" data-lang="no-insights">Collect more psychology data to generate personalized insights.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
             
             <!-- Notes page -->
             <div id="notes" class="page">
@@ -6447,27 +6417,40 @@
 
         // Page initialization
         document.addEventListener('DOMContentLoaded', async function() {
-    await waitForChart();
-    const savedLanguage = localStorage.getItem('tradingPlatformLanguage');
-    if (savedLanguage) {
-        currentLanguage = savedLanguage;
-        // document.getElementById('languageSelect').value = currentLanguage; // 이 줄 삭제
-        document.getElementById('settingsLanguageSelect').value = currentLanguage;
-    }
+            await waitForChart();
             
-            // Load daily fees
-            const savedFees = localStorage.getItem('tradingPlatformDailyFees');
-            if (savedFees) {
-                dailyFees = JSON.parse(savedFees);
+            // 언어 설정 로드
+            const savedLanguage = localStorage.getItem('tradingPlatformLanguage');
+            if (savedLanguage) {
+                currentLanguage = savedLanguage;
+                const settingsSelect = document.getElementById('settingsLanguageSelect');
+                if (settingsSelect) {
+                    settingsSelect.value = currentLanguage;
+                }
             }
             
+            // 데일리 피 로드
+            const savedFees = localStorage.getItem('tradingPlatformDailyFees');
+            if (savedFees) {
+                try {
+                    dailyFees = JSON.parse(savedFees);
+                } catch (error) {
+                    console.error('Error loading daily fees:', error);
+                    dailyFees = {};
+                }
+            }
+            
+            // 현재 거래 날짜 설정
             currentTradingDate = getESTTradingDate(new Date());
             updateCurrentDateDisplay();
             updateLanguage();
             
+            // 데이터 로드
             loadTrades();
             loadNotes();
             loadPsychologyData();
+            
+            // UI 업데이트
             updateStats();
             renderCalendar();
             renderAllNotesSections();
@@ -6476,106 +6459,178 @@
             calculateHoldingTime();
             loadDailyFees();
             
-            document.getElementById('tradeForm').addEventListener('submit', handleTradeSubmit);
-            document.getElementById('editTradeForm').addEventListener('submit', handleEditTradeSubmit);
-            document.getElementById('entryTime').addEventListener('change', calculateHoldingTime);
-            document.getElementById('exitTime').addEventListener('change', calculateHoldingTime);
+            // 이벤트 리스너 등록
+            const tradeForm = document.getElementById('tradeForm');
+            if (tradeForm) {
+                tradeForm.addEventListener('submit', handleTradeSubmit);
+            }
             
-            // Dashboard date range listeners
-            document.getElementById('dashboardStartDate').addEventListener('change', function() {
-                dashboardStartDate = this.value;
-                updateStats();
-                updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
-            });
+            const editTradeForm = document.getElementById('editTradeForm');
+            if (editTradeForm) {
+                editTradeForm.addEventListener('submit', handleEditTradeSubmit);
+            }
             
-            document.getElementById('dashboardEndDate').addEventListener('change', function() {
-                dashboardEndDate = this.value;
-                updateStats();
-                updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
-            });
-
-            // Analytics date range listeners
-            document.getElementById('analyticsStartDate').addEventListener('change', function() {
-                analyticsStartDate = this.value;
-                updateDetailedAnalytics();
-            });
+            const entryTime = document.getElementById('entryTime');
+            if (entryTime) {
+                entryTime.addEventListener('change', calculateHoldingTime);
+            }
             
-            document.getElementById('analyticsEndDate').addEventListener('change', function() {
-                analyticsEndDate = this.value;
-                updateDetailedAnalytics();
-            });
-
-            // Trades page date range listeners
-            document.getElementById('tradesStartDate').addEventListener('change', function() {
-                tradesStartDate = this.value;
-                updateAllTradesList();
-            });
+            const exitTime = document.getElementById('exitTime');
+            if (exitTime) {
+                exitTime.addEventListener('change', calculateHoldingTime);
+            }
             
-            document.getElementById('tradesEndDate').addEventListener('change', function() {
-                tradesEndDate = this.value;
-                updateAllTradesList();
-            });
+            // 대시보드 날짜 범위 리스너
+            const dashboardStartDate = document.getElementById('dashboardStartDate');
+            if (dashboardStartDate) {
+                dashboardStartDate.addEventListener('change', function() {
+                    dashboardStartDate = this.value;
+                    updateStats();
+                    updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
+                });
+            }
             
-            document.getElementById('datePickerModal').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    closeDatePicker();
-                }
-            });
+            const dashboardEndDate = document.getElementById('dashboardEndDate');
+            if (dashboardEndDate) {
+                dashboardEndDate.addEventListener('change', function() {
+                    dashboardEndDate = this.value;
+                    updateStats();
+                    updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
+                });
+            }
 
-            document.getElementById('editTradeModal').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    closeEditTradeModal();
-                }
-            });
+            // Analytics 날짜 범위 리스너
+            const analyticsStartDate = document.getElementById('analyticsStartDate');
+            if (analyticsStartDate) {
+                analyticsStartDate.addEventListener('change', function() {
+                    analyticsStartDate = this.value;
+                    updateDetailedAnalytics();
+                });
+            }
+            
+            const analyticsEndDate = document.getElementById('analyticsEndDate');
+            if (analyticsEndDate) {
+                analyticsEndDate.addEventListener('change', function() {
+                    analyticsEndDate = this.value;
+                    updateDetailedAnalytics();
+                });
+            }
 
-            document.getElementById('monthDetailsModal').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    closeMonthDetails();
-                }
-            });
+            // Trades 페이지 날짜 범위 리스너
+            const tradesStartDate = document.getElementById('tradesStartDate');
+            if (tradesStartDate) {
+                tradesStartDate.addEventListener('change', function() {
+                    tradesStartDate = this.value;
+                    updateAllTradesList();
+                });
+            }
+            
+            const tradesEndDate = document.getElementById('tradesEndDate');
+            if (tradesEndDate) {
+                tradesEndDate.addEventListener('change', function() {
+                    tradesEndDate = this.value;
+                    updateAllTradesList();
+                });
+            }
+            
+            // 모달 클릭 이벤트
+            const datePickerModal = document.getElementById('datePickerModal');
+            if (datePickerModal) {
+                datePickerModal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeDatePicker();
+                    }
+                });
+            }
 
-            document.getElementById('weekDetailsModal').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    closeWeekDetails();
-                }
-            });
+            const editTradeModal = document.getElementById('editTradeModal');
+            if (editTradeModal) {
+                editTradeModal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeEditTradeModal();
+                    }
+                });
+            }
+
+            const monthDetailsModal = document.getElementById('monthDetailsModal');
+            if (monthDetailsModal) {
+                monthDetailsModal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeMonthDetails();
+                    }
+                });
+            }
+
+            const weekDetailsModal = document.getElementById('weekDetailsModal');
+            if (weekDetailsModal) {
+                weekDetailsModal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeWeekDetails();
+                    }
+                });
+            }
+            
+            console.log('Application initialized successfully');
         });
 
         // Navigation functions
         function showPage(pageId) {
+            // 모든 페이지 숨기기
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
             });
             
+            // 모든 네비게이션 아이템 비활성화
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
             });
             
-            document.getElementById(pageId).classList.add('active');
-            event.target.closest('.nav-item').classList.add('active');
+            // 선택된 페이지 표시
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
             
-            if (pageId === 'analysis') {
-                updateDetailedAnalytics();
-                if (currentAnalyticsSection === 'detail') {
-                    setTimeout(updateBasicCharts, 100);
-                } else {
-                    setTimeout(updateAdvancedCharts, 100);
+            // 클릭된 네비게이션 아이템 활성화
+            if (event && event.target) {
+                const navItem = event.target.closest('.nav-item');
+                if (navItem) {
+                    navItem.classList.add('active');
                 }
             }
             
+            // 페이지별 특별 처리
+            if (pageId === 'analysis') {
+                setTimeout(() => {
+                    updateDetailedAnalytics();
+                    if (currentAnalyticsSection === 'detail') {
+                        updateBasicCharts();
+                    } else {
+                        updateAdvancedCharts();
+                    }
+                }, 100);
+            }
+            
             if (pageId === 'notes') {
-                renderAllNotesSections();
+                setTimeout(() => {
+                    renderAllNotesSections();
+                }, 50);
             }
 
             if (pageId === 'psychology') {
                 setTimeout(() => {
-    loadPsychologyData();
-    updatePsychologyMetrics();
-}, 100);
+                    loadPsychologyData();
+                    updateVisualDashboard();
+                    updatePsychologyPerformanceChart();
+                }, 100);
             }
             
+            // 모바일에서 사이드바 닫기
             if (window.innerWidth <= 768) {
-                document.getElementById('sidebar').classList.remove('open');
+                const sidebar = document.getElementById('sidebar');
+                if (sidebar) {
+                    sidebar.classList.remove('open');
+                }
             }
         }
 
@@ -8231,21 +8286,50 @@ function applyCustomRisk() {
             
             if (confirm(confirmMessage)) {
                 // 모든 입력 필드 초기화
-                document.getElementById('sleepHours').value = '';
-                document.getElementById('sleepQuality').value = '3';
-                document.getElementById('energyLevel').value = '3';
-                document.getElementById('actualStartTime').value = '';
-                document.getElementById('tradingEnvironment').value = 'home-quiet';
-                document.getElementById('psychAccountBalance').value = '';
-                document.getElementById('dailyTarget').value = '';
-                document.getElementById('maxDailyLoss').value = '';
-                document.getElementById('preMarketMood').value = '3';
-                document.getElementById('confidenceLevel').value = '3';
-                document.getElementById('stressLevel').value = '3';
-                document.getElementById('focusLevel').value = '3';
+                const sleepHours = document.getElementById('sleepHours');
+                if (sleepHours) sleepHours.value = '';
                 
-                // 메트릭 초기화
-                resetPsychologyMetrics();
+                const startTime = document.getElementById('startTime');
+                if (startTime) startTime.value = '';
+                
+                const endTime = document.getElementById('endTime');
+                if (endTime) endTime.value = '';
+                
+                const environmentType = document.getElementById('environmentType');
+                if (environmentType) environmentType.value = 'home';
+                
+                const accountBalance = document.getElementById('accountBalance');
+                if (accountBalance) accountBalance.value = '';
+                
+                const dailyTarget = document.getElementById('dailyTarget');
+                if (dailyTarget) dailyTarget.value = '';
+                
+                const maxDailyLoss = document.getElementById('maxDailyLoss');
+                if (maxDailyLoss) maxDailyLoss.value = '';
+                
+                const stressLevel = document.getElementById('stressLevel');
+                if (stressLevel) {
+                    stressLevel.value = '3';
+                    updateSliderDisplay('stressLevel', 'stressValue');
+                }
+                
+                const confidenceLevel = document.getElementById('confidenceLevel');
+                if (confidenceLevel) {
+                    confidenceLevel.value = '3';
+                    updateSliderDisplay('confidenceLevel', 'confidenceValue');
+                }
+                
+                const focusLevel = document.getElementById('focusLevel');
+                if (focusLevel) {
+                    focusLevel.value = '3';
+                    updateSliderDisplay('focusLevel', 'focusValue');
+                }
+                
+                // 퍼센트 디스플레이 초기화
+                updateTargetPercentages();
+                
+                // 비주얼 대시보드 초기화
+                resetVisualDashboard();
                 
                 showToast(currentLanguage === 'ko' ? '심리 데이터가 초기화되었습니다' : 'Psychology data has been reset');
             }
@@ -8314,20 +8398,57 @@ function applyCustomRisk() {
             updateVisualDashboard();
         }
 
+        function updatePsychologyMetrics() {
+            // 이 함수는 현재 사용하지 않으므로 빈 함수로 유지
+            console.log('Psychology metrics updated');
+        }
+
+        function calculateDailyScore() {
+            const currentDate = formatTradingDate(currentTradingDate);
+            const sleepHours = parseFloat(document.getElementById('sleepHours').value) || 0;
+            const stressLevel = parseInt(document.getElementById('stressLevel').value) || 3;
+            const confidenceLevel = parseInt(document.getElementById('confidenceLevel').value) || 3;
+            const focusLevel = parseInt(document.getElementById('focusLevel').value) || 3;
+            
+            if (sleepHours === 0) {
+                alert(currentLanguage === 'ko' ? '먼저 수면 시간을 입력해주세요.' : 'Please enter sleep hours first.');
+                return;
+            }
+            
+            // 점수 계산
+            let sleepScore = Math.min((sleepHours / 8) * 25, 25);
+            let stressScore = ((6 - stressLevel) / 5) * 25;
+            let confidenceScore = (confidenceLevel / 5) * 25;
+            let focusScore = (focusLevel / 5) * 25;
+            
+            let totalScore = sleepScore + stressScore + confidenceScore + focusScore;
+            
+            // 결과 표시
+            let scoreMessage = currentLanguage === 'ko' ? 
+                `일일 심리 점수: ${totalScore.toFixed(1)}/100\n\n수면: ${sleepScore.toFixed(1)}/25\n스트레스: ${stressScore.toFixed(1)}/25\n자신감: ${confidenceScore.toFixed(1)}/25\n집중력: ${focusScore.toFixed(1)}/25` :
+                `Daily Psychology Score: ${totalScore.toFixed(1)}/100\n\nSleep: ${sleepScore.toFixed(1)}/25\nStress: ${stressScore.toFixed(1)}/25\nConfidence: ${confidenceScore.toFixed(1)}/25\nFocus: ${focusScore.toFixed(1)}/25`;
+            
+            alert(scoreMessage);
+            
+            showToast(currentLanguage === 'ko' ? '일일 심리 점수가 계산되었습니다' : 'Daily psychology score calculated');
+        }
+
         // Enhanced Psychology System Functions
         function showPsychologySection(section) {
+            currentPsychologySection = section;
+            
             // 탭 상태 업데이트
             document.querySelectorAll('.psychology-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
             event.target.classList.add('active');
             
-            // 섹션 표시/숨기기
+            // 모든 섹션 숨기기
             document.querySelectorAll('.psychology-section').forEach(sec => {
                 sec.classList.remove('active');
             });
             
-            // 섹션 ID 매핑
+            // 선택된 섹션만 표시
             let targetSectionId;
             switch(section) {
                 case 'input':
@@ -8352,7 +8473,7 @@ function applyCustomRisk() {
             }
             
             // 해당 섹션의 데이터 업데이트
-            if (section === 'metrics') {
+            if (section === 'input') {
                 setTimeout(() => {
                     updateVisualDashboard();
                     updatePsychologyPerformanceChart();
@@ -8363,7 +8484,7 @@ function applyCustomRisk() {
                 updatePatternInsights();
             }
         }
-
+        
         function calculateDailyScore() {
             const currentDate = formatTradingDate(currentTradingDate);
             const todayData = psychologyData[currentDate];
@@ -9115,6 +9236,7 @@ function applyCustomRisk() {
             }
             document.getElementById('sleepStatus').textContent = sleepStatus;
             
+            // Update environment display
             // Update environment display
             // Update environment display
             const environmentType = todayData.environmentType || 'home';
