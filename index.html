@@ -3860,6 +3860,13 @@
                             <button class="psychology-save-btn" onclick="calculateDailyScore()" style="background: #3b82f6;" data-lang="calculate-score">Calculate Daily Score</button>
                             <button class="psychology-save-btn" onclick="resetPsychologyData()" style="background: #ef4444;" data-lang="reset-psychology-data">Reset Data</button>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Metrics Dashboard Section -->
+                <div id="psychologyMetricsSection" class="psychology-section">
+                    <div class="psychology-container">
+                        <h2 class="psychology-header" data-lang="psychology-metrics">Psychology Metrics Dashboard</h2>
                         
                         <!-- Enhanced Visual Dashboard -->
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 32px;">
@@ -3979,58 +3986,6 @@
                             <h3 style="color: #f8fafc; font-size: 18px; font-weight: 600; margin-bottom: 20px; text-align: center;" data-lang="psychology-performance-chart">Psychology vs Performance Analysis</h3>
                             <div style="height: 300px; display: flex; align-items: center; justify-content: center;">
                                 <canvas id="psychologyPerformanceChart" style="max-width: 100%; max-height: 100%;"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                        
-                        <!-- Weekly Bias Risk Assessment -->
-                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
-                            <h3 style="color: #f8fafc; font-size: 18px; margin-bottom: 16px; text-align: center;" data-lang="weekly-bias-risk">Weekly Bias Risk Assessment</h3>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
-                                <div id="overconfidenceRiskCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="overconfidence-risk">Overconfidence Risk</div>
-                                    <div id="overconfidenceRisk" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">Low</div>
-                                    <div id="overconfidenceDetails" style="color: #64748b; font-size: 11px;">Calibration Error: 0.0%</div>
-                                </div>
-                                
-                                <div id="lossAversionRiskCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="loss-aversion-risk">Loss Aversion Risk</div>
-                                    <div id="lossAversionRisk" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">Low</div>
-                                    <div id="lossAversionDetails" style="color: #64748b; font-size: 11px;">Disposition Ratio: 0.0</div>
-                                </div>
-                                
-                                <div id="anchoringRiskCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="anchoring-risk">Anchoring Risk</div>
-                                    <div id="anchoringRisk" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">Low</div>
-                                    <div id="anchoringDetails" style="color: #64748b; font-size: 11px;">Entry Price Dependency: 0%</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Performance Correlation -->
-                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px;">
-                            <h3 style="color: #f8fafc; font-size: 18px; margin-bottom: 16px; text-align: center;" data-lang="performance-correlation">Performance Correlation Analysis</h3>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="sleep-performance">Sleep vs Performance</div>
-                                    <div id="sleepCorrelation" style="color: #f8fafc; font-size: 18px; font-weight: 700;">+0.00</div>
-                                </div>
-                                
-                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="caffeine-performance">Caffeine vs Performance</div>
-                                    <div id="caffeineCorrelation" style="color: #f8fafc; font-size: 18px; font-weight: 700;">+0.00</div>
-                                </div>
-                                
-                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="timing-performance">Timing vs Performance</div>
-                                    <div id="timingCorrelation" style="color: #f8fafc; font-size: 18px; font-weight: 700;">+0.00</div>
-                                </div>
-                                
-                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="confidence-performance">Confidence vs Performance</div>
-                                    <div id="confidenceCorrelation" style="color: #f8fafc; font-size: 18px; font-weight: 700;">+0.00</div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -4241,7 +4196,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
             
             <!-- Notes page -->
             <div id="notes" class="page">
@@ -8003,13 +7957,18 @@
             const avgWin = parseFloat(document.getElementById('calcAvgWin').value) || 0;
             const avgLoss = parseFloat(document.getElementById('calcAvgLoss').value) || 0;
             
+            // 요소 존재 확인
+            const recommendedSizeEl = document.getElementById('recommendedSize');
+            const accountUtilEl = document.getElementById('accountUtil');
+            const expectedValEl = document.getElementById('expectedVal');
+            
             if (avgLoss === 0 || balance === 0) {
-                document.getElementById('recommendedSize').textContent = '$0';
-                document.getElementById('accountUtil').textContent = '0%';
-                document.getElementById('expectedVal').textContent = '$0';
-                document.getElementById('expectedVal').className = 'sidebar-stat-value';
-                document.getElementById('kellyStatus').textContent = 'Safe';
-                document.getElementById('kellyStatus').className = 'sidebar-stat-value positive';
+                if (recommendedSizeEl) recommendedSizeEl.textContent = '$0';
+                if (accountUtilEl) accountUtilEl.textContent = '0%';
+                if (expectedValEl) {
+                    expectedValEl.textContent = '$0';
+                    expectedValEl.className = 'sidebar-stat-value';
+                }
                 return;
             }
             
@@ -8021,25 +7980,23 @@
             const fullKelly = balance * kellyFraction;
             
             const recommendedPosition = fullKelly * selectedKellyMultiplier;
-            document.getElementById('recommendedSize').textContent = '$' + recommendedPosition.toFixed(0);
+            if (recommendedSizeEl) recommendedSizeEl.textContent = '$' + recommendedPosition.toFixed(0);
             
             const utilization = (recommendedPosition / balance) * 100;
-            document.getElementById('accountUtil').textContent = utilization.toFixed(1) + '%';
+            if (accountUtilEl) accountUtilEl.textContent = utilization.toFixed(1) + '%';
             
             const expectedValue = (p * avgWin - q * avgLoss) * (recommendedPosition / Math.max(avgWin, 1));
-            document.getElementById('expectedVal').textContent = '$' + expectedValue.toFixed(0);
-            document.getElementById('expectedVal').className = 'sidebar-stat-value ' + (expectedValue >= 0 ? 'positive' : 'negative');
+            if (expectedValEl) {
+                expectedValEl.textContent = '$' + expectedValue.toFixed(0);
+                expectedValEl.className = 'sidebar-stat-value ' + (expectedValue >= 0 ? 'positive' : 'negative');
+            }
             
             const kellyPercent = kellyFraction * 100;
             let riskLevel = 'Safe';
             if (kellyPercent > 25) riskLevel = 'High';
             else if (kellyPercent > 15) riskLevel = 'Medium';
-            
-            document.getElementById('kellyStatus').textContent = riskLevel;
-            document.getElementById('kellyStatus').className = 'sidebar-stat-value ' + 
-                (riskLevel === 'Safe' ? 'positive' : riskLevel === 'Medium' ? 'neutral' : 'negative');
         }
-
+        
         function selectKellyMultiplier(element) {
             document.querySelectorAll('.kelly-option').forEach(option => {
                 option.classList.remove('selected');
@@ -8051,37 +8008,37 @@
         }
 
         function autoLoadTradeData() {
-    if (!trades || trades.length === 0) {
-        alert('거래 이력이 없습니다.');
-        return;
-    }
-    
-    const recentTrades = trades.slice(-20);
-    const wins = recentTrades.filter(trade => trade.pnl > 0);
-    const losses = recentTrades.filter(trade => trade.pnl < 0);
-    
-    if (losses.length === 0) {
-        alert('손실 거래가 없어 계산할 수 없습니다.');
-        return;
-    }
-    
-    const winRate = (wins.length / recentTrades.length) * 100;
-    const avgWin = wins.length > 0 ? wins.reduce((sum, trade) => sum + trade.pnl, 0) / wins.length : 0;
-    const avgLoss = Math.abs(losses.reduce((sum, trade) => sum + trade.pnl, 0) / losses.length);
-    
-    // Kelly 계산기 입력 필드에 값 설정
-    document.getElementById('calcWinRate').value = winRate.toFixed(1);
-    document.getElementById('calcAvgWin').value = avgWin.toFixed(0);
-    document.getElementById('calcAvgLoss').value = avgLoss.toFixed(0);
-    
-    // 사이드바에도 표시
-    document.getElementById('recentWinRateCalc').textContent = winRate.toFixed(1) + '%';
-    document.getElementById('plRatioCalc').textContent = (avgWin / avgLoss).toFixed(2);
-    
-    // 계산 실행
-    calculatePosition();
-    showToast('거래 이력에서 데이터를 불러왔습니다');
-}
+            if (!trades || trades.length === 0) {
+                alert(currentLanguage === 'ko' ? '거래 이력이 없습니다.' : 'No trade history available.');
+                return;
+            }
+            
+            const recentTrades = trades.slice(-20);
+            const wins = recentTrades.filter(trade => trade.pnl > 0);
+            const losses = recentTrades.filter(trade => trade.pnl < 0);
+            
+            if (losses.length === 0) {
+                alert(currentLanguage === 'ko' ? '손실 거래가 없어 계산할 수 없습니다.' : 'No losing trades available for calculation.');
+                return;
+            }
+            
+            const winRate = (wins.length / recentTrades.length) * 100;
+            const avgWin = wins.length > 0 ? wins.reduce((sum, trade) => sum + trade.pnl, 0) / wins.length : 0;
+            const avgLoss = Math.abs(losses.reduce((sum, trade) => sum + trade.pnl, 0) / losses.length);
+            
+            // Kelly 계산기 입력 필드에 값 설정
+            const calcWinRateEl = document.getElementById('calcWinRate');
+            const calcAvgWinEl = document.getElementById('calcAvgWin');
+            const calcAvgLossEl = document.getElementById('calcAvgLoss');
+            
+            if (calcWinRateEl) calcWinRateEl.value = winRate.toFixed(1);
+            if (calcAvgWinEl) calcAvgWinEl.value = avgWin.toFixed(0);
+            if (calcAvgLossEl) calcAvgLossEl.value = avgLoss.toFixed(0);
+            
+            // 계산 실행
+            calculatePosition();
+            showToast(currentLanguage === 'ko' ? '거래 이력에서 데이터를 불러왔습니다' : 'Data loaded from trade history');
+        }
 
         // Calculator Tab Management
         function showCalculatorTab(tabName) {
@@ -8377,6 +8334,8 @@ function applyCustomRisk() {
 
         // Enhanced Psychology System Functions
         function showPsychologySection(section) {
+            currentPsychologySection = section;
+            
             // 탭 상태 업데이트
             document.querySelectorAll('.psychology-tab').forEach(tab => {
                 tab.classList.remove('active');
@@ -8419,9 +8378,13 @@ function applyCustomRisk() {
                     updatePsychologyPerformanceChart();
                 }, 100);
             } else if (section === 'bias-analysis') {
-                updateBiasAnalysis();
+                setTimeout(() => {
+                    updateBiasAnalysis();
+                }, 100);
             } else if (section === 'patterns') {
-                updatePatternInsights();
+                setTimeout(() => {
+                    updatePatternInsights();
+                }, 100);
             }
         }
 
