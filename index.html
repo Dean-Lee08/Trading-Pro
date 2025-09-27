@@ -694,6 +694,12 @@
             border-color: #475569;
         }
 
+        .calendar-week-pnl.selected {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+        }
+
         .week-pnl-value {
             font-weight: 700;
             font-size: 13px;
@@ -3073,11 +3079,17 @@
                 <div class="trades-section">
                     <div class="trades-header">
                         <h2 data-lang="trade-history">Trade History</h2>
-                        <div class="period-summary" id="periodSummary"></div>
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <button id="deleteSelectedBtn" class="btn btn-secondary" onclick="deleteSelectedTrades()" style="display: none; background: #dc2626; border-color: #dc2626;" data-lang="delete-selected">Delete Selected</button>
+                            <div class="period-summary" id="periodSummary"></div>
+                        </div>
                     </div>
                     <table class="trades-table">
                         <thead>
                             <tr>
+                                <th style="width: 40px;">
+                                    <input type="checkbox" id="selectAllTrades" onchange="toggleAllTrades()" style="accent-color: #3b82f6;">
+                                </th>
                                 <th data-lang="date">Date</th>
                                 <th data-lang="symbol">Symbol</th>
                                 <th data-lang="buy-price">Buy Price</th>
@@ -3987,11 +3999,17 @@
                 <div class="trades-section">
                     <div class="trades-header">
                         <h2 data-lang="trade-history">Trade History</h2>
-                        <div class="period-summary" id="allTradesSummary"></div>
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <button id="deleteSelectedListBtn" class="btn btn-secondary" onclick="deleteSelectedTradesList()" style="display: none; background: #dc2626; border-color: #dc2626;" data-lang="delete-selected">Delete Selected</button>
+                            <div class="period-summary" id="allTradesSummary"></div>
+                        </div>
                     </div>
                     <table class="trades-table">
                         <thead>
                             <tr>
+                                <th style="width: 40px;">
+                                    <input type="checkbox" id="selectAllTradesList" onchange="toggleAllTradesList()" style="accent-color: #3b82f6;">
+                                </th>
                                 <th data-lang="date">Date</th>
                                 <th data-lang="symbol">Symbol</th>
                                 <th data-lang="buy-price">Buy Price</th>
@@ -4082,6 +4100,9 @@
         let currentFont = "'Inter', sans-serif";
         let psychologyData = {};
         let currentPsychologySection = 'input';
+        let selectedWeekPnl = null;
+        let selectedTrades = new Set();
+        let selectedTradesList = new Set();
         
         // Chart instances
         let basicCharts = {};
@@ -4368,7 +4389,10 @@
                 'week-worst-day': 'Worst Day',
                 'week-trade-details': 'Week Trade Details',
                 'cost-basis': 'Cost Basis',
-                'trade-count': 'Trades'
+                'trade-count': 'Trades',
+                'cost-basis': 'Cost Basis',
+                'trade-count': 'Trades',
+                'delete-selected': 'Delete Selected'
             },
             ko: {
                 'dashboard': '대시보드',
@@ -4633,7 +4657,10 @@
                 'week-worst-day': '최악의 날',
                 'week-trade-details': '주간 거래 세부사항',
                 'cost-basis': '평균단가',
-                'trade-count': '거래'
+                'trade-count': '거래',
+                'cost-basis': '평균단가',
+                'trade-count': '거래',
+                'delete-selected': '선택된 거래 삭제'
             }
         };
         
@@ -6427,7 +6454,7 @@
             const tableBody = document.getElementById(tableBodyId);
             
             if (tradesToShow.length === 0) {
-                const colspan = '10';
+                const colspan = '11';
                 tableBody.innerHTML = `
                     <tr>
                         <td colspan="${colspan}">
@@ -6457,8 +6484,10 @@
                 tableBody.innerHTML = sortedTrades.map(trade => {
                     const shares = trade.shares || (trade.amount && trade.buyPrice ? Math.round(trade.amount / trade.buyPrice) : 0);
                     const amount = trade.amount || (shares * trade.buyPrice);
+                    const isSelected = selectedTrades.has(trade.id);
                     return `
                         <tr>
+                            <td><input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleTradeSelection(${trade.id})" style="accent-color: #3b82f6;"></td>
                             <td>${new Date(trade.date).toLocaleDateString()}</td>
                             <td><strong>${trade.symbol}</strong></td>
                             <td>${trade.buyPrice.toFixed(4)}</td>
@@ -6475,12 +6504,16 @@
                         </tr>
                     `;
                 }).join('');
+                updateDeleteButtonVisibility();
+                updateSelectAllCheckbox();
             } else {
                 tableBody.innerHTML = sortedTrades.map(trade => {
                     const shares = trade.shares || (trade.amount && trade.buyPrice ? Math.round(trade.amount / trade.buyPrice) : 0);
                     const amount = trade.amount || (shares * trade.buyPrice);
+                    const isSelected = selectedTradesList.has(trade.id);
                     return `
                         <tr>
+                            <td><input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleTradeListSelection(${trade.id})" style="accent-color: #3b82f6;"></td>
                             <td>${new Date(trade.date).toLocaleDateString()}</td>
                             <td><strong>${trade.symbol}</strong></td>
                             <td>${trade.buyPrice.toFixed(4)}</td>
@@ -6497,6 +6530,8 @@
                         </tr>
                     `;
                 }).join('');
+                updateDeleteListButtonVisibility();
+                updateSelectAllListCheckbox();
             }
         }
 
@@ -7273,9 +7308,14 @@
             calendarStartDate = null;
             calendarEndDate = null;
             selectedCalendarDay = null;
+            selectedWeekPnl = null;
             
             document.querySelectorAll('.calendar-day').forEach(day => {
                 day.classList.remove('selected', 'range-start', 'range-end', 'in-range');
+            });
+            
+            document.querySelectorAll('.calendar-week-pnl').forEach(weekEl => {
+                weekEl.classList.remove('selected');
             });
             
             document.getElementById('dayDetails').style.display = 'none';
@@ -8424,6 +8464,15 @@ function applyCustomRisk() {
 
         // 기존 showWeekDetails 함수를 완전히 교체
         function showWeekDetails(weekNumber, weekTrades, weekPnl) {
+            // 기존 선택된 week P/L 초기화
+            document.querySelectorAll('.calendar-week-pnl').forEach(weekEl => {
+                weekEl.classList.remove('selected');
+            });
+            
+            // 현재 클릭한 week P/L 선택 표시
+            event.target.closest('.calendar-week-pnl').classList.add('selected');
+            selectedWeekPnl = { weekNumber, weekTrades, weekPnl };
+            
             const year = calendarDate.getFullYear();
             const month = calendarDate.getMonth();
             const monthNames = currentLanguage === 'ko' ? 
@@ -8612,6 +8661,182 @@ function applyCustomRisk() {
         
         function closeWeekDetails() {
             document.getElementById('weekDetailsModal').style.display = 'none';
+        }
+
+        // Trade selection functions for dashboard
+        function toggleTradeSelection(tradeId) {
+            if (selectedTrades.has(tradeId)) {
+                selectedTrades.delete(tradeId);
+            } else {
+                selectedTrades.add(tradeId);
+            }
+            updateDeleteButtonVisibility();
+            updateSelectAllCheckbox();
+        }
+
+        function toggleAllTrades() {
+            const selectAllCheckbox = document.getElementById('selectAllTrades');
+            const isChecked = selectAllCheckbox.checked;
+            
+            const filteredTrades = getFilteredDashboardTrades();
+            
+            if (isChecked) {
+                filteredTrades.forEach(trade => selectedTrades.add(trade.id));
+            } else {
+                filteredTrades.forEach(trade => selectedTrades.delete(trade.id));
+            }
+            
+            updateTradesTable(filteredTrades, 'tradesTableBody');
+        }
+
+        function updateSelectAllCheckbox() {
+            const selectAllCheckbox = document.getElementById('selectAllTrades');
+            const filteredTrades = getFilteredDashboardTrades();
+            
+            if (filteredTrades.length === 0) {
+                selectAllCheckbox.indeterminate = false;
+                selectAllCheckbox.checked = false;
+                return;
+            }
+            
+            const selectedCount = filteredTrades.filter(trade => selectedTrades.has(trade.id)).length;
+            
+            if (selectedCount === 0) {
+                selectAllCheckbox.indeterminate = false;
+                selectAllCheckbox.checked = false;
+            } else if (selectedCount === filteredTrades.length) {
+                selectAllCheckbox.indeterminate = false;
+                selectAllCheckbox.checked = true;
+            } else {
+                selectAllCheckbox.indeterminate = true;
+                selectAllCheckbox.checked = false;
+            }
+        }
+
+        function updateDeleteButtonVisibility() {
+            const deleteBtn = document.getElementById('deleteSelectedBtn');
+            if (deleteBtn) {
+                if (selectedTrades.size > 0) {
+                    deleteBtn.style.display = 'block';
+                    deleteBtn.textContent = currentLanguage === 'ko' ? 
+                        `선택된 거래 삭제 (${selectedTrades.size})` : 
+                        `Delete Selected (${selectedTrades.size})`;
+                } else {
+                    deleteBtn.style.display = 'none';
+                }
+            }
+        }
+
+        function deleteSelectedTrades() {
+            if (selectedTrades.size === 0) return;
+            
+            const confirmMessage = currentLanguage === 'ko' ? 
+                `선택된 ${selectedTrades.size}개의 거래를 삭제하시겠습니까?` : 
+                `Are you sure you want to delete ${selectedTrades.size} selected trades?`;
+            
+            if (confirm(confirmMessage)) {
+                const tradesToDelete = Array.from(selectedTrades);
+                trades = trades.filter(trade => !selectedTrades.has(trade.id));
+                selectedTrades.clear();
+                
+                saveTrades();
+                updateStats();
+                renderCalendar();
+                updateAllTradesList();
+                updateDetailedAnalytics();
+                
+                showToast(currentLanguage === 'ko' ? 
+                    `${tradesToDelete.length}개의 거래가 삭제되었습니다` : 
+                    `${tradesToDelete.length} trades deleted`);
+            }
+        }
+
+        // Trade selection functions for trade list page
+        function toggleTradeListSelection(tradeId) {
+            if (selectedTradesList.has(tradeId)) {
+                selectedTradesList.delete(tradeId);
+            } else {
+                selectedTradesList.add(tradeId);
+            }
+            updateDeleteListButtonVisibility();
+            updateSelectAllListCheckbox();
+        }
+
+        function toggleAllTradesList() {
+            const selectAllCheckbox = document.getElementById('selectAllTradesList');
+            const isChecked = selectAllCheckbox.checked;
+            
+            const filteredTrades = getFilteredTradesList();
+            
+            if (isChecked) {
+                filteredTrades.forEach(trade => selectedTradesList.add(trade.id));
+            } else {
+                filteredTrades.forEach(trade => selectedTradesList.delete(trade.id));
+            }
+            
+            updateTradesTable(filteredTrades, 'allTradesTableBody');
+        }
+
+        function updateSelectAllListCheckbox() {
+            const selectAllCheckbox = document.getElementById('selectAllTradesList');
+            const filteredTrades = getFilteredTradesList();
+            
+            if (filteredTrades.length === 0) {
+                selectAllCheckbox.indeterminate = false;
+                selectAllCheckbox.checked = false;
+                return;
+            }
+            
+            const selectedCount = filteredTrades.filter(trade => selectedTradesList.has(trade.id)).length;
+            
+            if (selectedCount === 0) {
+                selectAllCheckbox.indeterminate = false;
+                selectAllCheckbox.checked = false;
+            } else if (selectedCount === filteredTrades.length) {
+                selectAllCheckbox.indeterminate = false;
+                selectAllCheckbox.checked = true;
+            } else {
+                selectAllCheckbox.indeterminate = true;
+                selectAllCheckbox.checked = false;
+            }
+        }
+
+        function updateDeleteListButtonVisibility() {
+            const deleteBtn = document.getElementById('deleteSelectedListBtn');
+            if (deleteBtn) {
+                if (selectedTradesList.size > 0) {
+                    deleteBtn.style.display = 'block';
+                    deleteBtn.textContent = currentLanguage === 'ko' ? 
+                        `선택된 거래 삭제 (${selectedTradesList.size})` : 
+                        `Delete Selected (${selectedTradesList.size})`;
+                } else {
+                    deleteBtn.style.display = 'none';
+                }
+            }
+        }
+
+        function deleteSelectedTradesList() {
+            if (selectedTradesList.size === 0) return;
+            
+            const confirmMessage = currentLanguage === 'ko' ? 
+                `선택된 ${selectedTradesList.size}개의 거래를 삭제하시겠습니까?` : 
+                `Are you sure you want to delete ${selectedTradesList.size} selected trades?`;
+            
+            if (confirm(confirmMessage)) {
+                const tradesToDelete = Array.from(selectedTradesList);
+                trades = trades.filter(trade => !selectedTradesList.has(trade.id));
+                selectedTradesList.clear();
+                
+                saveTrades();
+                updateStats();
+                renderCalendar();
+                updateAllTradesList();
+                updateDetailedAnalytics();
+                
+                showToast(currentLanguage === 'ko' ? 
+                    `${tradesToDelete.length}개의 거래가 삭제되었습니다` : 
+                    `${tradesToDelete.length} trades deleted`);
+            }
         }
         
     </script>
