@@ -2608,6 +2608,11 @@
             -webkit-appearance: none;
             margin: 0;
         }
+
+        .calendar-week-pnl.selected {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: #3b82f6;
+        }
     </style>
 </head>
 <body>
@@ -3078,6 +3083,9 @@
                     <table class="trades-table">
                         <thead>
                             <tr>
+                                <th style="width: 40px; text-align: center;">
+                                    <input type="checkbox" id="selectAllTrades" style="cursor: pointer;" onchange="toggleAllTrades()">
+                                </th>
                                 <th data-lang="date">Date</th>
                                 <th data-lang="symbol">Symbol</th>
                                 <th data-lang="buy-price">Buy Price</th>
@@ -3987,11 +3995,17 @@
                 <div class="trades-section">
                     <div class="trades-header">
                         <h2 data-lang="trade-history">Trade History</h2>
-                        <div class="period-summary" id="allTradesSummary"></div>
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <button id="deleteSelectedBtnPage" class="btn" style="background: #ef4444; color: white; padding: 6px 12px; font-size: 12px; display: none;" onclick="deleteSelectedTradesPage()" data-lang="delete-selected">Delete Selected</button>
+                            <div class="period-summary" id="allTradesSummary"></div>
+                        </div>
                     </div>
                     <table class="trades-table">
                         <thead>
                             <tr>
+                                <th style="width: 40px; text-align: center;">
+                                    <input type="checkbox" id="selectAllTradesPage" style="cursor: pointer;" onchange="toggleAllTradesPage()">
+                                </th>
                                 <th data-lang="date">Date</th>
                                 <th data-lang="symbol">Symbol</th>
                                 <th data-lang="buy-price">Buy Price</th>
@@ -5950,7 +5964,7 @@
 }
 
         // Page initialization
-        document.addEventListener('DOMContentLoaded', async function() {
+        'DOMContentLoaded', async function() {
     await waitForChart();
     const savedLanguage = localStorage.getItem('tradingPlatformLanguage');
     if (savedLanguage) {
@@ -6427,7 +6441,7 @@
             const tableBody = document.getElementById(tableBodyId);
             
             if (tradesToShow.length === 0) {
-                const colspan = '10';
+                const colspan = '11'; // 체크박스 추가로 11개로 변경
                 tableBody.innerHTML = `
                     <tr>
                         <td colspan="${colspan}">
@@ -6453,53 +6467,32 @@
                 return dateTimeB - dateTimeA;
             });
             
-            if (tableBodyId === 'tradesTableBody') {
-                tableBody.innerHTML = sortedTrades.map(trade => {
-                    const shares = trade.shares || (trade.amount && trade.buyPrice ? Math.round(trade.amount / trade.buyPrice) : 0);
-                    const amount = trade.amount || (shares * trade.buyPrice);
-                    return `
-                        <tr>
-                            <td>${new Date(trade.date).toLocaleDateString()}</td>
-                            <td><strong>${trade.symbol}</strong></td>
-                            <td>${trade.buyPrice.toFixed(4)}</td>
-                            <td>${trade.sellPrice.toFixed(4)}</td>
-                            <td>${shares}</td>
-                            <td>$${amount.toFixed(2)}</td>
-                            <td>${trade.holdingTime || 'N/A'}</td>
-                            <td class="${trade.pnl >= 0 ? 'positive' : 'negative'}">$${trade.pnl.toFixed(2)}</td>
-                            <td class="${trade.returnPct >= 0 ? 'positive' : 'negative'}">${trade.returnPct.toFixed(2)}%</td>
-                            <td>
-                                <button class="action-btn" onclick="editTrade(${trade.id})" title="Edit trade">✏️</button>
-                                <button class="action-btn" onclick="deleteTrade(${trade.id})" title="Delete trade">🗑️</button>
-                            </td>
-                        </tr>
-                    `;
-                }).join('');
-            } else {
-                tableBody.innerHTML = sortedTrades.map(trade => {
-                    const shares = trade.shares || (trade.amount && trade.buyPrice ? Math.round(trade.amount / trade.buyPrice) : 0);
-                    const amount = trade.amount || (shares * trade.buyPrice);
-                    return `
-                        <tr>
-                            <td>${new Date(trade.date).toLocaleDateString()}</td>
-                            <td><strong>${trade.symbol}</strong></td>
-                            <td>${trade.buyPrice.toFixed(4)}</td>
-                            <td>${trade.sellPrice.toFixed(4)}</td>
-                            <td>${shares}</td>
-                            <td>$${amount.toFixed(2)}</td>
-                            <td>${trade.holdingTime || 'N/A'}</td>
-                            <td class="${trade.pnl >= 0 ? 'positive' : 'negative'}">$${trade.pnl.toFixed(2)}</td>
-                            <td class="${trade.returnPct >= 0 ? 'positive' : 'negative'}">${trade.returnPct.toFixed(2)}%</td>
-                            <td>
-                                <button class="action-btn" onclick="editTrade(${trade.id})" title="Edit trade">✏️</button>
-                                <button class="action-btn" onclick="deleteTrade(${trade.id})" title="Delete trade">🗑️</button>
-                            </td>
-                        </tr>
-                    `;
-                }).join('');
-            }
+            tableBody.innerHTML = sortedTrades.map(trade => {
+                const shares = trade.shares || (trade.amount && trade.buyPrice ? Math.round(trade.amount / trade.buyPrice) : 0);
+                const amount = trade.amount || (shares * trade.buyPrice);
+                return `
+                    <tr>
+                        <td style="padding: 8px; text-align: center;">
+                            <input type="checkbox" class="trade-checkbox" data-trade-id="${trade.id}" style="cursor: pointer;">
+                        </td>
+                        <td>${new Date(trade.date).toLocaleDateString()}</td>
+                        <td><strong>${trade.symbol}</strong></td>
+                        <td>${trade.buyPrice.toFixed(4)}</td>
+                        <td>${trade.sellPrice.toFixed(4)}</td>
+                        <td>${shares}</td>
+                        <td>$${amount.toFixed(2)}</td>
+                        <td>${trade.holdingTime || 'N/A'}</td>
+                        <td class="${trade.pnl >= 0 ? 'positive' : 'negative'}">$${trade.pnl.toFixed(2)}</td>
+                        <td class="${trade.returnPct >= 0 ? 'positive' : 'negative'}">${trade.returnPct.toFixed(2)}%</td>
+                        <td>
+                            <button class="action-btn" onclick="editTrade(${trade.id})" title="Edit trade">✏️</button>
+                            <button class="action-btn" onclick="deleteTrade(${trade.id})" title="Delete trade">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
         }
-
+        
         function updateAllTradesList() {
             const filteredTrades = getFilteredTradesList();
             updateTradesTable(filteredTrades, 'allTradesTableBody');
@@ -7106,9 +7099,25 @@
                 if (showWeekPnl) {
                     const weekPnlElement = document.createElement('div');
                     weekPnlElement.className = 'calendar-week-pnl';
+                    weekPnlElement.dataset.week = week + 1;
                     
                     if (weekTrades.length > 0) {
-                        weekPnlElement.onclick = () => showWeekDetails(week + 1, weekTrades, weekPnl);
+                        weekPnlElement.onclick = (e) => {
+                            e.stopPropagation();
+                            
+                            // 기존 선택 해제
+                            document.querySelectorAll('.calendar-week-pnl').forEach(el => {
+                                el.classList.remove('selected');
+                            });
+                            document.querySelectorAll('.calendar-day').forEach(el => {
+                                el.classList.remove('selected');
+                            });
+                            
+                            // 현재 요소 선택
+                            weekPnlElement.classList.add('selected');
+                            
+                            showWeekDetails(week + 1, weekTrades, weekPnl);
+                        };
                         
                         const weekPnlValue = document.createElement('div');
                         weekPnlValue.className = `week-pnl-value ${weekPnl > 0 ? 'positive' : weekPnl < 0 ? 'negative' : 'neutral'}`;
@@ -8612,6 +8621,101 @@ function applyCustomRisk() {
         
         function closeWeekDetails() {
             document.getElementById('weekDetailsModal').style.display = 'none';
+        }
+
+        // 개별 체크박스 클릭 시 (두 페이지 모두 처리)
+        document.addEventListener('change', function(e) {
+            if (e.target.classList.contains('trade-checkbox')) {
+                // Dashboard 페이지
+                if (e.target.closest('#tradesTableBody')) {
+                    updateDeleteButtonVisibility();
+                    updateSelectAllCheckbox();
+                }
+                // Trade List 페이지
+                else if (e.target.closest('#allTradesTableBody')) {
+                    updateDeleteButtonVisibilityPage();
+                    updateSelectAllCheckboxPage();
+                }
+            }
+        });
+
+        // Trade List 페이지용 전체 선택/해제
+        function toggleAllTradesPage() {
+            const selectAll = document.getElementById('selectAllTradesPage');
+            const checkboxes = document.querySelectorAll('#allTradesTableBody .trade-checkbox');
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAll.checked;
+            });
+            
+            updateDeleteButtonVisibilityPage();
+        }
+
+        // Trade List 페이지용 삭제 버튼 표시/숨기기
+        function updateDeleteButtonVisibilityPage() {
+            const checkedBoxes = document.querySelectorAll('#allTradesTableBody .trade-checkbox:checked');
+            const deleteBtn = document.getElementById('deleteSelectedBtnPage');
+            
+            if (checkedBoxes.length > 0) {
+                deleteBtn.style.display = 'block';
+                const tradeText = currentLanguage === 'ko' ? '개 거래 삭제' : ' trades';
+                deleteBtn.textContent = currentLanguage === 'ko' ? 
+                    `${checkedBoxes.length}${tradeText}` : 
+                    `Delete ${checkedBoxes.length}${tradeText}`;
+            } else {
+                deleteBtn.style.display = 'none';
+            }
+        }
+
+        // Trade List 페이지용 선택된 거래들 삭제
+        function deleteSelectedTradesPage() {
+            const checkedBoxes = document.querySelectorAll('#allTradesTableBody .trade-checkbox:checked');
+            const tradeIds = Array.from(checkedBoxes).map(checkbox => parseInt(checkbox.dataset.tradeId));
+            
+            if (tradeIds.length === 0) return;
+            
+            const confirmMessage = currentLanguage === 'ko' ? 
+                `선택된 ${tradeIds.length}개의 거래를 삭제하시겠습니까?` : 
+                `Are you sure you want to delete ${tradeIds.length} selected trades?`;
+            
+            if (confirm(confirmMessage)) {
+                trades = trades.filter(trade => !tradeIds.includes(trade.id));
+                
+                saveTrades();
+                updateStats();
+                renderCalendar();
+                updateAllTradesList();
+                updateDetailedAnalytics();
+                
+                document.getElementById('selectAllTradesPage').checked = false;
+                document.getElementById('deleteSelectedBtnPage').style.display = 'none';
+                
+                const deletedText = currentLanguage === 'ko' ? '개 거래가 삭제되었습니다' : ' trades deleted';
+                showToast(currentLanguage === 'ko' ? 
+                    `${tradeIds.length}${deletedText}` : 
+                    `${tradeIds.length}${deletedText}`);
+            }
+        }
+
+        // Trade List 페이지용 전체 선택 체크박스 상태 업데이트
+        function updateSelectAllCheckboxPage() {
+            const selectAll = document.getElementById('selectAllTradesPage');
+            const checkboxes = document.querySelectorAll('#allTradesTableBody .trade-checkbox');
+            const checkedBoxes = document.querySelectorAll('#allTradesTableBody .trade-checkbox:checked');
+            
+            if (checkboxes.length === 0) {
+                selectAll.indeterminate = false;
+                selectAll.checked = false;
+            } else if (checkedBoxes.length === checkboxes.length) {
+                selectAll.indeterminate = false;
+                selectAll.checked = true;
+            } else if (checkedBoxes.length > 0) {
+                selectAll.indeterminate = true;
+                selectAll.checked = false;
+            } else {
+                selectAll.indeterminate = false;
+                selectAll.checked = false;
+            }
         }
         
     </script>
