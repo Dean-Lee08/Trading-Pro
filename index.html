@@ -8301,35 +8301,85 @@ function applyCustomRisk() {
             
             if (!todayData) {
                 resetPsychologyMetrics();
-                generatePsychologyInsights();
                 return;
             }
             
-            // Calculate Sleep Factor (0-25 points)
-            const sleepFactor = calculateSleepFactor(todayData.sleepHours, todayData.sleepQuality);
-            updateMetricCard('sleepFactorCard', 'sleepFactor', 'sleepFactorStatus', sleepFactor, 25);
+            // 총 심리 점수 계산
+            const totalScore = calculateDailyPsychologyScore(todayData);
             
-            // Calculate Stress Factor (0-25 points)
-            const stressFactor = calculateStressFactor(todayData.caffeineIntake, todayData.stressLevel, todayData.energyLevel);
-            updateMetricCard('stressFactorCard', 'stressFactor', 'stressFactorStatus', stressFactor, 25);
+            // 각 요인별 점수 계산
+            const sleepFactor = todayData.sleepHours ? Math.min(25, (todayData.sleepHours / 8) * 25) : 0;
+            const stressFactor = todayData.stressLevel ? 25 - ((todayData.stressLevel - 1) * 6.25) : 0;
+            const disciplineFactor = calculateDisciplineFactor();
+            const consistencyFactor = calculateConsistencyFactor();
             
-            // Calculate Environment Factor (0-25 points)
-            const environmentFactor = calculateEnvironmentFactor(todayData.tradingEnvironment, todayData.focusLevel);
-            updateMetricCard('environmentFactorCard', 'environmentFactor', 'environmentFactorStatus', environmentFactor, 25);
+            // UI 업데이트
+            updateVisualScoreCard('sleepFactorCard', 'sleepFactorScore', 'sleepFactorStatus', 'sleepFactorBar', sleepFactor, 25);
+            updateVisualScoreCard('stressFactorCard', 'stressFactorScore', 'stressFactorStatus', 'stressFactorBar', stressFactor, 25);
+            updateVisualScoreCard('disciplineFactorCard', 'disciplineFactorScore', 'disciplineFactorStatus', 'disciplineFactorBar', disciplineFactor, 25);
+            updateVisualScoreCard('consistencyFactorCard', 'consistencyFactorScore', 'consistencyFactorStatus', 'consistencyFactorBar', consistencyFactor, 25);
             
-            // Calculate Pressure Index (0-25 points)
-            const pressureIndex = calculatePressureIndex(todayData.pressureLevel, todayData.accountBalance, todayData.dailyTarget);
-            updateMetricCard('pressureIndexCard', 'pressureIndex', 'pressureIndexStatus', pressureIndex, 25);
+            // 총점 업데이트
+            const totalScoreElement = document.getElementById('totalPsychScore');
+            const totalStatusElement = document.getElementById('totalScoreStatus');
             
-            // Calculate Emotional Readiness (0-25 points)
-            const emotionalReadiness = calculateEmotionalReadiness(todayData.preMarketMood, todayData.confidenceLevel);
-            updateMetricCard('emotionalReadinessCard', 'emotionalReadiness', 'emotionalReadinessStatus', emotionalReadiness, 25);
+            if (totalScoreElement) {
+                totalScoreElement.textContent = Math.round(totalScore);
+            }
             
-            // Calculate Daily Psychology Score (0-100)
-            const dailyScore = sleepFactor + stressFactor + environmentFactor + pressureIndex + emotionalReadiness;
-            updateMetricCard('dailyPsychScoreCard', 'dailyPsychScore', 'dailyPsychStatus', dailyScore, 100);
+            if (totalStatusElement) {
+                const percentage = totalScore;
+                let status;
+                if (percentage >= 80) status = currentLanguage === 'ko' ? '최적' : 'Optimal';
+                else if (percentage >= 60) status = currentLanguage === 'ko' ? '양호' : 'Good';
+                else if (percentage >= 40) status = currentLanguage === 'ko' ? '보통' : 'Fair';
+                else status = currentLanguage === 'ko' ? '주의' : 'Poor';
+                
+                totalStatusElement.textContent = status;
+            }
+            
+            // 게이지 차트 업데이트
+            drawPsychologyScoreGauge();
+        }
 
-            generatePsychologyInsights();
+        function updateVisualScoreCard(cardId, scoreId, statusId, barId, score, maxScore) {
+            const scoreElement = document.getElementById(scoreId);
+            const statusElement = document.getElementById(statusId);
+            const barElement = document.getElementById(barId);
+            
+            if (scoreElement) {
+                scoreElement.textContent = `${Math.round(score)}/${maxScore}`;
+            }
+            
+            const percentage = (score / maxScore) * 100;
+            let status, borderColor;
+            
+            if (percentage >= 80) {
+                status = currentLanguage === 'ko' ? '최적' : 'Optimal';
+                borderColor = '#10b981';
+            } else if (percentage >= 60) {
+                status = currentLanguage === 'ko' ? '양호' : 'Good';
+                borderColor = '#10b981';
+            } else if (percentage >= 40) {
+                status = currentLanguage === 'ko' ? '보통' : 'Fair';
+                borderColor = '#f59e0b';
+            } else {
+                status = currentLanguage === 'ko' ? '주의' : 'Poor';
+                borderColor = '#ef4444';
+            }
+            
+            if (statusElement) {
+                statusElement.textContent = status;
+            }
+            
+            if (barElement) {
+                barElement.style.width = `${percentage}%`;
+            }
+            
+            const card = document.getElementById(cardId);
+            if (card) {
+                card.style.borderColor = borderColor;
+            }
         }
 
         function calculateSleepFactor(sleepHours, sleepQuality) {
@@ -8445,15 +8495,38 @@ function applyCustomRisk() {
         }
 
         function resetPsychologyMetrics() {
-            const metrics = ['dailyPsychScore', 'sleepFactor', 'stressFactor', 'environmentFactor', 'pressureIndex', 'emotionalReadiness'];
-            const cards = ['dailyPsychScoreCard', 'sleepFactorCard', 'stressFactorCard', 'environmentFactorCard', 'pressureIndexCard', 'emotionalReadinessCard'];
-            const statuses = ['dailyPsychStatus', 'sleepFactorStatus', 'stressFactorStatus', 'environmentFactorStatus', 'pressureIndexStatus', 'emotionalReadinessStatus'];
+            const scoreElements = ['sleepFactorScore', 'stressFactorScore', 'disciplineFactorScore', 'consistencyFactorScore'];
+            const statusElements = ['sleepFactorStatus', 'stressFactorStatus', 'disciplineFactorStatus', 'consistencyFactorStatus'];
+            const barElements = ['sleepFactorBar', 'stressFactorBar', 'disciplineFactorBar', 'consistencyFactorBar'];
+            const cardElements = ['sleepFactorCard', 'stressFactorCard', 'disciplineFactorCard', 'consistencyFactorCard'];
             
-            metrics.forEach((metricId, index) => {
-                document.getElementById(metricId).textContent = '0';
-                document.getElementById(statuses[index]).textContent = 'No data';
-                document.getElementById(cards[index]).className = 'psychology-metric-card';
+            scoreElements.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) element.textContent = '0/25';
             });
+            
+            statusElements.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) element.textContent = 'No data';
+            });
+            
+            barElements.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) element.style.width = '0%';
+            });
+            
+            cardElements.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) element.style.borderColor = '#334155';
+            });
+            
+            const totalScoreElement = document.getElementById('totalPsychScore');
+            const totalStatusElement = document.getElementById('totalScoreStatus');
+            
+            if (totalScoreElement) totalScoreElement.textContent = '0';
+            if (totalStatusElement) totalStatusElement.textContent = 'No data';
+            
+            drawPsychologyScoreGauge();
         }
 
         function generatePsychologyInsights() {
@@ -8644,27 +8717,8 @@ function applyCustomRisk() {
                 return;
             }
             
-            // 수면 요인 계산 (25점 만점)
-            const sleepFactor = calculateSleepFactor(todayData.sleepHours, 5); // 기본 품질 5로 가정
-            
-            // 스트레스 요인 계산 (25점 만점)
-            const stressFactor = calculateStressFactor(todayData.stressLevel, todayData.focusLevel);
-            
-            // 규율 요인 계산 (25점 만점) - 거래 데이터 기반
-            const disciplineFactor = calculateDisciplineFactor();
-            
-            // 일관성 요인 계산 (25점 만점) - 거래 데이터 기반
-            const consistencyFactor = calculateConsistencyFactor();
-            
-            // 총점 계산
-            const totalScore = sleepFactor + stressFactor + disciplineFactor + consistencyFactor;
-            
-            // UI 업데이트
-            updateScoreCard('sleepFactorCard', 'sleepFactorScore', 'sleepFactorStatus', sleepFactor, 25);
-            updateScoreCard('stressFactorCard', 'stressFactorScore', 'stressFactorStatus', stressFactor, 25);
-            updateScoreCard('disciplineFactorCard', 'disciplineFactorScore', 'disciplineFactorStatus', disciplineFactor, 25);
-            updateScoreCard('consistencyFactorCard', 'consistencyFactorScore', 'consistencyFactorStatus', consistencyFactor, 25);
-            updateScoreCard('totalScoreCard', 'totalPsychScore', 'totalScoreStatus', totalScore, 100);
+            updatePsychologyMetrics();
+            updatePsychologyCharts();
             
             showToast(currentLanguage === 'ko' ? '일일 심리 점수가 계산되었습니다' : 'Daily psychology score calculated');
         }
@@ -9940,10 +9994,14 @@ function applyCustomRisk() {
 
         // Psychology Charts Functions
         function updatePsychologyCharts() {
-            updatePerformancePsychologyChart();
-            updatePsychologyScoreTrendChart();
-            updateBiasRiskRadarChart();
-            updateEnvironmentalImpactChart();
+            try {
+                updatePerformancePsychologyChart();
+                updatePsychologyScoreTrendChart();
+                updateBiasRiskRadarChart();
+                updateEnvironmentalImpactChart();
+            } catch (error) {
+                console.warn('Chart update failed:', error);
+            }
         }
 
         function updatePerformancePsychologyChart() {
