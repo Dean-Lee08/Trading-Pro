@@ -4408,7 +4408,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script>
-        // Global variables
+        // Global variables (변수명 충돌 해결)
         let trades = [];
         let notes = [];
         let dailyFees = {};
@@ -4421,12 +4421,12 @@
         let selectedCalendarDay = null;
         let currentLanguage = 'en';
         let analyticsPeriod = 'all';
-        let dashboardStartDate = null;
-        let dashboardEndDate = null;
-        let analyticsStartDate = null;
-        let analyticsEndDate = null;
-        let tradesStartDate = null;
-        let tradesEndDate = null;
+        let dashboardDateStart = null;  // 변수명 변경
+        let dashboardDateEnd = null;    // 변수명 변경
+        let analyticsDateStart = null;  // 변수명 변경
+        let analyticsDateEnd = null;    // 변수명 변경
+        let tradesDateStart = null;     // 변수명 변경
+        let tradesDateEnd = null;       // 변수명 변경
         let currentAnalyticsSection = 'detail';
         let editingNoteId = null;
         let currentNotesSection = 'all';
@@ -5309,10 +5309,12 @@
 
         // Dashboard date range functions
         function clearDashboardRange() {
-            dashboardStartDate = null;
-            dashboardEndDate = null;
-            document.getElementById('dashboardStartDate').value = '';
-            document.getElementById('dashboardEndDate').value = '';
+            dashboardDateStart = null;
+            dashboardDateEnd = null;
+            const startDateInput = document.getElementById('dashboardStartDate');
+            const endDateInput = document.getElementById('dashboardEndDate');
+            if (startDateInput) startDateInput.value = '';
+            if (endDateInput) endDateInput.value = '';
             updateStats();
             updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
         }
@@ -5321,11 +5323,11 @@
             let filteredTrades = trades;
             const currentDate = formatTradingDate(currentTradingDate);
             
-            if (dashboardStartDate || dashboardEndDate) {
+            if (dashboardDateStart || dashboardDateEnd) {
                 filteredTrades = trades.filter(trade => {
                     const tradeDate = trade.date;
-                    if (dashboardStartDate && tradeDate < dashboardStartDate) return false;
-                    if (dashboardEndDate && tradeDate > dashboardEndDate) return false;
+                    if (dashboardDateStart && tradeDate < dashboardDateStart) return false;
+                    if (dashboardDateEnd && tradeDate > dashboardDateEnd) return false;
                     return true;
                 });
             } else {
@@ -5337,28 +5339,32 @@
 
         // Analytics date range functions
         function clearAnalyticsRange() {
-            analyticsStartDate = null;
-            analyticsEndDate = null;
-            document.getElementById('analyticsStartDate').value = '';
-            document.getElementById('analyticsEndDate').value = '';
+            analyticsDateStart = null;
+            analyticsDateEnd = null;
+            const startDateInput = document.getElementById('analyticsStartDate');
+            const endDateInput = document.getElementById('analyticsEndDate');
+            if (startDateInput) startDateInput.value = '';
+            if (endDateInput) endDateInput.value = '';
             updateDetailedAnalytics();
         }
 
         // Trades page date range functions
         function clearTradesRange() {
-            tradesStartDate = null;
-            tradesEndDate = null;
-            document.getElementById('tradesStartDate').value = '';
-            document.getElementById('tradesEndDate').value = '';
+            tradesDateStart = null;
+            tradesDateEnd = null;
+            const startDateInput = document.getElementById('tradesStartDate');
+            const endDateInput = document.getElementById('tradesEndDate');
+            if (startDateInput) startDateInput.value = '';
+            if (endDateInput) endDateInput.value = '';
             updateAllTradesList();
         }
 
         function getFilteredTradesList() {
-            if (tradesStartDate || tradesEndDate) {
+            if (tradesDateStart || tradesDateEnd) {
                 return trades.filter(trade => {
                     const tradeDate = trade.date;
-                    if (tradesStartDate && tradeDate < tradesStartDate) return false;
-                    if (tradesEndDate && tradeDate > tradesEndDate) return false;
+                    if (tradesDateStart && tradeDate < tradesDateStart) return false;
+                    if (tradesDateEnd && tradeDate > tradesDateEnd) return false;
                     return true;
                 });
             }
@@ -5571,92 +5577,117 @@
 }
 
         function renderAllNotesSections() {
-            renderNotesList('all');
-            renderNotesList('daily');
-            renderNotesList('strategy');
-            renderNotesList('general');
+            try {
+                // 각 섹션별로 안전하게 렌더링
+                ['all', 'daily', 'strategy', 'general'].forEach(category => {
+                    try {
+                        renderNotesList(category);
+                    } catch (error) {
+                        console.error(`Error rendering notes for category ${category}:`, error);
+                    }
+                });
+            } catch (error) {
+                console.error('Error in renderAllNotesSections:', error);
+            }
         }
 
         function renderNotesList(category) {
-    let categoryNotes;
-    if (category === 'all') {
-        categoryNotes = notes;
-    } else {
-        categoryNotes = notes.filter(note => note.category === category);
-    }
-    
-    // 고정된 노트와 일반 노트 분리
-    const pinnedNotes = categoryNotes.filter(note => note.pinned);
-    const regularNotes = categoryNotes.filter(note => !note.pinned);
-    
-    // 고정된 노트는 업데이트 시간순, 일반 노트는 생성 시간순 정렬
-    pinnedNotes.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-    regularNotes.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    
-    const sortedNotes = [...pinnedNotes, ...regularNotes];
-    
-    const notesList = document.getElementById(`${category}NotesList`);
-    
-    if (sortedNotes.length === 0) {
-        const emptyMessages = {
-            all: currentLanguage === 'ko' ? '아직 작성된 노트가 없습니다. "새 노트"를 클릭하여 시작하세요.' : 'No notes written yet. Click "New Note" to start.',
-            daily: currentLanguage === 'ko' ? '일일 리뷰 노트가 아직 없습니다. "새 노트"를 클릭하여 시작하세요.' : 'No daily review notes yet. Click "New Note" to start.',
-            strategy: currentLanguage === 'ko' ? '전략 노트가 아직 없습니다. "새 노트"를 클릭하여 시작하세요.' : 'No strategy notes yet. Click "New Note" to start.',
-            general: currentLanguage === 'ko' ? '일반 노트가 아직 없습니다. "새 노트"를 클릭하여 시작하세요.' : 'No general notes yet. Click "New Note" to start.'
-        };
-        
-        notesList.innerHTML = `
-            <div class="empty-state">
-                <div class="empty-state-icon">📝</div>
-                <div>${emptyMessages[category]}</div>
-            </div>
-        `;
-        return;
-    }
+            try {
+                let categoryNotes;
+                if (category === 'all') {
+                    categoryNotes = notes || [];
+                } else {
+                    categoryNotes = (notes || []).filter(note => note.category === category);
+                }
+                
+                // 고정된 노트와 일반 노트 분리
+                const pinnedNotes = categoryNotes.filter(note => note.pinned);
+                const regularNotes = categoryNotes.filter(note => !note.pinned);
+                
+                // 정렬
+                pinnedNotes.sort((a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt));
+                regularNotes.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                
+                const sortedNotes = [...pinnedNotes, ...regularNotes];
+                
+                const notesList = document.getElementById(`${category}NotesList`);
+                if (!notesList) {
+                    console.warn(`Notes list element not found for category: ${category}`);
+                    return;
+                }
+                
+                if (sortedNotes.length === 0) {
+                    const emptyMessages = {
+                        all: currentLanguage === 'ko' ? '아직 작성된 노트가 없습니다. "새 노트"를 클릭하여 시작하세요.' : 'No notes written yet. Click "New Note" to start.',
+                        daily: currentLanguage === 'ko' ? '일일 리뷰 노트가 아직 없습니다. "새 노트"를 클릭하여 시작하세요.' : 'No daily review notes yet. Click "New Note" to start.',
+                        strategy: currentLanguage === 'ko' ? '전략 노트가 아직 없습니다. "새 노트"를 클릭하여 시작하세요.' : 'No strategy notes yet. Click "New Note" to start.',
+                        general: currentLanguage === 'ko' ? '일반 노트가 아직 없습니다. "새 노트"를 클릭하여 시작하세요.' : 'No general notes yet. Click "New Note" to start.'
+                    };
+                    
+                    notesList.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📝</div>
+                            <div>${emptyMessages[category] || emptyMessages.all}</div>
+                        </div>
+                    `;
+                    return;
+                }
 
-    notesList.innerHTML = sortedNotes.map(note => {
-        const createdDate = new Date(note.createdAt);
-        const formattedDate = createdDate.toLocaleDateString(currentLanguage === 'ko' ? 'ko-KR' : 'en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-        });
-        
-        const preview = note.content.replace(/<[^>]*>/g, '');
-        const previewText = preview.length > 150 ? preview.substring(0, 150) + '...' : preview;
+                notesList.innerHTML = sortedNotes.map(note => {
+                    const createdDate = new Date(note.createdAt);
+                    const formattedDate = createdDate.toLocaleDateString(currentLanguage === 'ko' ? 'ko-KR' : 'en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    });
+                    
+                    const preview = (note.content || '').replace(/<[^>]*>/g, '');
+                    const previewText = preview.length > 150 ? preview.substring(0, 150) + '...' : preview;
 
-        const categoryLabels = {
-            daily: currentLanguage === 'ko' ? '일일 리뷰' : 'Daily Review',
-            strategy: currentLanguage === 'ko' ? '전략' : 'Strategy',
-            general: currentLanguage === 'ko' ? '일반' : 'General'
-        };
+                    const categoryLabels = {
+                        daily: currentLanguage === 'ko' ? '일일 리뷰' : 'Daily Review',
+                        strategy: currentLanguage === 'ko' ? '전략' : 'Strategy',
+                        general: currentLanguage === 'ko' ? '일반' : 'General'
+                    };
 
-        const pinnedClass = note.pinned ? 'note-item-pinned' : '';
-        const pinnedIcon = note.pinned ? '📌 ' : '';
-        const uniqueId = `${note.id}_${category}`;
+                    const pinnedClass = note.pinned ? 'note-item-pinned' : '';
+                    const pinnedIcon = note.pinned ? '📌 ' : '';
+                    const uniqueId = `${note.id}_${category}`;
 
-        return `
-            <div class="note-item ${pinnedClass}" onclick="viewNote(${note.id})">
-                <div class="note-item-header">
-                    <div>
-                        <h3 class="note-item-title">${pinnedIcon}${note.title}</h3>
-                        ${category === 'all' ? `<div class="note-item-category">${categoryLabels[note.category]}</div>` : ''}
-                    </div>
-                    <div class="note-item-header-right">
-                        <span class="note-item-date">${formattedDate}</span>
-                        <button class="pin-btn" onclick="event.stopPropagation(); togglePinNote(${note.id})" title="${note.pinned ? (currentLanguage === 'ko' ? '고정 해제' : 'Unpin') : (currentLanguage === 'ko' ? '상단 고정' : 'Pin to top')}">${note.pinned ? '📌' : '📌'}</button>
-                    </div>
-                </div>
-                <div class="note-item-preview" id="preview-${uniqueId}" style="color: ${note.textColor || '#94a3b8'}; font-family: ${note.font || "'Inter', sans-serif"};">${previewText}</div>
-                <button class="expand-btn" data-note-id="${note.id}" data-category="${category}" onclick="event.stopPropagation(); toggleNotePreview(this)">${currentLanguage === 'ko' ? '더보기' : 'Show more'}</button>
-                <div class="note-item-actions">
-                    <button class="action-btn" onclick="event.stopPropagation(); editNote(${note.id})" title="Edit note">✏️</button>
-                    <button class="action-btn" onclick="event.stopPropagation(); deleteNote(${note.id})" title="Delete note">🗑️</button>
-                </div>
-            </div>
-        `;
-    }).join('');
-}
+                    return `
+                        <div class="note-item ${pinnedClass}" onclick="viewNote(${note.id})">
+                            <div class="note-item-header">
+                                <div>
+                                    <h3 class="note-item-title">${pinnedIcon}${note.title || 'Untitled'}</h3>
+                                    ${category === 'all' ? `<div class="note-item-category">${categoryLabels[note.category] || categoryLabels.general}</div>` : ''}
+                                </div>
+                                <div class="note-item-header-right">
+                                    <span class="note-item-date">${formattedDate}</span>
+                                    <button class="pin-btn" onclick="event.stopPropagation(); togglePinNote(${note.id})" title="${note.pinned ? (currentLanguage === 'ko' ? '고정 해제' : 'Unpin') : (currentLanguage === 'ko' ? '상단 고정' : 'Pin to top')}">${note.pinned ? '📌' : '📌'}</button>
+                                </div>
+                            </div>
+                            <div class="note-item-preview" id="preview-${uniqueId}" style="color: ${note.textColor || '#94a3b8'}; font-family: ${note.font || "'Inter', sans-serif"};">${previewText}</div>
+                            <button class="expand-btn" data-note-id="${note.id}" data-category="${category}" onclick="event.stopPropagation(); toggleNotePreview(this)">${currentLanguage === 'ko' ? '더보기' : 'Show more'}</button>
+                            <div class="note-item-actions">
+                                <button class="action-btn" onclick="event.stopPropagation(); editNote(${note.id})" title="Edit note">✏️</button>
+                                <button class="action-btn" onclick="event.stopPropagation(); deleteNote(${note.id})" title="Delete note">🗑️</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error(`Error rendering notes list for category ${category}:`, error);
+                const notesList = document.getElementById(`${category}NotesList`);
+                if (notesList) {
+                    notesList.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">❌</div>
+                            <div>Error loading notes</div>
+                        </div>
+                    `;
+                }
+            }
+        }
 
         function saveNotes() {
             try {
@@ -6417,220 +6448,260 @@
 
         // Page initialization
         document.addEventListener('DOMContentLoaded', async function() {
-            await waitForChart();
-            
-            // 언어 설정 로드
-            const savedLanguage = localStorage.getItem('tradingPlatformLanguage');
-            if (savedLanguage) {
-                currentLanguage = savedLanguage;
-                const settingsSelect = document.getElementById('settingsLanguageSelect');
-                if (settingsSelect) {
-                    settingsSelect.value = currentLanguage;
+            try {
+                console.log('Initializing application...');
+                
+                await waitForChart();
+                
+                // 언어 설정 로드
+                const savedLanguage = localStorage.getItem('tradingPlatformLanguage');
+                if (savedLanguage) {
+                    currentLanguage = savedLanguage;
+                    const settingsSelect = document.getElementById('settingsLanguageSelect');
+                    if (settingsSelect) {
+                        settingsSelect.value = currentLanguage;
+                    }
                 }
-            }
-            
-            // 데일리 피 로드
-            const savedFees = localStorage.getItem('tradingPlatformDailyFees');
-            if (savedFees) {
-                try {
-                    dailyFees = JSON.parse(savedFees);
-                } catch (error) {
-                    console.error('Error loading daily fees:', error);
-                    dailyFees = {};
+                
+                // 데일리 피 로드
+                const savedFees = localStorage.getItem('tradingPlatformDailyFees');
+                if (savedFees) {
+                    try {
+                        dailyFees = JSON.parse(savedFees);
+                    } catch (error) {
+                        console.error('Error loading daily fees:', error);
+                        dailyFees = {};
+                    }
                 }
-            }
-            
-            // 현재 거래 날짜 설정
-            currentTradingDate = getESTTradingDate(new Date());
-            updateCurrentDateDisplay();
-            updateLanguage();
-            
-            // 데이터 로드
-            loadTrades();
-            loadNotes();
-            loadPsychologyData();
-            
-            // UI 업데이트
-            updateStats();
-            renderCalendar();
-            renderAllNotesSections();
-            updateAllTradesList();
-            updateDetailedAnalytics();
-            calculateHoldingTime();
-            loadDailyFees();
-            
-            // 이벤트 리스너 등록
-            const tradeForm = document.getElementById('tradeForm');
-            if (tradeForm) {
-                tradeForm.addEventListener('submit', handleTradeSubmit);
-            }
-            
-            const editTradeForm = document.getElementById('editTradeForm');
-            if (editTradeForm) {
-                editTradeForm.addEventListener('submit', handleEditTradeSubmit);
-            }
-            
-            const entryTime = document.getElementById('entryTime');
-            if (entryTime) {
-                entryTime.addEventListener('change', calculateHoldingTime);
-            }
-            
-            const exitTime = document.getElementById('exitTime');
-            if (exitTime) {
-                exitTime.addEventListener('change', calculateHoldingTime);
-            }
-            
-            // 대시보드 날짜 범위 리스너
-            const dashboardStartDate = document.getElementById('dashboardStartDate');
-            if (dashboardStartDate) {
-                dashboardStartDate.addEventListener('change', function() {
-                    dashboardStartDate = this.value;
-                    updateStats();
-                    updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
-                });
-            }
-            
-            const dashboardEndDate = document.getElementById('dashboardEndDate');
-            if (dashboardEndDate) {
-                dashboardEndDate.addEventListener('change', function() {
-                    dashboardEndDate = this.value;
-                    updateStats();
-                    updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
-                });
-            }
+                
+                // 현재 거래 날짜 설정
+                currentTradingDate = getESTTradingDate(new Date());
+                updateCurrentDateDisplay();
+                updateLanguage();
+                
+                // 데이터 로드
+                loadTrades();
+                loadNotes();
+                loadPsychologyData();
+                
+                // UI 업데이트
+                updateStats();
+                renderCalendar();
+                renderAllNotesSections();
+                updateAllTradesList();
+                updateDetailedAnalytics();
+                calculateHoldingTime();
+                loadDailyFees();
+                
+                // 이벤트 리스너 등록 (안전하게)
+                const tradeForm = document.getElementById('tradeForm');
+                if (tradeForm) {
+                    tradeForm.addEventListener('submit', handleTradeSubmit);
+                }
+                
+                const editTradeForm = document.getElementById('editTradeForm');
+                if (editTradeForm) {
+                    editTradeForm.addEventListener('submit', handleEditTradeSubmit);
+                }
+                
+                const entryTime = document.getElementById('entryTime');
+                if (entryTime) {
+                    entryTime.addEventListener('change', calculateHoldingTime);
+                }
+                
+                const exitTime = document.getElementById('exitTime');
+                if (exitTime) {
+                    exitTime.addEventListener('change', calculateHoldingTime);
+                }
+                
+                // 대시보드 날짜 범위 리스너 (수정됨)
+                const dashboardStartInput = document.getElementById('dashboardStartDate');
+                if (dashboardStartInput) {
+                    dashboardStartInput.addEventListener('change', function() {
+                        dashboardDateStart = this.value;  // 전역변수에 저장
+                        updateStats();
+                        updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
+                    });
+                }
+                
+                const dashboardEndInput = document.getElementById('dashboardEndDate');
+                if (dashboardEndInput) {
+                    dashboardEndInput.addEventListener('change', function() {
+                        dashboardDateEnd = this.value;  // 전역변수에 저장
+                        updateStats();
+                        updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
+                    });
+                }
 
-            // Analytics 날짜 범위 리스너
-            const analyticsStartDate = document.getElementById('analyticsStartDate');
-            if (analyticsStartDate) {
-                analyticsStartDate.addEventListener('change', function() {
-                    analyticsStartDate = this.value;
-                    updateDetailedAnalytics();
-                });
-            }
-            
-            const analyticsEndDate = document.getElementById('analyticsEndDate');
-            if (analyticsEndDate) {
-                analyticsEndDate.addEventListener('change', function() {
-                    analyticsEndDate = this.value;
-                    updateDetailedAnalytics();
-                });
-            }
+                // Analytics 날짜 범위 리스너 (수정됨)
+                const analyticsStartInput = document.getElementById('analyticsStartDate');
+                if (analyticsStartInput) {
+                    analyticsStartInput.addEventListener('change', function() {
+                        analyticsDateStart = this.value;  // 전역변수에 저장
+                        updateDetailedAnalytics();
+                    });
+                }
+                
+                const analyticsEndInput = document.getElementById('analyticsEndDate');
+                if (analyticsEndInput) {
+                    analyticsEndInput.addEventListener('change', function() {
+                        analyticsDateEnd = this.value;  // 전역변수에 저장
+                        updateDetailedAnalytics();
+                    });
+                }
 
-            // Trades 페이지 날짜 범위 리스너
-            const tradesStartDate = document.getElementById('tradesStartDate');
-            if (tradesStartDate) {
-                tradesStartDate.addEventListener('change', function() {
-                    tradesStartDate = this.value;
-                    updateAllTradesList();
-                });
-            }
-            
-            const tradesEndDate = document.getElementById('tradesEndDate');
-            if (tradesEndDate) {
-                tradesEndDate.addEventListener('change', function() {
-                    tradesEndDate = this.value;
-                    updateAllTradesList();
-                });
-            }
-            
-            // 모달 클릭 이벤트
-            const datePickerModal = document.getElementById('datePickerModal');
-            if (datePickerModal) {
-                datePickerModal.addEventListener('click', function(e) {
-                    if (e.target === this) {
-                        closeDatePicker();
-                    }
-                });
-            }
+                // Trades 페이지 날짜 범위 리스너 (수정됨)
+                const tradesStartInput = document.getElementById('tradesStartDate');
+                if (tradesStartInput) {
+                    tradesStartInput.addEventListener('change', function() {
+                        tradesDateStart = this.value;  // 전역변수에 저장
+                        updateAllTradesList();
+                    });
+                }
+                
+                const tradesEndInput = document.getElementById('tradesEndDate');
+                if (tradesEndInput) {
+                    tradesEndInput.addEventListener('change', function() {
+                        tradesDateEnd = this.value;  // 전역변수에 저장
+                        updateAllTradesList();
+                    });
+                }
+                
+                // 모달 클릭 이벤트
+                const datePickerModal = document.getElementById('datePickerModal');
+                if (datePickerModal) {
+                    datePickerModal.addEventListener('click', function(e) {
+                        if (e.target === this) {
+                            closeDatePicker();
+                        }
+                    });
+                }
 
-            const editTradeModal = document.getElementById('editTradeModal');
-            if (editTradeModal) {
-                editTradeModal.addEventListener('click', function(e) {
-                    if (e.target === this) {
-                        closeEditTradeModal();
-                    }
-                });
-            }
+                const editTradeModal = document.getElementById('editTradeModal');
+                if (editTradeModal) {
+                    editTradeModal.addEventListener('click', function(e) {
+                        if (e.target === this) {
+                            closeEditTradeModal();
+                        }
+                    });
+                }
 
-            const monthDetailsModal = document.getElementById('monthDetailsModal');
-            if (monthDetailsModal) {
-                monthDetailsModal.addEventListener('click', function(e) {
-                    if (e.target === this) {
-                        closeMonthDetails();
-                    }
-                });
-            }
+                const monthDetailsModal = document.getElementById('monthDetailsModal');
+                if (monthDetailsModal) {
+                    monthDetailsModal.addEventListener('click', function(e) {
+                        if (e.target === this) {
+                            closeMonthDetails();
+                        }
+                    });
+                }
 
-            const weekDetailsModal = document.getElementById('weekDetailsModal');
-            if (weekDetailsModal) {
-                weekDetailsModal.addEventListener('click', function(e) {
-                    if (e.target === this) {
-                        closeWeekDetails();
-                    }
-                });
+                const weekDetailsModal = document.getElementById('weekDetailsModal');
+                if (weekDetailsModal) {
+                    weekDetailsModal.addEventListener('click', function(e) {
+                        if (e.target === this) {
+                            closeWeekDetails();
+                        }
+                    });
+                }
+                
+                console.log('Application initialized successfully');
+            } catch (error) {
+                console.error('Error during application initialization:', error);
             }
-            
-            console.log('Application initialized successfully');
         });
-
+        
         // Navigation functions
         function showPage(pageId) {
-            // 모든 페이지 숨기기
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-            });
-            
-            // 모든 네비게이션 아이템 비활성화
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            // 선택된 페이지 표시
-            const targetPage = document.getElementById(pageId);
-            if (targetPage) {
-                targetPage.classList.add('active');
-            }
-            
-            // 클릭된 네비게이션 아이템 활성화
-            if (event && event.target) {
-                const navItem = event.target.closest('.nav-item');
-                if (navItem) {
-                    navItem.classList.add('active');
+            try {
+                console.log(`Showing page: ${pageId}`);
+                
+                // 모든 페이지 숨기기
+                document.querySelectorAll('.page').forEach(page => {
+                    page.classList.remove('active');
+                });
+                
+                // 모든 네비게이션 아이템 비활성화
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // 선택된 페이지 표시
+                const targetPage = document.getElementById(pageId);
+                if (targetPage) {
+                    targetPage.classList.add('active');
+                    console.log(`Page ${pageId} activated`);
+                } else {
+                    console.error(`Page element not found: ${pageId}`);
+                    return;
                 }
-            }
-            
-            // 페이지별 특별 처리
-            if (pageId === 'analysis') {
-                setTimeout(() => {
-                    updateDetailedAnalytics();
-                    if (currentAnalyticsSection === 'detail') {
-                        updateBasicCharts();
-                    } else {
-                        updateAdvancedCharts();
+                
+                // 클릭된 네비게이션 아이템 활성화
+                if (event && event.target) {
+                    const navItem = event.target.closest('.nav-item');
+                    if (navItem) {
+                        navItem.classList.add('active');
                     }
-                }, 100);
-            }
-            
-            if (pageId === 'notes') {
-                setTimeout(() => {
-                    renderAllNotesSections();
-                }, 50);
-            }
-
-            if (pageId === 'psychology') {
-                setTimeout(() => {
-                    loadPsychologyData();
-                    updateVisualDashboard();
-                    updatePsychologyPerformanceChart();
-                }, 100);
-            }
-            
-            // 모바일에서 사이드바 닫기
-            if (window.innerWidth <= 768) {
-                const sidebar = document.getElementById('sidebar');
-                if (sidebar) {
-                    sidebar.classList.remove('open');
                 }
+                
+                // 페이지별 특별 처리
+                if (pageId === 'analysis') {
+                    setTimeout(() => {
+                        try {
+                            updateDetailedAnalytics();
+                            if (currentAnalyticsSection === 'detail') {
+                                updateBasicCharts();
+                            } else {
+                                updateAdvancedCharts();
+                            }
+                        } catch (error) {
+                            console.error('Error updating analytics:', error);
+                        }
+                    }, 100);
+                }
+                
+                if (pageId === 'notes') {
+                    setTimeout(() => {
+                        try {
+                            renderAllNotesSections();
+                            console.log('Notes sections rendered');
+                        } catch (error) {
+                            console.error('Error rendering notes sections:', error);
+                        }
+                    }, 50);
+                }
+
+                if (pageId === 'psychology') {
+                    setTimeout(() => {
+                        try {
+                            loadPsychologyData();
+                            updateVisualDashboard();
+                            updatePsychologyPerformanceChart();
+                        } catch (error) {
+                            console.error('Error updating psychology page:', error);
+                        }
+                    }, 100);
+                }
+
+                if (pageId === 'trades') {
+                    setTimeout(() => {
+                        try {
+                            updateAllTradesList();
+                            console.log('Trades list updated');
+                        } catch (error) {
+                            console.error('Error updating trades list:', error);
+                        }
+                    }, 50);
+                }
+                
+                // 모바일에서 사이드바 닫기
+                if (window.innerWidth <= 768) {
+                    const sidebar = document.getElementById('sidebar');
+                    if (sidebar) {
+                        sidebar.classList.remove('open');
+                    }
+                }
+            } catch (error) {
+                console.error(`Error showing page ${pageId}:`, error);
             }
         }
 
@@ -7087,11 +7158,11 @@
             let filteredTrades = trades;
             
             // Apply custom date range if set
-            if (analyticsStartDate || analyticsEndDate) {
+            if (analyticsDateStart || analyticsDateEnd) {
                 filteredTrades = trades.filter(trade => {
                     const tradeDate = trade.date;
-                    if (analyticsStartDate && tradeDate < analyticsStartDate) return false;
-                    if (analyticsEndDate && tradeDate > analyticsEndDate) return false;
+                    if (analyticsDateStart && tradeDate < analyticsDateStart) return false;
+                    if (analyticsDateEnd && tradeDate > analyticsDateEnd) return false;
                     return true;
                 });
             } else {
@@ -7123,7 +7194,7 @@
             
             return filteredTrades;
         }
-
+        
         function updateDetailedAnalytics() {
             const filteredTrades = getFilteredTradesForAnalytics();
             
