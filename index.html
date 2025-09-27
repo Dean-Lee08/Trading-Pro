@@ -113,27 +113,10 @@
             padding: 24px;
             max-width: 1400px;
             margin: 0 auto;
-            min-height: calc(100vh - 48px);
         }
 
         .page.active {
-            display: block !important;
-        }
-
-        .psychology-section {
-            display: none;
-        }
-
-        .psychology-section.active {
-            display: block !important;
-        }
-
-        .note-section {
-            display: none;
-        }
-
-        .note-section.active {
-            display: block !important;
+            display: block;
         }
 
         .page-header {
@@ -3760,462 +3743,418 @@
                 </div>
 
                 <!-- Daily Input Section -->
-        <div id="psychologyInputSection" class="psychology-section active">
-            <div class="psychology-container">
-                <h2 class="psychology-header" data-lang="daily-data-input">Daily Data Input</h2>
-                
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 24px;">
-                    <!-- Biological Data -->
-                    <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
-                        <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="biological-data">Biological Data</h3>
+                <div id="psychologyInputSection" class="psychology-section active">
+                    <div class="psychology-container">
+                        <h2 class="psychology-header" data-lang="daily-data-input">Daily Data Input</h2>
                         
-                        <div style="margin-bottom: 16px;">
-                            <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="sleep-hours">Sleep Hours</label>
-                            <input type="number" id="sleepHours" step="0.5" min="0" max="12" placeholder="7.5" 
-                                   style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 24px;">
+                            <!-- Biological Rhythm Data -->
+                            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
+                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="biological-data">Biological Data</h3>
+                                
+                                <div>
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="sleep-hours">Sleep Hours</label>
+                                    <input type="number" id="sleepHours" step="0.5" min="0" max="12" placeholder="7.5" 
+                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                </div>
+                            </div>
+                            
+                            <!-- Trading Environment -->
+                            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
+                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="trading-environment">Trading Environment</h3>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="start-time">Start Time</label>
+                                    <input type="time" id="startTime" value="09:30" 
+                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                </div>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="end-time">End Time</label>
+                                    <input type="time" id="endTime" 
+                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                </div>
+                                
+                                <div>
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="environment-type">Environment Type</label>
+                                    <select id="environmentType" style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                        <option value="home-quiet">Home (Quiet)</option>
+                                        <option value="home-noisy">Home (Noisy)</option>
+                                        <option value="office">Office</option>
+                                        <option value="cafe">Cafe</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Economic Pressure -->
+                            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
+                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="economic-pressure">Economic Pressure</h3>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="account-balance">Account Balance ($)</label>
+                                    <input type="number" id="accountBalance" min="0" placeholder="10000" 
+                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                </div>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="daily-target">Daily P&L Target ($)</label>
+                                    <input type="number" id="dailyTarget" placeholder="200" 
+                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                </div>
+                                
+                                <div>
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="max-daily-loss">Max Daily Loss ($)</label>
+                                    <input type="number" id="maxDailyLoss" placeholder="500" 
+                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                </div>
+                            </div>
+                            
+                            <!-- Emotional State -->
+                            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
+                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="emotional-state">Emotional State</h3>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="stress-level">Stress Level (1-5)</label>
+                                    <input type="number" id="stressLevel" min="1" max="5" value="3" 
+                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                </div>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="confidence-level">Confidence Level (1-5)</label>
+                                    <input type="number" id="confidenceLevel" min="1" max="5" value="3" 
+                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                </div>
+                                
+                                <div>
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="focus-level">Focus Level (1-5)</label>
+                                    <input type="number" id="focusLevel" min="1" max="5" value="3" 
+                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 12px; justify-content: center;">
+                            <button onclick="savePsychologyData()" 
+                                    style="background: #3b82f6; border: none; color: white; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;" 
+                                    data-lang="save-psychology-data">Save Psychology Data</button>
+                            <button onclick="calculateDailyScore()" 
+                                    style="background: #10b981; border: none; color: white; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;" 
+                                    data-lang="calculate-score">Calculate Daily Score</button>
+                            <button onclick="resetPsychologyData()" 
+                                    style="background: #ef4444; border: none; color: white; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;" 
+                                    data-lang="reset-data">Reset Data</button>
                         </div>
                     </div>
-                    
-                    <!-- Trading Environment -->
-                    <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
-                        <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="trading-environment">Trading Environment</h3>
-                        
-                        <div style="margin-bottom: 16px;">
-                            <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="start-time">Start Time</label>
-                            <input type="time" id="startTime" 
-                                   style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                        </div>
-                        
-                        <div style="margin-bottom: 16px;">
-                            <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="end-time">End Time</label>
-                            <input type="time" id="endTime" 
-                                   style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                        </div>
-                        
-                        <div>
-                            <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="environment-type">Environment Type</label>
-                            <select id="environmentType" style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                                <option value="home">Home</option>
-                                <option value="cafe">Cafe</option>
-                                <option value="office">Office</option>
-                                <option value="hotel">Hotel</option>
-                            </select>
+
+                    <!-- Psychology vs Performance Analysis Chart -->
+                    <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 24px; margin-top: 24px;">
+                        <h3 style="color: #f8fafc; font-size: 18px; font-weight: 600; margin-bottom: 20px; text-align: center;">Psychology vs Performance Analysis</h3>
+                        <div style="height: 400px; position: relative;">
+                            <canvas id="psychologyPerformanceChart" style="width: 100%; height: 100%;"></canvas>
                         </div>
                     </div>
-                    
-                    <!-- Economic Pressure -->
-                    <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
-                        <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="economic-pressure">Economic Pressure</h3>
+                </div>
+
+                <!-- Metrics Dashboard Section -->
+                <div id="psychologyMetricsSection" class="psychology-section">
+                    <div class="psychology-container">
+                        <h2 class="psychology-header" data-lang="psychology-dashboard">Psychology Dashboard</h2>
                         
-                        <div style="margin-bottom: 16px;">
-                            <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="account-balance">Account Balance ($)</label>
-                            <input type="number" id="accountBalance" min="0" placeholder="10000" oninput="updateTargetPercentages()"
-                                   style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                        </div>
-                        
-                        <div style="margin-bottom: 16px;">
-                            <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="daily-target">Daily P&L Target ($)</label>
-                            <div style="display: flex; gap: 8px; align-items: center;">
-                                <input type="number" id="dailyTarget" placeholder="200" oninput="updateTargetPercentages()"
-                                       style="flex: 1; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                                <span id="dailyTargetPercent" style="color: #64748b; font-size: 12px; min-width: 40px;">0%</span>
+                        <!-- Daily Psychology Score -->
+                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                            <h3 style="color: #f8fafc; font-size: 18px; margin-bottom: 16px; text-align: center;" data-lang="daily-psychology-score">Daily Psychology Score</h3>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                                <div id="sleepFactorCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="sleep-factor">Sleep Factor</div>
+                                    <div id="sleepFactorScore" style="color: #f8fafc; font-size: 24px; font-weight: 700; margin-bottom: 4px;">0/25</div>
+                                    <div id="sleepFactorStatus" style="color: #64748b; font-size: 11px;">No data</div>
+                                </div>
+                                
+                                <div id="stressFactorCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="stress-factor">Stress Factor</div>
+                                    <div id="stressFactorScore" style="color: #f8fafc; font-size: 24px; font-weight: 700; margin-bottom: 4px;">0/25</div>
+                                    <div id="stressFactorStatus" style="color: #64748b; font-size: 11px;">No data</div>
+                                </div>
+                                
+                                <div id="disciplineFactorCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="discipline-factor">Discipline Factor</div>
+                                    <div id="disciplineFactorScore" style="color: #f8fafc; font-size: 24px; font-weight: 700; margin-bottom: 4px;">0/25</div>
+                                    <div id="disciplineFactorStatus" style="color: #64748b; font-size: 11px;">No data</div>
+                                </div>
+                                
+                                <div id="consistencyFactorCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="consistency-factor">Consistency Factor</div>
+                                    <div id="consistencyFactorScore" style="color: #f8fafc; font-size: 24px; font-weight: 700; margin-bottom: 4px;">0/25</div>
+                                    <div id="consistencyFactorStatus" style="color: #64748b; font-size: 11px;">No data</div>
+                                </div>
+                                
+                                <div id="totalScoreCard" style="background: #0f172a; border: 2px solid #3b82f6; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="total-score">Total Score</div>
+                                    <div id="totalPsychScore" style="color: #3b82f6; font-size: 28px; font-weight: 700; margin-bottom: 4px;">0/100</div>
+                                    <div id="totalScoreStatus" style="color: #64748b; font-size: 11px;">No data</div>
+                                </div>
                             </div>
                         </div>
                         
-                        <div>
-                            <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="max-daily-loss">Max Daily Loss ($)</label>
-                            <div style="display: flex; gap: 8px; align-items: center;">
-                                <input type="number" id="maxDailyLoss" placeholder="500" oninput="updateTargetPercentages()"
-                                       style="flex: 1; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                                <span id="maxLossPercent" style="color: #64748b; font-size: 12px; min-width: 40px;">0%</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Emotional State -->
-                    <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
-                        <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="emotional-state">Emotional State</h3>
-                        
-                        <div style="margin-bottom: 16px;">
-                            <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="stress-level">Stress Level (1-5)</label>
-                            <input type="range" id="stressLevel" min="1" max="5" value="3" oninput="updateSliderDisplay('stressLevel', 'stressValue')"
-                                   style="width: 100%; accent-color: #3b82f6;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
-                                <span style="color: #64748b; font-size: 11px;">Low</span>
-                                <span id="stressValue" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">3</span>
-                                <span style="color: #64748b; font-size: 11px;">High</span>
-                            </div>
-                        </div>
-                        
-                        <div style="margin-bottom: 16px;">
-                            <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="confidence-level">Confidence Level (1-5)</label>
-                            <input type="range" id="confidenceLevel" min="1" max="5" value="3" oninput="updateSliderDisplay('confidenceLevel', 'confidenceValue')"
-                                   style="width: 100%; accent-color: #3b82f6;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
-                                <span style="color: #64748b; font-size: 11px;">Low</span>
-                                <span id="confidenceValue" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">3</span>
-                                <span style="color: #64748b; font-size: 11px;">High</span>
+                        <!-- Weekly Bias Risk Assessment -->
+                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                            <h3 style="color: #f8fafc; font-size: 18px; margin-bottom: 16px; text-align: center;" data-lang="weekly-bias-risk">Weekly Bias Risk Assessment</h3>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+                                <div id="overconfidenceRiskCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="overconfidence-risk">Overconfidence Risk</div>
+                                    <div id="overconfidenceRisk" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">Low</div>
+                                    <div id="overconfidenceDetails" style="color: #64748b; font-size: 11px;">Calibration Error: 0.0%</div>
+                                </div>
+                                
+                                <div id="lossAversionRiskCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="loss-aversion-risk">Loss Aversion Risk</div>
+                                    <div id="lossAversionRisk" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">Low</div>
+                                    <div id="lossAversionDetails" style="color: #64748b; font-size: 11px;">Disposition Ratio: 0.0</div>
+                                </div>
+                                
+                                <div id="anchoringRiskCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="anchoring-risk">Anchoring Risk</div>
+                                    <div id="anchoringRisk" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">Low</div>
+                                    <div id="anchoringDetails" style="color: #64748b; font-size: 11px;">Entry Price Dependency: 0%</div>
+                                </div>
                             </div>
                         </div>
                         
-                        <div>
-                            <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="focus-level">Focus Level (1-5)</label>
-                            <input type="range" id="focusLevel" min="1" max="5" value="3" oninput="updateSliderDisplay('focusLevel', 'focusValue')"
-                                   style="width: 100%; accent-color: #3b82f6;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
-                                <span style="color: #64748b; font-size: 11px;">Low</span>
-                                <span id="focusValue" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">3</span>
-                                <span style="color: #64748b; font-size: 11px;">High</span>
+                        <!-- Performance Correlation -->
+                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px;">
+                            <h3 style="color: #f8fafc; font-size: 18px; margin-bottom: 16px; text-align: center;" data-lang="performance-correlation">Performance Correlation Analysis</h3>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="sleep-performance">Sleep vs Performance</div>
+                                    <div id="sleepCorrelation" style="color: #f8fafc; font-size: 18px; font-weight: 700;">+0.00</div>
+                                </div>
+                                
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="caffeine-performance">Caffeine vs Performance</div>
+                                    <div id="caffeineCorrelation" style="color: #f8fafc; font-size: 18px; font-weight: 700;">+0.00</div>
+                                </div>
+                                
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="timing-performance">Timing vs Performance</div>
+                                    <div id="timingCorrelation" style="color: #f8fafc; font-size: 18px; font-weight: 700;">+0.00</div>
+                                </div>
+                                
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="confidence-performance">Confidence vs Performance</div>
+                                    <div id="confidenceCorrelation" style="color: #f8fafc; font-size: 18px; font-weight: 700;">+0.00</div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Action Buttons -->
-                <div style="display: flex; gap: 12px; justify-content: center; margin-bottom: 24px;">
-                    <button class="psychology-save-btn" onclick="savePsychologyData()" data-lang="save-psychology-data">Save Psychology Data</button>
-                    <button class="psychology-save-btn" onclick="calculateDailyScore()" style="background: #3b82f6;" data-lang="calculate-score">Calculate Daily Score</button>
-                    <button class="psychology-save-btn" onclick="resetPsychologyData()" style="background: #ef4444;" data-lang="reset-psychology-data">Reset Data</button>
-                </div>
-                
-                <!-- Enhanced Visual Dashboard - 여기가 Daily Input 섹션에만 나타나는 유일한 대시보드 -->
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 32px;">
-                    <!-- Sleep Performance Card -->
-                    <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid #334155; border-radius: 12px; padding: 20px; position: relative; overflow: hidden;">
-                        <div style="position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%); pointer-events: none;"></div>
-                        <div style="position: relative; z-index: 1;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                                <h3 style="color: #10b981; font-size: 16px; font-weight: 600;" data-lang="sleep-performance">Sleep Performance</h3>
-                                <div style="width: 40px; height: 40px; background: rgba(16, 185, 129, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                                    <span style="font-size: 20px;">🛌</span>
-                                </div>
-                            </div>
-                            <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px;">
-                                <span id="sleepHoursDisplay" style="font-size: 28px; font-weight: 700; color: #e4e4e7;">0</span>
-                                <span style="color: #94a3b8; font-size: 14px;">hours</span>
-                            </div>
-                            <div id="sleepQualityIndicator" style="height: 4px; background: #334155; border-radius: 2px; overflow: hidden;">
-                                <div id="sleepQualityBar" style="height: 100%; background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981); width: 0%; transition: width 0.3s ease;"></div>
-                            </div>
-                            <div id="sleepStatus" style="color: #94a3b8; font-size: 12px; margin-top: 8px;">No data</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Environment Card -->
-                    <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid #334155; border-radius: 12px; padding: 20px; position: relative; overflow: hidden;">
-                        <div style="position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%); pointer-events: none;"></div>
-                        <div style="position: relative; z-index: 1;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                                <h3 style="color: #3b82f6; font-size: 16px; font-weight: 600;" data-lang="environment-score">Environment Score</h3>
-                                <div style="width: 40px; height: 40px; background: rgba(59, 130, 246, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                                    <span style="font-size: 20px;">🏢</span>
-                                </div>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-                                <div style="width: 60px; height: 60px; position: relative;">
-                                    <svg style="width: 100%; height: 100%; transform: rotate(-90deg);">
-                                        <circle cx="30" cy="30" r="25" stroke="#334155" stroke-width="4" fill="none"></circle>
-                                        <circle id="environmentCircle" cx="30" cy="30" r="25" stroke="#3b82f6" stroke-width="4" fill="none" 
-                                                stroke-dasharray="157" stroke-dashoffset="157" style="transition: stroke-dashoffset 0.5s ease;"></circle>
-                                    </svg>
-                                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-                                        <span id="environmentScore" style="font-size: 14px; font-weight: 700; color: #e4e4e7;">0</span>
+
+                <!-- Bias Analysis Section -->
+                <div id="psychologyBiasSection" class="psychology-section">
+                    <div class="psychology-container">
+                        <h2 class="psychology-header" data-lang="bias-analysis-title">Quantified Bias Analysis</h2>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 24px;">
+                            <!-- Overconfidence Bias -->
+                            <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px;">
+                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="overconfidence-bias">Overconfidence Bias</h3>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                        <span style="color: #94a3b8; font-size: 13px;" data-lang="calibration-error">Calibration Error</span>
+                                        <span id="calibrationError" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0.0%</span>
+                                    </div>
+                                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
+                                        <div id="calibrationErrorBar" style="height: 100%; background: #10b981; width: 0%; transition: width 0.3s ease;"></div>
                                     </div>
                                 </div>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                        <span style="color: #94a3b8; font-size: 13px;" data-lang="overtrading-index">Overtrading Index</span>
+                                        <span id="overtradingIndex" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0%</span>
+                                    </div>
+                                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
+                                        <div id="overtradingBar" style="height: 100%; background: #f59e0b; width: 0%; transition: width 0.3s ease;"></div>
+                                    </div>
+                                </div>
+                                
                                 <div>
-                                    <div id="environmentType" style="color: #e4e4e7; font-size: 14px; font-weight: 600;">-</div>
-                                    <div id="environmentStatus" style="color: #94a3b8; font-size: 12px;">No data</div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                        <span style="color: #94a3b8; font-size: 13px;" data-lang="position-deviation">Position Size Deviation</span>
+                                        <span id="positionDeviation" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0.0</span>
+                                    </div>
+                                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
+                                        <div id="positionDeviationBar" style="height: 100%; background: #3b82f6; width: 0%; transition: width 0.3s ease;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Loss Aversion -->
+                            <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px;">
+                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="loss-aversion-bias">Loss Aversion Bias</h3>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                        <span style="color: #94a3b8; font-size: 13px;" data-lang="disposition-ratio">Disposition Ratio</span>
+                                        <span id="dispositionRatio" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">1.0</span>
+                                    </div>
+                                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
+                                        <div id="dispositionBar" style="height: 100%; background: #ef4444; width: 0%; transition: width 0.3s ease;"></div>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                        <span style="color: #94a3b8; font-size: 13px;" data-lang="stop-loss-execution">Stop Loss Execution Rate</span>
+                                        <span id="stopLossRate" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0%</span>
+                                    </div>
+                                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
+                                        <div id="stopLossBar" style="height: 100%; background: #10b981; width: 0%; transition: width 0.3s ease;"></div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                        <span style="color: #94a3b8; font-size: 13px;" data-lang="stop-loss-modification">Stop Loss Modification Rate</span>
+                                        <span id="stopLossModRate" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0%</span>
+                                    </div>
+                                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
+                                        <div id="stopLossModBar" style="height: 100%; background: #8b5cf6; width: 0%; transition: width 0.3s ease;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Anchoring Bias -->
+                            <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px;">
+                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="anchoring-bias">Anchoring Bias</h3>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                        <span style="color: #94a3b8; font-size: 13px;" data-lang="entry-price-dependency">Entry Price Dependency</span>
+                                        <span id="entryPriceDep" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0%</span>
+                                    </div>
+                                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
+                                        <div id="entryPriceBar" style="height: 100%; background: #06b6d4; width: 0%; transition: width 0.3s ease;"></div>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                        <span style="color: #94a3b8; font-size: 13px;" data-lang="round-number-bias">Round Number Bias</span>
+                                        <span id="roundNumberBias" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0%</span>
+                                    </div>
+                                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
+                                        <div id="roundNumberBar" style="height: 100%; background: #f59e0b; width: 0%; transition: width 0.3s ease;"></div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                        <span style="color: #94a3b8; font-size: 13px;" data-lang="recent-high-anchor">Recent High Anchor</span>
+                                        <span id="recentHighAnchor" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0%</span>
+                                    </div>
+                                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
+                                        <div id="recentHighBar" style="height: 100%; background: #ef4444; width: 0%; transition: width 0.3s ease;"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <!-- Emotional State Card -->
-                    <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid #334155; border-radius: 12px; padding: 20px; position: relative; overflow: hidden;">
-                        <div style="position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%); pointer-events: none;"></div>
-                        <div style="position: relative; z-index: 1;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                                <h3 style="color: #8b5cf6; font-size: 16px; font-weight: 600;" data-lang="emotional-readiness">Emotional Readiness</h3>
-                                <div style="width: 40px; height: 40px; background: rgba(139, 92, 246, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                                    <span style="font-size: 20px;">🧠</span>
+                        
+                        <!-- Weekly Risk Summary -->
+                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-top: 24px;">
+                            <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="weekly-risk-summary">Weekly Risk Summary</h3>
+                            
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="overall-bias-risk">Overall Bias Risk</div>
+                                    <div id="overallBiasRisk" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">Low</div>
+                                    <div id="overallBiasScore" style="color: #64748b; font-size: 11px;">Score: 0/100</div>
+                                </div>
+                                
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="risk-trend">Risk Trend</div>
+                                    <div id="riskTrend" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">Stable</div>
+                                    <div id="riskTrendDetails" style="color: #64748b; font-size: 11px;">Last 7 days</div>
+                                </div>
+                                
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="action-needed">Action Needed</div>
+                                    <div id="actionNeeded" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">None</div>
+                                    <div id="actionDetails" style="color: #64748b; font-size: 11px;">All metrics normal</div>
                                 </div>
                             </div>
-                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px;">
-                                <div style="text-align: center;">
-                                    <div id="stressDisplay" style="font-size: 18px; font-weight: 700; color: #e4e4e7;">3</div>
-                                    <div style="color: #94a3b8; font-size: 10px;">Stress</div>
-                                </div>
-                                <div style="text-align: center;">
-                                    <div id="confidenceDisplay" style="font-size: 18px; font-weight: 700; color: #e4e4e7;">3</div>
-                                    <div style="color: #94a3b8; font-size: 10px;">Confidence</div>
-                                </div>
-                                <div style="text-align: center;">
-                                    <div id="focusDisplay" style="font-size: 18px; font-weight: 700; color: #e4e4e7;">3</div>
-                                    <div style="color: #94a3b8; font-size: 10px;">Focus</div>
-                                </div>
-                            </div>
-                            <div id="emotionalStatus" style="color: #94a3b8; font-size: 12px; text-align: center;">No data</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Risk Assessment Card -->
-                    <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid #334155; border-radius: 12px; padding: 20px; position: relative; overflow: hidden;">
-                        <div style="position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(245, 158, 11, 0.1) 0%, transparent 70%); pointer-events: none;"></div>
-                        <div style="position: relative; z-index: 1;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                                <h3 style="color: #f59e0b; font-size: 16px; font-weight: 600;" data-lang="risk-assessment">Risk Assessment</h3>
-                                <div style="width: 40px; height: 40px; background: rgba(245, 158, 11, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                                    <span style="font-size: 20px;">⚠️</span>
-                                </div>
-                            </div>
-                            <div style="margin-bottom: 12px;">
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                                    <span style="color: #94a3b8; font-size: 12px;">Target Risk</span>
-                                    <span id="targetRiskPercent" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">0%</span>
-                                </div>
-                                <div style="background: #334155; height: 6px; border-radius: 3px; overflow: hidden;">
-                                    <div id="targetRiskBar" style="height: 100%; background: linear-gradient(90deg, #10b981, #f59e0b, #ef4444); width: 0%; transition: width 0.3s ease;"></div>
-                                </div>
-                            </div>
-                            <div style="margin-bottom: 8px;">
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                                    <span style="color: #94a3b8; font-size: 12px;">Max Loss Risk</span>
-                                    <span id="maxLossRiskPercent" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">0%</span>
-                                </div>
-                                <div style="background: #334155; height: 6px; border-radius: 3px; overflow: hidden;">
-                                    <div id="maxLossRiskBar" style="height: 100%; background: linear-gradient(90deg, #10b981, #f59e0b, #ef4444); width: 0%; transition: width 0.3s ease;"></div>
-                                </div>
-                            </div>
-                            <div id="riskStatus" style="color: #94a3b8; font-size: 12px; text-align: center;">No data</div>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Performance Chart Section -->
-                <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 24px; margin-bottom: 24px;">
-                    <h3 style="color: #f8fafc; font-size: 18px; font-weight: 600; margin-bottom: 20px; text-align: center;" data-lang="psychology-performance-chart">Psychology vs Performance Analysis</h3>
-                    <div style="height: 300px; display: flex; align-items: center; justify-content: center;">
-                        <canvas id="psychologyPerformanceChart" style="max-width: 100%; max-height: 100%;"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Metrics Dashboard Section -->
-        <div id="psychologyMetricsSection" class="psychology-section">
-            <div class="psychology-container">
-                <h2 class="psychology-header" data-lang="psychology-dashboard">Psychology Metrics Dashboard</h2>
-                <div style="text-align: center; color: #94a3b8; padding: 40px 20px;">
-                    <p>Metrics dashboard will display aggregated psychology performance data</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Bias Analysis Section -->
-        <div id="psychologyBiasSection" class="psychology-section">
-            <div class="psychology-container">
-                <h2 class="psychology-header" data-lang="bias-analysis-title">Quantified Bias Analysis</h2>
-                
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 24px;">
-                    <!-- Overconfidence Bias -->
-                    <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px;">
-                        <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="overconfidence-bias">Overconfidence Bias</h3>
+                <!-- Pattern Insights Section -->
+                <div id="psychologyPatternsSection" class="psychology-section">
+                    <div class="psychology-container">
+                        <h2 class="psychology-header" data-lang="pattern-insights-title">Pattern Insights & Recommendations</h2>
                         
-                        <div style="margin-bottom: 16px;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                <span style="color: #94a3b8; font-size: 13px;" data-lang="calibration-error">Calibration Error</span>
-                                <span id="calibrationError" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0.0%</span>
-                            </div>
-                            <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
-                                <div id="calibrationErrorBar" style="height: 100%; background: #10b981; width: 0%; transition: width 0.3s ease;"></div>
+                        <!-- Time-Based Performance -->
+                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                            <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="time-based-performance">Time-Based Performance Analysis</h3>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="best-trading-hour">Best Trading Hour</div>
+                                    <div id="bestTradingHour" style="color: #10b981; font-size: 18px; font-weight: 700; margin-bottom: 4px;">--:--</div>
+                                    <div id="bestHourPerformance" style="color: #64748b; font-size: 11px;">Win Rate: --%</div>
+                                </div>
+                                
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="worst-trading-hour">Worst Trading Hour</div>
+                                    <div id="worstTradingHour" style="color: #ef4444; font-size: 18px; font-weight: 700; margin-bottom: 4px;">--:--</div>
+                                    <div id="worstHourPerformance" style="color: #64748b; font-size: 11px;">Win Rate: --%</div>
+                                </div>
+                                
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="optimal-sleep-range">Optimal Sleep Range</div>
+                                    <div id="optimalSleepRange" style="color: #3b82f6; font-size: 18px; font-weight: 700; margin-bottom: 4px;">-.- hours</div>
+                                    <div id="sleepRangePerformance" style="color: #64748b; font-size: 11px;">Avg P&L: $--</div>
+                                </div>
+                                
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="delay-impact">Start Delay Impact</div>
+                                    <div id="delayImpact" style="color: #f59e0b; font-size: 18px; font-weight: 700; margin-bottom: 4px;">--min</div>
+                                    <div id="delayPerformance" style="color: #64748b; font-size: 11px;">Performance drop: --%</div>
+                                </div>
                             </div>
                         </div>
                         
-                        <div style="margin-bottom: 16px;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                <span style="color: #94a3b8; font-size: 13px;" data-lang="overtrading-index">Overtrading Index</span>
-                                <span id="overtradingIndex" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0%</span>
-                            </div>
-                            <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
-                                <div id="overtradingBar" style="height: 100%; background: #f59e0b; width: 0%; transition: width 0.3s ease;"></div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                <span style="color: #94a3b8; font-size: 13px;" data-lang="position-deviation">Position Size Deviation</span>
-                                <span id="positionDeviation" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0.0</span>
-                            </div>
-                            <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
-                                <div id="positionDeviationBar" style="height: 100%; background: #3b82f6; width: 0%; transition: width 0.3s ease;"></div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Loss Aversion -->
-                    <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px;">
-                        <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="loss-aversion-bias">Loss Aversion Bias</h3>
-                        
-                        <div style="margin-bottom: 16px;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                <span style="color: #94a3b8; font-size: 13px;" data-lang="disposition-ratio">Disposition Ratio</span>
-                                <span id="dispositionRatio" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">1.0</span>
-                            </div>
-                            <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
-                                <div id="dispositionBar" style="height: 100%; background: #ef4444; width: 0%; transition: width 0.3s ease;"></div>
+                        <!-- Consecutive Trades Pattern -->
+                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                            <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="consecutive-pattern">Consecutive Trades Pattern</h3>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
+                                    <div style="color: #94a3b8; font-size: 14px; margin-bottom: 12px;" data-lang="after-losses">Performance After Losses</div>
+                                    <div style="color: #e4e4e7; font-size: 13px; margin-bottom: 8px;">After 1 loss: <span id="after1Loss" style="font-weight: 600;">--%</span></div>
+                                    <div style="color: #e4e4e7; font-size: 13px; margin-bottom: 8px;">After 2 losses: <span id="after2Losses" style="font-weight: 600;">--%</span></div>
+                                    <div style="color: #e4e4e7; font-size: 13px;">After 3+ losses: <span id="after3Losses" style="font-weight: 600;">--%</span></div>
+                                </div>
+                                
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
+                                    <div style="color: #94a3b8; font-size: 14px; margin-bottom: 12px;" data-lang="after-wins">Performance After Wins</div>
+                                    <div style="color: #e4e4e7; font-size: 13px; margin-bottom: 8px;">After 1 win: <span id="after1Win" style="font-weight: 600;">--%</span></div>
+                                    <div style="color: #e4e4e7; font-size: 13px; margin-bottom: 8px;">After 2 wins: <span id="after2Wins" style="font-weight: 600;">--%</span></div>
+                                    <div style="color: #e4e4e7; font-size: 13px;">After 3+ wins: <span id="after3Wins" style="font-weight: 600;">--%</span></div>
+                                </div>
                             </div>
                         </div>
                         
-                        <div style="margin-bottom: 16px;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                <span style="color: #94a3b8; font-size: 13px;" data-lang="stop-loss-execution">Stop Loss Execution Rate</span>
-                                <span id="stopLossRate" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0%</span>
+                        <!-- AI-Generated Insights -->
+                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px;">
+                            <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="ai-insights">AI-Generated Insights</h3>
+                            <div id="aiInsightsList" style="display: grid; gap: 12px;">
+                                <div style="background: #0f172a; border-left: 4px solid #3b82f6; padding: 12px 16px; border-radius: 0 6px 6px 0;">
+                                    <div style="color: #e4e4e7; font-size: 14px; line-height: 1.5;" data-lang="no-insights">Collect more psychology data to generate personalized insights.</div>
+                                </div>
                             </div>
-                            <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
-                                <div id="stopLossBar" style="height: 100%; background: #10b981; width: 0%; transition: width 0.3s ease;"></div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                <span style="color: #94a3b8; font-size: 13px;" data-lang="stop-loss-modification">Stop Loss Modification Rate</span>
-                                <span id="stopLossModRate" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0%</span>
-                            </div>
-                            <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
-                                <div id="stopLossModBar" style="height: 100%; background: #8b5cf6; width: 0%; transition: width 0.3s ease;"></div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Anchoring Bias -->
-                    <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px;">
-                        <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="anchoring-bias">Anchoring Bias</h3>
-                        
-                        <div style="margin-bottom: 16px;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                <span style="color: #94a3b8; font-size: 13px;" data-lang="entry-price-dependency">Entry Price Dependency</span>
-                                <span id="entryPriceDep" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0%</span>
-                            </div>
-                            <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
-                                <div id="entryPriceBar" style="height: 100%; background: #06b6d4; width: 0%; transition: width 0.3s ease;"></div>
-                            </div>
-                        </div>
-                        
-                        <div style="margin-bottom: 16px;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                <span style="color: #94a3b8; font-size: 13px;" data-lang="round-number-bias">Round Number Bias</span>
-                                <span id="roundNumberBias" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0%</span>
-                            </div>
-                            <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
-                                <div id="roundNumberBar" style="height: 100%; background: #f59e0b; width: 0%; transition: width 0.3s ease;"></div>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                <span style="color: #94a3b8; font-size: 13px;" data-lang="recent-high-anchor">Recent High Anchor</span>
-                                <span id="recentHighAnchor" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0%</span>
-                            </div>
-                            <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
-                                <div id="recentHighBar" style="height: 100%; background: #ef4444; width: 0%; transition: width 0.3s ease;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Weekly Risk Summary -->
-                <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-top: 24px;">
-                    <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="weekly-risk-summary">Weekly Risk Summary</h3>
-                    
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-                        <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="overall-bias-risk">Overall Bias Risk</div>
-                            <div id="overallBiasRisk" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">Low</div>
-                            <div id="overallBiasScore" style="color: #64748b; font-size: 11px;">Score: 0/100</div>
-                        </div>
-                        
-                        <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="risk-trend">Risk Trend</div>
-                            <div id="riskTrend" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">Stable</div>
-                            <div id="riskTrendDetails" style="color: #64748b; font-size: 11px;">Last 7 days</div>
-                        </div>
-                        
-                        <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="action-needed">Action Needed</div>
-                            <div id="actionNeeded" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">None</div>
-                            <div id="actionDetails" style="color: #64748b; font-size: 11px;">All metrics normal</div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Pattern Insights Section -->
-        <div id="psychologyPatternsSection" class="psychology-section">
-            <div class="psychology-container">
-                <h2 class="psychology-header" data-lang="pattern-insights-title">Pattern Insights & Recommendations</h2>
-                
-                <!-- Time-Based Performance -->
-                <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
-                    <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="time-based-performance">Time-Based Performance Analysis</h3>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-                        <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="best-trading-hour">Best Trading Hour</div>
-                            <div id="bestTradingHour" style="color: #10b981; font-size: 18px; font-weight: 700; margin-bottom: 4px;">--:--</div>
-                            <div id="bestHourPerformance" style="color: #64748b; font-size: 11px;">Win Rate: --%</div>
-                        </div>
-                        
-                        <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="worst-trading-hour">Worst Trading Hour</div>
-                            <div id="worstTradingHour" style="color: #ef4444; font-size: 18px; font-weight: 700; margin-bottom: 4px;">--:--</div>
-                            <div id="worstHourPerformance" style="color: #64748b; font-size: 11px;">Win Rate: --%</div>
-                        </div>
-                        
-                        <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="optimal-sleep-range">Optimal Sleep Range</div>
-                            <div id="optimalSleepRange" style="color: #3b82f6; font-size: 18px; font-weight: 700; margin-bottom: 4px;">-.- hours</div>
-                            <div id="sleepRangePerformance" style="color: #64748b; font-size: 11px;">Avg P&L: $--</div>
-                        </div>
-                        
-                        <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="delay-impact">Start Delay Impact</div>
-                            <div id="delayImpact" style="color: #f59e0b; font-size: 18px; font-weight: 700; margin-bottom: 4px;">--min</div>
-                            <div id="delayPerformance" style="color: #64748b; font-size: 11px;">Performance drop: --%</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Consecutive Trades Pattern -->
-                <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
-                    <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="consecutive-pattern">Consecutive Trades Pattern</h3>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
-                        <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
-                            <div style="color: #94a3b8; font-size: 14px; margin-bottom: 12px;" data-lang="after-losses">Performance After Losses</div>
-                            <div style="color: #e4e4e7; font-size: 13px; margin-bottom: 8px;">After 1 loss: <span id="after1Loss" style="font-weight: 600;">--%</span></div>
-                            <div style="color: #e4e4e7; font-size: 13px; margin-bottom: 8px;">After 2 losses: <span id="after2Losses" style="font-weight: 600;">--%</span></div>
-                            <div style="color: #e4e4e7; font-size: 13px;">After 3+ losses: <span id="after3Losses" style="font-weight: 600;">--%</span></div>
-                        </div>
-                        
-                        <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
-                            <div style="color: #94a3b8; font-size: 14px; margin-bottom: 12px;" data-lang="after-wins">Performance After Wins</div>
-                            <div style="color: #e4e4e7; font-size: 13px; margin-bottom: 8px;">After 1 win: <span id="after1Win" style="font-weight: 600;">--%</span></div>
-                            <div style="color: #e4e4e7; font-size: 13px; margin-bottom: 8px;">After 2 wins: <span id="after2Wins" style="font-weight: 600;">--%</span></div>
-                            <div style="color: #e4e4e7; font-size: 13px;">After 3+ wins: <span id="after3Wins" style="font-weight: 600;">--%</span></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- AI-Generated Insights -->
-                <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px;">
-                    <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="ai-insights">AI-Generated Insights</h3>
-                    <div id="aiInsightsList" style="display: grid; gap: 12px;">
-                        <div style="background: #0f172a; border-left: 4px solid #3b82f6; padding: 12px 16px; border-radius: 0 6px 6px 0;">
-                            <div style="color: #e4e4e7; font-size: 14px; line-height: 1.5;" data-lang="no-insights">Collect more psychology data to generate personalized insights.</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
             
             <!-- Notes page -->
             <div id="notes" class="page">
@@ -4408,7 +4347,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script>
-        // Global variables (변수명 충돌 해결)
+        // Global variables
         let trades = [];
         let notes = [];
         let dailyFees = {};
@@ -4421,12 +4360,12 @@
         let selectedCalendarDay = null;
         let currentLanguage = 'en';
         let analyticsPeriod = 'all';
-        let dashboardDateStart = null;  // 변수명 변경
-        let dashboardDateEnd = null;    // 변수명 변경
-        let analyticsDateStart = null;  // 변수명 변경
-        let analyticsDateEnd = null;    // 변수명 변경
-        let tradesDateStart = null;     // 변수명 변경
-        let tradesDateEnd = null;       // 변수명 변경
+        let dashboardStartDate = null;
+        let dashboardEndDate = null;
+        let analyticsStartDate = null;
+        let analyticsEndDate = null;
+        let tradesStartDate = null;
+        let tradesEndDate = null;
         let currentAnalyticsSection = 'detail';
         let editingNoteId = null;
         let currentNotesSection = 'all';
@@ -4779,7 +4718,12 @@
                 'weekly-risk-summary': 'Weekly Risk Summary',
                 'overall-bias-risk': 'Overall Bias Risk',
                 'risk-trend': 'Risk Trend',
-                'action-needed': 'Action Needed'
+                'action-needed': 'Action Needed',
+                'start-time': 'Start Time',
+                'end-time': 'End Time',
+                'stress-level': 'Stress Level (1-5)',
+                'focus-level': 'Focus Level (1-5)',
+                'emotional-state': 'Emotional State'
             },
             ko: {
                 'dashboard': '대시보드',
@@ -5099,7 +5043,12 @@
                 'weekly-risk-summary': '주간 위험 요약',
                 'overall-bias-risk': '전체 편향 위험',
                 'risk-trend': '위험 추세',
-                'action-needed': '필요한 조치'
+                'action-needed': '필요한 조치',
+                'start-time': '시작 시간',
+                'end-time': '종료 시간',
+                'stress-level': '스트레스 수준 (1-5)',
+                'focus-level': '집중력 수준 (1-5)',
+                'emotional-state': '감정 상태'
             }
         };
         
@@ -5309,12 +5258,10 @@
 
         // Dashboard date range functions
         function clearDashboardRange() {
-            dashboardDateStart = null;
-            dashboardDateEnd = null;
-            const startDateInput = document.getElementById('dashboardStartDate');
-            const endDateInput = document.getElementById('dashboardEndDate');
-            if (startDateInput) startDateInput.value = '';
-            if (endDateInput) endDateInput.value = '';
+            dashboardStartDate = null;
+            dashboardEndDate = null;
+            document.getElementById('dashboardStartDate').value = '';
+            document.getElementById('dashboardEndDate').value = '';
             updateStats();
             updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
         }
@@ -5323,11 +5270,11 @@
             let filteredTrades = trades;
             const currentDate = formatTradingDate(currentTradingDate);
             
-            if (dashboardDateStart || dashboardDateEnd) {
+            if (dashboardStartDate || dashboardEndDate) {
                 filteredTrades = trades.filter(trade => {
                     const tradeDate = trade.date;
-                    if (dashboardDateStart && tradeDate < dashboardDateStart) return false;
-                    if (dashboardDateEnd && tradeDate > dashboardDateEnd) return false;
+                    if (dashboardStartDate && tradeDate < dashboardStartDate) return false;
+                    if (dashboardEndDate && tradeDate > dashboardEndDate) return false;
                     return true;
                 });
             } else {
@@ -5339,32 +5286,28 @@
 
         // Analytics date range functions
         function clearAnalyticsRange() {
-            analyticsDateStart = null;
-            analyticsDateEnd = null;
-            const startDateInput = document.getElementById('analyticsStartDate');
-            const endDateInput = document.getElementById('analyticsEndDate');
-            if (startDateInput) startDateInput.value = '';
-            if (endDateInput) endDateInput.value = '';
+            analyticsStartDate = null;
+            analyticsEndDate = null;
+            document.getElementById('analyticsStartDate').value = '';
+            document.getElementById('analyticsEndDate').value = '';
             updateDetailedAnalytics();
         }
 
         // Trades page date range functions
         function clearTradesRange() {
-            tradesDateStart = null;
-            tradesDateEnd = null;
-            const startDateInput = document.getElementById('tradesStartDate');
-            const endDateInput = document.getElementById('tradesEndDate');
-            if (startDateInput) startDateInput.value = '';
-            if (endDateInput) endDateInput.value = '';
+            tradesStartDate = null;
+            tradesEndDate = null;
+            document.getElementById('tradesStartDate').value = '';
+            document.getElementById('tradesEndDate').value = '';
             updateAllTradesList();
         }
 
         function getFilteredTradesList() {
-            if (tradesDateStart || tradesDateEnd) {
+            if (tradesStartDate || tradesEndDate) {
                 return trades.filter(trade => {
                     const tradeDate = trade.date;
-                    if (tradesDateStart && tradeDate < tradesDateStart) return false;
-                    if (tradesDateEnd && tradeDate > tradesDateEnd) return false;
+                    if (tradesStartDate && tradeDate < tradesStartDate) return false;
+                    if (tradesEndDate && tradeDate > tradesEndDate) return false;
                     return true;
                 });
             }
@@ -5577,28 +5520,101 @@
 }
 
         function renderAllNotesSections() {
+            renderNotesList('all');
+            renderNotesList('daily');
+            renderNotesList('strategy');
+            renderNotesList('general');
+        }
+
+        function renderNotesList(category) {
+    let categoryNotes;
+    if (category === 'all') {
+        categoryNotes = notes;
+    } else {
+        categoryNotes = notes.filter(note => note.category === category);
+    }
+    
+    // 고정된 노트와 일반 노트 분리
+    const pinnedNotes = categoryNotes.filter(note => note.pinned);
+    const regularNotes = categoryNotes.filter(note => !note.pinned);
+    
+    // 고정된 노트는 업데이트 시간순, 일반 노트는 생성 시간순 정렬
+    pinnedNotes.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+    regularNotes.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    
+    const sortedNotes = [...pinnedNotes, ...regularNotes];
+    
+    const notesList = document.getElementById(`${category}NotesList`);
+    
+    if (sortedNotes.length === 0) {
+        const emptyMessages = {
+            all: currentLanguage === 'ko' ? '아직 작성된 노트가 없습니다. "새 노트"를 클릭하여 시작하세요.' : 'No notes written yet. Click "New Note" to start.',
+            daily: currentLanguage === 'ko' ? '일일 리뷰 노트가 아직 없습니다. "새 노트"를 클릭하여 시작하세요.' : 'No daily review notes yet. Click "New Note" to start.',
+            strategy: currentLanguage === 'ko' ? '전략 노트가 아직 없습니다. "새 노트"를 클릭하여 시작하세요.' : 'No strategy notes yet. Click "New Note" to start.',
+            general: currentLanguage === 'ko' ? '일반 노트가 아직 없습니다. "새 노트"를 클릭하여 시작하세요.' : 'No general notes yet. Click "New Note" to start.'
+        };
+        
+        notesList.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">📝</div>
+                <div>${emptyMessages[category]}</div>
+            </div>
+        `;
+        return;
+    }
+
+    notesList.innerHTML = sortedNotes.map(note => {
+        const createdDate = new Date(note.createdAt);
+        const formattedDate = createdDate.toLocaleDateString(currentLanguage === 'ko' ? 'ko-KR' : 'en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+        
+        const preview = note.content.replace(/<[^>]*>/g, '');
+        const previewText = preview.length > 150 ? preview.substring(0, 150) + '...' : preview;
+
+        const categoryLabels = {
+            daily: currentLanguage === 'ko' ? '일일 리뷰' : 'Daily Review',
+            strategy: currentLanguage === 'ko' ? '전략' : 'Strategy',
+            general: currentLanguage === 'ko' ? '일반' : 'General'
+        };
+
+        const pinnedClass = note.pinned ? 'note-item-pinned' : '';
+        const pinnedIcon = note.pinned ? '📌 ' : '';
+        const uniqueId = `${note.id}_${category}`;
+
+        return `
+            <div class="note-item ${pinnedClass}" onclick="viewNote(${note.id})">
+                <div class="note-item-header">
+                    <div>
+                        <h3 class="note-item-title">${pinnedIcon}${note.title}</h3>
+                        ${category === 'all' ? `<div class="note-item-category">${categoryLabels[note.category]}</div>` : ''}
+                    </div>
+                    <div class="note-item-header-right">
+                        <span class="note-item-date">${formattedDate}</span>
+                        <button class="pin-btn" onclick="event.stopPropagation(); togglePinNote(${note.id})" title="${note.pinned ? (currentLanguage === 'ko' ? '고정 해제' : 'Unpin') : (currentLanguage === 'ko' ? '상단 고정' : 'Pin to top')}">${note.pinned ? '📌' : '📌'}</button>
+                    </div>
+                </div>
+                <div class="note-item-preview" id="preview-${uniqueId}" style="color: ${note.textColor || '#94a3b8'}; font-family: ${note.font || "'Inter', sans-serif"};">${previewText}</div>
+                <button class="expand-btn" data-note-id="${note.id}" data-category="${category}" onclick="event.stopPropagation(); toggleNotePreview(this)">${currentLanguage === 'ko' ? '더보기' : 'Show more'}</button>
+                <div class="note-item-actions">
+                    <button class="action-btn" onclick="event.stopPropagation(); editNote(${note.id})" title="Edit note">✏️</button>
+                    <button class="action-btn" onclick="event.stopPropagation(); deleteNote(${note.id})" title="Delete note">🗑️</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+        function saveNotes() {
             try {
-                // 각 섹션별로 안전하게 렌더링
-                const categories = ['all', 'daily', 'strategy', 'general'];
-                
-                categories.forEach(category => {
-                    try {
-                        const listElement = document.getElementById(`${category}NotesList`);
-                        if (listElement) {
-                            renderNotesList(category);
-                            console.log(`Rendered notes for category: ${category}`);
-                        } else {
-                            console.warn(`Notes list element not found for category: ${category}`);
-                        }
-                    } catch (error) {
-                        console.error(`Error rendering notes for category ${category}:`, error);
-                    }
-                });
+                localStorage.setItem('tradingPlatformNotes', JSON.stringify(notes));
             } catch (error) {
-                console.error('Error in renderAllNotesSections:', error);
+                console.error('Error saving notes:', error);
             }
         }
-        
+
         function toggleNotePreview(buttonElement) {
     const noteId = parseInt(buttonElement.getAttribute('data-note-id'));
     const category = buttonElement.getAttribute('data-category');
@@ -5692,31 +5708,25 @@
         }
 
         function loadNotes() {
-            try {
-                const saved = localStorage.getItem('tradingPlatformNotes');
-                if (saved) {
-                    notes = JSON.parse(saved);
-                    notes = notes.map(note => ({
-                        ...note,
-                        id: note.id || Date.now() + Math.random(), // ID 보장
-                        category: note.category || 'general',
-                        textColor: note.textColor || '#94a3b8',
-                        font: note.font || "'Inter', sans-serif",
-                        pinned: note.pinned || false,
-                        createdAt: note.createdAt || new Date().toISOString(),
-                        updatedAt: note.updatedAt || note.createdAt || new Date().toISOString()
-                    }));
-                } else {
-                    notes = [];
-                }
-                console.log('Notes loaded successfully:', notes.length);
-            } catch (error) {
-                console.error('Error loading notes:', error);
-                notes = [];
-                // 로컬스토리지 데이터가 손상된 경우 초기화
-                localStorage.removeItem('tradingPlatformNotes');
-            }
+    try {
+        const saved = localStorage.getItem('tradingPlatformNotes');
+        if (saved) {
+            notes = JSON.parse(saved);
+            notes = notes.map(note => ({
+                ...note,
+                category: note.category || 'general',
+                textColor: note.textColor || '#94a3b8',
+                font: note.font || "'Inter', sans-serif",
+                pinned: note.pinned || false
+            }));
+        } else {
+            notes = [];
         }
+    } catch (error) {
+        console.error('Error loading notes:', error);
+        notes = [];
+    }
+}
 
         // Analytics section management
         function showAnalyticsSection(sectionName) {
@@ -6356,159 +6366,135 @@
 
         // Page initialization
         document.addEventListener('DOMContentLoaded', async function() {
-            try {
-                console.log('Initializing application...');
-                
-                await waitForChart();
-                
-                // 언어 설정 로드
-                const savedLanguage = localStorage.getItem('tradingPlatformLanguage');
-                if (savedLanguage) {
-                    currentLanguage = savedLanguage;
-                    const settingsSelect = document.getElementById('settingsLanguageSelect');
-                    if (settingsSelect) {
-                        settingsSelect.value = currentLanguage;
-                    }
-                }
-                
-                // 데일리 피 로드
-                const savedFees = localStorage.getItem('tradingPlatformDailyFees');
-                if (savedFees) {
-                    try {
-                        dailyFees = JSON.parse(savedFees);
-                    } catch (error) {
-                        console.error('Error loading daily fees:', error);
-                        dailyFees = {};
-                    }
-                }
-                
-                // 현재 거래 날짜 설정
-                currentTradingDate = getESTTradingDate(new Date());
-                updateCurrentDateDisplay();
-                
-                // 데이터 로드 (순서 중요)
-                loadTrades();
-                loadNotes();
-                loadPsychologyData();
-                
-                // 언어 업데이트 (데이터 로드 후)
-                updateLanguage();
-                
-                // UI 업데이트
-                updateStats();
-                renderCalendar();
-                renderAllNotesSections();
-                updateAllTradesList();
-                updateDetailedAnalytics();
-                calculateHoldingTime();
-                loadDailyFees();
-                
-                // 기본 페이지 활성화 확인
-                const activePage = document.querySelector('.page.active');
-                if (!activePage) {
-                    const dashboardPage = document.getElementById('dashboard');
-                    if (dashboardPage) {
-                        dashboardPage.classList.add('active');
-                    }
-                }
-                
-                console.log('Application initialized successfully');
-            } catch (error) {
-                console.error('Error during application initialization:', error);
+    await waitForChart();
+    const savedLanguage = localStorage.getItem('tradingPlatformLanguage');
+    if (savedLanguage) {
+        currentLanguage = savedLanguage;
+        // document.getElementById('languageSelect').value = currentLanguage; // 이 줄 삭제
+        document.getElementById('settingsLanguageSelect').value = currentLanguage;
+    }
+            
+            // Load daily fees
+            const savedFees = localStorage.getItem('tradingPlatformDailyFees');
+            if (savedFees) {
+                dailyFees = JSON.parse(savedFees);
             }
+            
+            currentTradingDate = getESTTradingDate(new Date());
+            updateCurrentDateDisplay();
+            updateLanguage();
+            
+            loadTrades();
+            loadNotes();
+            loadPsychologyData();
+            updateStats();
+            renderCalendar();
+            renderAllNotesSections();
+            updateAllTradesList();
+            updateDetailedAnalytics();
+            calculateHoldingTime();
+            loadDailyFees();
+            
+            document.getElementById('tradeForm').addEventListener('submit', handleTradeSubmit);
+            document.getElementById('editTradeForm').addEventListener('submit', handleEditTradeSubmit);
+            document.getElementById('entryTime').addEventListener('change', calculateHoldingTime);
+            document.getElementById('exitTime').addEventListener('change', calculateHoldingTime);
+            
+            // Dashboard date range listeners
+            document.getElementById('dashboardStartDate').addEventListener('change', function() {
+                dashboardStartDate = this.value;
+                updateStats();
+                updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
+            });
+            
+            document.getElementById('dashboardEndDate').addEventListener('change', function() {
+                dashboardEndDate = this.value;
+                updateStats();
+                updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
+            });
+
+            // Analytics date range listeners
+            document.getElementById('analyticsStartDate').addEventListener('change', function() {
+                analyticsStartDate = this.value;
+                updateDetailedAnalytics();
+            });
+            
+            document.getElementById('analyticsEndDate').addEventListener('change', function() {
+                analyticsEndDate = this.value;
+                updateDetailedAnalytics();
+            });
+
+            // Trades page date range listeners
+            document.getElementById('tradesStartDate').addEventListener('change', function() {
+                tradesStartDate = this.value;
+                updateAllTradesList();
+            });
+            
+            document.getElementById('tradesEndDate').addEventListener('change', function() {
+                tradesEndDate = this.value;
+                updateAllTradesList();
+            });
+            
+            document.getElementById('datePickerModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeDatePicker();
+                }
+            });
+
+            document.getElementById('editTradeModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeEditTradeModal();
+                }
+            });
+
+            document.getElementById('monthDetailsModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeMonthDetails();
+                }
+            });
+
+            document.getElementById('weekDetailsModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeWeekDetails();
+                }
+            });
         });
-        
+
         // Navigation functions
         function showPage(pageId) {
-            try {
-                console.log(`Showing page: ${pageId}`);
-                
-                // 모든 페이지와 네비게이션 초기화
-                document.querySelectorAll('.page').forEach(page => {
-                    page.classList.remove('active');
-                });
-                
-                document.querySelectorAll('.nav-item').forEach(item => {
-                    item.classList.remove('active');
-                });
-                
-                // 대상 페이지 요소 찾기
-                const targetPage = document.getElementById(pageId);
-                if (!targetPage) {
-                    console.error(`Page element not found: ${pageId}`);
-                    return;
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            document.getElementById(pageId).classList.add('active');
+            event.target.closest('.nav-item').classList.add('active');
+            
+            if (pageId === 'analysis') {
+                updateDetailedAnalytics();
+                if (currentAnalyticsSection === 'detail') {
+                    setTimeout(updateBasicCharts, 100);
+                } else {
+                    setTimeout(updateAdvancedCharts, 100);
                 }
-                
-                // 페이지 활성화
-                targetPage.classList.add('active');
-                
-                // 네비게이션 아이템 활성화
-                const navButton = document.querySelector(`[onclick="showPage('${pageId}')"]`);
-                if (navButton) {
-                    navButton.classList.add('active');
-                }
-                
-                // 페이지별 초기화 로직
+            }
+            
+            if (pageId === 'notes') {
+                renderAllNotesSections();
+            }
+
+            if (pageId === 'psychology') {
                 setTimeout(() => {
-                    try {
-                        switch(pageId) {
-                            case 'notes':
-                                // 노트 섹션 초기화
-                                currentNotesSection = 'all';
-                                document.querySelectorAll('.notes-tab').forEach(tab => tab.classList.remove('active'));
-                                const allTab = document.querySelector(`[onclick="showNotesSection('all')"]`);
-                                if (allTab) allTab.classList.add('active');
-                                
-                                document.querySelectorAll('.note-section').forEach(section => {
-                                    section.classList.remove('active');
-                                    section.style.display = 'none';
-                                });
-                                
-                                const allSection = document.getElementById('allNotesSection');
-                                if (allSection) {
-                                    allSection.classList.add('active');
-                                    allSection.style.display = 'block';
-                                }
-                                
-                                renderAllNotesSections();
-                                break;
-                                
-                            case 'trades':
-                                updateAllTradesList();
-                                break;
-                                
-                            case 'analysis':
-                                updateDetailedAnalytics();
-                                if (currentAnalyticsSection === 'detail') {
-                                    updateBasicCharts();
-                                } else {
-                                    updateAdvancedCharts();
-                                }
-                                break;
-                                
-                            case 'psychology':
-                                loadPsychologyData();
-                                updateVisualDashboard();
-                                updatePsychologyPerformanceChart();
-                                break;
-                        }
-                    } catch (error) {
-                        console.error(`Error initializing page ${pageId}:`, error);
-                    }
-                }, 100);
-                
-                // 모바일 사이드바 닫기
-                if (window.innerWidth <= 768) {
-                    const sidebar = document.getElementById('sidebar');
-                    if (sidebar) {
-                        sidebar.classList.remove('open');
-                    }
-                }
-                
-                console.log(`Page ${pageId} activated successfully`);
-                
-            } catch (error) {
-                console.error(`Error showing page ${pageId}:`, error);
+    loadPsychologyData();
+    updatePsychologyMetrics();
+}, 100);
+            }
+            
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('open');
             }
         }
 
@@ -6965,11 +6951,11 @@
             let filteredTrades = trades;
             
             // Apply custom date range if set
-            if (analyticsDateStart || analyticsDateEnd) {
+            if (analyticsStartDate || analyticsEndDate) {
                 filteredTrades = trades.filter(trade => {
                     const tradeDate = trade.date;
-                    if (analyticsDateStart && tradeDate < analyticsDateStart) return false;
-                    if (analyticsDateEnd && tradeDate > analyticsDateEnd) return false;
+                    if (analyticsStartDate && tradeDate < analyticsStartDate) return false;
+                    if (analyticsEndDate && tradeDate > analyticsEndDate) return false;
                     return true;
                 });
             } else {
@@ -7001,7 +6987,7 @@
             
             return filteredTrades;
         }
-        
+
         function updateDetailedAnalytics() {
             const filteredTrades = getFilteredTradesForAnalytics();
             
@@ -8157,6 +8143,47 @@ function applyCustomRisk() {
     }
 }
 
+        // Psychology functions
+        function savePsychologyData() {
+            const currentDate = formatTradingDate(currentTradingDate);
+            
+            const data = {
+                date: currentDate,
+                timestamp: new Date().toISOString(),
+                
+                // Biological data
+                sleepHours: parseFloat(document.getElementById('sleepHours').value) || 0,
+                sleepQuality: parseInt(document.getElementById('sleepQuality').value) || 3,
+                caffeineIntake: parseFloat(document.getElementById('caffeineIntake').value) || 0,
+                energyLevel: parseInt(document.getElementById('energyLevel').value) || 3,
+                
+                // Time & environment
+                plannedStartTime: document.getElementById('plannedStartTime').value || '09:30',
+                actualStartTime: document.getElementById('actualStartTime').value || '',
+                marketDelay: parseInt(document.getElementById('marketDelay').value) || 0,
+                tradingEnvironment: document.getElementById('tradingEnvironment').value || 'home-quiet',
+                
+                // Economic pressure
+                accountBalance: parseFloat(document.getElementById('psychAccountBalance').value) || 0,
+                pressureLevel: parseInt(document.getElementById('pressureLevel').value) || 3,
+                dailyTarget: parseFloat(document.getElementById('dailyTarget').value) || 0,
+                maxDailyLoss: parseFloat(document.getElementById('maxDailyLoss').value) || 0,
+                
+                // Emotional state
+                preMarketMood: parseInt(document.getElementById('preMarketMood').value) || 3,
+                confidenceLevel: parseInt(document.getElementById('confidenceLevel').value) || 3,
+                stressLevel: parseInt(document.getElementById('stressLevel').value) || 3,
+                focusLevel: parseInt(document.getElementById('focusLevel').value) || 3
+            };
+            
+            psychologyData[currentDate] = data;
+            localStorage.setItem('tradingPlatformPsychologyData', JSON.stringify(psychologyData));
+            
+            updatePsychologyMetrics();
+            generatePsychologyInsights();
+            showToast(currentLanguage === 'ko' ? '심리 데이터가 저장되었습니다' : 'Psychology data saved');
+        }
+
         function resetPsychologyData() {
             const confirmMessage = currentLanguage === 'ko' ? 
                 '심리 데이터를 초기화하시겠습니까?' : 
@@ -8164,169 +8191,351 @@ function applyCustomRisk() {
             
             if (confirm(confirmMessage)) {
                 // 모든 입력 필드 초기화
-                const sleepHours = document.getElementById('sleepHours');
-                if (sleepHours) sleepHours.value = '';
-                
-                const startTime = document.getElementById('startTime');
-                if (startTime) startTime.value = '';
-                
-                const endTime = document.getElementById('endTime');
-                if (endTime) endTime.value = '';
-                
-                const environmentType = document.getElementById('environmentType');
-                if (environmentType) environmentType.value = 'home';
-                
-                const accountBalance = document.getElementById('accountBalance');
-                if (accountBalance) accountBalance.value = '';
-                
-                const dailyTarget = document.getElementById('dailyTarget');
-                if (dailyTarget) dailyTarget.value = '';
-                
-                const maxDailyLoss = document.getElementById('maxDailyLoss');
-                if (maxDailyLoss) maxDailyLoss.value = '';
-                
-                const stressLevel = document.getElementById('stressLevel');
-                if (stressLevel) {
-                    stressLevel.value = '3';
-                    updateSliderDisplay('stressLevel', 'stressValue');
-                }
-                
-                const confidenceLevel = document.getElementById('confidenceLevel');
-                if (confidenceLevel) {
-                    confidenceLevel.value = '3';
-                    updateSliderDisplay('confidenceLevel', 'confidenceValue');
-                }
-                
-                const focusLevel = document.getElementById('focusLevel');
-                if (focusLevel) {
-                    focusLevel.value = '3';
-                    updateSliderDisplay('focusLevel', 'focusValue');
-                }
-                
-                // 퍼센트 디스플레이 초기화
-                updateTargetPercentages();
-                
-                // 비주얼 대시보드 초기화
-                resetVisualDashboard();
+                document.getElementById('sleepHours').value = '';
+                document.getElementById('startTime').value = '09:30';
+                document.getElementById('endTime').value = '';
+                document.getElementById('environmentType').value = 'home-quiet';
+                document.getElementById('accountBalance').value = '';
+                document.getElementById('dailyTarget').value = '';
+                document.getElementById('maxDailyLoss').value = '';
+                document.getElementById('stressLevel').value = '3';
+                document.getElementById('confidenceLevel').value = '3';
+                document.getElementById('focusLevel').value = '3';
                 
                 showToast(currentLanguage === 'ko' ? '심리 데이터가 초기화되었습니다' : 'Psychology data has been reset');
             }
         }
 
         function loadPsychologyData() {
-            try {
-                const saved = localStorage.getItem('tradingPlatformPsychologyData');
-                if (saved) {
-                    psychologyData = JSON.parse(saved);
-                } else {
-                    psychologyData = {};
-                }
-            } catch (error) {
-                console.error('Error loading psychology data:', error);
-                psychologyData = {};
-            }
+    try {
+        const saved = localStorage.getItem('tradingPlatformPsychologyData');
+        if (saved) {
+            psychologyData = JSON.parse(saved);
+        } else {
+            psychologyData = {};
+        }
+    } catch (error) {
+        console.error('Error loading psychology data:', error);
+        psychologyData = {};
+    }
 
-            // Load today's data if available
+    // Load today's data if available
+    const currentDate = formatTradingDate(currentTradingDate);
+    const todayData = psychologyData[currentDate];
+
+    if (todayData) {
+        const sleepHours = document.getElementById('sleepHours');
+        if (sleepHours) sleepHours.value = todayData.sleepHours || '';
+
+        const sleepQuality = document.getElementById('sleepQuality');
+        if (sleepQuality) sleepQuality.value = todayData.sleepQuality || 3;
+
+        const energyLevel = document.getElementById('energyLevel');
+        if (energyLevel) energyLevel.value = todayData.energyLevel || 3;
+
+        const actualStartTime = document.getElementById('actualStartTime');
+        if (actualStartTime) actualStartTime.value = todayData.actualStartTime || '';
+
+        const tradingEnvironment = document.getElementById('tradingEnvironment');
+        if (tradingEnvironment) tradingEnvironment.value = todayData.tradingEnvironment || 'home-quiet';
+
+        const psychAccountBalance = document.getElementById('psychAccountBalance');
+        if (psychAccountBalance) psychAccountBalance.value = todayData.accountBalance || '';
+
+        const dailyTarget = document.getElementById('dailyTarget');
+        if (dailyTarget) dailyTarget.value = todayData.dailyTarget || '';
+
+        const maxDailyLoss = document.getElementById('maxDailyLoss');
+        if (maxDailyLoss) maxDailyLoss.value = todayData.maxDailyLoss || '';
+
+        const preMarketMood = document.getElementById('preMarketMood');
+        if (preMarketMood) preMarketMood.value = todayData.preMarketMood || 3;
+
+        const confidenceLevel = document.getElementById('confidenceLevel');
+        if (confidenceLevel) confidenceLevel.value = todayData.confidenceLevel || 3;
+
+        const stressLevel = document.getElementById('stressLevel');
+        if (stressLevel) stressLevel.value = todayData.stressLevel || 3;
+
+        const focusLevel = document.getElementById('focusLevel');
+        if (focusLevel) focusLevel.value = todayData.focusLevel || 3;
+    }
+}
+        
+        function updatePsychologyMetrics() {
             const currentDate = formatTradingDate(currentTradingDate);
             const todayData = psychologyData[currentDate];
-
-            if (todayData) {
-                const sleepHours = document.getElementById('sleepHours');
-                if (sleepHours) sleepHours.value = todayData.sleepHours || '';
-
-                const startTime = document.getElementById('startTime');
-                if (startTime) startTime.value = todayData.startTime || '';
-
-                const endTime = document.getElementById('endTime');
-                if (endTime) endTime.value = todayData.endTime || '';
-
-                const environmentType = document.getElementById('environmentType');
-                if (environmentType) environmentType.value = todayData.environmentType || 'home';
-
-                const accountBalance = document.getElementById('accountBalance');
-                if (accountBalance) accountBalance.value = todayData.accountBalance || '';
-
-                const dailyTarget = document.getElementById('dailyTarget');
-                if (dailyTarget) dailyTarget.value = todayData.dailyTarget || '';
-
-                const maxDailyLoss = document.getElementById('maxDailyLoss');
-                if (maxDailyLoss) maxDailyLoss.value = todayData.maxDailyLoss || '';
-
-                const stressLevel = document.getElementById('stressLevel');
-                if (stressLevel) {
-                    stressLevel.value = todayData.stressLevel || 3;
-                    updateSliderDisplay('stressLevel', 'stressValue');
-                }
-
-                const confidenceLevel = document.getElementById('confidenceLevel');
-                if (confidenceLevel) {
-                    confidenceLevel.value = todayData.confidenceLevel || 3;
-                    updateSliderDisplay('confidenceLevel', 'confidenceValue');
-                }
-
-                const focusLevel = document.getElementById('focusLevel');
-                if (focusLevel) {
-                    focusLevel.value = todayData.focusLevel || 3;
-                    updateSliderDisplay('focusLevel', 'focusValue');
-                }
-
-                updateTargetPercentages();
-            }
             
-            updateVisualDashboard();
-        }
-
-        function updatePsychologyMetrics() {
-            // 이 함수는 현재 사용하지 않으므로 빈 함수로 유지
-            console.log('Psychology metrics updated');
-        }
-
-        function calculateDailyScore() {
-            const currentDate = formatTradingDate(currentTradingDate);
-            const sleepHours = parseFloat(document.getElementById('sleepHours').value) || 0;
-            const stressLevel = parseInt(document.getElementById('stressLevel').value) || 3;
-            const confidenceLevel = parseInt(document.getElementById('confidenceLevel').value) || 3;
-            const focusLevel = parseInt(document.getElementById('focusLevel').value) || 3;
-            
-            if (sleepHours === 0) {
-                alert(currentLanguage === 'ko' ? '먼저 수면 시간을 입력해주세요.' : 'Please enter sleep hours first.');
+            if (!todayData) {
+                resetPsychologyMetrics();
+                generatePsychologyInsights();
                 return;
             }
             
-            // 점수 계산
-            let sleepScore = Math.min((sleepHours / 8) * 25, 25);
-            let stressScore = ((6 - stressLevel) / 5) * 25;
-            let confidenceScore = (confidenceLevel / 5) * 25;
-            let focusScore = (focusLevel / 5) * 25;
+            // Calculate Sleep Factor (0-25 points)
+            const sleepFactor = calculateSleepFactor(todayData.sleepHours, todayData.sleepQuality);
+            updateMetricCard('sleepFactorCard', 'sleepFactor', 'sleepFactorStatus', sleepFactor, 25);
             
-            let totalScore = sleepScore + stressScore + confidenceScore + focusScore;
+            // Calculate Stress Factor (0-25 points)
+            const stressFactor = calculateStressFactor(todayData.caffeineIntake, todayData.stressLevel, todayData.energyLevel);
+            updateMetricCard('stressFactorCard', 'stressFactor', 'stressFactorStatus', stressFactor, 25);
             
-            // 결과 표시
-            let scoreMessage = currentLanguage === 'ko' ? 
-                `일일 심리 점수: ${totalScore.toFixed(1)}/100\n\n수면: ${sleepScore.toFixed(1)}/25\n스트레스: ${stressScore.toFixed(1)}/25\n자신감: ${confidenceScore.toFixed(1)}/25\n집중력: ${focusScore.toFixed(1)}/25` :
-                `Daily Psychology Score: ${totalScore.toFixed(1)}/100\n\nSleep: ${sleepScore.toFixed(1)}/25\nStress: ${stressScore.toFixed(1)}/25\nConfidence: ${confidenceScore.toFixed(1)}/25\nFocus: ${focusScore.toFixed(1)}/25`;
+            // Calculate Environment Factor (0-25 points)
+            const environmentFactor = calculateEnvironmentFactor(todayData.tradingEnvironment, todayData.focusLevel);
+            updateMetricCard('environmentFactorCard', 'environmentFactor', 'environmentFactorStatus', environmentFactor, 25);
             
-            alert(scoreMessage);
+            // Calculate Pressure Index (0-25 points)
+            const pressureIndex = calculatePressureIndex(todayData.pressureLevel, todayData.accountBalance, todayData.dailyTarget);
+            updateMetricCard('pressureIndexCard', 'pressureIndex', 'pressureIndexStatus', pressureIndex, 25);
             
-            showToast(currentLanguage === 'ko' ? '일일 심리 점수가 계산되었습니다' : 'Daily psychology score calculated');
+            // Calculate Emotional Readiness (0-25 points)
+            const emotionalReadiness = calculateEmotionalReadiness(todayData.preMarketMood, todayData.confidenceLevel);
+            updateMetricCard('emotionalReadinessCard', 'emotionalReadiness', 'emotionalReadinessStatus', emotionalReadiness, 25);
+            
+            // Calculate Daily Psychology Score (0-100)
+            const dailyScore = sleepFactor + stressFactor + environmentFactor + pressureIndex + emotionalReadiness;
+            updateMetricCard('dailyPsychScoreCard', 'dailyPsychScore', 'dailyPsychStatus', dailyScore, 100);
+
+            generatePsychologyInsights();
+        }
+
+        function calculateSleepFactor(sleepHours, sleepQuality) {
+            if (!sleepHours) return 0;
+            
+            let baseScore = Math.min(sleepHours >= 7 ? 20 : (sleepHours * 20 / 7), 20);
+            let qualityBonus = (sleepQuality - 3) * 1.25;
+            
+            return Math.max(0, Math.min(25, baseScore + qualityBonus));
+        }
+
+        function calculateStressFactor(sleepHours, stressLevel, focusLevel) {
+            let baseScore = 25;
+            
+            // 수면 부족 시 스트레스 증가
+            if (sleepHours < 6) {
+                baseScore -= 8;
+            } else if (sleepHours < 7) {
+                baseScore -= 4;
+            }
+            
+            // 스트레스 레벨 패널티
+            baseScore -= (stressLevel - 3) * 4;
+            
+            // 집중력 조정
+            if (focusLevel <= 2) {
+                baseScore -= 5; // 낮은 집중력
+            } else if (focusLevel >= 4) {
+                baseScore += 3; // 높은 집중력
+            }
+            
+            return Math.max(0, Math.min(25, baseScore));
+        }
+
+        function calculateEnvironmentFactor(environment, focusLevel) {
+            let baseScore = 15;
+            
+            // Environment scoring
+            const envScores = {
+                'home-quiet': 10,
+                'office': 7,
+                'home-noisy': 5,
+                'cafe': 3,
+                'other': 5
+            };
+            
+            baseScore += envScores[environment] || 5;
+            
+            // Focus adjustment
+            baseScore += (focusLevel - 3) * 2;
+            
+            return Math.max(0, Math.min(25, baseScore));
+        }
+
+        function calculatePressureIndex(pressureLevel, accountBalance, dailyTarget) {
+            let baseScore = 25;
+            
+            // Pressure penalty
+            baseScore -= (pressureLevel - 3) * 5;
+            
+            // Target vs balance ratio check
+            if (accountBalance && dailyTarget) {
+                const targetRatio = dailyTarget / accountBalance;
+                if (targetRatio > 0.05) { // More than 5% daily target
+                    baseScore -= 8;
+                } else if (targetRatio > 0.03) { // More than 3% daily target
+                    baseScore -= 4;
+                }
+            }
+            
+            return Math.max(0, Math.min(25, baseScore));
+        }
+
+        function calculateEmotionalReadiness(mood, confidence) {
+            let baseScore = 15;
+            
+            // Mood adjustment (-6 to +6)
+            baseScore += (mood - 3) * 3;
+            
+            // Confidence adjustment (-4 to +4)
+            baseScore += (confidence - 3) * 2;
+            
+            return Math.max(0, Math.min(25, baseScore));
+        }
+
+        function updateMetricCard(cardId, valueId, statusId, value, maxValue) {
+            const card = document.getElementById(cardId);
+            const valueElement = document.getElementById(valueId);
+            const statusElement = document.getElementById(statusId);
+            
+            valueElement.textContent = Math.round(value);
+            
+            const percentage = (value / maxValue) * 100;
+            let status, cardClass;
+            
+            if (percentage >= 80) {
+                status = currentLanguage === 'ko' ? '최적' : 'Optimal';
+                cardClass = 'good';
+            } else if (percentage >= 60) {
+                status = currentLanguage === 'ko' ? '양호' : 'Good';
+                cardClass = 'good';
+            } else if (percentage >= 40) {
+                status = currentLanguage === 'ko' ? '보통' : 'Fair';
+                cardClass = 'warning';
+            } else if (percentage >= 20) {
+                status = currentLanguage === 'ko' ? '주의' : 'Poor';
+                cardClass = 'warning';
+            } else {
+                status = currentLanguage === 'ko' ? '위험' : 'Critical';
+                cardClass = 'danger';
+            }
+            
+            statusElement.textContent = status;
+            card.className = `psychology-metric-card ${cardClass}`;
+        }
+
+        function resetPsychologyMetrics() {
+            const metrics = ['dailyPsychScore', 'sleepFactor', 'stressFactor', 'environmentFactor', 'pressureIndex', 'emotionalReadiness'];
+            const cards = ['dailyPsychScoreCard', 'sleepFactorCard', 'stressFactorCard', 'environmentFactorCard', 'pressureIndexCard', 'emotionalReadinessCard'];
+            const statuses = ['dailyPsychStatus', 'sleepFactorStatus', 'stressFactorStatus', 'environmentFactorStatus', 'pressureIndexStatus', 'emotionalReadinessStatus'];
+            
+            metrics.forEach((metricId, index) => {
+                document.getElementById(metricId).textContent = '0';
+                document.getElementById(statuses[index]).textContent = 'No data';
+                document.getElementById(cards[index]).className = 'psychology-metric-card';
+            });
+        }
+
+        function generatePsychologyInsights() {
+            const currentDate = formatTradingDate(currentTradingDate);
+            const todayData = psychologyData[currentDate];
+            const insightsList = document.getElementById('psychologyInsightsList');
+            
+            if (!todayData) {
+                insightsList.innerHTML = `
+                    <div class="psychology-insight-item">
+                        <div class="psychology-insight-text">${currentLanguage === 'ko' ? 
+                            '심리 데이터가 없습니다. 오늘의 데이터를 입력하여 인사이트를 받아보세요.' : 
+                            'No psychology data available. Fill in today\'s data to get insights.'}</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            const insights = [];
+            
+            // Sleep insights
+            if (todayData.sleepHours < 6) {
+                insights.push({
+                    type: 'danger',
+                    text: currentLanguage === 'ko' ? 
+                        `수면 부족 경고: ${todayData.sleepHours}시간 수면은 거래 성과에 부정적 영향을 줄 수 있습니다. 7-8시간 수면을 권장합니다.` :
+                        `Sleep Warning: ${todayData.sleepHours} hours of sleep may negatively impact trading performance. 7-8 hours recommended.`
+                });
+            } else if (todayData.sleepHours >= 7 && todayData.sleepHours <= 8) {
+                insights.push({
+                    type: 'good',
+                    text: currentLanguage === 'ko' ? 
+                        '수면 상태 양호: 충분한 수면으로 최적의 거래 준비가 되었습니다.' :
+                        'Sleep Status Good: Adequate sleep prepares you for optimal trading.'
+                });
+            }
+            
+            // Stress and focus insights
+            if (todayData.stressLevel >= 4 && todayData.focusLevel <= 2) {
+                insights.push({
+                    type: 'danger',
+                    text: currentLanguage === 'ko' ? 
+                        '고스트레스 + 저집중 상태: 감정적 의사결정 위험이 높습니다. 포지션 크기를 줄이고 휴식을 고려하세요.' :
+                        'High Stress + Low Focus: High risk of emotional decisions. Consider reducing position size and taking breaks.'
+                });
+            }
+            
+            // Environment insights
+            if (todayData.environmentType === 'cafe' || todayData.environmentType === 'home-noisy') {
+                insights.push({
+                    type: 'warning',
+                    text: currentLanguage === 'ko' ? 
+                        '거래 환경 주의: 소음이 있는 환경은 집중력을 저해할 수 있습니다. 조용한 환경을 찾아보세요.' :
+                        'Trading Environment Warning: Noisy environments may impair focus. Consider finding a quieter space.'
+                });
+            }
+            
+            // Focus and confidence insights
+            if (todayData.focusLevel <= 2 && todayData.confidenceLevel <= 2) {
+                insights.push({
+                    type: 'danger',
+                    text: currentLanguage === 'ko' ? 
+                        '집중력 및 자신감 부족: 오늘은 거래를 피하거나 매우 작은 포지션만 고려하세요.' :
+                        'Low Focus & Confidence: Consider avoiding trading today or using very small positions only.'
+                });
+            }
+            
+            // Good condition insights
+            const sleepScore = calculateSleepFactor(todayData.sleepHours);
+            const stressScore = calculateStressFactor(todayData.sleepHours, todayData.stressLevel, todayData.focusLevel);
+            const totalConditionScore = sleepScore + stressScore;
+            
+            if (totalConditionScore >= 40) {
+                insights.push({
+                    type: 'good',
+                    text: currentLanguage === 'ko' ? 
+                        '양호한 거래 조건: 심리적 요인이 양호합니다. 계획된 전략을 자신 있게 실행하세요.' :
+                        'Good Trading Conditions: Psychological factors are favorable. Execute your planned strategy with confidence.'
+                });
+            }
+            
+            // Default insight if no specific insights
+            if (insights.length === 0) {
+                insights.push({
+                    type: 'good',
+                    text: currentLanguage === 'ko' ? 
+                        '심리적 준비 상태 보통: 특별한 주의사항은 없습니다. 계획된 거래 전략을 따르세요.' :
+                        'Psychological Readiness Fair: No specific warnings. Follow your planned trading strategy.'
+                });
+            }
+            
+            // Render insights
+            insightsList.innerHTML = insights.map(insight => `
+                <div class="psychology-insight-item ${insight.type === 'danger' ? 'danger' : insight.type === 'warning' ? 'warning' : ''}">
+                    <div class="psychology-insight-text">${insight.text}</div>
+                </div>
+            `).join('');
         }
 
         // Enhanced Psychology System Functions
         function showPsychologySection(section) {
-            currentPsychologySection = section;
-            
             // 탭 상태 업데이트
             document.querySelectorAll('.psychology-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
             event.target.classList.add('active');
             
-            // 모든 섹션 숨기기
+            // 섹션 표시/숨기기
             document.querySelectorAll('.psychology-section').forEach(sec => {
                 sec.classList.remove('active');
             });
             
-            // 선택된 섹션만 표시
+            // 섹션 ID 매핑
             let targetSectionId;
             switch(section) {
                 case 'input':
@@ -8351,18 +8560,15 @@ function applyCustomRisk() {
             }
             
             // 해당 섹션의 데이터 업데이트
-            if (section === 'input') {
-                setTimeout(() => {
-                    updateVisualDashboard();
-                    updatePsychologyPerformanceChart();
-                }, 100);
+            if (section === 'metrics') {
+                updatePsychologyMetrics();
             } else if (section === 'bias-analysis') {
                 updateBiasAnalysis();
             } else if (section === 'patterns') {
                 updatePatternInsights();
             }
         }
-        
+
         function calculateDailyScore() {
             const currentDate = formatTradingDate(currentTradingDate);
             const todayData = psychologyData[currentDate];
@@ -8373,14 +8579,10 @@ function applyCustomRisk() {
             }
             
             // 수면 요인 계산 (25점 만점)
-            const sleepFactor = calculateSleepFactor(todayData.sleepHours, todayData.sleepQuality);
+            const sleepFactor = calculateSleepFactor(todayData.sleepHours);
             
             // 스트레스 요인 계산 (25점 만점)
-            const stressFactor = calculateStressFactor(
-                todayData.caffeineIntake || 0, 
-                todayData.screenTime || 0, 
-                todayData.distractionsCount || 0
-            );
+            const stressFactor = calculateStressFactor(todayData.sleepHours, todayData.stressLevel, todayData.focusLevel);
             
             // 규율 요인 계산 (25점 만점) - 거래 데이터 기반
             const disciplineFactor = calculateDisciplineFactor();
@@ -8401,13 +8603,23 @@ function applyCustomRisk() {
             showToast(currentLanguage === 'ko' ? '일일 심리 점수가 계산되었습니다' : 'Daily psychology score calculated');
         }
 
-        function calculateSleepFactor(sleepHours, sleepQuality) {
+        function calculateSleepFactor(sleepHours) {
             if (!sleepHours) return 0;
             
-            let baseScore = Math.min(sleepHours >= 7 ? 20 : (sleepHours * 20 / 7), 20);
-            let qualityBonus = (sleepQuality - 3) * 1.25;
-            
-            return Math.max(0, Math.min(25, baseScore + qualityBonus));
+            // 7-8시간이 최적
+            if (sleepHours >= 7 && sleepHours <= 8) {
+                return 25;
+            } else if (sleepHours >= 6 && sleepHours < 7) {
+                return 20;
+            } else if (sleepHours >= 5 && sleepHours < 6) {
+                return 15;
+            } else if (sleepHours > 8 && sleepHours <= 9) {
+                return 20;
+            } else if (sleepHours > 9) {
+                return 15;
+            } else {
+                return 5; // 5시간 미만
+            }
         }
 
         function calculateStressFactor(caffeine, screenTime, distractions) {
@@ -8960,10 +9172,10 @@ function applyCustomRisk() {
                 // Biological data
                 sleepHours: parseFloat(document.getElementById('sleepHours').value) || 0,
                 
-                // Time & environment
-                startTime: document.getElementById('startTime').value || '',
+                // Trading environment
+                startTime: document.getElementById('startTime').value || '09:30',
                 endTime: document.getElementById('endTime').value || '',
-                environmentType: document.getElementById('environmentType').value || 'home',
+                environmentType: document.getElementById('environmentType').value || 'home-quiet',
                 
                 // Economic pressure
                 accountBalance: parseFloat(document.getElementById('accountBalance').value) || 0,
@@ -8979,397 +9191,62 @@ function applyCustomRisk() {
             psychologyData[currentDate] = data;
             localStorage.setItem('tradingPlatformPsychologyData', JSON.stringify(psychologyData));
             
-            updateVisualDashboard();
             showToast(currentLanguage === 'ko' ? '심리 데이터가 저장되었습니다' : 'Psychology data saved');
         }
 
-        // Updated Psychology Functions
-        function updateTargetPercentages() {
-            const balance = parseFloat(document.getElementById('accountBalance').value) || 0;
-            const dailyTarget = parseFloat(document.getElementById('dailyTarget').value) || 0;
-            const maxLoss = parseFloat(document.getElementById('maxDailyLoss').value) || 0;
-            
-            if (balance > 0) {
-                const targetPercent = ((dailyTarget / balance) * 100).toFixed(1);
-                const lossPercent = ((maxLoss / balance) * 100).toFixed(1);
-                
-                document.getElementById('dailyTargetPercent').textContent = `${targetPercent}%`;
-                document.getElementById('maxLossPercent').textContent = `${lossPercent}%`;
-                
-                // Update risk indicators
-                updateRiskIndicators(parseFloat(targetPercent), parseFloat(lossPercent));
-            } else {
-                document.getElementById('dailyTargetPercent').textContent = '0%';
-                document.getElementById('maxLossPercent').textContent = '0%';
-            }
-        }
-
-        function updateSliderDisplay(sliderId, displayId) {
-            const slider = document.getElementById(sliderId);
-            const display = document.getElementById(displayId);
-            if (slider && display) {
-                display.textContent = slider.value;
-                updateEmotionalDisplays();
-            }
-        }
-
-        function updateEmotionalDisplays() {
-            const stress = document.getElementById('stressLevel')?.value || 3;
-            const confidence = document.getElementById('confidenceLevel')?.value || 3;
-            const focus = document.getElementById('focusLevel')?.value || 3;
-            
-            document.getElementById('stressDisplay').textContent = stress;
-            document.getElementById('confidenceDisplay').textContent = confidence;
-            document.getElementById('focusDisplay').textContent = focus;
-            
-            // Calculate emotional readiness score
-            const emotionalScore = ((parseInt(confidence) + parseInt(focus) + (6 - parseInt(stress))) / 15 * 100);
-            updateEmotionalStatus(emotionalScore);
-        }
-
-        function updateRiskIndicators(targetPercent, lossPercent) {
-            const targetRiskBar = document.getElementById('targetRiskBar');
-            const maxLossRiskBar = document.getElementById('maxLossRiskBar');
-            const targetRiskPercent = document.getElementById('targetRiskPercent');
-            const maxLossRiskPercent = document.getElementById('maxLossRiskPercent');
-            const riskStatus = document.getElementById('riskStatus');
-            
-            if (targetRiskBar && maxLossRiskBar) {
-                // Target risk (safe: <2%, moderate: 2-5%, high: >5%)
-                const targetRiskLevel = Math.min(targetPercent / 10 * 100, 100);
-                targetRiskBar.style.width = `${targetRiskLevel}%`;
-                targetRiskPercent.textContent = `${targetPercent}%`;
-                
-                // Max loss risk (safe: <3%, moderate: 3-7%, high: >7%)
-                const lossRiskLevel = Math.min(lossPercent / 15 * 100, 100);
-                maxLossRiskBar.style.width = `${lossRiskLevel}%`;
-                maxLossRiskPercent.textContent = `${lossPercent}%`;
-                
-                // Overall risk status
-                let status;
-                if (targetPercent > 5 || lossPercent > 7) {
-                    status = currentLanguage === 'ko' ? '고위험' : 'High Risk';
-                    riskStatus.style.color = '#ef4444';
-                } else if (targetPercent > 2 || lossPercent > 3) {
-                    status = currentLanguage === 'ko' ? '중간위험' : 'Medium Risk';
-                    riskStatus.style.color = '#f59e0b';
+        // 기존 loadPsychologyData 함수 업데이트
+        function loadPsychologyData() {
+            try {
+                const saved = localStorage.getItem('tradingPlatformPsychologyData');
+                if (saved) {
+                    psychologyData = JSON.parse(saved);
                 } else {
-                    status = currentLanguage === 'ko' ? '안전' : 'Safe';
-                    riskStatus.style.color = '#10b981';
+                    psychologyData = {};
                 }
-                riskStatus.textContent = status;
+            } catch (error) {
+                console.error('Error loading psychology data:', error);
+                psychologyData = {};
             }
-        }
 
-        function updateEmotionalStatus(score) {
-            const emotionalStatus = document.getElementById('emotionalStatus');
-            if (emotionalStatus) {
-                let status;
-                if (score >= 80) {
-                    status = currentLanguage === 'ko' ? '최적 상태' : 'Optimal';
-                    emotionalStatus.style.color = '#10b981';
-                } else if (score >= 60) {
-                    status = currentLanguage === 'ko' ? '양호' : 'Good';
-                    emotionalStatus.style.color = '#3b82f6';
-                } else if (score >= 40) {
-                    status = currentLanguage === 'ko' ? '보통' : 'Fair';
-                    emotionalStatus.style.color = '#f59e0b';
-                } else {
-                    status = currentLanguage === 'ko' ? '주의 필요' : 'Needs Attention';
-                    emotionalStatus.style.color = '#ef4444';
-                }
-                emotionalStatus.textContent = status;
-            }
-        }
-
-        function updateVisualDashboard() {
+            // Load today's data if available
             const currentDate = formatTradingDate(currentTradingDate);
             const todayData = psychologyData[currentDate];
-            
-            if (!todayData) {
-                resetVisualDashboard();
-                return;
-            }
-            
-            // Update sleep display
-            const sleepHours = todayData.sleepHours || 0;
-            document.getElementById('sleepHoursDisplay').textContent = sleepHours.toFixed(1);
-            
-            const sleepQuality = (sleepHours >= 7) ? 100 : (sleepHours / 7 * 100);
-            document.getElementById('sleepQualityBar').style.width = `${sleepQuality}%`;
-            
-            let sleepStatus;
-            if (sleepHours >= 8) {
-                sleepStatus = currentLanguage === 'ko' ? '최적' : 'Optimal';
-                document.getElementById('sleepStatus').style.color = '#10b981';
-            } else if (sleepHours >= 7) {
-                sleepStatus = currentLanguage === 'ko' ? '양호' : 'Good';
-                document.getElementById('sleepStatus').style.color = '#3b82f6';
-            } else if (sleepHours >= 6) {
-                sleepStatus = currentLanguage === 'ko' ? '부족' : 'Insufficient';
-                document.getElementById('sleepStatus').style.color = '#f59e0b';
-            } else {
-                sleepStatus = currentLanguage === 'ko' ? '심각히 부족' : 'Severely Lacking';
-                document.getElementById('sleepStatus').style.color = '#ef4444';
-            }
-            document.getElementById('sleepStatus').textContent = sleepStatus;
-            
-            // Update environment display
-            // Update environment display
-            // Update environment display
-            const environmentType = todayData.environmentType || 'home';
-            const environmentTypeNames = {
-                home: currentLanguage === 'ko' ? '집' : 'Home',
-                cafe: currentLanguage === 'ko' ? '카페' : 'Cafe', 
-                office: currentLanguage === 'ko' ? '사무실' : 'Office',
-                hotel: currentLanguage === 'ko' ? '호텔' : 'Hotel'
-            };
-            
-            document.getElementById('environmentType').textContent = environmentTypeNames[environmentType] || environmentTypeNames.home;
-            
-            // Environment score based on type
-            let envScore = 75; // Base score
-            switch(environmentType) {
-                case 'home': envScore = 90; break;
-                case 'office': envScore = 80; break;
-                case 'hotel': envScore = 60; break;
-                case 'cafe': envScore = 50; break;
-                default: envScore = 75;
-            }
-            
-            document.getElementById('environmentScore').textContent = envScore;
-            const circumference = 2 * Math.PI * 25;
-            const offset = circumference - (envScore / 100 * circumference);
-            document.getElementById('environmentCircle').style.strokeDashoffset = offset;
-            
-            let envStatus;
-            if (envScore >= 80) {
-                envStatus = currentLanguage === 'ko' ? '최적' : 'Optimal';
-                document.getElementById('environmentStatus').style.color = '#10b981';
-            } else if (envScore >= 60) {
-                envStatus = currentLanguage === 'ko' ? '양호' : 'Good';
-                document.getElementById('environmentStatus').style.color = '#3b82f6';
-            } else {
-                envStatus = currentLanguage === 'ko' ? '개선 필요' : 'Needs Improvement';
-                document.getElementById('environmentStatus').style.color = '#f59e0b';
-            }
-            document.getElementById('environmentStatus').textContent = envStatus;
-            
-            // Update emotional displays if data exists
-            if (todayData.stressLevel) {
-                document.getElementById('stressLevel').value = todayData.stressLevel;
-                document.getElementById('stressValue').textContent = todayData.stressLevel;
-                document.getElementById('stressDisplay').textContent = todayData.stressLevel;
-            }
-            if (todayData.confidenceLevel) {
-                document.getElementById('confidenceLevel').value = todayData.confidenceLevel;
-                document.getElementById('confidenceValue').textContent = todayData.confidenceLevel;
-                document.getElementById('confidenceDisplay').textContent = todayData.confidenceLevel;
-            }
-            if (todayData.focusLevel) {
-                document.getElementById('focusLevel').value = todayData.focusLevel;
-                document.getElementById('focusValue').textContent = todayData.focusLevel;
-                document.getElementById('focusDisplay').textContent = todayData.focusLevel;
-            }
-            
-            updateTargetPercentages();
 
-            setTimeout(() => {
-                updatePsychologyPerformanceChart();
-            }, 100);
-        }
+            if (todayData) {
+                // Biological data
+                const sleepHours = document.getElementById('sleepHours');
+                if (sleepHours) sleepHours.value = todayData.sleepHours || '';
 
-        function resetVisualDashboard() {
-            document.getElementById('sleepHoursDisplay').textContent = '0';
-            document.getElementById('sleepQualityBar').style.width = '0%';
-            document.getElementById('sleepStatus').textContent = 'No data';
-            document.getElementById('sleepStatus').style.color = '#94a3b8';
-            
-            document.getElementById('environmentType').textContent = '-';
-            document.getElementById('environmentScore').textContent = '0';
-            document.getElementById('environmentCircle').style.strokeDashoffset = '157';
-            document.getElementById('environmentStatus').textContent = 'No data';
-            document.getElementById('environmentStatus').style.color = '#94a3b8';
-            
-            document.getElementById('stressDisplay').textContent = '3';
-            document.getElementById('confidenceDisplay').textContent = '3';
-            document.getElementById('focusDisplay').textContent = '3';
-            document.getElementById('emotionalStatus').textContent = 'No data';
-            document.getElementById('emotionalStatus').style.color = '#94a3b8';
-            
-            document.getElementById('targetRiskPercent').textContent = '0%';
-            document.getElementById('maxLossRiskPercent').textContent = '0%';
-            document.getElementById('targetRiskBar').style.width = '0%';
-            document.getElementById('maxLossRiskBar').style.width = '0%';
-            document.getElementById('riskStatus').textContent = 'No data';
-            document.getElementById('riskStatus').style.color = '#94a3b8';
-        }
+                // Trading environment
+                const startTime = document.getElementById('startTime');
+                if (startTime) startTime.value = todayData.startTime || '09:30';
 
-        async function updatePsychologyPerformanceChart() {
-            try {
-                await waitForChart();
-                const ctx = document.getElementById('psychologyPerformanceChart');
-                if (!ctx) {
-                    console.log('Chart canvas not found');
-                    return;
-                }
+                const endTime = document.getElementById('endTime');
+                if (endTime) endTime.value = todayData.endTime || '';
 
-                // Destroy existing chart
-                if (window.psychPerformanceChart) {
-                    window.psychPerformanceChart.destroy();
-                    window.psychPerformanceChart = null;
-                }
+                const environmentType = document.getElementById('environmentType');
+                if (environmentType) environmentType.value = todayData.environmentType || 'home-quiet';
 
-                // Prepare data from psychology and trading records
-                const chartData = preparePsychologyChartData();
-                
-                if (chartData.labels.length === 0) {
-                    const context = ctx.getContext('2d');
-                    context.clearRect(0, 0, ctx.width, ctx.height);
-                    context.fillStyle = '#64748b';
-                    context.font = '14px Inter';
-                    context.textAlign = 'center';
-                    context.fillText('Collect more data to display chart', ctx.width / 2, ctx.height / 2);
-                    return;
-                }
+                // Economic pressure
+                const accountBalance = document.getElementById('accountBalance');
+                if (accountBalance) accountBalance.value = todayData.accountBalance || '';
 
-                window.psychPerformanceChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: chartData.labels,
-                        datasets: [
-                            {
-                                label: currentLanguage === 'ko' ? '수면 시간' : 'Sleep Hours',
-                                data: chartData.sleepData,
-                                borderColor: '#10b981',
-                                backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                                yAxisID: 'y',
-                                tension: 0.4,
-                                pointRadius: 4,
-                                pointHoverRadius: 6
-                            },
-                            {
-                                label: currentLanguage === 'ko' ? '일일 손익' : 'Daily P&L',
-                                data: chartData.performanceData,
-                                borderColor: '#3b82f6',
-                                backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                                yAxisID: 'y1',
-                                tension: 0.4,
-                                pointRadius: 4,
-                                pointHoverRadius: 6
-                            },
-                            {
-                                label: currentLanguage === 'ko' ? '스트레스 수준' : 'Stress Level',
-                                data: chartData.stressData,
-                                borderColor: '#ef4444',
-                                backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                                yAxisID: 'y2',
-                                tension: 0.4,
-                                pointRadius: 4,
-                                pointHoverRadius: 6
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        interaction: {
-                            intersect: false,
-                            mode: 'index'
-                        },
-                        plugins: {
-                            legend: {
-                                labels: { 
-                                    color: '#e4e4e7',
-                                    usePointStyle: true,
-                                    padding: 20
-                                }
-                            }
-                        },
-                        scales: {
-                            x: {
-                                ticks: { color: '#94a3b8' },
-                                grid: { color: '#334155' }
-                            },
-                            y: {
-                                type: 'linear',
-                                display: true,
-                                position: 'left',
-                                title: {
-                                    display: true,
-                                    text: currentLanguage === 'ko' ? '수면 시간' : 'Sleep Hours',
-                                    color: '#10b981'
-                                },
-                                ticks: { color: '#10b981' },
-                                grid: { color: '#334155' },
-                                min: 0,
-                                max: 12
-                            },
-                            y1: {
-                                type: 'linear',
-                                display: true,
-                                position: 'right',
-                                title: {
-                                    display: true,
-                                    text: currentLanguage === 'ko' ? '손익 ($)' : 'P&L ($)',
-                                    color: '#3b82f6'
-                                },
-                                ticks: { color: '#3b82f6' },
-                                grid: { drawOnChartArea: false }
-                            },
-                            y2: {
-                                type: 'linear',
-                                display: false,
-                                min: 1,
-                                max: 5
-                            }
-                        }
-                    }
-                });
-                
-                console.log('Psychology performance chart updated successfully');
-            } catch (error) {
-                console.error('Error updating psychology performance chart:', error);
+                const dailyTarget = document.getElementById('dailyTarget');
+                if (dailyTarget) dailyTarget.value = todayData.dailyTarget || '';
+
+                const maxDailyLoss = document.getElementById('maxDailyLoss');
+                if (maxDailyLoss) maxDailyLoss.value = todayData.maxDailyLoss || '';
+
+                // Emotional state
+                const stressLevel = document.getElementById('stressLevel');
+                if (stressLevel) stressLevel.value = todayData.stressLevel || 3;
+
+                const confidenceLevel = document.getElementById('confidenceLevel');
+                if (confidenceLevel) confidenceLevel.value = todayData.confidenceLevel || 3;
+
+                const focusLevel = document.getElementById('focusLevel');
+                if (focusLevel) focusLevel.value = todayData.focusLevel || 3;
             }
-        }
-
-        function preparePsychologyChartData() {
-            const last30Days = [];
-            const today = new Date();
-            
-            for (let i = 29; i >= 0; i--) {
-                const date = new Date(today);
-                date.setDate(date.getDate() - i);
-                const dateStr = formatTradingDate(date);
-                last30Days.push(dateStr);
-            }
-            
-            const labels = [];
-            const sleepData = [];
-            const performanceData = [];
-            const stressData = [];
-            
-            last30Days.forEach(dateStr => {
-                const psychData = psychologyData[dateStr];
-                const dayTrades = trades.filter(trade => trade.date === dateStr);
-                
-                if (psychData || dayTrades.length > 0) {
-                    labels.push(new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
-                    
-                    sleepData.push(psychData?.sleepHours || null);
-                    stressData.push(psychData?.stressLevel || null);
-                    
-                    if (dayTrades.length > 0) {
-                        const dayPnL = dayTrades.reduce((sum, trade) => sum + trade.pnl, 0);
-                        const dailyFee = dailyFees[dateStr] || 0;
-                        performanceData.push(dayPnL - dailyFee);
-                    } else {
-                        performanceData.push(null);
-                    }
-                }
-            });
-            
-            return { labels, sleepData, performanceData, stressData };
         }
 
         // Annual Heatmap Functions
