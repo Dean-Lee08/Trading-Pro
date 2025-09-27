@@ -3748,187 +3748,126 @@
                         <h2 class="psychology-header" data-lang="daily-data-input">Daily Data Input</h2>
                         
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 24px;">
-                            <!-- Biological Data -->
-                            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
-                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="biological-data">Biological Data</h3>
-                                
-                                <div style="margin-bottom: 16px;">
-                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="sleep-hours">Sleep Hours</label>
-                                    <input type="number" id="sleepHours" step="0.5" min="0" max="12" placeholder="7.5" 
-                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                                </div>
-                            </div>
-                            
-                            <!-- Trading Environment -->
-                            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
-                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="trading-environment">Trading Environment</h3>
-                                
-                                <div style="margin-bottom: 16px;">
-                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="start-time">Start Time</label>
-                                    <input type="time" id="startTime" 
-                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                                </div>
-                                
-                                <div style="margin-bottom: 16px;">
-                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="end-time">End Time</label>
-                                    <input type="time" id="endTime" 
-                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                                </div>
-                                
-                                <div>
-                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="environment-type">Environment Type</label>
-                                    <select id="environmentType" style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                                        <option value="home">Home</option>
-                                        <option value="cafe">Cafe</option>
-                                        <option value="office">Office</option>
-                                        <option value="hotel">Hotel</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <!-- Economic Pressure -->
-                            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
-                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="economic-pressure">Economic Pressure</h3>
-                                
-                                <div style="margin-bottom: 16px;">
-                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="account-balance">Account Balance ($)</label>
-                                    <input type="number" id="accountBalance" min="0" placeholder="10000" oninput="updateTargetPercentages()"
-                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                                </div>
-                                
-                                <div style="margin-bottom: 16px;">
-                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="daily-target">Daily P&L Target ($)</label>
-                                    <div style="display: flex; gap: 8px; align-items: center;">
-                                        <input type="number" id="dailyTarget" placeholder="200" oninput="updateTargetPercentages()"
-                                               style="flex: 1; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                                        <span id="dailyTargetPercent" style="color: #64748b; font-size: 12px; min-width: 40px;">0%</span>
-                                    </div>
-                                </div>
-                                
-                                <div>
-                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="max-daily-loss">Max Daily Loss ($)</label>
-                                    <div style="display: flex; gap: 8px; align-items: center;">
-                                        <input type="number" id="maxDailyLoss" placeholder="500" oninput="updateTargetPercentages()"
-                                               style="flex: 1; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                                        <span id="maxLossPercent" style="color: #64748b; font-size: 12px; min-width: 40px;">0%</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Emotional State -->
-                            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
-                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="emotional-state">Emotional State</h3>
-                                
-                                <div style="margin-bottom: 16px;">
-                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="stress-level">Stress Level (1-5)</label>
-                                    <input type="range" id="stressLevel" min="1" max="5" value="3" oninput="updateSliderDisplay('stressLevel', 'stressValue')"
-                                           style="width: 100%; accent-color: #3b82f6;">
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
-                                        <span style="color: #64748b; font-size: 11px;">Low</span>
-                                        <span id="stressValue" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">3</span>
-                                        <span style="color: #64748b; font-size: 11px;">High</span>
-                                    </div>
-                                </div>
-                                
-                                <div style="margin-bottom: 16px;">
-                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="confidence-level">Confidence Level (1-5)</label>
-                                    <input type="range" id="confidenceLevel" min="1" max="5" value="3" oninput="updateSliderDisplay('confidenceLevel', 'confidenceValue')"
-                                           style="width: 100%; accent-color: #3b82f6;">
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
-                                        <span style="color: #64748b; font-size: 11px;">Low</span>
-                                        <span id="confidenceValue" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">3</span>
-                                        <span style="color: #64748b; font-size: 11px;">High</span>
-                                    </div>
-                                </div>
-                                
-                                <div>
-                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="focus-level">Focus Level (1-5)</label>
-                                    <input type="range" id="focusLevel" min="1" max="5" value="3" oninput="updateSliderDisplay('focusLevel', 'focusValue')"
-                                           style="width: 100%; accent-color: #3b82f6;">
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
-                                        <span style="color: #64748b; font-size: 11px;">Low</span>
-                                        <span id="focusValue" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">3</span>
-                                        <span style="color: #64748b; font-size: 11px;">High</span>
-                                    </div>
-                                </div>
+                    <!-- Biological Data -->
+                    <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
+                        <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="biological-data">Biological Data</h3>
+                        
+                        <div>
+                            <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="sleep-hours">Sleep Hours</label>
+                            <input type="number" id="sleepHours" step="0.5" min="0" max="12" placeholder="7.5" 
+                                   style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                        </div>
+                    </div>
+                    
+                    <!-- Trading Environment -->
+                    <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
+                        <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="trading-environment">Trading Environment</h3>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="start-time">Start Time</label>
+                            <input type="time" id="startTime" 
+                                   style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="end-time">End Time</label>
+                            <input type="time" id="endTime" 
+                                   style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                        </div>
+                        
+                        <div>
+                            <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="environment-type">Environment Type</label>
+                            <select id="environmentType" style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                <option value="home">Home</option>
+                                <option value="cafe">Cafe</option>
+                                <option value="office">Office</option>
+                                <option value="hotel">Hotel</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Economic Pressure -->
+                    <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
+                        <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="economic-pressure">Economic Pressure</h3>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="account-balance">Account Balance ($)</label>
+                            <input type="number" id="accountBalance" min="0" placeholder="10000" oninput="updateTargetPercentages()"
+                                   style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="daily-target">Daily P&L Target ($)</label>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <input type="number" id="dailyTarget" placeholder="200" oninput="updateTargetPercentages()"
+                                       style="flex: 1; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                <span id="dailyTargetPercent" style="color: #64748b; font-size: 12px; min-width: 40px;">0%</span>
                             </div>
                         </div>
                         
-                        <!-- Action Buttons -->
-                        <div style="display: flex; gap: 12px; justify-content: center; margin-bottom: 24px;">
-                            <button class="psychology-save-btn" onclick="savePsychologyData()" data-lang="save-psychology-data">Save Psychology Data</button>
-                            <button class="psychology-save-btn" onclick="calculateDailyScore()" style="background: #3b82f6;" data-lang="calculate-score">Calculate Daily Score</button>
-                            <button class="psychology-save-btn" onclick="resetPsychologyData()" style="background: #ef4444;" data-lang="reset-psychology-data">Reset Data</button>
+                        <div>
+                            <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="max-daily-loss">Max Daily Loss ($)</label>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <input type="number" id="maxDailyLoss" placeholder="500" oninput="updateTargetPercentages()"
+                                       style="flex: 1; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                <span id="maxLossPercent" style="color: #64748b; font-size: 12px; min-width: 40px;">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Emotional State -->
+                    <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
+                        <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="emotional-state">Emotional State</h3>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="stress-level">Stress Level (1-5)</label>
+                            <input type="range" id="stressLevel" min="1" max="5" value="3" oninput="updateSliderDisplay('stressLevel', 'stressValue')"
+                                   style="width: 100%; accent-color: #3b82f6;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+                                <span style="color: #64748b; font-size: 11px;">Low</span>
+                                <span id="stressValue" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">3</span>
+                                <span style="color: #64748b; font-size: 11px;">High</span>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="confidence-level">Confidence Level (1-5)</label>
+                            <input type="range" id="confidenceLevel" min="1" max="5" value="3" oninput="updateSliderDisplay('confidenceLevel', 'confidenceValue')"
+                                   style="width: 100%; accent-color: #3b82f6;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+                                <span style="color: #64748b; font-size: 11px;">Low</span>
+                                <span id="confidenceValue" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">3</span>
+                                <span style="color: #64748b; font-size: 11px;">High</span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="focus-level">Focus Level (1-5)</label>
+                            <input type="range" id="focusLevel" min="1" max="5" value="3" oninput="updateSliderDisplay('focusLevel', 'focusValue')"
+                                   style="width: 100%; accent-color: #3b82f6;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+                                <span style="color: #64748b; font-size: 11px;">Low</span>
+                                <span id="focusValue" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">3</span>
+                                <span style="color: #64748b; font-size: 11px;">High</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Performance Chart Section -->
-                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 24px; margin-bottom: 24px;">
-                            <h3 style="color: #f8fafc; font-size: 18px; font-weight: 600; margin-bottom: 20px; text-align: center;" data-lang="psychology-performance-chart">Psychology vs Performance Analysis</h3>
-                            <div style="height: 300px; display: flex; align-items: center; justify-content: center;">
-                                <canvas id="psychologyPerformanceChart" style="max-width: 100%; max-height: 100%;"></canvas>
-                            </div>
-                        </div>
+                        <!-- Performance Chart Section for Daily Input -->
+                <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 24px; margin-top: 24px;">
+                    <h3 style="color: #f8fafc; font-size: 18px; font-weight: 600; margin-bottom: 20px; text-align: center;" data-lang="psychology-performance-chart">Psychology vs Performance Analysis</h3>
+                    <div style="height: 300px; display: flex; align-items: center; justify-content: center;">
+                        <canvas id="psychologyPerformanceChart" style="max-width: 100%; max-height: 100%;"></canvas>
+                    </div>
+                </div>
 
-                <!-- Metrics Dashboard Section -->
+                        <!-- Metrics Dashboard Section -->
                 <div id="psychologyMetricsSection" class="psychology-section">
                     <div class="psychology-container">
-                        <h2 class="psychology-header" data-lang="psychology-metrics">Psychology Metrics Dashboard</h2>
+                        <h2 class="psychology-header" data-lang="psychology-dashboard">Psychology Dashboard</h2>
                         
-                        <!-- Weekly Bias Risk Assessment -->
-                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
-                            <h3 style="color: #f8fafc; font-size: 18px; margin-bottom: 16px; text-align: center;" data-lang="weekly-bias-risk">Weekly Bias Risk Assessment</h3>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
-                                <div id="overconfidenceRiskCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="overconfidence-risk">Overconfidence Risk</div>
-                                    <div id="overconfidenceRisk" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">Low</div>
-                                    <div id="overconfidenceDetails" style="color: #64748b; font-size: 11px;">Calibration Error: 0.0%</div>
-                                </div>
-                                
-                                <div id="lossAversionRiskCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="loss-aversion-risk">Loss Aversion Risk</div>
-                                    <div id="lossAversionRisk" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">Low</div>
-                                    <div id="lossAversionDetails" style="color: #64748b; font-size: 11px;">Disposition Ratio: 0.0</div>
-                                </div>
-                                
-                                <div id="anchoringRiskCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="anchoring-risk">Anchoring Risk</div>
-                                    <div id="anchoringRisk" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">Low</div>
-                                    <div id="anchoringDetails" style="color: #64748b; font-size: 11px;">Entry Price Dependency: 0%</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Performance Correlation -->
-                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px;">
-                            <h3 style="color: #f8fafc; font-size: 18px; margin-bottom: 16px; text-align: center;" data-lang="performance-correlation">Performance Correlation Analysis</h3>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="sleep-performance">Sleep vs Performance</div>
-                                    <div id="sleepCorrelation" style="color: #f8fafc; font-size: 18px; font-weight: 700;">+0.00</div>
-                                </div>
-                                
-                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="caffeine-performance">Caffeine vs Performance</div>
-                                    <div id="caffeineCorrelation" style="color: #f8fafc; font-size: 18px; font-weight: 700;">+0.00</div>
-                                </div>
-                                
-                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="timing-performance">Timing vs Performance</div>
-                                    <div id="timingCorrelation" style="color: #f8fafc; font-size: 18px; font-weight: 700;">+0.00</div>
-                                </div>
-                                
-                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="confidence-performance">Confidence vs Performance</div>
-                                    <div id="confidenceCorrelation" style="color: #f8fafc; font-size: 18px; font-weight: 700;">+0.00</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                        
-                        <!-- Enhanced Visual Dashboard -->
+                        <!-- Visual Dashboard Cards -->
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 32px;">
                             <!-- Sleep Performance Card -->
                             <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid #334155; border-radius: 12px; padding: 20px; position: relative; overflow: hidden;">
@@ -4040,6 +3979,66 @@
                                 </div>
                             </div>
                         </div>
+                        
+                        <!-- Performance Chart Section -->
+                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 24px; margin-bottom: 24px;">
+                            <h3 style="color: #f8fafc; font-size: 18px; font-weight: 600; margin-bottom: 20px; text-align: center;" data-lang="psychology-performance-chart">Psychology vs Performance Analysis</h3>
+                            <div style="height: 300px; display: flex; align-items: center; justify-content: center;">
+                                <canvas id="psychologyPerformanceChart" style="max-width: 100%; max-height: 100%;"></canvas>
+                            </div>
+                        </div>
+                        
+                        <!-- Weekly Bias Risk Assessment -->
+                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                            <h3 style="color: #f8fafc; font-size: 18px; margin-bottom: 16px; text-align: center;" data-lang="weekly-bias-risk">Weekly Bias Risk Assessment</h3>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+                                <div id="overconfidenceRiskCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="overconfidence-risk">Overconfidence Risk</div>
+                                    <div id="overconfidenceRisk" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">Low</div>
+                                    <div id="overconfidenceDetails" style="color: #64748b; font-size: 11px;">Calibration Error: 0.0%</div>
+                                </div>
+                                
+                                <div id="lossAversionRiskCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="loss-aversion-risk">Loss Aversion Risk</div>
+                                    <div id="lossAversionRisk" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">Low</div>
+                                    <div id="lossAversionDetails" style="color: #64748b; font-size: 11px;">Disposition Ratio: 0.0</div>
+                                </div>
+                                
+                                <div id="anchoringRiskCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="anchoring-risk">Anchoring Risk</div>
+                                    <div id="anchoringRisk" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">Low</div>
+                                    <div id="anchoringDetails" style="color: #64748b; font-size: 11px;">Entry Price Dependency: 0%</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Performance Correlation -->
+                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px;">
+                            <h3 style="color: #f8fafc; font-size: 18px; margin-bottom: 16px; text-align: center;" data-lang="performance-correlation">Performance Correlation Analysis</h3>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="sleep-performance">Sleep vs Performance</div>
+                                    <div id="sleepCorrelation" style="color: #f8fafc; font-size: 18px; font-weight: 700;">+0.00</div>
+                                </div>
+                                
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="caffeine-performance">Caffeine vs Performance</div>
+                                    <div id="caffeineCorrelation" style="color: #f8fafc; font-size: 18px; font-weight: 700;">+0.00</div>
+                                </div>
+                                
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="timing-performance">Timing vs Performance</div>
+                                    <div id="timingCorrelation" style="color: #f8fafc; font-size: 18px; font-weight: 700;">+0.00</div>
+                                </div>
+                                
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="confidence-performance">Confidence vs Performance</div>
+                                    <div id="confidenceCorrelation" style="color: #f8fafc; font-size: 18px; font-weight: 700;">+0.00</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Bias Analysis Section -->
                 <div id="psychologyBiasSection" class="psychology-section">
@@ -4246,6 +4245,7 @@
                         </div>
                     </div>
                 </div>
+            </div>
             
             <!-- Notes page -->
             <div id="notes" class="page">
@@ -6543,69 +6543,39 @@
 
         // Navigation functions
         function showPage(pageId) {
-            // 모든 페이지 숨기기
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
             });
             
-            // 모든 네비게이션 아이템 비활성화
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
             });
             
-            // 선택된 페이지 표시
-            const targetPage = document.getElementById(pageId);
-            if (targetPage) {
-                targetPage.classList.add('active');
-            }
+            document.getElementById(pageId).classList.add('active');
+            event.target.closest('.nav-item').classList.add('active');
             
-            // 클릭된 네비게이션 아이템 활성화
-            const clickedNavItem = event.target.closest('.nav-item');
-            if (clickedNavItem) {
-                clickedNavItem.classList.add('active');
-            }
-            
-            // 페이지별 특별 처리
             if (pageId === 'analysis') {
-                setTimeout(() => {
-                    updateDetailedAnalytics();
-                    if (currentAnalyticsSection === 'detail') {
-                        updateBasicCharts();
-                    } else {
-                        updateAdvancedCharts();
-                    }
-                }, 100);
+                updateDetailedAnalytics();
+                if (currentAnalyticsSection === 'detail') {
+                    setTimeout(updateBasicCharts, 100);
+                } else {
+                    setTimeout(updateAdvancedCharts, 100);
+                }
             }
             
             if (pageId === 'notes') {
-                setTimeout(() => {
-                    renderAllNotesSections();
-                }, 100);
+                renderAllNotesSections();
             }
 
             if (pageId === 'psychology') {
                 setTimeout(() => {
-                    loadPsychologyData();
-                    updateVisualDashboard();
-                    // 일일 입력 탭이 기본이므로 차트도 업데이트
-                    if (currentPsychologySection === 'input') {
-                        updatePsychologyPerformanceChart();
-                    }
-                }, 100);
+    loadPsychologyData();
+    updatePsychologyMetrics();
+}, 100);
             }
             
-            if (pageId === 'trades') {
-                setTimeout(() => {
-                    updateAllTradesList();
-                }, 100);
-            }
-            
-            // 모바일에서 사이드바 닫기
             if (window.innerWidth <= 768) {
-                const sidebar = document.getElementById('sidebar');
-                if (sidebar) {
-                    sidebar.classList.remove('open');
-                }
+                document.getElementById('sidebar').classList.remove('open');
             }
         }
 
@@ -8036,18 +8006,13 @@
             const avgWin = parseFloat(document.getElementById('calcAvgWin').value) || 0;
             const avgLoss = parseFloat(document.getElementById('calcAvgLoss').value) || 0;
             
-            // 요소 존재 확인
-            const recommendedSizeEl = document.getElementById('recommendedSize');
-            const accountUtilEl = document.getElementById('accountUtil');
-            const expectedValEl = document.getElementById('expectedVal');
-            
             if (avgLoss === 0 || balance === 0) {
-                if (recommendedSizeEl) recommendedSizeEl.textContent = '$0';
-                if (accountUtilEl) accountUtilEl.textContent = '0%';
-                if (expectedValEl) {
-                    expectedValEl.textContent = '$0';
-                    expectedValEl.className = 'sidebar-stat-value';
-                }
+                document.getElementById('recommendedSize').textContent = '$0';
+                document.getElementById('accountUtil').textContent = '0%';
+                document.getElementById('expectedVal').textContent = '$0';
+                document.getElementById('expectedVal').className = 'sidebar-stat-value';
+                document.getElementById('kellyStatus').textContent = 'Safe';
+                document.getElementById('kellyStatus').className = 'sidebar-stat-value positive';
                 return;
             }
             
@@ -8059,23 +8024,25 @@
             const fullKelly = balance * kellyFraction;
             
             const recommendedPosition = fullKelly * selectedKellyMultiplier;
-            if (recommendedSizeEl) recommendedSizeEl.textContent = '$' + recommendedPosition.toFixed(0);
+            document.getElementById('recommendedSize').textContent = '$' + recommendedPosition.toFixed(0);
             
             const utilization = (recommendedPosition / balance) * 100;
-            if (accountUtilEl) accountUtilEl.textContent = utilization.toFixed(1) + '%';
+            document.getElementById('accountUtil').textContent = utilization.toFixed(1) + '%';
             
             const expectedValue = (p * avgWin - q * avgLoss) * (recommendedPosition / Math.max(avgWin, 1));
-            if (expectedValEl) {
-                expectedValEl.textContent = '$' + expectedValue.toFixed(0);
-                expectedValEl.className = 'sidebar-stat-value ' + (expectedValue >= 0 ? 'positive' : 'negative');
-            }
+            document.getElementById('expectedVal').textContent = '$' + expectedValue.toFixed(0);
+            document.getElementById('expectedVal').className = 'sidebar-stat-value ' + (expectedValue >= 0 ? 'positive' : 'negative');
             
             const kellyPercent = kellyFraction * 100;
             let riskLevel = 'Safe';
             if (kellyPercent > 25) riskLevel = 'High';
             else if (kellyPercent > 15) riskLevel = 'Medium';
+            
+            document.getElementById('kellyStatus').textContent = riskLevel;
+            document.getElementById('kellyStatus').className = 'sidebar-stat-value ' + 
+                (riskLevel === 'Safe' ? 'positive' : riskLevel === 'Medium' ? 'neutral' : 'negative');
         }
-        
+
         function selectKellyMultiplier(element) {
             document.querySelectorAll('.kelly-option').forEach(option => {
                 option.classList.remove('selected');
@@ -8087,37 +8054,37 @@
         }
 
         function autoLoadTradeData() {
-            if (!trades || trades.length === 0) {
-                alert(currentLanguage === 'ko' ? '거래 이력이 없습니다.' : 'No trade history available.');
-                return;
-            }
-            
-            const recentTrades = trades.slice(-20);
-            const wins = recentTrades.filter(trade => trade.pnl > 0);
-            const losses = recentTrades.filter(trade => trade.pnl < 0);
-            
-            if (losses.length === 0) {
-                alert(currentLanguage === 'ko' ? '손실 거래가 없어 계산할 수 없습니다.' : 'No losing trades available for calculation.');
-                return;
-            }
-            
-            const winRate = (wins.length / recentTrades.length) * 100;
-            const avgWin = wins.length > 0 ? wins.reduce((sum, trade) => sum + trade.pnl, 0) / wins.length : 0;
-            const avgLoss = Math.abs(losses.reduce((sum, trade) => sum + trade.pnl, 0) / losses.length);
-            
-            // Kelly 계산기 입력 필드에 값 설정
-            const calcWinRateEl = document.getElementById('calcWinRate');
-            const calcAvgWinEl = document.getElementById('calcAvgWin');
-            const calcAvgLossEl = document.getElementById('calcAvgLoss');
-            
-            if (calcWinRateEl) calcWinRateEl.value = winRate.toFixed(1);
-            if (calcAvgWinEl) calcAvgWinEl.value = avgWin.toFixed(0);
-            if (calcAvgLossEl) calcAvgLossEl.value = avgLoss.toFixed(0);
-            
-            // 계산 실행
-            calculatePosition();
-            showToast(currentLanguage === 'ko' ? '거래 이력에서 데이터를 불러왔습니다' : 'Data loaded from trade history');
-        }
+    if (!trades || trades.length === 0) {
+        alert('거래 이력이 없습니다.');
+        return;
+    }
+    
+    const recentTrades = trades.slice(-20);
+    const wins = recentTrades.filter(trade => trade.pnl > 0);
+    const losses = recentTrades.filter(trade => trade.pnl < 0);
+    
+    if (losses.length === 0) {
+        alert('손실 거래가 없어 계산할 수 없습니다.');
+        return;
+    }
+    
+    const winRate = (wins.length / recentTrades.length) * 100;
+    const avgWin = wins.length > 0 ? wins.reduce((sum, trade) => sum + trade.pnl, 0) / wins.length : 0;
+    const avgLoss = Math.abs(losses.reduce((sum, trade) => sum + trade.pnl, 0) / losses.length);
+    
+    // Kelly 계산기 입력 필드에 값 설정
+    document.getElementById('calcWinRate').value = winRate.toFixed(1);
+    document.getElementById('calcAvgWin').value = avgWin.toFixed(0);
+    document.getElementById('calcAvgLoss').value = avgLoss.toFixed(0);
+    
+    // 사이드바에도 표시
+    document.getElementById('recentWinRateCalc').textContent = winRate.toFixed(1) + '%';
+    document.getElementById('plRatioCalc').textContent = (avgWin / avgLoss).toFixed(2);
+    
+    // 계산 실행
+    calculatePosition();
+    showToast('거래 이력에서 데이터를 불러왔습니다');
+}
 
         // Calculator Tab Management
         function showCalculatorTab(tabName) {
@@ -8264,50 +8231,21 @@ function applyCustomRisk() {
             
             if (confirm(confirmMessage)) {
                 // 모든 입력 필드 초기화
-                const sleepHours = document.getElementById('sleepHours');
-                if (sleepHours) sleepHours.value = '';
+                document.getElementById('sleepHours').value = '';
+                document.getElementById('sleepQuality').value = '3';
+                document.getElementById('energyLevel').value = '3';
+                document.getElementById('actualStartTime').value = '';
+                document.getElementById('tradingEnvironment').value = 'home-quiet';
+                document.getElementById('psychAccountBalance').value = '';
+                document.getElementById('dailyTarget').value = '';
+                document.getElementById('maxDailyLoss').value = '';
+                document.getElementById('preMarketMood').value = '3';
+                document.getElementById('confidenceLevel').value = '3';
+                document.getElementById('stressLevel').value = '3';
+                document.getElementById('focusLevel').value = '3';
                 
-                const startTime = document.getElementById('startTime');
-                if (startTime) startTime.value = '';
-                
-                const endTime = document.getElementById('endTime');
-                if (endTime) endTime.value = '';
-                
-                const environmentType = document.getElementById('environmentType');
-                if (environmentType) environmentType.value = 'home';
-                
-                const accountBalance = document.getElementById('accountBalance');
-                if (accountBalance) accountBalance.value = '';
-                
-                const dailyTarget = document.getElementById('dailyTarget');
-                if (dailyTarget) dailyTarget.value = '';
-                
-                const maxDailyLoss = document.getElementById('maxDailyLoss');
-                if (maxDailyLoss) maxDailyLoss.value = '';
-                
-                const stressLevel = document.getElementById('stressLevel');
-                if (stressLevel) {
-                    stressLevel.value = '3';
-                    updateSliderDisplay('stressLevel', 'stressValue');
-                }
-                
-                const confidenceLevel = document.getElementById('confidenceLevel');
-                if (confidenceLevel) {
-                    confidenceLevel.value = '3';
-                    updateSliderDisplay('confidenceLevel', 'confidenceValue');
-                }
-                
-                const focusLevel = document.getElementById('focusLevel');
-                if (focusLevel) {
-                    focusLevel.value = '3';
-                    updateSliderDisplay('focusLevel', 'focusValue');
-                }
-                
-                // 퍼센트 디스플레이 초기화
-                updateTargetPercentages();
-                
-                // 비주얼 대시보드 초기화
-                resetVisualDashboard();
+                // 메트릭 초기화
+                resetPsychologyMetrics();
                 
                 showToast(currentLanguage === 'ko' ? '심리 데이터가 초기화되었습니다' : 'Psychology data has been reset');
             }
@@ -8376,57 +8314,15 @@ function applyCustomRisk() {
             updateVisualDashboard();
         }
 
-        function updatePsychologyMetrics() {
-            // 이 함수는 현재 사용하지 않으므로 빈 함수로 유지
-            console.log('Psychology metrics updated');
-        }
-
-        function calculateDailyScore() {
-            const currentDate = formatTradingDate(currentTradingDate);
-            const sleepHours = parseFloat(document.getElementById('sleepHours').value) || 0;
-            const stressLevel = parseInt(document.getElementById('stressLevel').value) || 3;
-            const confidenceLevel = parseInt(document.getElementById('confidenceLevel').value) || 3;
-            const focusLevel = parseInt(document.getElementById('focusLevel').value) || 3;
-            
-            if (sleepHours === 0) {
-                alert(currentLanguage === 'ko' ? '먼저 수면 시간을 입력해주세요.' : 'Please enter sleep hours first.');
-                return;
-            }
-            
-            // 점수 계산
-            let sleepScore = Math.min((sleepHours / 8) * 25, 25);
-            let stressScore = ((6 - stressLevel) / 5) * 25;
-            let confidenceScore = (confidenceLevel / 5) * 25;
-            let focusScore = (focusLevel / 5) * 25;
-            
-            let totalScore = sleepScore + stressScore + confidenceScore + focusScore;
-            
-            // 결과 표시
-            let scoreMessage = currentLanguage === 'ko' ? 
-                `일일 심리 점수: ${totalScore.toFixed(1)}/100\n\n수면: ${sleepScore.toFixed(1)}/25\n스트레스: ${stressScore.toFixed(1)}/25\n자신감: ${confidenceScore.toFixed(1)}/25\n집중력: ${focusScore.toFixed(1)}/25` :
-                `Daily Psychology Score: ${totalScore.toFixed(1)}/100\n\nSleep: ${sleepScore.toFixed(1)}/25\nStress: ${stressScore.toFixed(1)}/25\nConfidence: ${confidenceScore.toFixed(1)}/25\nFocus: ${focusScore.toFixed(1)}/25`;
-            
-            alert(scoreMessage);
-            
-            showToast(currentLanguage === 'ko' ? '일일 심리 점수가 계산되었습니다' : 'Daily psychology score calculated');
-        }
-
         // Enhanced Psychology System Functions
         function showPsychologySection(section) {
-            currentPsychologySection = section;
-            
             // 탭 상태 업데이트
             document.querySelectorAll('.psychology-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
+            event.target.classList.add('active');
             
-            // 이벤트 타겟이 없는 경우를 대비해 직접 찾기
-            const targetTab = document.querySelector(`[onclick="showPsychologySection('${section}')"]`);
-            if (targetTab) {
-                targetTab.classList.add('active');
-            }
-            
-            // 모든 섹션 숨기기
+            // 섹션 표시/숨기기
             document.querySelectorAll('.psychology-section').forEach(sec => {
                 sec.classList.remove('active');
             });
@@ -8456,18 +8352,16 @@ function applyCustomRisk() {
             }
             
             // 해당 섹션의 데이터 업데이트
-            setTimeout(() => {
-                if (section === 'input') {
+            if (section === 'metrics') {
+                setTimeout(() => {
                     updateVisualDashboard();
                     updatePsychologyPerformanceChart();
-                } else if (section === 'metrics') {
-                    updateBiasAnalysis();
-                } else if (section === 'bias-analysis') {
-                    updateBiasAnalysis();
-                } else if (section === 'patterns') {
-                    updatePatternInsights();
-                }
-            }, 100);
+                }, 100);
+            } else if (section === 'bias-analysis') {
+                updateBiasAnalysis();
+            } else if (section === 'patterns') {
+                updatePatternInsights();
+            }
         }
 
         function calculateDailyScore() {
@@ -9221,7 +9115,6 @@ function applyCustomRisk() {
             }
             document.getElementById('sleepStatus').textContent = sleepStatus;
             
-            // Update environment display
             // Update environment display
             // Update environment display
             const environmentType = todayData.environmentType || 'home';
@@ -10143,79 +10036,6 @@ function applyCustomRisk() {
                 showToast(currentLanguage === 'ko' ? 
                     `${tradesToDelete.length}개의 거래가 삭제되었습니다` : 
                     `${tradesToDelete.length} trades deleted`);
-            }
-        }
-
-        function calculateOverconfidenceBias() {
-            // 기본값 설정
-            document.getElementById('calibrationError').textContent = '0.0%';
-            document.getElementById('calibrationErrorBar').style.width = '0%';
-            document.getElementById('overtradingIndex').textContent = '0%';
-            document.getElementById('overtradingBar').style.width = '0%';
-            document.getElementById('positionDeviation').textContent = '0.0';
-            document.getElementById('positionDeviationBar').style.width = '0%';
-        }
-
-        function calculateLossAversionBias() {
-            // 기본값 설정
-            document.getElementById('dispositionRatio').textContent = '1.0';
-            document.getElementById('dispositionBar').style.width = '0%';
-            document.getElementById('stopLossRate').textContent = '0%';
-            document.getElementById('stopLossBar').style.width = '0%';
-            document.getElementById('stopLossModRate').textContent = '0%';
-            document.getElementById('stopLossModBar').style.width = '0%';
-        }
-
-        function calculateAnchoringBias() {
-            // 기본값 설정
-            document.getElementById('entryPriceDep').textContent = '0%';
-            document.getElementById('entryPriceBar').style.width = '0%';
-            document.getElementById('roundNumberBias').textContent = '0%';
-            document.getElementById('roundNumberBar').style.width = '0%';
-            document.getElementById('recentHighAnchor').textContent = '0%';
-            document.getElementById('recentHighBar').style.width = '0%';
-        }
-
-        function calculateOverallBiasRisk() {
-            // 기본값 설정
-            document.getElementById('overallBiasRisk').textContent = 'Low';
-            document.getElementById('overallBiasRisk').style.color = '#10b981';
-            document.getElementById('overallBiasScore').textContent = 'Score: 0/100';
-            document.getElementById('riskTrend').textContent = 'Stable';
-            document.getElementById('actionNeeded').textContent = 'None';
-            document.getElementById('actionDetails').textContent = 'All metrics normal';
-        }
-
-        function analyzeTimeBasedPerformance() {
-            // 기본값 설정
-            document.getElementById('bestTradingHour').textContent = '--:--';
-            document.getElementById('bestHourPerformance').textContent = 'Win Rate: --%';
-            document.getElementById('worstTradingHour').textContent = '--:--';
-            document.getElementById('worstHourPerformance').textContent = 'Win Rate: --%';
-            document.getElementById('optimalSleepRange').textContent = '-.- hours';
-            document.getElementById('sleepRangePerformance').textContent = 'Avg P&L: $--';
-            document.getElementById('delayImpact').textContent = '--min';
-            document.getElementById('delayPerformance').textContent = 'Performance drop: --%';
-        }
-
-        function analyzeConsecutiveTradesPattern() {
-            // 기본값 설정
-            document.getElementById('after1Loss').textContent = '--%';
-            document.getElementById('after2Losses').textContent = '--%';
-            document.getElementById('after3Losses').textContent = '--%';
-            document.getElementById('after1Win').textContent = '--%';
-            document.getElementById('after2Wins').textContent = '--%';
-            document.getElementById('after3Wins').textContent = '--%';
-        }
-
-        function generateAIInsights() {
-            const insightsList = document.getElementById('aiInsightsList');
-            if (insightsList) {
-                insightsList.innerHTML = `
-                    <div style="background: #0f172a; border-left: 4px solid #3b82f6; padding: 12px 16px; border-radius: 0 6px 6px 0;">
-                        <div style="color: #e4e4e7; font-size: 14px; line-height: 1.5;">Collect more psychology data and trading records to generate personalized insights.</div>
-                    </div>
-                `;
             }
         }
         
