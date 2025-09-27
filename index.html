@@ -4375,7 +4375,6 @@
         let psychologyData = {};
         let currentPsychologySection = 'input';
         let selectedWeekPnl = null;
-        let selectedTrades = new Set();
         let selectedTradesList = new Set();
         
         // Chart instances
@@ -7455,6 +7454,9 @@
             
             updateCalendarStats();
             
+            // 기존 이벤트 리스너 제거
+            document.removeEventListener('mouseup', endRangeSelection);
+            
             for (let week = 0; week < 6; week++) {
                 let weekTrades = [];
                 let weekPnl = 0;
@@ -7549,11 +7551,8 @@
                 }
             }
             
-            document.addEventListener('mouseup', function() {
-                if (isSelecting) {
-                    endRangeSelection();
-                }
-            });
+            // 이벤트 리스너를 한 번만 등록
+            document.addEventListener('mouseup', endRangeSelection);
             
             renderAnnualHeatmap();
         }
@@ -8308,29 +8307,6 @@ function applyCustomRisk() {
             return Math.max(0, Math.min(25, baseScore + qualityBonus));
         }
 
-        function calculateStressFactor(sleepHours, stressLevel, focusLevel) {
-            let baseScore = 25;
-            
-            // 수면 부족 시 스트레스 증가
-            if (sleepHours < 6) {
-                baseScore -= 8;
-            } else if (sleepHours < 7) {
-                baseScore -= 4;
-            }
-            
-            // 스트레스 레벨 패널티
-            baseScore -= (stressLevel - 3) * 4;
-            
-            // 집중력 조정
-            if (focusLevel <= 2) {
-                baseScore -= 5; // 낮은 집중력
-            } else if (focusLevel >= 4) {
-                baseScore += 3; // 높은 집중력
-            }
-            
-            return Math.max(0, Math.min(25, baseScore));
-        }
-
         function calculateEnvironmentFactor(environment, focusLevel) {
             let baseScore = 15;
             
@@ -8387,6 +8363,8 @@ function applyCustomRisk() {
             const valueElement = document.getElementById(valueId);
             const statusElement = document.getElementById(statusId);
             
+            if (!valueElement || !statusElement) return;
+            
             valueElement.textContent = Math.round(value);
             
             const percentage = (value / maxValue) * 100;
@@ -8410,7 +8388,9 @@ function applyCustomRisk() {
             }
             
             statusElement.textContent = status;
-            card.className = `psychology-metric-card ${cardClass}`;
+            if (card) {
+                card.className = `psychology-metric-card ${cardClass}`;
+            }
         }
 
         function resetPsychologyMetrics() {
@@ -8620,24 +8600,6 @@ function applyCustomRisk() {
             } else {
                 return 5; // 5시간 미만
             }
-        }
-
-        function calculateStressFactor(caffeine, screenTime, distractions) {
-            let baseScore = 25;
-            
-            // 카페인 페널티
-            if (caffeine > 400) baseScore -= 8;
-            else if (caffeine > 200) baseScore -= 3;
-            
-            // 스크린 타임 페널티
-            if (screenTime > 3) baseScore -= 5;
-            else if (screenTime > 1.5) baseScore -= 2;
-            
-            // 방해 요소 페널티
-            if (distractions > 10) baseScore -= 5;
-            else if (distractions > 5) baseScore -= 2;
-            
-            return Math.max(0, Math.min(25, baseScore));
         }
 
         function calculateDisciplineFactor() {
