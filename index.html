@@ -3748,124 +3748,126 @@
                         <h2 class="psychology-header" data-lang="daily-data-input">Daily Data Input</h2>
                         
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 24px;">
-                    <!-- Biological Data -->
-                    <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
-                        <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="biological-data">Biological Data</h3>
-                        
-                        <div>
-                            <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="sleep-hours">Sleep Hours</label>
-                            <input type="number" id="sleepHours" step="0.5" min="0" max="12" placeholder="7.5" 
-                                   style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                        </div>
-                    </div>
-                    
-                    <!-- Trading Environment -->
-                    <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
-                        <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="trading-environment">Trading Environment</h3>
-                        
-                        <div style="margin-bottom: 16px;">
-                            <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="start-time">Start Time</label>
-                            <input type="time" id="startTime" 
-                                   style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                        </div>
-                        
-                        <div style="margin-bottom: 16px;">
-                            <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="end-time">End Time</label>
-                            <input type="time" id="endTime" 
-                                   style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                        </div>
-                        
-                        <div>
-                            <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="environment-type">Environment Type</label>
-                            <select id="environmentType" style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                                <option value="home">Home</option>
-                                <option value="cafe">Cafe</option>
-                                <option value="office">Office</option>
-                                <option value="hotel">Hotel</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <!-- Economic Pressure -->
-                    <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
-                        <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="economic-pressure">Economic Pressure</h3>
-                        
-                        <div style="margin-bottom: 16px;">
-                            <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="account-balance">Account Balance ($)</label>
-                            <input type="number" id="accountBalance" min="0" placeholder="10000" oninput="updateTargetPercentages()"
-                                   style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                        </div>
-                        
-                        <div style="margin-bottom: 16px;">
-                            <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="daily-target">Daily P&L Target ($)</label>
-                            <div style="display: flex; gap: 8px; align-items: center;">
-                                <input type="number" id="dailyTarget" placeholder="200" oninput="updateTargetPercentages()"
-                                       style="flex: 1; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                                <span id="dailyTargetPercent" style="color: #64748b; font-size: 12px; min-width: 40px;">0%</span>
+                            <!-- Biological Data -->
+                            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
+                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="biological-data">Biological Data</h3>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="sleep-hours">Sleep Hours</label>
+                                    <input type="number" id="sleepHours" step="0.5" min="0" max="12" placeholder="7.5" 
+                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                </div>
+                            </div>
+                            
+                            <!-- Trading Environment -->
+                            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
+                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="trading-environment">Trading Environment</h3>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="start-time">Start Time</label>
+                                    <input type="time" id="startTime" 
+                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                </div>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="end-time">End Time</label>
+                                    <input type="time" id="endTime" 
+                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                </div>
+                                
+                                <div>
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="environment-type">Environment Type</label>
+                                    <select id="environmentType" style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                        <option value="home">Home</option>
+                                        <option value="cafe">Cafe</option>
+                                        <option value="office">Office</option>
+                                        <option value="hotel">Hotel</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Economic Pressure -->
+                            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
+                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="economic-pressure">Economic Pressure</h3>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="account-balance">Account Balance ($)</label>
+                                    <input type="number" id="accountBalance" min="0" placeholder="10000" oninput="updateTargetPercentages()"
+                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                </div>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="daily-target">Daily P&L Target ($)</label>
+                                    <div style="display: flex; gap: 8px; align-items: center;">
+                                        <input type="number" id="dailyTarget" placeholder="200" oninput="updateTargetPercentages()"
+                                               style="flex: 1; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                        <span id="dailyTargetPercent" style="color: #64748b; font-size: 12px; min-width: 40px;">0%</span>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="max-daily-loss">Max Daily Loss ($)</label>
+                                    <div style="display: flex; gap: 8px; align-items: center;">
+                                        <input type="number" id="maxDailyLoss" placeholder="500" oninput="updateTargetPercentages()"
+                                               style="flex: 1; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                        <span id="maxLossPercent" style="color: #64748b; font-size: 12px; min-width: 40px;">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Emotional State -->
+                            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
+                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="emotional-state">Emotional State</h3>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="stress-level">Stress Level (1-5)</label>
+                                    <input type="range" id="stressLevel" min="1" max="5" value="3" oninput="updateSliderDisplay('stressLevel', 'stressValue')"
+                                           style="width: 100%; accent-color: #3b82f6;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+                                        <span style="color: #64748b; font-size: 11px;">Low</span>
+                                        <span id="stressValue" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">3</span>
+                                        <span style="color: #64748b; font-size: 11px;">High</span>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="confidence-level">Confidence Level (1-5)</label>
+                                    <input type="range" id="confidenceLevel" min="1" max="5" value="3" oninput="updateSliderDisplay('confidenceLevel', 'confidenceValue')"
+                                           style="width: 100%; accent-color: #3b82f6;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+                                        <span style="color: #64748b; font-size: 11px;">Low</span>
+                                        <span id="confidenceValue" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">3</span>
+                                        <span style="color: #64748b; font-size: 11px;">High</span>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="focus-level">Focus Level (1-5)</label>
+                                    <input type="range" id="focusLevel" min="1" max="5" value="3" oninput="updateSliderDisplay('focusLevel', 'focusValue')"
+                                           style="width: 100%; accent-color: #3b82f6;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+                                        <span style="color: #64748b; font-size: 11px;">Low</span>
+                                        <span id="focusValue" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">3</span>
+                                        <span style="color: #64748b; font-size: 11px;">High</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         
-                        <div>
-                            <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="max-daily-loss">Max Daily Loss ($)</label>
-                            <div style="display: flex; gap: 8px; align-items: center;">
-                                <input type="number" id="maxDailyLoss" placeholder="500" oninput="updateTargetPercentages()"
-                                       style="flex: 1; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                                <span id="maxLossPercent" style="color: #64748b; font-size: 12px; min-width: 40px;">0%</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Emotional State -->
-                    <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
-                        <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="emotional-state">Emotional State</h3>
-                        
-                        <div style="margin-bottom: 16px;">
-                            <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="stress-level">Stress Level (1-5)</label>
-                            <input type="range" id="stressLevel" min="1" max="5" value="3" oninput="updateSliderDisplay('stressLevel', 'stressValue')"
-                                   style="width: 100%; accent-color: #3b82f6;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
-                                <span style="color: #64748b; font-size: 11px;">Low</span>
-                                <span id="stressValue" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">3</span>
-                                <span style="color: #64748b; font-size: 11px;">High</span>
-                            </div>
+                        <!-- Action Buttons -->
+                        <div style="display: flex; gap: 12px; justify-content: center; margin-bottom: 24px;">
+                            <button class="psychology-save-btn" onclick="savePsychologyData()" data-lang="save-psychology-data">Save Psychology Data</button>
+                            <button class="psychology-save-btn" onclick="calculateDailyScore()" style="background: #3b82f6;" data-lang="calculate-score">Calculate Daily Score</button>
+                            <button class="psychology-save-btn" onclick="resetPsychologyData()" style="background: #ef4444;" data-lang="reset-psychology-data">Reset Data</button>
                         </div>
                         
-                        <div style="margin-bottom: 16px;">
-                            <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="confidence-level">Confidence Level (1-5)</label>
-                            <input type="range" id="confidenceLevel" min="1" max="5" value="3" oninput="updateSliderDisplay('confidenceLevel', 'confidenceValue')"
-                                   style="width: 100%; accent-color: #3b82f6;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
-                                <span style="color: #64748b; font-size: 11px;">Low</span>
-                                <span id="confidenceValue" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">3</span>
-                                <span style="color: #64748b; font-size: 11px;">High</span>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="focus-level">Focus Level (1-5)</label>
-                            <input type="range" id="focusLevel" min="1" max="5" value="3" oninput="updateSliderDisplay('focusLevel', 'focusValue')"
-                                   style="width: 100%; accent-color: #3b82f6;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
-                                <span style="color: #64748b; font-size: 11px;">Low</span>
-                                <span id="focusValue" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">3</span>
-                                <span style="color: #64748b; font-size: 11px;">High</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Metrics Dashboard Section -->
-                <div id="psychologyMetricsSection" class="psychology-section">
-                    <div class="psychology-container">
-                        <h2 class="psychology-header" data-lang="psychology-dashboard">Psychology Dashboard</h2>
-                        
-                        <!-- Visual Dashboard Cards -->
+                        <!-- Enhanced Visual Dashboard -->
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 32px;">
                             <!-- Sleep Performance Card -->
                             <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid #334155; border-radius: 12px; padding: 20px; position: relative; overflow: hidden;">
                                 <div style="position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%); pointer-events: none;"></div>
                                 <div style="position: relative; z-index: 1;">
-                                    <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 16px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                                         <h3 style="color: #10b981; font-size: 16px; font-weight: 600;" data-lang="sleep-performance">Sleep Performance</h3>
                                         <div style="width: 40px; height: 40px; background: rgba(16, 185, 129, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                                             <span style="font-size: 20px;">🛌</span>
@@ -3886,7 +3888,7 @@
                             <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid #334155; border-radius: 12px; padding: 20px; position: relative; overflow: hidden;">
                                 <div style="position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%); pointer-events: none;"></div>
                                 <div style="position: relative; z-index: 1;">
-                                    <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 16px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                                         <h3 style="color: #3b82f6; font-size: 16px; font-weight: 600;" data-lang="environment-score">Environment Score</h3>
                                         <div style="width: 40px; height: 40px; background: rgba(59, 130, 246, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                                             <span style="font-size: 20px;">🏢</span>
@@ -3915,7 +3917,7 @@
                             <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid #334155; border-radius: 12px; padding: 20px; position: relative; overflow: hidden;">
                                 <div style="position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%); pointer-events: none;"></div>
                                 <div style="position: relative; z-index: 1;">
-                                    <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 16px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                                         <h3 style="color: #8b5cf6; font-size: 16px; font-weight: 600;" data-lang="emotional-readiness">Emotional Readiness</h3>
                                         <div style="width: 40px; height: 40px; background: rgba(139, 92, 246, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                                             <span style="font-size: 20px;">🧠</span>
@@ -3943,7 +3945,7 @@
                             <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid #334155; border-radius: 12px; padding: 20px; position: relative; overflow: hidden;">
                                 <div style="position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(245, 158, 11, 0.1) 0%, transparent 70%); pointer-events: none;"></div>
                                 <div style="position: relative; z-index: 1;">
-                                    <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 16px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                                         <h3 style="color: #f59e0b; font-size: 16px; font-weight: 600;" data-lang="risk-assessment">Risk Assessment</h3>
                                         <div style="width: 40px; height: 40px; background: rgba(245, 158, 11, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                                             <span style="font-size: 20px;">⚠️</span>
@@ -6563,9 +6565,10 @@
 
             if (pageId === 'psychology') {
                 setTimeout(() => {
-    loadPsychologyData();
-    updatePsychologyMetrics();
-}, 100);
+                    loadPsychologyData();
+                    updateVisualDashboard();
+                    updatePsychologyPerformanceChart();
+                }, 100);
             }
             
             if (window.innerWidth <= 768) {
@@ -8308,6 +8311,75 @@ function applyCustomRisk() {
             updateVisualDashboard();
         }
 
+        function updatePsychologyMetrics() {
+            // 이 함수는 현재 사용하지 않으므로 빈 함수로 유지
+            console.log('Psychology metrics updated');
+        }
+
+        function resetPsychologyData() {
+            const confirmMessage = currentLanguage === 'ko' ? 
+                '심리 데이터를 초기화하시겠습니까?' : 
+                'Are you sure you want to reset psychology data?';
+            
+            if (confirm(confirmMessage)) {
+                // 모든 입력 필드 초기화
+                document.getElementById('sleepHours').value = '';
+                document.getElementById('startTime').value = '';
+                document.getElementById('endTime').value = '';
+                document.getElementById('environmentType').value = 'home';
+                document.getElementById('accountBalance').value = '';
+                document.getElementById('dailyTarget').value = '';
+                document.getElementById('maxDailyLoss').value = '';
+                document.getElementById('stressLevel').value = '3';
+                document.getElementById('confidenceLevel').value = '3';
+                document.getElementById('focusLevel').value = '3';
+                
+                // 슬라이더 디스플레이 업데이트
+                document.getElementById('stressValue').textContent = '3';
+                document.getElementById('confidenceValue').textContent = '3';
+                document.getElementById('focusValue').textContent = '3';
+                
+                // 퍼센트 디스플레이 초기화
+                document.getElementById('dailyTargetPercent').textContent = '0%';
+                document.getElementById('maxLossPercent').textContent = '0%';
+                
+                // 비주얼 대시보드 초기화
+                resetVisualDashboard();
+                
+                showToast(currentLanguage === 'ko' ? '심리 데이터가 초기화되었습니다' : 'Psychology data has been reset');
+            }
+        }
+
+        function calculateDailyScore() {
+            const currentDate = formatTradingDate(currentTradingDate);
+            const sleepHours = parseFloat(document.getElementById('sleepHours').value) || 0;
+            const stressLevel = parseInt(document.getElementById('stressLevel').value) || 3;
+            const confidenceLevel = parseInt(document.getElementById('confidenceLevel').value) || 3;
+            const focusLevel = parseInt(document.getElementById('focusLevel').value) || 3;
+            
+            if (sleepHours === 0) {
+                alert(currentLanguage === 'ko' ? '먼저 수면 시간을 입력해주세요.' : 'Please enter sleep hours first.');
+                return;
+            }
+            
+            // 점수 계산
+            let sleepScore = Math.min((sleepHours / 8) * 25, 25);
+            let stressScore = ((6 - stressLevel) / 5) * 25;
+            let confidenceScore = (confidenceLevel / 5) * 25;
+            let focusScore = (focusLevel / 5) * 25;
+            
+            let totalScore = sleepScore + stressScore + confidenceScore + focusScore;
+            
+            // 결과 표시
+            let scoreMessage = currentLanguage === 'ko' ? 
+                `일일 심리 점수: ${totalScore.toFixed(1)}/100\n\n수면: ${sleepScore.toFixed(1)}/25\n스트레스: ${stressScore.toFixed(1)}/25\n자신감: ${confidenceScore.toFixed(1)}/25\n집중력: ${focusScore.toFixed(1)}/25` :
+                `Daily Psychology Score: ${totalScore.toFixed(1)}/100\n\nSleep: ${sleepScore.toFixed(1)}/25\nStress: ${stressScore.toFixed(1)}/25\nConfidence: ${confidenceScore.toFixed(1)}/25\nFocus: ${focusScore.toFixed(1)}/25`;
+            
+            alert(scoreMessage);
+            
+            showToast(currentLanguage === 'ko' ? '일일 심리 점수가 계산되었습니다' : 'Daily psychology score calculated');
+        }
+
         // Enhanced Psychology System Functions
         function showPsychologySection(section) {
             // 탭 상태 업데이트
@@ -9109,6 +9181,7 @@ function applyCustomRisk() {
             }
             document.getElementById('sleepStatus').textContent = sleepStatus;
             
+            // Update environment display
             // Update environment display
             // Update environment display
             const environmentType = todayData.environmentType || 'home';
