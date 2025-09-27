@@ -8228,21 +8228,50 @@ function applyCustomRisk() {
             
             if (confirm(confirmMessage)) {
                 // 모든 입력 필드 초기화
-                document.getElementById('sleepHours').value = '';
-                document.getElementById('sleepQuality').value = '3';
-                document.getElementById('energyLevel').value = '3';
-                document.getElementById('actualStartTime').value = '';
-                document.getElementById('tradingEnvironment').value = 'home-quiet';
-                document.getElementById('psychAccountBalance').value = '';
-                document.getElementById('dailyTarget').value = '';
-                document.getElementById('maxDailyLoss').value = '';
-                document.getElementById('preMarketMood').value = '3';
-                document.getElementById('confidenceLevel').value = '3';
-                document.getElementById('stressLevel').value = '3';
-                document.getElementById('focusLevel').value = '3';
+                const sleepHours = document.getElementById('sleepHours');
+                if (sleepHours) sleepHours.value = '';
                 
-                // 메트릭 초기화
-                resetPsychologyMetrics();
+                const startTime = document.getElementById('startTime');
+                if (startTime) startTime.value = '';
+                
+                const endTime = document.getElementById('endTime');
+                if (endTime) endTime.value = '';
+                
+                const environmentType = document.getElementById('environmentType');
+                if (environmentType) environmentType.value = 'home';
+                
+                const accountBalance = document.getElementById('accountBalance');
+                if (accountBalance) accountBalance.value = '';
+                
+                const dailyTarget = document.getElementById('dailyTarget');
+                if (dailyTarget) dailyTarget.value = '';
+                
+                const maxDailyLoss = document.getElementById('maxDailyLoss');
+                if (maxDailyLoss) maxDailyLoss.value = '';
+                
+                const stressLevel = document.getElementById('stressLevel');
+                if (stressLevel) {
+                    stressLevel.value = '3';
+                    updateSliderDisplay('stressLevel', 'stressValue');
+                }
+                
+                const confidenceLevel = document.getElementById('confidenceLevel');
+                if (confidenceLevel) {
+                    confidenceLevel.value = '3';
+                    updateSliderDisplay('confidenceLevel', 'confidenceValue');
+                }
+                
+                const focusLevel = document.getElementById('focusLevel');
+                if (focusLevel) {
+                    focusLevel.value = '3';
+                    updateSliderDisplay('focusLevel', 'focusValue');
+                }
+                
+                // 퍼센트 디스플레이 초기화
+                updateTargetPercentages();
+                
+                // 비주얼 대시보드 초기화
+                resetVisualDashboard();
                 
                 showToast(currentLanguage === 'ko' ? '심리 데이터가 초기화되었습니다' : 'Psychology data has been reset');
             }
@@ -8314,40 +8343,6 @@ function applyCustomRisk() {
         function updatePsychologyMetrics() {
             // 이 함수는 현재 사용하지 않으므로 빈 함수로 유지
             console.log('Psychology metrics updated');
-        }
-
-        function resetPsychologyData() {
-            const confirmMessage = currentLanguage === 'ko' ? 
-                '심리 데이터를 초기화하시겠습니까?' : 
-                'Are you sure you want to reset psychology data?';
-            
-            if (confirm(confirmMessage)) {
-                // 모든 입력 필드 초기화
-                document.getElementById('sleepHours').value = '';
-                document.getElementById('startTime').value = '';
-                document.getElementById('endTime').value = '';
-                document.getElementById('environmentType').value = 'home';
-                document.getElementById('accountBalance').value = '';
-                document.getElementById('dailyTarget').value = '';
-                document.getElementById('maxDailyLoss').value = '';
-                document.getElementById('stressLevel').value = '3';
-                document.getElementById('confidenceLevel').value = '3';
-                document.getElementById('focusLevel').value = '3';
-                
-                // 슬라이더 디스플레이 업데이트
-                document.getElementById('stressValue').textContent = '3';
-                document.getElementById('confidenceValue').textContent = '3';
-                document.getElementById('focusValue').textContent = '3';
-                
-                // 퍼센트 디스플레이 초기화
-                document.getElementById('dailyTargetPercent').textContent = '0%';
-                document.getElementById('maxLossPercent').textContent = '0%';
-                
-                // 비주얼 대시보드 초기화
-                resetVisualDashboard();
-                
-                showToast(currentLanguage === 'ko' ? '심리 데이터가 초기화되었습니다' : 'Psychology data has been reset');
-            }
         }
 
         function calculateDailyScore() {
