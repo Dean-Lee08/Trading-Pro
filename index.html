@@ -8272,23 +8272,23 @@ function applyCustomRisk() {
             }
             
             // Calculate Sleep Factor (0-25 points)
-            const sleepFactor = calculateSleepFactor(todayData.sleepHours, todayData.sleepQuality);
+            const sleepFactor = calculateSleepFactor(todayData.sleepHours);
             updateMetricCard('sleepFactorCard', 'sleepFactor', 'sleepFactorStatus', sleepFactor, 25);
             
-            // Calculate Stress Factor (0-25 points)
-            const stressFactor = calculateStressFactor(todayData.caffeineIntake, todayData.stressLevel, todayData.energyLevel);
+            // Calculate Stress Factor (0-25 points) - 수정된 매개변수
+            const stressFactor = calculateStressFactor(todayData.sleepHours, todayData.stressLevel, todayData.focusLevel);
             updateMetricCard('stressFactorCard', 'stressFactor', 'stressFactorStatus', stressFactor, 25);
             
             // Calculate Environment Factor (0-25 points)
-            const environmentFactor = calculateEnvironmentFactor(todayData.tradingEnvironment, todayData.focusLevel);
+            const environmentFactor = calculateEnvironmentFactor(todayData.environmentType, todayData.focusLevel);
             updateMetricCard('environmentFactorCard', 'environmentFactor', 'environmentFactorStatus', environmentFactor, 25);
             
             // Calculate Pressure Index (0-25 points)
-            const pressureIndex = calculatePressureIndex(todayData.pressureLevel, todayData.accountBalance, todayData.dailyTarget);
+            const pressureIndex = calculatePressureIndex(todayData.stressLevel, todayData.accountBalance, todayData.dailyTarget);
             updateMetricCard('pressureIndexCard', 'pressureIndex', 'pressureIndexStatus', pressureIndex, 25);
             
             // Calculate Emotional Readiness (0-25 points)
-            const emotionalReadiness = calculateEmotionalReadiness(todayData.preMarketMood, todayData.confidenceLevel);
+            const emotionalReadiness = calculateEmotionalReadiness(todayData.confidenceLevel, todayData.confidenceLevel);
             updateMetricCard('emotionalReadinessCard', 'emotionalReadiness', 'emotionalReadinessStatus', emotionalReadiness, 25);
             
             // Calculate Daily Psychology Score (0-100)
@@ -8391,6 +8391,80 @@ function applyCustomRisk() {
             if (card) {
                 card.className = `psychology-metric-card ${cardClass}`;
             }
+        }
+
+        function calculateStressFactor(sleepHours, stressLevel, focusLevel) {
+            let baseScore = 25;
+            
+            // 수면 부족 시 스트레스 증가
+            if (sleepHours < 6) {
+                baseScore -= 8;
+            } else if (sleepHours < 7) {
+                baseScore -= 4;
+            }
+            
+            // 스트레스 레벨 페널티
+            baseScore -= (stressLevel - 3) * 4;
+            
+            // 집중력 조정
+            if (focusLevel <= 2) {
+                baseScore -= 5; // 낮은 집중력
+            } else if (focusLevel >= 4) {
+                baseScore += 3; // 높은 집중력
+            }
+            
+            return Math.max(0, Math.min(25, baseScore));
+        }
+
+        function calculateEnvironmentFactor(environment, focusLevel) {
+            let baseScore = 15;
+            
+            // Environment scoring
+            const envScores = {
+                'home-quiet': 10,
+                'office': 7,
+                'home-noisy': 5,
+                'cafe': 3,
+                'other': 5
+            };
+            
+            baseScore += envScores[environment] || 5;
+            
+            // Focus adjustment
+            baseScore += (focusLevel - 3) * 2;
+            
+            return Math.max(0, Math.min(25, baseScore));
+        }
+
+        function calculatePressureIndex(stressLevel, accountBalance, dailyTarget) {
+            let baseScore = 25;
+            
+            // Pressure penalty
+            baseScore -= (stressLevel - 3) * 5;
+            
+            // Target vs balance ratio check
+            if (accountBalance && dailyTarget) {
+                const targetRatio = dailyTarget / accountBalance;
+                if (targetRatio > 0.05) { // More than 5% daily target
+                    baseScore -= 8;
+                } else if (targetRatio > 0.03) { // More than 3% daily target
+                    baseScore -= 4;
+                }
+            }
+            
+            return Math.max(0, Math.min(25, baseScore));
+        }
+
+        function calculateEmotionalReadiness(confidenceLevel, focusLevel) {
+            let baseScore = 15;
+            
+            // Confidence adjustment (-4 to +4)
+            baseScore += (confidenceLevel - 3) * 2;
+            
+            // Focus adjustment
+            baseScore += (focusLevel - 3) * 2;
+            
+            return Math.max(0, Math.min(25, baseScore));
         }
 
         function resetPsychologyMetrics() {
