@@ -8147,46 +8147,140 @@ function applyCustomRisk() {
             
             const monthNames = currentLanguage === 'ko' ? 
                 ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'] :
-                ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            
+            // 그리드를 4x3으로 재설정
+            heatmapGrid.style.cssText = `
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
+                margin-bottom: 20px;
+            `;
             
             for (let month = 0; month < 12; month++) {
                 const monthContainer = document.createElement('div');
-                monthContainer.className = 'month-heatmap';
+                monthContainer.style.cssText = `
+                    background: #0f172a;
+                    border: 1px solid #334155;
+                    border-radius: 8px;
+                    padding: 16px;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                    min-height: 250px;
+                `;
                 
                 if (month === calendarDate.getMonth() && currentYear === calendarDate.getFullYear()) {
-                    monthContainer.classList.add('current-month');
+                    monthContainer.style.borderColor = '#3b82f6';
+                    monthContainer.style.background = 'rgba(59, 130, 246, 0.1)';
                 }
                 
                 monthContainer.onclick = () => showMonthDetails(currentYear, month);
                 
+                // 월 헤더
                 const monthHeader = document.createElement('div');
-                monthHeader.className = 'month-heatmap-header';
-                monthHeader.textContent = monthNames[month];
+                monthHeader.style.cssText = `
+                    color: #e4e4e7;
+                    font-size: 14px;
+                    font-weight: 600;
+                    text-align: center;
+                    margin-bottom: 8px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                `;
+                
+                monthHeader.innerHTML = `
+                    <span>${monthNames[month]}, ${currentYear}</span>
+                    <span style="background: #374151; color: #94a3b8; padding: 2px 6px; border-radius: 4px; font-size: 11px;">Open</span>
+                `;
+                
                 monthContainer.appendChild(monthHeader);
                 
+                // 요일 헤더
+                const weekDayHeader = document.createElement('div');
+                weekDayHeader.style.cssText = `
+                    display: grid;
+                    grid-template-columns: repeat(7, 1fr);
+                    gap: 2px;
+                    margin-bottom: 4px;
+                    font-size: 10px;
+                    color: #64748b;
+                    text-align: center;
+                    font-weight: 500;
+                `;
+                
+                const dayAbbrs = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                dayAbbrs.forEach(day => {
+                    const dayHeader = document.createElement('div');
+                    dayHeader.textContent = day;
+                    dayHeader.style.cssText = 'padding: 2px;';
+                    weekDayHeader.appendChild(dayHeader);
+                });
+                
+                monthContainer.appendChild(weekDayHeader);
+                
+                // 달력 그리드
                 const miniCalendar = document.createElement('div');
-                miniCalendar.className = 'month-mini-calendar';
+                miniCalendar.style.cssText = `
+                    display: grid;
+                    grid-template-columns: repeat(7, 1fr);
+                    gap: 2px;
+                    height: 120px;
+                    margin-bottom: 12px;
+                `;
                 
                 const firstDay = new Date(currentYear, month, 1);
                 const daysInMonth = new Date(currentYear, month + 1, 0).getDate();
                 const startPadding = firstDay.getDay();
                 
-                for (let i = 0; i < startPadding; i++) {
-                    const emptyDay = document.createElement('div');
-                    emptyDay.className = 'mini-day';
-                    miniCalendar.appendChild(emptyDay);
-                }
-                
                 let monthPnl = 0;
                 let monthTrades = 0;
                 
+                // 이전 달 빈 셀들
+                const prevMonth = month === 0 ? 11 : month - 1;
+                const prevYear = month === 0 ? currentYear - 1 : currentYear;
+                const prevMonthDays = new Date(prevYear, prevMonth + 1, 0).getDate();
+                
+                for (let i = startPadding - 1; i >= 0; i--) {
+                    const dayNum = prevMonthDays - i;
+                    const emptyDay = document.createElement('div');
+                    emptyDay.style.cssText = `
+                        width: 20px;
+                        height: 16px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 10px;
+                        color: #4b5563;
+                        background: transparent;
+                    `;
+                    emptyDay.textContent = dayNum;
+                    miniCalendar.appendChild(emptyDay);
+                }
+                
+                // 현재 달 날짜들
                 for (let day = 1; day <= daysInMonth; day++) {
                     const date = new Date(currentYear, month, day);
                     const dateString = formatTradingDate(date);
                     const dayTrades = trades.filter(trade => trade.date === dateString);
                     
                     const dayElement = document.createElement('div');
-                    dayElement.className = 'mini-day';
+                    dayElement.style.cssText = `
+                        width: 20px;
+                        height: 16px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 10px;
+                        font-weight: 500;
+                        border-radius: 2px;
+                        cursor: pointer;
+                        transition: all 0.2s ease;
+                        background: #334155;
+                        color: #94a3b8;
+                    `;
+                    
+                    dayElement.textContent = day;
                     
                     if (dayTrades.length > 0) {
                         const tradePnL = dayTrades.reduce((sum, trade) => sum + trade.pnl, 0);
@@ -8197,29 +8291,78 @@ function applyCustomRisk() {
                         monthTrades += dayTrades.length;
                         
                         if (totalPnL > 0) {
-                            dayElement.classList.add('trading-day');
+                            dayElement.style.background = '#10b981';
+                            dayElement.style.color = 'white';
                         } else if (totalPnL < 0) {
-                            dayElement.classList.add('loss-day');
+                            dayElement.style.background = '#ef4444';
+                            dayElement.style.color = 'white';
                         } else {
-                            dayElement.classList.add('neutral-day');
+                            dayElement.style.background = '#f59e0b';
+                            dayElement.style.color = 'white';
                         }
+                        
+                        dayElement.title = `${day}일: $${totalPnL.toFixed(0)} (${dayTrades.length} trades)`;
                     }
+                    
+                    dayElement.addEventListener('mouseenter', function() {
+                        this.style.transform = 'scale(1.1)';
+                        this.style.zIndex = '10';
+                    });
+                    
+                    dayElement.addEventListener('mouseleave', function() {
+                        this.style.transform = 'scale(1)';
+                        this.style.zIndex = '1';
+                    });
                     
                     miniCalendar.appendChild(dayElement);
                 }
                 
+                // 다음 달 빈 셀들
+                const totalCells = 42; // 6주 * 7일
+                const usedCells = startPadding + daysInMonth;
+                const remainingCells = totalCells - usedCells;
+                
+                for (let day = 1; day <= Math.min(remainingCells, 14); day++) {
+                    const emptyDay = document.createElement('div');
+                    emptyDay.style.cssText = `
+                        width: 20px;
+                        height: 16px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 10px;
+                        color: #4b5563;
+                        background: transparent;
+                    `;
+                    emptyDay.textContent = day;
+                    miniCalendar.appendChild(emptyDay);
+                }
+                
                 monthContainer.appendChild(miniCalendar);
                 
+                // 월 통계
                 const monthStats = document.createElement('div');
-                monthStats.className = 'month-stats';
+                monthStats.style.cssText = `
+                    text-align: center;
+                    border-top: 1px solid #334155;
+                    padding-top: 8px;
+                `;
                 
                 const monthPnlElement = document.createElement('div');
-                monthPnlElement.className = `month-pnl ${monthPnl > 0 ? 'positive' : monthPnl < 0 ? 'negative' : 'neutral'}`;
+                monthPnlElement.style.cssText = `
+                    font-size: 14px;
+                    font-weight: 700;
+                    margin-bottom: 4px;
+                    color: ${monthPnl > 0 ? '#10b981' : monthPnl < 0 ? '#ef4444' : '#64748b'};
+                `;
                 monthPnlElement.textContent = `$${monthPnl.toFixed(0)}`;
                 monthStats.appendChild(monthPnlElement);
                 
                 const monthTradesElement = document.createElement('div');
-                monthTradesElement.className = 'month-trades';
+                monthTradesElement.style.cssText = `
+                    font-size: 11px;
+                    color: #64748b;
+                `;
                 const tradeText = currentLanguage === 'ko' ? '거래' : 'trades';
                 monthTradesElement.textContent = `${monthTrades} ${tradeText}`;
                 monthStats.appendChild(monthTradesElement);
@@ -8308,7 +8451,6 @@ function applyCustomRisk() {
             
             const dailyPLs = Object.values(dailyStats);
             const bestDay = dailyPLs.length > 0 ? Math.max(...dailyPLs) : 0;
-            // 모든 날이 수익일 때 최악의 날을 표시하지 않도록 수정
             const worstDay = dailyPLs.length > 0 && dailyPLs.some(pnl => pnl < 0) ? Math.min(...dailyPLs) : 0;
             
             // 티커별 통계 계산
@@ -8362,9 +8504,12 @@ function applyCustomRisk() {
                     margin-top: 20px;
                     padding-top: 20px;
                     border-top: 1px solid #334155;
-                    max-height: 200px;
-                    overflow: hidden;
                 `;
+                
+                // 페이지네이션 변수 (6개씩)
+                const itemsPerPage = 6;
+                const totalPages = Math.ceil(sortedTickers.length / itemsPerPage);
+                let currentPage = 1;
                 
                 const detailsTitle = document.createElement('div');
                 detailsTitle.style.cssText = `
@@ -8380,19 +8525,18 @@ function applyCustomRisk() {
                 
                 const titleText = currentLanguage === 'ko' ? '주간 티커 상세' : 'Week Ticker Details';
                 
-                // 페이지네이션 변수 (6개씩)
-                const itemsPerPage = 6;
-                const totalPages = Math.ceil(sortedTickers.length / itemsPerPage);
-                let currentPage = 1;
-                
-                detailsTitle.innerHTML = `
-                    <span>${titleText}</span>
-                    <div style="display: flex; gap: 4px; align-items: center;">
-                        <button id="weekPrevBtn" style="background: #374151; border: 1px solid #4b5563; color: #e4e4e7; padding: 4px 6px; border-radius: 3px; cursor: pointer; font-size: 11px;">‹</button>
-                        <span id="weekPageInfo" style="font-size: 11px; color: #94a3b8; min-width: 30px; text-align: center;">1/${totalPages}</span>
-                        <button id="weekNextBtn" style="background: #374151; border: 1px solid #4b5563; color: #e4e4e7; padding: 4px 6px; border-radius: 3px; cursor: pointer; font-size: 11px;">›</button>
-                    </div>
-                `;
+                if (totalPages > 1) {
+                    detailsTitle.innerHTML = `
+                        <span>${titleText}</span>
+                        <div style="display: flex; gap: 4px; align-items: center;">
+                            <button id="weekPrevBtn" style="background: #374151; border: 1px solid #4b5563; color: #e4e4e7; padding: 4px 6px; border-radius: 3px; cursor: pointer; font-size: 11px;">‹</button>
+                            <span id="weekPageInfo" style="font-size: 11px; color: #94a3b8; min-width: 30px; text-align: center;">1/${totalPages}</span>
+                            <button id="weekNextBtn" style="background: #374151; border: 1px solid #4b5563; color: #e4e4e7; padding: 4px 6px; border-radius: 3px; cursor: pointer; font-size: 11px;">›</button>
+                        </div>
+                    `;
+                } else {
+                    detailsTitle.innerHTML = `<span>${titleText}</span>`;
+                }
                 
                 weekDetailsDiv.appendChild(detailsTitle);
                 
@@ -8403,7 +8547,7 @@ function applyCustomRisk() {
                 // 페이지 렌더링 함수
                 function renderWeekPage() {
                     const startIndex = (currentPage - 1) * itemsPerPage;
-                    const endIndex = startIndex + itemsPerPage;
+                    const endIndex = Math.min(startIndex + itemsPerPage, sortedTickers.length);
                     const pageItems = sortedTickers.slice(startIndex, endIndex);
                     
                     tickerList.innerHTML = pageItems.map(([symbol, stats]) => {
@@ -8421,30 +8565,44 @@ function applyCustomRisk() {
                         `;
                     }).join('');
                     
-                    document.getElementById('weekPageInfo').textContent = `${currentPage}/${totalPages}`;
-                    document.getElementById('weekPrevBtn').style.opacity = currentPage === 1 ? '0.5' : '1';
-                    document.getElementById('weekNextBtn').style.opacity = currentPage === totalPages ? '0.5' : '1';
+                    if (totalPages > 1) {
+                        const pageInfo = document.getElementById('weekPageInfo');
+                        const prevBtn = document.getElementById('weekPrevBtn');
+                        const nextBtn = document.getElementById('weekNextBtn');
+                        
+                        if (pageInfo) pageInfo.textContent = `${currentPage}/${totalPages}`;
+                        if (prevBtn) prevBtn.style.opacity = currentPage === 1 ? '0.5' : '1';
+                        if (nextBtn) nextBtn.style.opacity = currentPage === totalPages ? '0.5' : '1';
+                    }
                 }
                 
                 // 이벤트 리스너 추가
-                setTimeout(() => {
-                    document.getElementById('weekPrevBtn').onclick = () => {
-                        if (currentPage > 1) {
-                            currentPage--;
-                            renderWeekPage();
+                if (totalPages > 1) {
+                    setTimeout(() => {
+                        const prevBtn = document.getElementById('weekPrevBtn');
+                        const nextBtn = document.getElementById('weekNextBtn');
+                        
+                        if (prevBtn) {
+                            prevBtn.onclick = () => {
+                                if (currentPage > 1) {
+                                    currentPage--;
+                                    renderWeekPage();
+                                }
+                            };
                         }
-                    };
-                    
-                    document.getElementById('weekNextBtn').onclick = () => {
-                        if (currentPage < totalPages) {
-                            currentPage++;
-                            renderWeekPage();
+                        
+                        if (nextBtn) {
+                            nextBtn.onclick = () => {
+                                if (currentPage < totalPages) {
+                                    currentPage++;
+                                    renderWeekPage();
+                                }
+                            };
                         }
-                    };
-                    
-                    renderWeekPage();
-                }, 100);
+                    }, 50);
+                }
                 
+                renderWeekPage();
                 document.getElementById('weeklySummary').parentNode.appendChild(weekDetailsDiv);
             }
             
