@@ -6673,7 +6673,8 @@
             const winDays = Object.values(dailyStats).filter(data => data.winDays > 0).length;
             const lossDays = Object.values(dailyStats).filter(data => data.lossDays > 0).length;
             const bestTradingDay = dailyPLsWithFees.length > 0 ? Math.max(...dailyPLsWithFees) : 0;
-            const worstTradingDay = dailyPLsWithFees.length > 0 ? Math.min(...dailyPLsWithFees) : 0;
+            // 모든 날이 수익일 때는 최악의 날을 0으로 표시
+            const worstTradingDay = dailyPLsWithFees.length > 0 && dailyPLsWithFees.some(pnl => pnl < 0) ? Math.min(...dailyPLsWithFees) : 0;
             const avgDailyPL = dailyPLsWithFees.length > 0 ? dailyPLsWithFees.reduce((sum, pnl) => sum + pnl, 0) / dailyPLsWithFees.length : 0;
             const avgDailyFees = uniqueDatesForFees.length > 0 ? totalDailyFees / uniqueDatesForFees.length : 0;
 
@@ -6685,7 +6686,7 @@
             document.getElementById('detailAvgDailyPL').textContent = `$${avgDailyPL.toFixed(2)}`;
             document.getElementById('detailAvgDailyPL').className = `detail-value ${avgDailyPL >= 0 ? 'positive' : 'negative'}`;
         }
-
+        
         function updateTimeAnalysisDetails(filteredTrades) {
             // Hold time analysis
             const holdTimes = filteredTrades
@@ -7327,8 +7328,6 @@
             
             const dailyPLs = Object.values(dailyStats);
             const avgDaily = dailyPLs.length > 0 ? dailyPLs.reduce((sum, pnl) => sum + pnl, 0) / dailyPLs.length : 0;
-            const bestDay = dailyPLs.length > 0 ? Math.max(...dailyPLs) : 0;
-            const worstDay = dailyPLs.length > 0 ? Math.min(...dailyPLs) : 0;
             
             document.getElementById('calendarPeriodLabel').textContent = periodLabel;
             document.getElementById('calendarTotalTrades').textContent = totalTrades;
@@ -7339,9 +7338,17 @@
             document.getElementById('calendarAvgDaily').textContent = `$${avgDaily.toFixed(2)}`;
             document.getElementById('calendarAvgDaily').className = `calendar-stat-value ${avgDaily >= 0 ? 'positive' : 'negative'}`;
             
-            if (showBestWorst) {
+            if (showBestWorst && dailyPLs.length > 0) {
+                const bestDay = Math.max(...dailyPLs);
+                const worstDay = dailyPLs.some(pnl => pnl < 0) ? Math.min(...dailyPLs) : Math.min(...dailyPLs);
+                
                 document.getElementById('calendarBestDay').textContent = `$${bestDay.toFixed(2)}`;
-                document.getElementById('calendarWorstDay').textContent = `$${worstDay.toFixed(2)}`;
+                // 모든 날이 수익일 때는 최악의 날을 표시하지 않음
+                if (dailyPLs.some(pnl => pnl < 0)) {
+                    document.getElementById('calendarWorstDay').textContent = `$${worstDay.toFixed(2)}`;
+                } else {
+                    document.getElementById('calendarWorstDay').textContent = '$0.00';
+                }
             } else {
                 document.getElementById('calendarBestDay').textContent = '-';
                 document.getElementById('calendarWorstDay').textContent = '-';
@@ -8294,7 +8301,8 @@ function applyCustomRisk() {
             
             const dailyPLs = Object.values(dailyStats);
             const bestDay = dailyPLs.length > 0 ? Math.max(...dailyPLs) : 0;
-            const worstDay = dailyPLs.length > 0 ? Math.min(...dailyPLs) : 0;
+            // 모든 날이 수익일 때 최악의 날을 표시하지 않도록 수정
+            const worstDay = dailyPLs.length > 0 && dailyPLs.some(pnl => pnl < 0) ? Math.min(...dailyPLs) : 0;
             
             // 티커별 통계 계산
             const tickerStats = {};
@@ -8328,7 +8336,7 @@ function applyCustomRisk() {
             document.getElementById('selectedWeekWinRate').textContent = `${winRate.toFixed(1)}%`;
             document.getElementById('selectedWeekWinRate').className = `weekly-value ${winRate >= 50 ? 'positive' : 'negative'}`;
             document.getElementById('selectedWeekBestDay').textContent = `$${bestDay.toFixed(2)}`;
-            document.getElementById('selectedWeekWorstDay').textContent = `$${worstDay.toFixed(2)}`;
+            document.getElementById('selectedWeekWorstDay').textContent = worstDay < 0 ? `$${worstDay.toFixed(2)}` : '$0.00';
             
             // 기존 상세 정보 제거
             let existingWeekDetails = document.getElementById('weekTickerDetails');
@@ -8347,16 +8355,16 @@ function applyCustomRisk() {
                     margin-top: 16px;
                     padding-top: 16px;
                     border-top: 1px solid #334155;
-                    max-height: 200px;
+                    max-height: 220px;
                     overflow: hidden;
                 `;
                 
                 const detailsTitle = document.createElement('div');
                 detailsTitle.style.cssText = `
                     color: #f8fafc;
-                    font-size: 14px;
+                    font-size: 15px;
                     font-weight: 600;
-                    margin-bottom: 8px;
+                    margin-bottom: 12px;
                     text-align: center;
                     display: flex;
                     justify-content: space-between;
@@ -8365,17 +8373,17 @@ function applyCustomRisk() {
                 
                 const titleText = currentLanguage === 'ko' ? '주간 티커 상세' : 'Week Ticker Details';
                 
-                // 페이지네이션 변수
-                const itemsPerPage = 3;
+                // 페이지네이션 변수 (6개씩)
+                const itemsPerPage = 6;
                 const totalPages = Math.ceil(sortedTickers.length / itemsPerPage);
                 let currentPage = 1;
                 
                 detailsTitle.innerHTML = `
                     <span>${titleText}</span>
-                    <div style="display: flex; gap: 4px; align-items: center;">
-                        <button id="weekPrevBtn" style="background: #374151; border: 1px solid #4b5563; color: #e4e4e7; padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 10px;">‹</button>
-                        <span id="weekPageInfo" style="font-size: 10px; color: #94a3b8; min-width: 30px; text-align: center;">1/${totalPages}</span>
-                        <button id="weekNextBtn" style="background: #374151; border: 1px solid #4b5563; color: #e4e4e7; padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 10px;">›</button>
+                    <div style="display: flex; gap: 6px; align-items: center;">
+                        <button id="weekPrevBtn" style="background: #374151; border: 1px solid #4b5563; color: #e4e4e7; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px;">‹</button>
+                        <span id="weekPageInfo" style="font-size: 12px; color: #94a3b8; min-width: 35px; text-align: center;">1/${totalPages}</span>
+                        <button id="weekNextBtn" style="background: #374151; border: 1px solid #4b5563; color: #e4e4e7; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px;">›</button>
                     </div>
                 `;
                 
@@ -8394,12 +8402,12 @@ function applyCustomRisk() {
                     tickerList.innerHTML = pageItems.map(([symbol, stats]) => {
                         const avgCostBasis = stats.totalCost / stats.totalShares;
                         return `
-                            <div style="margin-bottom: 6px; padding: 6px; background: #0f172a; border-radius: 4px; border: 1px solid #334155;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px;">
-                                    <span style="font-weight: 600; color: #e4e4e7; font-size: 11px;">${symbol}</span>
-                                    <span style="font-weight: 600; font-size: 11px;" class="${stats.totalPnL >= 0 ? 'positive' : 'negative'}">$${stats.totalPnL.toFixed(2)}</span>
+                            <div style="margin-bottom: 8px; padding: 10px; background: #0f172a; border-radius: 6px; border: 1px solid #334155;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                    <span style="font-weight: 600; color: #e4e4e7; font-size: 14px;">${symbol}</span>
+                                    <span style="font-weight: 600; font-size: 14px;" class="${stats.totalPnL >= 0 ? 'positive' : 'negative'}">$${stats.totalPnL.toFixed(2)}</span>
                                 </div>
-                                <div style="font-size: 9px; color: #64748b; display: flex; justify-content: space-between;">
+                                <div style="font-size: 12px; color: #64748b; display: flex; justify-content: space-between;">
                                     <span>${currentLanguage === 'ko' ? '평균' : 'Avg'}: $${avgCostBasis.toFixed(2)}</span>
                                     <span>${stats.tradeCount} ${currentLanguage === 'ko' ? '거래' : 'trades'}</span>
                                 </div>
