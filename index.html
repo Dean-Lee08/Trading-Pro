@@ -8347,15 +8347,14 @@ function applyCustomRisk() {
             
             // 해당 섹션의 데이터 업데이트
             if (section === 'metrics') {
-                updatePsychologyMetrics();
+                setTimeout(() => {
+                    updateVisualDashboard();
+                    updatePsychologyPerformanceChart();
+                }, 100);
             } else if (section === 'bias-analysis') {
                 updateBiasAnalysis();
             } else if (section === 'patterns') {
                 updatePatternInsights();
-            }
-            if (section === 'metrics') {
-                updateVisualDashboard();
-                setTimeout(() => updatePsychologyPerformanceChart(), 100);
             }
         }
 
@@ -9111,6 +9110,7 @@ function applyCustomRisk() {
             document.getElementById('sleepStatus').textContent = sleepStatus;
             
             // Update environment display
+            // Update environment display
             const environmentType = todayData.environmentType || 'home';
             const environmentTypeNames = {
                 home: currentLanguage === 'ko' ? '집' : 'Home',
@@ -9119,14 +9119,17 @@ function applyCustomRisk() {
                 hotel: currentLanguage === 'ko' ? '호텔' : 'Hotel'
             };
             
-            document.getElementById('environmentType').textContent = environmentTypeNames[environmentType];
+            document.getElementById('environmentType').textContent = environmentTypeNames[environmentType] || environmentTypeNames.home;
             
-            // Environment score based on type and time consistency
+            // Environment score based on type
             let envScore = 75; // Base score
-            if (environmentType === 'home') envScore = 90;
-            else if (environmentType === 'office') envScore = 80;
-            else if (environmentType === 'hotel') envScore = 60;
-            else if (environmentType === 'cafe') envScore = 50;
+            switch(environmentType) {
+                case 'home': envScore = 90; break;
+                case 'office': envScore = 80; break;
+                case 'hotel': envScore = 60; break;
+                case 'cafe': envScore = 50; break;
+                default: envScore = 75;
+            }
             
             document.getElementById('environmentScore').textContent = envScore;
             const circumference = 2 * Math.PI * 25;
@@ -9164,7 +9167,10 @@ function applyCustomRisk() {
             }
             
             updateTargetPercentages();
-            updatePsychologyPerformanceChart();
+
+            setTimeout(() => {
+                updatePsychologyPerformanceChart();
+            }, 100);
         }
 
         function resetVisualDashboard() {
@@ -9197,23 +9203,27 @@ function applyCustomRisk() {
             try {
                 await waitForChart();
                 const ctx = document.getElementById('psychologyPerformanceChart');
-                if (!ctx) return;
+                if (!ctx) {
+                    console.log('Chart canvas not found');
+                    return;
+                }
 
                 // Destroy existing chart
                 if (window.psychPerformanceChart) {
                     window.psychPerformanceChart.destroy();
+                    window.psychPerformanceChart = null;
                 }
 
                 // Prepare data from psychology and trading records
                 const chartData = preparePsychologyChartData();
                 
                 if (chartData.labels.length === 0) {
-                    ctx.getContext('2d').clearRect(0, 0, ctx.width, ctx.height);
                     const context = ctx.getContext('2d');
+                    context.clearRect(0, 0, ctx.width, ctx.height);
                     context.fillStyle = '#64748b';
                     context.font = '14px Inter';
                     context.textAlign = 'center';
-                    context.fillText('No data available', ctx.width / 2, ctx.height / 2);
+                    context.fillText('Collect more data to display chart', ctx.width / 2, ctx.height / 2);
                     return;
                 }
 
@@ -9223,37 +9233,51 @@ function applyCustomRisk() {
                         labels: chartData.labels,
                         datasets: [
                             {
-                                label: 'Sleep Hours',
+                                label: currentLanguage === 'ko' ? '수면 시간' : 'Sleep Hours',
                                 data: chartData.sleepData,
                                 borderColor: '#10b981',
                                 backgroundColor: 'rgba(16, 185, 129, 0.1)',
                                 yAxisID: 'y',
-                                tension: 0.4
+                                tension: 0.4,
+                                pointRadius: 4,
+                                pointHoverRadius: 6
                             },
                             {
-                                label: 'Daily P&L',
+                                label: currentLanguage === 'ko' ? '일일 손익' : 'Daily P&L',
                                 data: chartData.performanceData,
                                 borderColor: '#3b82f6',
                                 backgroundColor: 'rgba(59, 130, 246, 0.1)',
                                 yAxisID: 'y1',
-                                tension: 0.4
+                                tension: 0.4,
+                                pointRadius: 4,
+                                pointHoverRadius: 6
                             },
                             {
-                                label: 'Stress Level',
+                                label: currentLanguage === 'ko' ? '스트레스 수준' : 'Stress Level',
                                 data: chartData.stressData,
                                 borderColor: '#ef4444',
                                 backgroundColor: 'rgba(239, 68, 68, 0.1)',
                                 yAxisID: 'y2',
-                                tension: 0.4
+                                tension: 0.4,
+                                pointRadius: 4,
+                                pointHoverRadius: 6
                             }
                         ]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
+                        interaction: {
+                            intersect: false,
+                            mode: 'index'
+                        },
                         plugins: {
                             legend: {
-                                labels: { color: '#e4e4e7' }
+                                labels: { 
+                                    color: '#e4e4e7',
+                                    usePointStyle: true,
+                                    padding: 20
+                                }
                             }
                         },
                         scales: {
@@ -9267,11 +9291,13 @@ function applyCustomRisk() {
                                 position: 'left',
                                 title: {
                                     display: true,
-                                    text: 'Sleep Hours',
+                                    text: currentLanguage === 'ko' ? '수면 시간' : 'Sleep Hours',
                                     color: '#10b981'
                                 },
                                 ticks: { color: '#10b981' },
-                                grid: { color: '#334155' }
+                                grid: { color: '#334155' },
+                                min: 0,
+                                max: 12
                             },
                             y1: {
                                 type: 'linear',
@@ -9279,7 +9305,7 @@ function applyCustomRisk() {
                                 position: 'right',
                                 title: {
                                     display: true,
-                                    text: 'P&L ($)',
+                                    text: currentLanguage === 'ko' ? '손익 ($)' : 'P&L ($)',
                                     color: '#3b82f6'
                                 },
                                 ticks: { color: '#3b82f6' },
@@ -9294,6 +9320,8 @@ function applyCustomRisk() {
                         }
                     }
                 });
+                
+                console.log('Psychology performance chart updated successfully');
             } catch (error) {
                 console.error('Error updating psychology performance chart:', error);
             }
