@@ -3745,141 +3745,154 @@
                 <!-- Daily Input Section -->
                 <div id="psychologyInputSection" class="psychology-section active">
                     <div class="psychology-container">
-                        <h2 class="psychology-header" data-lang="daily-data-input">Daily Data Input</h2>
+                    <h2 class="psychology-header" data-lang="daily-data-input">Daily Data Input</h2>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 24px;">
+                        <!-- Biological Data -->
+                        <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
+                            <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="biological-data">Biological Data</h3>
+                            
+                            <div style="margin-bottom: 16px;">
+                                <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="sleep-hours">Sleep Hours</label>
+                                <input type="number" id="sleepHours" step="0.5" min="0" max="12" placeholder="7.5" 
+                                       style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                            </div>
+                        </div>
                         
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 24px;">
-                            <!-- Biological Rhythm Data -->
-                            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
-                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="biological-data">Biological Data</h3>
-                                
-                                <div style="margin-bottom: 16px;">
-                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="sleep-hours">Sleep Hours</label>
-                                    <input type="number" id="sleepHours" step="0.5" min="0" max="12" placeholder="7.5" 
+                        <!-- Trading Environment -->
+                        <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
+                            <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="trading-environment">Trading Environment</h3>
+                            
+                            <div style="margin-bottom: 16px;">
+                                <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="start-time">Start Time</label>
+                                <input type="time" id="startTime" value="09:30" 
+                                       style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                            </div>
+                            
+                            <div style="margin-bottom: 16px;">
+                                <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="end-time">End Time</label>
+                                <input type="time" id="endTime" value="16:00" 
+                                       style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                            </div>
+                            
+                            <div>
+                                <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="environment-type">Environment Type</label>
+                                <select id="environmentType" style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                    <option value="home">Home</option>
+                                    <option value="cafe">Cafe</option>
+                                    <option value="office">Office</option>
+                                    <option value="hotel">Hotel</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Economic Pressure -->
+                        <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
+                            <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="economic-pressure">Economic Pressure</h3>
+                            
+                            <div style="margin-bottom: 16px;">
+                                <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="account-balance">Account Balance ($)</label>
+                                <input type="number" id="accountBalance" min="0" placeholder="10000" oninput="updateTargetPercentages()"
+                                       style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                            </div>
+                            
+                            <div style="margin-bottom: 16px;">
+                                <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="daily-target">Daily P&L Target ($)</label>
+                                <div style="position: relative;">
+                                    <input type="number" id="dailyTarget" placeholder="200" oninput="updateTargetPercentages()"
                                            style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                                </div>
-                                
-                                <div style="margin-bottom: 16px;">
-                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="sleep-quality">Sleep Quality (1-5)</label>
-                                    <input type="number" id="sleepQuality" min="1" max="5" value="3" 
-                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                                </div>
-                                
-                                <div style="margin-bottom: 16px;">
-                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="caffeine-intake">Caffeine Intake (mg)</label>
-                                    <input type="number" id="caffeineIntake" min="0" max="1000" placeholder="200" 
-                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                                </div>
-                                
-                                <div>
-                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="screen-time">Screen Time Before Trading (hours)</label>
-                                    <input type="number" id="screenTime" step="0.5" min="0" max="8" placeholder="1.5" 
-                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                    <span id="dailyTargetPercent" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 11px; color: #64748b;">0%</span>
                                 </div>
                             </div>
                             
-                            <!-- Trading Environment -->
-                            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
-                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="trading-environment">Trading Environment</h3>
-                                
-                                <div style="margin-bottom: 16px;">
-                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="planned-start">Planned Start Time</label>
-                                    <input type="time" id="plannedStartTime" value="09:30" 
+                            <div>
+                                <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="max-daily-loss">Max Daily Loss ($)</label>
+                                <div style="position: relative;">
+                                    <input type="number" id="maxDailyLoss" placeholder="500" oninput="updateTargetPercentages()"
                                            style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                                </div>
-                                
-                                <div style="margin-bottom: 16px;">
-                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="actual-start">Actual Start Time</label>
-                                    <input type="time" id="actualStartTime" 
-                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                                </div>
-                                
-                                <div style="margin-bottom: 16px;">
-                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="environment-type">Environment Type</label>
-                                    <select id="environmentType" style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                                        <option value="home-quiet">Home (Quiet)</option>
-                                        <option value="home-noisy">Home (Noisy)</option>
-                                        <option value="office">Office</option>
-                                        <option value="cafe">Cafe</option>
-                                        <option value="other">Other</option>
-                                    </select>
-                                </div>
-                                
-                                <div>
-                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="distractions">Distractions Count</label>
-                                    <input type="number" id="distractionsCount" min="0" max="50" placeholder="3" 
-                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                                </div>
-                            </div>
-                            
-                            <!-- Economic Pressure -->
-                            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
-                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="economic-pressure">Economic Pressure</h3>
-                                
-                                <div style="margin-bottom: 16px;">
-                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="account-balance">Account Balance ($)</label>
-                                    <input type="number" id="accountBalance" min="0" placeholder="10000" 
-                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                                </div>
-                                
-                                <div style="margin-bottom: 16px;">
-                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="daily-target">Daily P&L Target ($)</label>
-                                    <input type="number" id="dailyTarget" placeholder="200" 
-                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                                </div>
-                                
-                                <div style="margin-bottom: 16px;">
-                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="max-daily-loss">Max Daily Loss ($)</label>
-                                    <input type="number" id="maxDailyLoss" placeholder="500" 
-                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                                </div>
-                                
-                                <div>
-                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="financial-pressure">Financial Pressure Level (1-5)</label>
-                                    <input type="number" id="financialPressure" min="1" max="5" value="3" 
-                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                                </div>
-                            </div>
-                            
-                            <!-- Predicted Performance -->
-                            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
-                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="predictions">Pre-Market Predictions</h3>
-                                
-                                <div style="margin-bottom: 16px;">
-                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="predicted-win-rate">Predicted Win Rate (%)</label>
-                                    <input type="number" id="predictedWinRate" min="0" max="100" placeholder="65" 
-                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                                </div>
-                                
-                                <div style="margin-bottom: 16px;">
-                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="planned-trades">Planned Trades Count</label>
-                                    <input type="number" id="plannedTrades" min="0" max="50" placeholder="5" 
-                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                                </div>
-                                
-                                <div style="margin-bottom: 16px;">
-                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="confidence-level">Confidence Level (1-5)</label>
-                                    <input type="number" id="confidenceLevel" min="1" max="5" value="3" 
-                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
-                                </div>
-                                
-                                <div>
-                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="planned-position-size">Planned Avg Position Size ($)</label>
-                                    <input type="number" id="plannedPositionSize" min="0" placeholder="2000" 
-                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                    <span id="maxDailyLossPercent" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 11px; color: #64748b;">0%</span>
                                 </div>
                             </div>
                         </div>
                         
-                        <div style="display: flex; gap: 12px; justify-content: center;">
-                            <button onclick="savePsychologyData()" 
-                                    style="background: #3b82f6; border: none; color: white; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;" 
-                                    data-lang="save-psychology-data">Save Psychology Data</button>
-                            <button onclick="calculateDailyScore()" 
-                                    style="background: #10b981; border: none; color: white; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;" 
-                                    data-lang="calculate-score">Calculate Daily Score</button>
-                            <button onclick="resetPsychologyData()" 
-                                    style="background: #ef4444; border: none; color: white; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;" 
-                                    data-lang="reset-data">Reset Data</button>
+                        <!-- Emotional State -->
+                        <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
+                            <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="emotional-state">Emotional State</h3>
+                            
+                            <div style="margin-bottom: 16px;">
+                                <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="pre-market-mood">Pre-Market Mood (1-5)</label>
+                                <input type="number" id="preMarketMood" min="1" max="5" value="3" 
+                                       style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                            </div>
+                            
+                            <div style="margin-bottom: 16px;">
+                                <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="confidence-level">Confidence Level (1-5)</label>
+                                <input type="number" id="confidenceLevel" min="1" max="5" value="3" 
+                                       style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                            </div>
+                            
+                            <div style="margin-bottom: 16px;">
+                                <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="stress-level">Stress Level (1-5)</label>
+                                <input type="number" id="stressLevel" min="1" max="5" value="3" 
+                                       style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                            </div>
+                            
+                            <div>
+                                <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="focus-level">Focus Level (1-5)</label>
+                                <input type="number" id="focusLevel" min="1" max="5" value="3" 
+                                       style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 12px; justify-content: center;">
+                        <button onclick="savePsychologyData()" 
+                                style="background: #3b82f6; border: none; color: white; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;" 
+                                data-lang="save-psychology-data">Save Psychology Data</button>
+                        <button onclick="calculateDailyScore()" 
+                                style="background: #10b981; border: none; color: white; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;" 
+                                data-lang="calculate-score">Calculate Daily Score</button>
+                        <button onclick="resetPsychologyData()" 
+                                style="background: #ef4444; border: none; color: white; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;" 
+                                data-lang="reset-data">Reset Data</button>
+                    </div>
+                    
+                    <!-- Psychology Analysis Charts Section -->
+                    <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 24px; margin-top: 32px;">
+                        <h3 style="color: #f8fafc; font-size: 18px; font-weight: 600; margin-bottom: 24px; text-align: center;" data-lang="psychology-analysis-charts">Psychology Analysis Charts</h3>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px;">
+                            <!-- Performance vs Psychology Chart -->
+                            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; min-height: 300px;">
+                                <div style="color: #f8fafc; font-size: 14px; font-weight: 600; margin-bottom: 12px; text-align: center; padding-bottom: 8px; border-bottom: 1px solid #334155;" data-lang="performance-vs-psychology">Performance vs Psychology</div>
+                                <div style="height: 250px; display: flex; align-items: center; justify-content: center; position: relative;">
+                                    <canvas id="performancePsychologyChart" style="width: 100%; height: 100%; max-width: 100%; max-height: 100%;"></canvas>
+                                </div>
+                            </div>
+                            
+                            <!-- Daily Psychology Score Trend -->
+                            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; min-height: 300px;">
+                                <div style="color: #f8fafc; font-size: 14px; font-weight: 600; margin-bottom: 12px; text-align: center; padding-bottom: 8px; border-bottom: 1px solid #334155;" data-lang="psychology-score-trend">Psychology Score Trend</div>
+                                <div style="height: 250px; display: flex; align-items: center; justify-content: center; position: relative;">
+                                    <canvas id="psychologyScoreTrendChart" style="width: 100%; height: 100%; max-width: 100%; max-height: 100%;"></canvas>
+                                </div>
+                            </div>
+                            
+                            <!-- Bias Risk Analysis -->
+                            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; min-height: 300px;">
+                                <div style="color: #f8fafc; font-size: 14px; font-weight: 600; margin-bottom: 12px; text-align: center; padding-bottom: 8px; border-bottom: 1px solid #334155;" data-lang="bias-risk-radar">Bias Risk Radar</div>
+                                <div style="height: 250px; display: flex; align-items: center; justify-content: center; position: relative;">
+                                    <canvas id="biasRiskRadarChart" style="width: 100%; height: 100%; max-width: 100%; max-height: 100%;"></canvas>
+                                </div>
+                            </div>
+                            
+                            <!-- Environmental Impact -->
+                            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; min-height: 300px;">
+                                <div style="color: #f8fafc; font-size: 14px; font-weight: 600; margin-bottom: 12px; text-align: center; padding-bottom: 8px; border-bottom: 1px solid #334155;" data-lang="environmental-impact">Environmental Impact</div>
+                                <div style="height: 250px; display: flex; align-items: center; justify-content: center; position: relative;">
+                                    <canvas id="environmentalImpactChart" style="width: 100%; height: 100%; max-width: 100%; max-height: 100%;"></canvas>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -3892,35 +3905,63 @@
                         <!-- Daily Psychology Score -->
                         <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
                             <h3 style="color: #f8fafc; font-size: 18px; margin-bottom: 16px; text-align: center;" data-lang="daily-psychology-score">Daily Psychology Score</h3>
+                            
+                            <!-- Main Score Display -->
+                            <div style="text-align: center; margin-bottom: 24px;">
+                                <div style="position: relative; display: inline-block; width: 150px; height: 150px;">
+                                    <canvas id="psychologyScoreGauge" width="150" height="150" style="position: absolute; top: 0; left: 0;"></canvas>
+                                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                                        <div id="totalPsychScore" style="color: #3b82f6; font-size: 28px; font-weight: 700; line-height: 1;">0</div>
+                                        <div style="color: #94a3b8; font-size: 12px; margin-top: 4px;">/ 100</div>
+                                    </div>
+                                </div>
+                                <div id="totalScoreStatus" style="color: #64748b; font-size: 14px; margin-top: 8px;">No data</div>
+                            </div>
+                            
+                            <!-- Individual Factors -->
                             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-                                <div id="sleepFactorCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                <div id="sleepFactorCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center; position: relative; overflow: hidden;">
                                     <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="sleep-factor">Sleep Factor</div>
-                                    <div id="sleepFactorScore" style="color: #f8fafc; font-size: 24px; font-weight: 700; margin-bottom: 4px;">0/25</div>
+                                    <div style="position: relative; margin-bottom: 8px;">
+                                        <div style="background: #334155; height: 6px; border-radius: 3px; overflow: hidden;">
+                                            <div id="sleepFactorBar" style="height: 100%; background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981); width: 0%; transition: width 0.5s ease;"></div>
+                                        </div>
+                                        <div id="sleepFactorScore" style="color: #f8fafc; font-size: 18px; font-weight: 700; margin-top: 4px;">0/25</div>
+                                    </div>
                                     <div id="sleepFactorStatus" style="color: #64748b; font-size: 11px;">No data</div>
                                 </div>
                                 
-                                <div id="stressFactorCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                <div id="stressFactorCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center; position: relative; overflow: hidden;">
                                     <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="stress-factor">Stress Factor</div>
-                                    <div id="stressFactorScore" style="color: #f8fafc; font-size: 24px; font-weight: 700; margin-bottom: 4px;">0/25</div>
+                                    <div style="position: relative; margin-bottom: 8px;">
+                                        <div style="background: #334155; height: 6px; border-radius: 3px; overflow: hidden;">
+                                            <div id="stressFactorBar" style="height: 100%; background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981); width: 0%; transition: width 0.5s ease;"></div>
+                                        </div>
+                                        <div id="stressFactorScore" style="color: #f8fafc; font-size: 18px; font-weight: 700; margin-top: 4px;">0/25</div>
+                                    </div>
                                     <div id="stressFactorStatus" style="color: #64748b; font-size: 11px;">No data</div>
                                 </div>
                                 
-                                <div id="disciplineFactorCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                <div id="disciplineFactorCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center; position: relative; overflow: hidden;">
                                     <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="discipline-factor">Discipline Factor</div>
-                                    <div id="disciplineFactorScore" style="color: #f8fafc; font-size: 24px; font-weight: 700; margin-bottom: 4px;">0/25</div>
+                                    <div style="position: relative; margin-bottom: 8px;">
+                                        <div style="background: #334155; height: 6px; border-radius: 3px; overflow: hidden;">
+                                            <div id="disciplineFactorBar" style="height: 100%; background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981); width: 0%; transition: width 0.5s ease;"></div>
+                                        </div>
+                                        <div id="disciplineFactorScore" style="color: #f8fafc; font-size: 18px; font-weight: 700; margin-top: 4px;">0/25</div>
+                                    </div>
                                     <div id="disciplineFactorStatus" style="color: #64748b; font-size: 11px;">No data</div>
                                 </div>
                                 
-                                <div id="consistencyFactorCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                <div id="consistencyFactorCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center; position: relative; overflow: hidden;">
                                     <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="consistency-factor">Consistency Factor</div>
-                                    <div id="consistencyFactorScore" style="color: #f8fafc; font-size: 24px; font-weight: 700; margin-bottom: 4px;">0/25</div>
+                                    <div style="position: relative; margin-bottom: 8px;">
+                                        <div style="background: #334155; height: 6px; border-radius: 3px; overflow: hidden;">
+                                            <div id="consistencyFactorBar" style="height: 100%; background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981); width: 0%; transition: width 0.5s ease;"></div>
+                                        </div>
+                                        <div id="consistencyFactorScore" style="color: #f8fafc; font-size: 18px; font-weight: 700; margin-top: 4px;">0/25</div>
+                                    </div>
                                     <div id="consistencyFactorStatus" style="color: #64748b; font-size: 11px;">No data</div>
-                                </div>
-                                
-                                <div id="totalScoreCard" style="background: #0f172a; border: 2px solid #3b82f6; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="total-score">Total Score</div>
-                                    <div id="totalPsychScore" style="color: #3b82f6; font-size: 28px; font-weight: 700; margin-bottom: 4px;">0/100</div>
-                                    <div id="totalScoreStatus" style="color: #64748b; font-size: 11px;">No data</div>
                                 </div>
                             </div>
                         </div>
@@ -4646,8 +4687,6 @@
                 'daily-psychology-input': 'Daily Psychology Input',
                 'biological-rhythm': 'Biological Rhythm',
                 'sleep-hours': 'Sleep Hours',
-                'sleep-quality': 'Sleep Quality',
-                'caffeine-intake': 'Caffeine Intake (mg)',
                 'energy-level': 'Energy Level',
                 'time-environment': 'Time & Environment',
                 'planned-start-time': 'Planned Start Time',
@@ -4702,17 +4741,7 @@
                 'daily-data-input': 'Daily Data Input',
                 'biological-data': 'Biological Data',
                 'caffeine-intake': 'Caffeine Intake (mg)',
-                'screen-time': 'Screen Time Before Trading (hours)',
                 'trading-environment': 'Trading Environment',
-                'planned-start': 'Planned Start Time',
-                'actual-start': 'Actual Start Time',
-                'environment-type': 'Environment Type',
-                'distractions': 'Distractions Count',
-                'financial-pressure': 'Financial Pressure Level (1-5)',
-                'predictions': 'Pre-Market Predictions',
-                'predicted-win-rate': 'Predicted Win Rate (%)',
-                'planned-trades': 'Planned Trades Count',
-                'planned-position-size': 'Planned Avg Position Size ($)',
                 'calculate-score': 'Calculate Daily Score',
                 'psychology-dashboard': 'Psychology Dashboard',
                 'daily-psychology-score': 'Daily Psychology Score',
@@ -4746,7 +4775,15 @@
                 'weekly-risk-summary': 'Weekly Risk Summary',
                 'overall-bias-risk': 'Overall Bias Risk',
                 'risk-trend': 'Risk Trend',
-                'action-needed': 'Action Needed'
+                'action-needed': 'Action Needed',
+                'start-time': '시작 시간',
+                'end-time': '종료 시간',
+                'emotional-state': '감정 상태',
+                'performance-vs-psychology': '성과 vs 심리',
+                'psychology-score-trend': '심리 점수 추이',
+                'bias-risk-radar': '편향 위험 레이더',
+                'environmental-impact': '환경 영향',
+                'psychology-analysis-charts': '심리 분석 차트'
             },
             ko: {
                 'dashboard': '대시보드',
@@ -4966,8 +5003,6 @@
                 'daily-psychology-input': '일일 심리 입력',
                 'biological-rhythm': '생체 리듬',
                 'sleep-hours': '수면 시간',
-                'sleep-quality': '수면 질',
-                'caffeine-intake': '카페인 섭취량 (mg)',
                 'energy-level': '에너지 수준',
                 'time-environment': '시간 및 환경',
                 'planned-start-time': '계획된 시작 시간',
@@ -5022,17 +5057,7 @@
                 'daily-data-input': '일일 데이터 입력',
                 'biological-data': '생체 데이터',
                 'caffeine-intake': '카페인 섭취량 (mg)',
-                'screen-time': '거래 전 스크린 타임 (시간)',
                 'trading-environment': '거래 환경',
-                'planned-start': '계획된 시작 시간',
-                'actual-start': '실제 시작 시간',
-                'environment-type': '환경 유형',
-                'distractions': '방해 요소 횟수',
-                'financial-pressure': '재정적 압박 수준 (1-5)',
-                'predictions': '장전 예측',
-                'predicted-win-rate': '예상 승률 (%)',
-                'planned-trades': '계획된 거래 수',
-                'planned-position-size': '계획된 평균 포지션 크기 ($)',
                 'calculate-score': '일일 점수 계산',
                 'psychology-dashboard': '심리 대시보드',
                 'daily-psychology-score': '일일 심리 점수',
@@ -5066,7 +5091,15 @@
                 'weekly-risk-summary': '주간 위험 요약',
                 'overall-bias-risk': '전체 편향 위험',
                 'risk-trend': '위험 추세',
-                'action-needed': '필요한 조치'
+                'action-needed': '필요한 조치',
+                'start-time': 'Start Time',
+                'end-time': 'End Time',
+                'emotional-state': 'Emotional State',
+                'performance-vs-psychology': 'Performance vs Psychology',
+                'psychology-score-trend': 'Psychology Score Trend',
+                'bias-risk-radar': 'Bias Risk Radar',
+                'environmental-impact': 'Environmental Impact',
+                'psychology-analysis-charts': 'Psychology Analysis Charts'
             }
         };
         
@@ -6405,6 +6438,8 @@
             loadTrades();
             loadNotes();
             loadPsychologyData();
+            updatePsychologyCharts();
+            drawPsychologyScoreGauge();
             updateStats();
             renderCalendar();
             renderAllNotesSections();
@@ -8161,7 +8196,41 @@ function applyCustomRisk() {
     }
 }
 
-        // Psychology functions
+        // 새로운 목표 퍼센티지 계산 함수
+        function updateTargetPercentages() {
+            const balance = parseFloat(document.getElementById('accountBalance').value) || 0;
+            const dailyTarget = parseFloat(document.getElementById('dailyTarget').value) || 0;
+            const maxLoss = parseFloat(document.getElementById('maxDailyLoss').value) || 0;
+            
+            if (balance > 0) {
+                const targetPercent = ((dailyTarget / balance) * 100).toFixed(1);
+                const lossPercent = ((maxLoss / balance) * 100).toFixed(1);
+                
+                document.getElementById('dailyTargetPercent').textContent = `${targetPercent}%`;
+                document.getElementById('maxDailyLossPercent').textContent = `${lossPercent}%`;
+                
+                // 위험 수준에 따른 색상 변경
+                const targetEl = document.getElementById('dailyTargetPercent');
+                const lossEl = document.getElementById('maxDailyLossPercent');
+                
+                if (targetPercent > 5) {
+                    targetEl.style.color = '#ef4444';
+                } else if (targetPercent > 3) {
+                    targetEl.style.color = '#f59e0b';
+                } else {
+                    targetEl.style.color = '#10b981';
+                }
+                
+                if (lossPercent > 5) {
+                    lossEl.style.color = '#ef4444';
+                } else if (lossPercent > 3) {
+                    lossEl.style.color = '#f59e0b';
+                } else {
+                    lossEl.style.color = '#10b981';
+                }
+            }
+        }
+
         function savePsychologyData() {
             const currentDate = formatTradingDate(currentTradingDate);
             
@@ -8171,19 +8240,14 @@ function applyCustomRisk() {
                 
                 // Biological data
                 sleepHours: parseFloat(document.getElementById('sleepHours').value) || 0,
-                sleepQuality: parseInt(document.getElementById('sleepQuality').value) || 3,
-                caffeineIntake: parseFloat(document.getElementById('caffeineIntake').value) || 0,
-                energyLevel: parseInt(document.getElementById('energyLevel').value) || 3,
                 
-                // Time & environment
-                plannedStartTime: document.getElementById('plannedStartTime').value || '09:30',
-                actualStartTime: document.getElementById('actualStartTime').value || '',
-                marketDelay: parseInt(document.getElementById('marketDelay').value) || 0,
-                tradingEnvironment: document.getElementById('tradingEnvironment').value || 'home-quiet',
+                // Environment data
+                startTime: document.getElementById('startTime').value || '09:30',
+                endTime: document.getElementById('endTime').value || '16:00',
+                environmentType: document.getElementById('environmentType').value || 'home',
                 
                 // Economic pressure
-                accountBalance: parseFloat(document.getElementById('psychAccountBalance').value) || 0,
-                pressureLevel: parseInt(document.getElementById('pressureLevel').value) || 3,
+                accountBalance: parseFloat(document.getElementById('accountBalance').value) || 0,
                 dailyTarget: parseFloat(document.getElementById('dailyTarget').value) || 0,
                 maxDailyLoss: parseFloat(document.getElementById('maxDailyLoss').value) || 0,
                 
@@ -8197,8 +8261,7 @@ function applyCustomRisk() {
             psychologyData[currentDate] = data;
             localStorage.setItem('tradingPlatformPsychologyData', JSON.stringify(psychologyData));
             
-            updatePsychologyMetrics();
-            generatePsychologyInsights();
+            updatePsychologyCharts();
             showToast(currentLanguage === 'ko' ? '심리 데이터가 저장되었습니다' : 'Psychology data saved');
         }
 
@@ -8210,11 +8273,10 @@ function applyCustomRisk() {
             if (confirm(confirmMessage)) {
                 // 모든 입력 필드 초기화
                 document.getElementById('sleepHours').value = '';
-                document.getElementById('sleepQuality').value = '3';
-                document.getElementById('energyLevel').value = '3';
-                document.getElementById('actualStartTime').value = '';
-                document.getElementById('tradingEnvironment').value = 'home-quiet';
-                document.getElementById('psychAccountBalance').value = '';
+                document.getElementById('startTime').value = '09:30';
+                document.getElementById('endTime').value = '16:00';
+                document.getElementById('environmentType').value = 'home';
+                document.getElementById('accountBalance').value = '';
                 document.getElementById('dailyTarget').value = '';
                 document.getElementById('maxDailyLoss').value = '';
                 document.getElementById('preMarketMood').value = '3';
@@ -8222,68 +8284,16 @@ function applyCustomRisk() {
                 document.getElementById('stressLevel').value = '3';
                 document.getElementById('focusLevel').value = '3';
                 
+                // 퍼센티지 표시 초기화
+                document.getElementById('dailyTargetPercent').textContent = '0%';
+                document.getElementById('maxDailyLossPercent').textContent = '0%';
+                
                 // 메트릭 초기화
                 resetPsychologyMetrics();
                 
                 showToast(currentLanguage === 'ko' ? '심리 데이터가 초기화되었습니다' : 'Psychology data has been reset');
             }
         }
-
-        function loadPsychologyData() {
-    try {
-        const saved = localStorage.getItem('tradingPlatformPsychologyData');
-        if (saved) {
-            psychologyData = JSON.parse(saved);
-        } else {
-            psychologyData = {};
-        }
-    } catch (error) {
-        console.error('Error loading psychology data:', error);
-        psychologyData = {};
-    }
-
-    // Load today's data if available
-    const currentDate = formatTradingDate(currentTradingDate);
-    const todayData = psychologyData[currentDate];
-
-    if (todayData) {
-        const sleepHours = document.getElementById('sleepHours');
-        if (sleepHours) sleepHours.value = todayData.sleepHours || '';
-
-        const sleepQuality = document.getElementById('sleepQuality');
-        if (sleepQuality) sleepQuality.value = todayData.sleepQuality || 3;
-
-        const energyLevel = document.getElementById('energyLevel');
-        if (energyLevel) energyLevel.value = todayData.energyLevel || 3;
-
-        const actualStartTime = document.getElementById('actualStartTime');
-        if (actualStartTime) actualStartTime.value = todayData.actualStartTime || '';
-
-        const tradingEnvironment = document.getElementById('tradingEnvironment');
-        if (tradingEnvironment) tradingEnvironment.value = todayData.tradingEnvironment || 'home-quiet';
-
-        const psychAccountBalance = document.getElementById('psychAccountBalance');
-        if (psychAccountBalance) psychAccountBalance.value = todayData.accountBalance || '';
-
-        const dailyTarget = document.getElementById('dailyTarget');
-        if (dailyTarget) dailyTarget.value = todayData.dailyTarget || '';
-
-        const maxDailyLoss = document.getElementById('maxDailyLoss');
-        if (maxDailyLoss) maxDailyLoss.value = todayData.maxDailyLoss || '';
-
-        const preMarketMood = document.getElementById('preMarketMood');
-        if (preMarketMood) preMarketMood.value = todayData.preMarketMood || 3;
-
-        const confidenceLevel = document.getElementById('confidenceLevel');
-        if (confidenceLevel) confidenceLevel.value = todayData.confidenceLevel || 3;
-
-        const stressLevel = document.getElementById('stressLevel');
-        if (stressLevel) stressLevel.value = todayData.stressLevel || 3;
-
-        const focusLevel = document.getElementById('focusLevel');
-        if (focusLevel) focusLevel.value = todayData.focusLevel || 3;
-    }
-}
         
         function updatePsychologyMetrics() {
             const currentDate = formatTradingDate(currentTradingDate);
@@ -8635,14 +8645,10 @@ function applyCustomRisk() {
             }
             
             // 수면 요인 계산 (25점 만점)
-            const sleepFactor = calculateSleepFactor(todayData.sleepHours, todayData.sleepQuality);
+            const sleepFactor = calculateSleepFactor(todayData.sleepHours, 5); // 기본 품질 5로 가정
             
             // 스트레스 요인 계산 (25점 만점)
-            const stressFactor = calculateStressFactor(
-                todayData.caffeineIntake || 0, 
-                todayData.screenTime || 0, 
-                todayData.distractionsCount || 0
-            );
+            const stressFactor = calculateStressFactor(todayData.stressLevel, todayData.focusLevel);
             
             // 규율 요인 계산 (25점 만점) - 거래 데이터 기반
             const disciplineFactor = calculateDisciplineFactor();
@@ -8663,29 +8669,14 @@ function applyCustomRisk() {
             showToast(currentLanguage === 'ko' ? '일일 심리 점수가 계산되었습니다' : 'Daily psychology score calculated');
         }
 
-        function calculateSleepFactor(sleepHours, sleepQuality) {
-            if (!sleepHours) return 0;
-            
-            let baseScore = Math.min(sleepHours >= 7 ? 20 : (sleepHours * 20 / 7), 20);
-            let qualityBonus = (sleepQuality - 3) * 1.25;
-            
-            return Math.max(0, Math.min(25, baseScore + qualityBonus));
-        }
-
-        function calculateStressFactor(caffeine, screenTime, distractions) {
+        function calculateStressFactor(stressLevel, focusLevel) {
             let baseScore = 25;
             
-            // 카페인 페널티
-            if (caffeine > 400) baseScore -= 8;
-            else if (caffeine > 200) baseScore -= 3;
+            // 스트레스 페널티
+            baseScore -= (stressLevel - 3) * 5;
             
-            // 스크린 타임 페널티
-            if (screenTime > 3) baseScore -= 5;
-            else if (screenTime > 1.5) baseScore -= 2;
-            
-            // 방해 요소 페널티
-            if (distractions > 10) baseScore -= 5;
-            else if (distractions > 5) baseScore -= 2;
+            // 집중도 보너스/페널티
+            baseScore += (focusLevel - 3) * 3;
             
             return Math.max(0, Math.min(25, baseScore));
         }
@@ -8777,6 +8768,18 @@ function applyCustomRisk() {
                 card.className = `psychology-metric-card ${cardClass}`;
                 card.style.borderColor = cardClass === 'good' ? '#10b981' : 
                                         cardClass === 'warning' ? '#f59e0b' : '#ef4444';
+            }
+            
+            // 프로그레스 바 업데이트
+            const barId = scoreId.replace('Score', 'Bar');
+            const barElement = document.getElementById(barId);
+            if (barElement) {
+                barElement.style.width = `${percentage}%`;
+            }
+            
+            // 총점인 경우 게이지 차트 업데이트
+            if (scoreId === 'totalPsychScore') {
+                setTimeout(() => drawPsychologyScoreGauge(), 100);
             }
         }
 
@@ -9211,45 +9214,6 @@ function applyCustomRisk() {
             return { after3Losses: winRate };
         }
 
-        // 기존 savePsychologyData 함수 업데이트
-        function savePsychologyData() {
-            const currentDate = formatTradingDate(currentTradingDate);
-            
-            const data = {
-                date: currentDate,
-                timestamp: new Date().toISOString(),
-                
-                // Biological data
-                sleepHours: parseFloat(document.getElementById('sleepHours').value) || 0,
-                sleepQuality: parseInt(document.getElementById('sleepQuality').value) || 3,
-                caffeineIntake: parseFloat(document.getElementById('caffeineIntake').value) || 0,
-                screenTime: parseFloat(document.getElementById('screenTime').value) || 0,
-                
-                // Environment data
-                plannedStartTime: document.getElementById('plannedStartTime').value || '09:30',
-                actualStartTime: document.getElementById('actualStartTime').value || '',
-                environmentType: document.getElementById('environmentType').value || 'home-quiet',
-                distractionsCount: parseInt(document.getElementById('distractionsCount').value) || 0,
-                
-                // Economic pressure
-                accountBalance: parseFloat(document.getElementById('accountBalance').value) || 0,
-                dailyTarget: parseFloat(document.getElementById('dailyTarget').value) || 0,
-                maxDailyLoss: parseFloat(document.getElementById('maxDailyLoss').value) || 0,
-                financialPressure: parseInt(document.getElementById('financialPressure').value) || 3,
-                
-                // Predictions
-                predictedWinRate: parseFloat(document.getElementById('predictedWinRate').value) || 0,
-                plannedTrades: parseInt(document.getElementById('plannedTrades').value) || 0,
-                confidenceLevel: parseInt(document.getElementById('confidenceLevel').value) || 3,
-                plannedPositionSize: parseFloat(document.getElementById('plannedPositionSize').value) || 0
-            };
-            
-            psychologyData[currentDate] = data;
-            localStorage.setItem('tradingPlatformPsychologyData', JSON.stringify(psychologyData));
-            
-            showToast(currentLanguage === 'ko' ? '심리 데이터가 저장되었습니다' : 'Psychology data saved');
-        }
-
         // 기존 loadPsychologyData 함수 업데이트
         function loadPsychologyData() {
             try {
@@ -9269,35 +9233,23 @@ function applyCustomRisk() {
             const todayData = psychologyData[currentDate];
 
             if (todayData) {
-                // Biological data
                 const sleepHours = document.getElementById('sleepHours');
                 if (sleepHours) sleepHours.value = todayData.sleepHours || '';
 
-                const sleepQuality = document.getElementById('sleepQuality');
-                if (sleepQuality) sleepQuality.value = todayData.sleepQuality || 3;
+                const startTime = document.getElementById('startTime');
+                if (startTime) startTime.value = todayData.startTime || '09:30';
 
-                const caffeineIntake = document.getElementById('caffeineIntake');
-                if (caffeineIntake) caffeineIntake.value = todayData.caffeineIntake || '';
-
-                const screenTime = document.getElementById('screenTime');
-                if (screenTime) screenTime.value = todayData.screenTime || '';
-
-                // Environment data
-                const plannedStartTime = document.getElementById('plannedStartTime');
-                if (plannedStartTime) plannedStartTime.value = todayData.plannedStartTime || '09:30';
-
-                const actualStartTime = document.getElementById('actualStartTime');
-                if (actualStartTime) actualStartTime.value = todayData.actualStartTime || '';
+                const endTime = document.getElementById('endTime');
+                if (endTime) endTime.value = todayData.endTime || '16:00';
 
                 const environmentType = document.getElementById('environmentType');
-                if (environmentType) environmentType.value = todayData.environmentType || 'home-quiet';
+                if (environmentType) environmentType.value = todayData.environmentType || 'home';
 
-                const distractionsCount = document.getElementById('distractionsCount');
-                if (distractionsCount) distractionsCount.value = todayData.distractionsCount || '';
-
-                // Economic pressure
                 const accountBalance = document.getElementById('accountBalance');
-                if (accountBalance) accountBalance.value = todayData.accountBalance || '';
+                if (accountBalance) {
+                    accountBalance.value = todayData.accountBalance || '';
+                    updateTargetPercentages();
+                }
 
                 const dailyTarget = document.getElementById('dailyTarget');
                 if (dailyTarget) dailyTarget.value = todayData.dailyTarget || '';
@@ -9305,21 +9257,17 @@ function applyCustomRisk() {
                 const maxDailyLoss = document.getElementById('maxDailyLoss');
                 if (maxDailyLoss) maxDailyLoss.value = todayData.maxDailyLoss || '';
 
-                const financialPressure = document.getElementById('financialPressure');
-                if (financialPressure) financialPressure.value = todayData.financialPressure || 3;
-
-                // Predictions
-                const predictedWinRate = document.getElementById('predictedWinRate');
-                if (predictedWinRate) predictedWinRate.value = todayData.predictedWinRate || '';
-
-                const plannedTrades = document.getElementById('plannedTrades');
-                if (plannedTrades) plannedTrades.value = todayData.plannedTrades || '';
+                const preMarketMood = document.getElementById('preMarketMood');
+                if (preMarketMood) preMarketMood.value = todayData.preMarketMood || 3;
 
                 const confidenceLevel = document.getElementById('confidenceLevel');
                 if (confidenceLevel) confidenceLevel.value = todayData.confidenceLevel || 3;
 
-                const plannedPositionSize = document.getElementById('plannedPositionSize');
-                if (plannedPositionSize) plannedPositionSize.value = todayData.plannedPositionSize || '';
+                const stressLevel = document.getElementById('stressLevel');
+                if (stressLevel) stressLevel.value = todayData.stressLevel || 3;
+
+                const focusLevel = document.getElementById('focusLevel');
+                if (focusLevel) focusLevel.value = todayData.focusLevel || 3;
             }
         }
 
@@ -9988,6 +9936,405 @@ function applyCustomRisk() {
                     `${tradesToDelete.length}개의 거래가 삭제되었습니다` : 
                     `${tradesToDelete.length} trades deleted`);
             }
+        }
+
+        // Psychology Charts Functions
+        function updatePsychologyCharts() {
+            updatePerformancePsychologyChart();
+            updatePsychologyScoreTrendChart();
+            updateBiasRiskRadarChart();
+            updateEnvironmentalImpactChart();
+        }
+
+        function updatePerformancePsychologyChart() {
+            const canvas = document.getElementById('performancePsychologyChart');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            
+            // 데이터 준비
+            const dataPoints = [];
+            Object.values(psychologyData).forEach(dayData => {
+                if (dayData.sleepHours) {
+                    const dayTrades = trades.filter(trade => trade.date === dayData.date);
+                    if (dayTrades.length > 0) {
+                        const dayPnL = dayTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+                        const psychScore = calculateDailyPsychologyScore(dayData);
+                        dataPoints.push({ x: psychScore, y: dayPnL });
+                    }
+                }
+            });
+
+            if (dataPoints.length === 0) {
+                ctx.fillStyle = '#64748b';
+                ctx.font = '14px Inter';
+                ctx.textAlign = 'center';
+                ctx.fillText('No data available', canvas.width / 2, canvas.height / 2);
+                return;
+            }
+
+            // Chart.js 차트 생성
+            if (window.performancePsychChart) {
+                window.performancePsychChart.destroy();
+            }
+
+            window.performancePsychChart = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Performance vs Psychology',
+                        data: dataPoints,
+                        backgroundColor: 'rgba(59, 130, 246, 0.6)',
+                        borderColor: '#3b82f6',
+                        pointRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Psychology Score', color: '#94a3b8' },
+                            ticks: { color: '#94a3b8' },
+                            grid: { color: '#334155' }
+                        },
+                        y: {
+                            title: { display: true, text: 'Daily P&L ($)', color: '#94a3b8' },
+                            ticks: { color: '#94a3b8' },
+                            grid: { color: '#334155' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updatePsychologyScoreTrendChart() {
+            const canvas = document.getElementById('psychologyScoreTrendChart');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            
+            const sortedData = Object.entries(psychologyData)
+                .sort(([a], [b]) => new Date(a) - new Date(b))
+                .slice(-30); // 최근 30일
+
+            if (sortedData.length === 0) {
+                ctx.fillStyle = '#64748b';
+                ctx.font = '14px Inter';
+                ctx.textAlign = 'center';
+                ctx.fillText('No data available', canvas.width / 2, canvas.height / 2);
+                return;
+            }
+
+            const labels = sortedData.map(([date]) => new Date(date).toLocaleDateString());
+            const scores = sortedData.map(([, data]) => calculateDailyPsychologyScore(data));
+
+            if (window.psychScoreTrendChart) {
+                window.psychScoreTrendChart.destroy();
+            }
+
+            window.psychScoreTrendChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Psychology Score',
+                        data: scores,
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#94a3b8' },
+                            grid: { color: '#334155' }
+                        },
+                        y: {
+                            min: 0,
+                            max: 100,
+                            ticks: { color: '#94a3b8' },
+                            grid: { color: '#334155' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateBiasRiskRadarChart() {
+            const canvas = document.getElementById('biasRiskRadarChart');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            
+            // 편향 위험도 데이터 계산
+            const overconfidenceRisk = calculateOverconfidenceRisk();
+            const lossAversionRisk = calculateLossAversionRisk();
+            const anchoringRisk = calculateAnchoringRisk();
+            const emotionalRisk = calculateEmotionalRisk();
+            const environmentalRisk = calculateEnvironmentalRisk();
+
+            if (window.biasRiskChart) {
+                window.biasRiskChart.destroy();
+            }
+
+            window.biasRiskChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Overconfidence', 'Loss Aversion', 'Anchoring', 'Emotional', 'Environmental'],
+                    datasets: [{
+                        label: 'Bias Risk',
+                        data: [overconfidenceRisk, lossAversionRisk, anchoringRisk, emotionalRisk, environmentalRisk],
+                        borderColor: '#ef4444',
+                        backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: { color: '#94a3b8' },
+                            grid: { color: '#334155' },
+                            pointLabels: { color: '#e4e4e7' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateEnvironmentalImpactChart() {
+            const canvas = document.getElementById('environmentalImpactChart');
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            
+            // 환경별 성과 분석
+            const environmentStats = {};
+            Object.values(psychologyData).forEach(dayData => {
+                if (dayData.environmentType) {
+                    const dayTrades = trades.filter(trade => trade.date === dayData.date);
+                    if (dayTrades.length > 0) {
+                        const dayPnL = dayTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+                        if (!environmentStats[dayData.environmentType]) {
+                            environmentStats[dayData.environmentType] = { total: 0, count: 0 };
+                        }
+                        environmentStats[dayData.environmentType].total += dayPnL;
+                        environmentStats[dayData.environmentType].count++;
+                    }
+                }
+            });
+
+            const environments = Object.keys(environmentStats);
+            const avgPerformance = environments.map(env => 
+                environmentStats[env].count > 0 ? environmentStats[env].total / environmentStats[env].count : 0
+            );
+
+            if (environments.length === 0) {
+                ctx.fillStyle = '#64748b';
+                ctx.font = '14px Inter';
+                ctx.textAlign = 'center';
+                ctx.fillText('No data available', canvas.width / 2, canvas.height / 2);
+                return;
+            }
+
+            if (window.environmentChart) {
+                window.environmentChart.destroy();
+            }
+
+            window.environmentChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: environments.map(env => env.charAt(0).toUpperCase() + env.slice(1)),
+                    datasets: [{
+                        label: 'Avg Performance',
+                        data: avgPerformance,
+                        backgroundColor: avgPerformance.map(val => val >= 0 ? '#10b981' : '#ef4444')
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#94a3b8' },
+                            grid: { color: '#334155' }
+                        },
+                        y: {
+                            ticks: { color: '#94a3b8' },
+                            grid: { color: '#334155' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 심리 점수 계산 함수
+        function calculateDailyPsychologyScore(data) {
+            if (!data) return 0;
+            
+            let score = 0;
+            
+            // 수면 점수 (25점)
+            if (data.sleepHours) {
+                score += Math.min(25, (data.sleepHours / 8) * 25);
+            }
+            
+            // 스트레스 점수 (25점) - 역산
+            if (data.stressLevel) {
+                score += 25 - ((data.stressLevel - 1) * 6.25);
+            }
+            
+            // 집중도 점수 (25점)
+            if (data.focusLevel) {
+                score += ((data.focusLevel - 1) * 6.25);
+            }
+            
+            // 자신감 점수 (25점)
+            if (data.confidenceLevel) {
+                score += ((data.confidenceLevel - 1) * 6.25);
+            }
+            
+            return Math.max(0, Math.min(100, score));
+        }
+
+        // 편향 위험도 계산 함수들
+        function calculateOverconfidenceRisk() {
+            const recentTrades = trades.slice(-20);
+            if (recentTrades.length === 0) return 0;
+            
+            // 포지션 크기 편차로 과신 측정
+            const positions = recentTrades.map(trade => trade.amount);
+            const avgPosition = positions.reduce((sum, pos) => sum + pos, 0) / positions.length;
+            const deviation = calculateStandardDeviation(positions) / avgPosition;
+            
+            return Math.min(100, deviation * 200);
+        }
+
+        function calculateLossAversionRisk() {
+            const recentTrades = trades.slice(-30);
+            const winningTrades = recentTrades.filter(t => t.pnl > 0);
+            const losingTrades = recentTrades.filter(t => t.pnl < 0);
+            
+            if (winningTrades.length === 0 || losingTrades.length === 0) return 0;
+            
+            // 홀딩 타임 비교로 손실 회피 측정
+            const winningHoldTimes = winningTrades.filter(t => t.holdingTime).map(t => parseInt(t.holdingTime.replace('m', '')));
+            const losingHoldTimes = losingTrades.filter(t => t.holdingTime).map(t => parseInt(t.holdingTime.replace('m', '')));
+            
+            if (winningHoldTimes.length === 0 || losingHoldTimes.length === 0) return 0;
+            
+            const avgWinHold = winningHoldTimes.reduce((sum, time) => sum + time, 0) / winningHoldTimes.length;
+            const avgLossHold = losingHoldTimes.reduce((sum, time) => sum + time, 0) / losingHoldTimes.length;
+            
+            const ratio = avgLossHold / avgWinHold;
+            return Math.min(100, Math.max(0, (ratio - 1) * 50));
+        }
+
+        function calculateAnchoringRisk() {
+            const recentTrades = trades.slice(-20);
+            if (recentTrades.length === 0) return 0;
+            
+            // 라운드 넘버 의존도
+            const roundNumberTrades = recentTrades.filter(trade => {
+                const buyPrice = trade.buyPrice;
+                const sellPrice = trade.sellPrice;
+                return (buyPrice % 1 === 0) || (sellPrice % 1 === 0);
+            });
+            
+            return (roundNumberTrades.length / recentTrades.length) * 100;
+        }
+
+        function calculateEmotionalRisk() {
+            const currentDate = formatTradingDate(currentTradingDate);
+            const todayData = psychologyData[currentDate];
+            
+            if (!todayData) return 0;
+            
+            // 감정 상태 기반 위험도
+            const moodRisk = Math.abs(todayData.preMarketMood - 3) * 12.5;
+            const stressRisk = (todayData.stressLevel - 1) * 12.5;
+            const confidenceRisk = Math.abs(todayData.confidenceLevel - 3) * 12.5;
+            
+            return Math.min(100, (moodRisk + stressRisk + confidenceRisk) / 3);
+        }
+
+        function calculateEnvironmentalRisk() {
+            const currentDate = formatTradingDate(currentTradingDate);
+            const todayData = psychologyData[currentDate];
+            
+            if (!todayData) return 0;
+            
+            // 환경 기반 위험도
+            const envRisk = {
+                'home': 10,
+                'office': 30,
+                'cafe': 60,
+                'hotel': 80
+            };
+            
+            const baseRisk = envRisk[todayData.environmentType] || 50;
+            const focusRisk = (5 - todayData.focusLevel) * 12.5;
+            
+            return Math.min(100, (baseRisk + focusRisk) / 2);
+        }
+
+        // 게이지 차트 그리기 함수
+        function drawPsychologyScoreGauge() {
+            const canvas = document.getElementById('psychologyScoreGauge');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = 60;
+            
+            const currentDate = formatTradingDate(currentTradingDate);
+            const todayData = psychologyData[currentDate];
+            const score = todayData ? calculateDailyPsychologyScore(todayData) : 0;
+            
+            // 배경 원
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 8;
+            ctx.stroke();
+            
+            // 점수 호
+            const angle = (score / 100) * 2 * Math.PI - Math.PI / 2;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, -Math.PI / 2, angle);
+            
+            if (score >= 80) {
+                ctx.strokeStyle = '#10b981';
+            } else if (score >= 60) {
+                ctx.strokeStyle = '#f59e0b';
+            } else {
+                ctx.strokeStyle = '#ef4444';
+            }
+            
+            ctx.lineWidth = 8;
+            ctx.stroke();
         }
         
     </script>
