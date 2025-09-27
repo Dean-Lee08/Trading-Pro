@@ -4088,6 +4088,31 @@
                                 </div>
                             </div>
                         </div>
+                        
+                        <!-- Weekly Risk Summary -->
+                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-top: 24px;">
+                            <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="weekly-risk-summary">Weekly Risk Summary</h3>
+                            
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="overall-bias-risk">Overall Bias Risk</div>
+                                    <div id="overallBiasRisk" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">Low</div>
+                                    <div id="overallBiasScore" style="color: #64748b; font-size: 11px;">Score: 0/100</div>
+                                </div>
+                                
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="risk-trend">Risk Trend</div>
+                                    <div id="riskTrend" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">Stable</div>
+                                    <div id="riskTrendDetails" style="color: #64748b; font-size: 11px;">Last 7 days</div>
+                                </div>
+                                
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="action-needed">Action Needed</div>
+                                    <div id="actionNeeded" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">None</div>
+                                    <div id="actionDetails" style="color: #64748b; font-size: 11px;">All metrics normal</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -4704,7 +4729,24 @@
                 'sleep-performance': 'Sleep vs Performance',
                 'caffeine-performance': 'Caffeine vs Performance',
                 'timing-performance': 'Timing vs Performance',
-                'confidence-performance': 'Confidence vs Performance'
+                'confidence-performance': 'Confidence vs Performance',
+                'bias-analysis-title': 'Quantified Bias Analysis',
+                'overconfidence-bias': 'Overconfidence Bias',
+                'loss-aversion-bias': 'Loss Aversion Bias',
+                'anchoring-bias': 'Anchoring Bias',
+                'calibration-error': 'Calibration Error',
+                'overtrading-index': 'Overtrading Index',
+                'position-deviation': 'Position Size Deviation',
+                'disposition-ratio': 'Disposition Ratio',
+                'stop-loss-execution': 'Stop Loss Execution Rate',
+                'stop-loss-modification': 'Stop Loss Modification Rate',
+                'entry-price-dependency': 'Entry Price Dependency',
+                'round-number-bias': 'Round Number Bias',
+                'recent-high-anchor': 'Recent High Anchor',
+                'weekly-risk-summary': 'Weekly Risk Summary',
+                'overall-bias-risk': 'Overall Bias Risk',
+                'risk-trend': 'Risk Trend',
+                'action-needed': 'Action Needed'
             },
             ko: {
                 'dashboard': '대시보드',
@@ -5007,7 +5049,24 @@
                 'sleep-performance': '수면 vs 성과',
                 'caffeine-performance': '카페인 vs 성과',
                 'timing-performance': '타이밍 vs 성과',
-                'confidence-performance': '자신감 vs 성과'
+                'confidence-performance': '자신감 vs 성과',
+                'bias-analysis-title': '정량화된 편향 분석',
+                'overconfidence-bias': '과신 편향',
+                'loss-aversion-bias': '손실 회피 편향',
+                'anchoring-bias': '앵커링 편향',
+                'calibration-error': '캘리브레이션 오차',
+                'overtrading-index': '과도거래 지수',
+                'position-deviation': '포지션 크기 편차',
+                'disposition-ratio': '처분 효과 비율',
+                'stop-loss-execution': '손절매 실행률',
+                'stop-loss-modification': '손절매 수정률',
+                'entry-price-dependency': '진입가 의존도',
+                'round-number-bias': '라운드 넘버 편향',
+                'recent-high-anchor': '최근 고점 앵커',
+                'weekly-risk-summary': '주간 위험 요약',
+                'overall-bias-risk': '전체 편향 위험',
+                'risk-trend': '위험 추세',
+                'action-needed': '필요한 조치'
             }
         };
         
@@ -8532,7 +8591,26 @@ function applyCustomRisk() {
                 sec.classList.remove('active');
             });
             
-            const targetSection = document.getElementById(`psychology${section.charAt(0).toUpperCase() + section.slice(1).replace('-', '')}Section`);
+            // 섹션 ID 매핑
+            let targetSectionId;
+            switch(section) {
+                case 'input':
+                    targetSectionId = 'psychologyInputSection';
+                    break;
+                case 'metrics':
+                    targetSectionId = 'psychologyMetricsSection';
+                    break;
+                case 'bias-analysis':
+                    targetSectionId = 'psychologyBiasSection';
+                    break;
+                case 'patterns':
+                    targetSectionId = 'psychologyPatternsSection';
+                    break;
+                default:
+                    targetSectionId = 'psychologyInputSection';
+            }
+            
+            const targetSection = document.getElementById(targetSectionId);
             if (targetSection) {
                 targetSection.classList.add('active');
             }
@@ -8711,8 +8789,72 @@ function applyCustomRisk() {
             
             // 앵커링 편향 분석
             calculateAnchoringBias();
+
+            // 전체 편향 위험도 계산
+            calculateOverallBiasRisk();
         }
 
+        function calculateOverallBiasRisk() {
+            // 각 편향의 위험도를 0-100 점수로 변환
+            let overconfidenceScore = 0;
+            let lossAversionScore = 0;
+            let anchoringScore = 0;
+            
+            // 과신 편향 점수 계산
+            const calibrationError = parseFloat(document.getElementById('calibrationError').textContent) || 0;
+            const overtradingIndex = Math.abs(parseFloat(document.getElementById('overtradingIndex').textContent)) || 0;
+            const positionDeviation = parseFloat(document.getElementById('positionDeviation').textContent) || 0;
+            
+            overconfidenceScore = Math.min(100, (calibrationError * 2) + (overtradingIndex * 0.5) + (positionDeviation * 100));
+            
+            // 손실 회피 점수 계산
+            const dispositionRatio = parseFloat(document.getElementById('dispositionRatio').textContent) || 1;
+            lossAversionScore = Math.min(100, Math.max(0, (dispositionRatio - 1) * 50));
+            
+            // 앵커링 점수 계산
+            const roundNumberBias = parseFloat(document.getElementById('roundNumberBias').textContent) || 0;
+            anchoringScore = Math.min(100, roundNumberBias * 1.5);
+            
+            // 전체 점수 계산
+            const overallScore = (overconfidenceScore + lossAversionScore + anchoringScore) / 3;
+            
+            // 위험도 레벨 결정
+            let riskLevel, riskColor;
+            if (overallScore < 20) {
+                riskLevel = currentLanguage === 'ko' ? '낮음' : 'Low';
+                riskColor = '#10b981';
+            } else if (overallScore < 50) {
+                riskLevel = currentLanguage === 'ko' ? '보통' : 'Medium';
+                riskColor = '#f59e0b';
+            } else {
+                riskLevel = currentLanguage === 'ko' ? '높음' : 'High';
+                riskColor = '#ef4444';
+            }
+            
+            // UI 업데이트
+            document.getElementById('overallBiasRisk').textContent = riskLevel;
+            document.getElementById('overallBiasRisk').style.color = riskColor;
+            document.getElementById('overallBiasScore').textContent = `Score: ${overallScore.toFixed(0)}/100`;
+            
+            // 조치 필요 여부
+            let actionNeeded, actionDetails;
+            if (overallScore > 70) {
+                actionNeeded = currentLanguage === 'ko' ? '즉시 조치' : 'Immediate Action';
+                actionDetails = currentLanguage === 'ko' ? '편향 위험 높음' : 'High bias risk';
+            } else if (overallScore > 40) {
+                actionNeeded = currentLanguage === 'ko' ? '주의 필요' : 'Caution Needed';
+                actionDetails = currentLanguage === 'ko' ? '일부 편향 감지' : 'Some bias detected';
+            } else {
+                actionNeeded = currentLanguage === 'ko' ? '없음' : 'None';
+                actionDetails = currentLanguage === 'ko' ? '모든 지표 정상' : 'All metrics normal';
+            }
+            
+            document.getElementById('actionNeeded').textContent = actionNeeded;
+            document.getElementById('actionNeeded').style.color = overallScore > 70 ? '#ef4444' : overallScore > 40 ? '#f59e0b' : '#10b981';
+            document.getElementById('actionDetails').textContent = actionDetails;
+
+            }
+        
         function calculateOverconfidenceBias() {
             const recentTrades = trades.slice(-50);
             if (recentTrades.length === 0) return;
