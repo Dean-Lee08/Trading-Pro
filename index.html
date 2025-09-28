@@ -7081,10 +7081,8 @@
                     return true;
                 });
             } else {
-                // Apply period filter - only 'all' period supported now
-                if (analyticsPeriod === 'all') {
-                    filteredTrades = trades;
-                }
+                // Apply period filter - only 'all' supported
+                filteredTrades = trades;
             }
             
             return filteredTrades;
