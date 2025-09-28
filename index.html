@@ -7984,10 +7984,8 @@ function applyCustomRisk() {
             psychologyData[currentDate] = data;
             localStorage.setItem('tradingPlatformPsychologyData', JSON.stringify(psychologyData));
             
-            updatePsychologyMetrics();
             generatePsychologyInsights();
             showToast(currentLanguage === 'ko' ? '심리 데이터가 저장되었습니다' : 'Psychology data saved');
-        }
         
         function resetPsychologyData() {
             const confirmMessage = currentLanguage === 'ko' ? 
@@ -8236,51 +8234,15 @@ function applyCustomRisk() {
                 }
                 
                 // 해당 섹션의 데이터 업데이트
-                if (section === 'metrics') {
-                    updatePsychologyMetrics();
-
-                if (section === 'input') {
-                    setTimeout(() => {
-                        updateVisualCards();
-                    }, 100);
+                if (section === 'bias-analysis') {
+                    updateBiasAnalysis();
+                } else if (section === 'patterns') {
+                    updatePatternInsights();
                 }
+                
             } catch (error) {
                 console.error('Error showing psychology section:', error);
             }
-        }
-
-        function calculateDailyScore() {
-            const currentDate = formatTradingDate(currentTradingDate);
-            const todayData = psychologyData[currentDate];
-            
-            if (!todayData) {
-                alert(currentLanguage === 'ko' ? '먼저 심리 데이터를 입력해주세요.' : 'Please input psychology data first.');
-                return;
-            }
-            
-            // 수면 요인 계산 (25점 만점)
-            const sleepFactor = calculateSleepFactor(todayData.sleepHours);
-            
-            // 스트레스 요인 계산 (25점 만점)
-            const stressFactor = calculateStressFactor(todayData.sleepHours, todayData.stressLevel, todayData.focusLevel);
-            
-            // 규율 요인 계산 (25점 만점) - 거래 데이터 기반
-            const disciplineFactor = calculateDisciplineFactor();
-            
-            // 일관성 요인 계산 (25점 만점) - 거래 데이터 기반
-            const consistencyFactor = calculateConsistencyFactor();
-            
-            // 총점 계산
-            const totalScore = sleepFactor + stressFactor + disciplineFactor + consistencyFactor;
-            
-            // UI 업데이트
-            updateScoreCard('sleepFactorCard', 'sleepFactorScore', 'sleepFactorStatus', sleepFactor, 25);
-            updateScoreCard('stressFactorCard', 'stressFactorScore', 'stressFactorStatus', stressFactor, 25);
-            updateScoreCard('disciplineFactorCard', 'disciplineFactorScore', 'disciplineFactorStatus', disciplineFactor, 25);
-            updateScoreCard('consistencyFactorCard', 'consistencyFactorScore', 'consistencyFactorStatus', consistencyFactor, 25);
-            updateScoreCard('totalScoreCard', 'totalPsychScore', 'totalScoreStatus', totalScore, 100);
-            
-            showToast(currentLanguage === 'ko' ? '일일 심리 점수가 계산되었습니다' : 'Daily psychology score calculated');
         }
 
         function calculateSleepFactor(sleepHours) {
@@ -8300,25 +8262,6 @@ function applyCustomRisk() {
             } else {
                 return 5; // 5시간 미만
             }
-        }
-
-        function calculateDisciplineFactor() {
-            // 최근 30거래의 규율 준수도 분석
-            const recentTrades = trades.slice(-30);
-            if (recentTrades.length === 0) return 15; // 기본값
-            
-            // 손절매 실행률 가정 (실제로는 거래 데이터에서 계산)
-            let disciplineScore = 25;
-            
-            // 포지션 크기 일관성 검사
-            const positionSizes = recentTrades.map(trade => trade.amount);
-            const avgPosition = positionSizes.reduce((sum, size) => sum + size, 0) / positionSizes.length;
-            const deviation = Math.sqrt(positionSizes.reduce((sum, size) => sum + Math.pow(size - avgPosition, 2), 0) / positionSizes.length) / avgPosition;
-            
-            if (deviation > 0.5) disciplineScore -= 10;
-            else if (deviation > 0.3) disciplineScore -= 5;
-            
-            return Math.max(0, Math.min(25, disciplineScore));
         }
 
         function calculateConsistencyFactor() {
@@ -8347,49 +8290,6 @@ function applyCustomRisk() {
             const squaredDiffs = values.map(val => Math.pow(val - avg, 2));
             const variance = squaredDiffs.reduce((sum, diff) => sum + diff, 0) / values.length;
             return Math.sqrt(variance);
-        }
-
-        function updateScoreCard(cardId, scoreId, statusId, score, maxScore) {
-            const card = document.getElementById(cardId);
-            const scoreElement = document.getElementById(scoreId);
-            const statusElement = document.getElementById(statusId);
-            
-            if (scoreElement) {
-                scoreElement.textContent = `${Math.round(score)}/${maxScore}`;
-            }
-            
-            const percentage = (score / maxScore) * 100;
-            let status, cardClass;
-            
-            if (percentage >= 90) {
-                status = currentLanguage === 'ko' ? '최적' : 'Optimal';
-                cardClass = 'good';
-            } else if (percentage >= 75) {
-                status = currentLanguage === 'ko' ? '우수' : 'Excellent';
-                cardClass = 'good';
-            } else if (percentage >= 60) {
-                status = currentLanguage === 'ko' ? '양호' : 'Good';
-                cardClass = 'good';
-            } else if (percentage >= 40) {
-                status = currentLanguage === 'ko' ? '보통' : 'Fair';
-                cardClass = 'warning';
-            } else if (percentage >= 20) {
-                status = currentLanguage === 'ko' ? '주의' : 'Poor';
-                cardClass = 'warning';
-            } else {
-                status = currentLanguage === 'ko' ? '위험' : 'Critical';
-                cardClass = 'danger';
-            }
-            
-            if (statusElement) {
-                statusElement.textContent = status;
-            }
-            
-            if (card) {
-                card.className = `psychology-metric-card ${cardClass}`;
-                card.style.borderColor = cardClass === 'good' ? '#10b981' : 
-                                        cardClass === 'warning' ? '#f59e0b' : '#ef4444';
-            }
         }
 
         function updateBiasAnalysis() {
