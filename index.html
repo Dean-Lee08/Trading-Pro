@@ -4504,6 +4504,7 @@
         let currentPsychologySection = 'input';
         let selectedWeekPnl = null;
         let selectedTradesList = new Set();
+        let selectedTrades = new Set();
         
         // Chart instances
         let basicCharts = {};
@@ -6996,10 +6997,12 @@
             });
             
             if (tableBodyId === 'tradesTableBody') {
+                // 대시보드 테이블
+                const currentSelectedTrades = selectedTrades || new Set();
                 tableBody.innerHTML = sortedTrades.map(trade => {
                     const shares = trade.shares || (trade.amount && trade.buyPrice ? Math.round(trade.amount / trade.buyPrice) : 0);
                     const amount = trade.amount || (shares * trade.buyPrice);
-                    const isSelected = selectedTrades.has(trade.id);
+                    const isSelected = currentSelectedTrades.has(trade.id);
                     return `
                         <tr>
                             <td><input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleTradeSelection(${trade.id})" style="accent-color: #3b82f6;"></td>
@@ -7022,10 +7025,12 @@
                 updateDeleteButtonVisibility();
                 updateSelectAllCheckbox();
             } else {
+                // 거래 목록 페이지 테이블
+                const currentSelectedTradesList = selectedTradesList || new Set();
                 tableBody.innerHTML = sortedTrades.map(trade => {
                     const shares = trade.shares || (trade.amount && trade.buyPrice ? Math.round(trade.amount / trade.buyPrice) : 0);
                     const amount = trade.amount || (shares * trade.buyPrice);
-                    const isSelected = selectedTradesList.has(trade.id);
+                    const isSelected = currentSelectedTradesList.has(trade.id);
                     return `
                         <tr>
                             <td><input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleTradeListSelection(${trade.id})" style="accent-color: #3b82f6;"></td>
@@ -10038,6 +10043,10 @@ function applyCustomRisk() {
 
         // Trade selection functions for dashboard
         function toggleTradeSelection(tradeId) {
+            if (!selectedTrades) {
+                selectedTrades = new Set();
+            }
+            
             if (selectedTrades.has(tradeId)) {
                 selectedTrades.delete(tradeId);
             } else {
@@ -10048,6 +10057,10 @@ function applyCustomRisk() {
         }
 
         function toggleAllTrades() {
+            if (!selectedTrades) {
+                selectedTrades = new Set();
+            }
+            
             const selectAllCheckbox = document.getElementById('selectAllTrades');
             const isChecked = selectAllCheckbox.checked;
             
@@ -10064,6 +10077,12 @@ function applyCustomRisk() {
 
         function updateSelectAllCheckbox() {
             const selectAllCheckbox = document.getElementById('selectAllTrades');
+            if (!selectAllCheckbox) return;
+            
+            if (!selectedTrades) {
+                selectedTrades = new Set();
+            }
+            
             const filteredTrades = getFilteredDashboardTrades();
             
             if (filteredTrades.length === 0) {
@@ -10087,6 +10106,10 @@ function applyCustomRisk() {
         }
 
         function updateDeleteButtonVisibility() {
+            if (!selectedTrades) {
+                selectedTrades = new Set();
+            }
+            
             const deleteBtn = document.getElementById('deleteSelectedBtn');
             if (deleteBtn) {
                 if (selectedTrades.size > 0) {
