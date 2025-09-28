@@ -21,5 +21,1805 @@
             </div>
         </div>
     </div>
-</body>
-</html>
+
+    <!-- Edit trade modal -->
+    <div class="edit-trade-modal" id="editTradeModal">
+        <div class="edit-trade-content">
+            <div class="edit-trade-title">Edit Trade</div>
+            <form id="editTradeForm">
+                <input type="hidden" id="editTradeId">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Symbol</label>
+                        <input type="text" id="editSymbol" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Shares</label>
+                        <input type="number" id="editShares" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Buy Price</label>
+                        <input type="number" id="editBuyPrice" step="0.0001" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Sell Price</label>
+                        <input type="number" id="editSellPrice" step="0.0001" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Entry Time</label>
+                        <input type="time" id="editEntryTime">
+                    </div>
+                    <div class="form-group">
+                        <label>Exit Time</label>
+                        <input type="time" id="editExitTime">
+                    </div>
+                </div>
+                <div class="edit-trade-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeEditTradeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Trade</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Month Details Modal -->
+    <div class="month-details-modal" id="monthDetailsModal">
+        <div class="month-details-content">
+            <div class="month-details-header" id="monthDetailsTitle">Month Details</div>
+            
+            <div class="month-details-stats">
+                <div class="month-detail-stat">
+                    <div class="month-detail-stat-value" id="monthDetailPnl">$0.00</div>
+                    <div class="month-detail-stat-label" data-lang="total-pl">Total P/L</div>
+                </div>
+                <div class="month-detail-stat">
+                    <div class="month-detail-stat-value neutral" id="monthDetailTrades">0</div>
+                    <div class="month-detail-stat-label" data-lang="total-trades">Total Trades</div>
+                </div>
+                <div class="month-detail-stat">
+                    <div class="month-detail-stat-value" id="monthDetailWinRate">0%</div>
+                    <div class="month-detail-stat-label" data-lang="win-rate">Win Rate</div>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+                <button class="btn btn-primary" onclick="navigateToMonth()" style="width: 100%;" data-lang="view-full-month">View Full Month Calendar</button>
+            </div>
+            
+            <div style="display: flex; justify-content: center;">
+                <button class="btn btn-secondary" onclick="closeMonthDetails()" data-lang="close">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Week Details Modal -->
+    <div class="month-details-modal" id="weekDetailsModal">
+        <div class="month-details-content">
+            <div class="month-details-header" id="weekDetailsTitle">Week Details</div>
+            
+            <div class="month-details-stats">
+                <div class="month-detail-stat">
+                    <div class="month-detail-stat-value" id="weekDetailPnl">$0.00</div>
+                    <div class="month-detail-stat-label" data-lang="total-pl">Total P/L</div>
+                </div>
+                <div class="month-detail-stat">
+                    <div class="month-detail-stat-value neutral" id="weekDetailTrades">0</div>
+                    <div class="month-detail-stat-label" data-lang="total-trades">Total Trades</div>
+                </div>
+                <div class="month-detail-stat">
+                    <div class="month-detail-stat-value" id="weekDetailWinRate">0%</div>
+                    <div class="month-detail-stat-label" data-lang="win-rate">Win Rate</div>
+                </div>
+            </div>
+            
+            <div style="max-height: 200px; overflow-y: auto; margin-bottom: 16px;">
+                <div id="weekTradesList"></div>
+            </div>
+            
+            <div style="display: flex; justify-content: center;">
+                <button class="btn btn-secondary" onclick="closeWeekDetails()" data-lang="close">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-brand">
+                    <div class="sidebar-title">TradingPro</div>
+                    <div class="sidebar-subtitle">Advanced Trading Journal</div>
+                </div>
+            </div>
+            
+            <div class="nav-menu">
+                <button class="nav-item active" onclick="showPage('dashboard')">
+                    <span class="nav-item-icon">📊</span>
+                    <span data-lang="dashboard">Dashboard</span>
+                </button>
+                <button class="nav-item" onclick="showPage('calendar')">
+                    <span class="nav-item-icon">📅</span>
+                    <span data-lang="calendar">Calendar View</span>
+                </button>
+                <button class="nav-item" onclick="showPage('analysis')">
+                    <span class="nav-item-icon">📈</span>
+                    <span data-lang="analytics">Analytics</span>
+                </button>
+                <button class="nav-item" onclick="showPage('psychology')">
+                    <span class="nav-item-icon">🧠</span>
+                    <span data-lang="psychology">Psychology</span>
+                </button>
+                <button class="nav-item" onclick="showPage('notes')">
+                    <span class="nav-item-icon">📝</span>
+                    <span data-lang="notes">Notes</span>
+                </button>
+                <button class="nav-item" onclick="showPage('trades')">
+                    <span class="nav-item-icon">📋</span>
+                    <span data-lang="tradelist">Trade List</span>
+                </button>
+                <button class="nav-item" onclick="showPage('settings')">
+                    <span class="nav-item-icon">⚙️</span>
+                    <span data-lang="settings">Settings</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        <main class="main-content" id="mainContent">
+            <!-- Dashboard page -->
+            <div id="dashboard" class="page active">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title" data-lang="dashboard-title">Trading Dashboard</h1>
+                        <p class="page-subtitle" data-lang="dashboard-subtitle">Track your trades and performance</p>
+                    </div>
+                    <div class="page-header-info">
+                        <div class="date-range-selector">
+                            <input type="date" id="dashboardStartDate" class="date-range-input">
+                            <span style="color: #64748b;">to</span>
+                            <input type="date" id="dashboardEndDate" class="date-range-input">
+                            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="clearDashboardRange()">Clear</button>
+                        </div>
+                        <div class="date-navigation">
+                            <button class="date-nav-btn" onclick="changeTradingDate(-1)" title="Previous day">←</button>
+                            <div class="current-date-display" id="currentDateDisplay" onclick="openDatePicker()"></div>
+                            <button class="date-nav-btn" onclick="changeTradingDate(1)" title="Next day">→</button>
+                        </div>
+                        <div class="dashboard-tabs">
+                            <button class="dashboard-tab active" onclick="showDashboardSection('trading')" data-lang="trading-record">거래 기록</button>
+                            <button class="dashboard-tab" onclick="showDashboardSection('position-calc')" data-lang="position-calculator">Position Calculator</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-overview">
+                    <div class="stat-item">
+                        <h3 data-lang="total-pl">Total P/L</h3>
+                        <div class="stat-value" id="totalPL">$0.00</div>
+                        <div class="stat-subtitle" data-lang="net-result">Net Result</div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <h3 data-lang="trades">Trades</h3>
+                        <div class="stat-value neutral" id="totalTrades">0</div>
+                        <div class="stat-subtitle" data-lang="total-count">Total Count</div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <h3 data-lang="win-rate">Win Rate</h3>
+                        <div class="stat-value" id="winRate">0%</div>
+                        <div class="stat-subtitle" id="winLossCount">0W / 0L</div>
+                    </div>
+                </div>
+
+                <!-- Position Calculator Section -->
+                <div class="position-calculator-section" id="positionCalculatorSection">
+                    <div class="calculator-main-grid">
+                        <div class="stats-sidebar">
+                            <div class="sidebar-title-stats" data-lang="position-analysis">Position Analysis</div>
+                            
+                            <div class="sidebar-stat">
+                                <span class="sidebar-stat-label" data-lang="recommended-size">Recommended Size</span>
+                                <span class="sidebar-stat-value positive" id="recommendedSize">$0</span>
+                            </div>
+                            <div class="sidebar-stat">
+                                <span class="sidebar-stat-label" data-lang="account-utilization">Account Utilization</span>
+                                <span class="sidebar-stat-value neutral" id="accountUtil">0%</span>
+                            </div>
+                            <div class="sidebar-stat">
+                                <span class="sidebar-stat-label" data-lang="expected-value">Expected Value</span>
+                                <span class="sidebar-stat-value" id="expectedVal">$0</span>
+                            </div>
+
+                            <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #334155;">
+    <div class="sidebar-title-stats" style="font-size: 14px;" data-lang="auto-analysis">자동 분석</div>
+    <div class="sidebar-stat">
+        <span class="sidebar-stat-label" data-lang="position-size">포지션 크기</span>
+        <span class="sidebar-stat-value positive" id="riskPositionSizeSidebar">$0</span>
+    </div>
+    <div class="sidebar-stat">
+        <span class="sidebar-stat-label" data-lang="shares-quantity">주식 수량</span>
+        <span class="sidebar-stat-value neutral" id="riskSharesQuantitySidebar">0</span>
+    </div>
+    <div class="sidebar-stat">
+        <span class="sidebar-stat-label" data-lang="risk-per-share">주당 리스크</span>
+        <span class="sidebar-stat-value neutral" id="riskPerShareSidebar">$0.00</span>
+    </div>
+    <div class="sidebar-stat">
+        <span class="sidebar-stat-label" data-lang="max-loss">최대 손실</span>
+        <span class="sidebar-stat-value negative" id="riskMaxLossSidebar">$0.00</span>
+    </div>
+    <div class="sidebar-stat">
+        <span class="sidebar-stat-label" data-lang="position-cost">포지션 비용</span>
+        <span class="sidebar-stat-value neutral" id="riskPositionCostSidebar">$0.00</span>
+    </div>
+</div>
+                        </div>
+
+                        <div class="calculator-container">
+                            <!-- Calculator Tabs -->
+                            <div style="display: flex; background: #0f172a; border: 1px solid #334155; border-radius: 8px; overflow: hidden; margin-bottom: 20px;">
+                                <button class="position-calc-tab active" onclick="showCalculatorTab('kelly')" style="background: #3b82f6; border: none; color: white; padding: 12px 20px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s ease; border-right: 1px solid #334155; flex: 1;" data-lang="kelly-calculator">Kelly Calculator</button>
+                                <button class="position-calc-tab" onclick="showCalculatorTab('risk')" style="background: transparent; border: none; color: #94a3b8; padding: 12px 20px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s ease; flex: 1;" data-lang="risk-calculator">Risk Calculator</button>
+                            </div>
+                            
+                            <!-- Kelly Calculator Content -->
+                            <div id="kellyCalculator" class="calculator-content">
+    <h2 class="calculator-title" data-lang="kelly-criterion-calculator">Kelly Criterion Calculator</h2>
+                                
+                                <div class="calc-grid">
+    <div class="calc-input-group">
+        <label class="calc-label" data-lang="account-balance">계좌 잔고 ($)</label>
+        <input type="number" class="calc-input" id="calcAccountBalance" value="" oninput="calculatePosition()">
+    </div>
+    <div class="calc-input-group">
+        <label class="calc-label" data-lang="win-rate-input">승률 (%)</label>
+        <input type="number" class="calc-input" id="calcWinRate" value="" min="0" max="100" oninput="calculatePosition()">
+    </div>
+    <div class="calc-input-group">
+        <label class="calc-label" data-lang="average-win">평균 수익 ($)</label>
+        <input type="number" class="calc-input" id="calcAvgWin" value="" oninput="calculatePosition()">
+    </div>
+    <div class="calc-input-group">
+        <label class="calc-label" data-lang="average-loss">평균 손실 ($)</label>
+        <input type="number" class="calc-input" id="calcAvgLoss" value="" oninput="calculatePosition()">
+    </div>
+</div>
+
+                                <div class="calc-input-group">
+                                    <button class="btn btn-secondary" onclick="autoLoadTradeData()" style="width: 100%;" data-lang="auto-load-trade-data">
+                                        Auto Load from Trade History
+                                    </button>
+                                </div>
+
+                                <div class="kelly-options">
+                                    <div class="kelly-options-title" data-lang="kelly-strategies">Position Sizing Strategy</div>
+                                    <div class="kelly-option selected" data-multiplier="0.1" onclick="selectKellyMultiplier(this)">
+                                        <div class="kelly-option-label" data-lang="ultra-safe">Ultra Safe</div>
+                                        <div class="kelly-option-value">10% Kelly</div>
+                                    </div>
+                                    <div class="kelly-option" data-multiplier="0.25" onclick="selectKellyMultiplier(this)">
+                                        <div class="kelly-option-label" data-lang="conservative">Conservative</div>
+                                        <div class="kelly-option-value">25% Kelly</div>
+                                    </div>
+                                    <div class="kelly-option" data-multiplier="0.5" onclick="selectKellyMultiplier(this)">
+                                        <div class="kelly-option-label" data-lang="moderate">Moderate</div>
+                                        <div class="kelly-option-value">50% Kelly</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Risk Calculator Content -->
+                            <div id="riskCalculator" class="calculator-content" style="display: none;">
+    <h2 class="calculator-title" data-lang="risk-management-calculator">Risk Management Calculator</h2>
+                                
+                                <div class="calc-grid">
+    <div class="calc-input-group">
+        <label class="calc-label" data-lang="account-balance">계좌 잔고 ($)</label>
+        <input type="number" class="calc-input" id="riskAccountBalance" value="" oninput="calculateRiskPosition()">
+    </div>
+    <div class="calc-input-group">
+        <label class="calc-label" data-lang="risk-percentage">리스크 비율 (%)</label>
+        <input type="number" class="calc-input" id="riskPercentage" value="" min="0.1" max="10" step="1" oninput="calculateRiskPosition()">
+    </div>
+    <div class="calc-input-group">
+        <label class="calc-label" data-lang="entry-price">진입 가격 ($)</label>
+        <input type="number" class="calc-input" id="riskEntryPrice" value="" step="0.01" oninput="calculateRiskPosition()">
+    </div>
+    <div class="calc-input-group">
+        <label class="calc-label" data-lang="stop-loss-price">손절 가격 ($)</label>
+        <input type="number" class="calc-input" id="riskStopPrice" value="" step="0.01" oninput="calculateRiskPosition()">
+    </div>
+</div>
+
+                                <div class="risk-preset-section">
+                                    <div class="risk-preset-title">리스크 비율</div>
+                                    <div class="risk-preset-buttons" style="gap: 4px;">
+                                        <button class="risk-preset-btn" style="background: #374151 !important; border: 1px solid #4b5563 !important; color: #e4e4e7 !important; padding: 8px 16px !important; border-radius: 6px !important; cursor: pointer !important; font-size: 13px !important; font-weight: 500 !important; transition: all 0.2s ease !important; min-width: 60px !important;" onclick="setRiskPreset(1)">1%</button>
+                                        <button class="risk-preset-btn active" style="background: #3b82f6 !important; border: 1px solid #3b82f6 !important; color: white !important; padding: 8px 16px !important; border-radius: 6px !important; cursor: pointer !important; font-size: 13px !important; font-weight: 500 !important; transition: all 0.2s ease !important; min-width: 60px !important;" onclick="setRiskPreset(2)">2%</button>
+                                        <button class="risk-preset-btn" style="background: #374151 !important; border: 1px solid #4b5563 !important; color: #e4e4e7 !important; padding: 8px 16px !important; border-radius: 6px !important; cursor: pointer !important; font-size: 13px !important; font-weight: 500 !important; transition: all 0.2s ease !important; min-width: 60px !important;" onclick="setRiskPreset(3)">3%</button>
+                                        <button class="risk-preset-btn" style="background: #374151 !important; border: 1px solid #4b5563 !important; color: #e4e4e7 !important; padding: 8px 16px !important; border-radius: 6px !important; cursor: pointer !important; font-size: 13px !important; font-weight: 500 !important; transition: all 0.2s ease !important; min-width: 60px !important;" onclick="setRiskPreset(5)">5%</button>
+                                    </div>
+                                </div>
+
+                                <div class="calc-results">
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label" data-lang="position-size">Position Size</span>
+                                        <span class="calc-result-value positive" id="riskPositionSize">$0</span>
+                                    </div>
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label" data-lang="shares-quantity">Shares Quantity</span>
+                                        <span class="calc-result-value neutral" id="riskSharesQuantity">0</span>
+                                    </div>
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label" data-lang="risk-per-share">Risk per Share</span>
+                                        <span class="calc-result-value neutral" id="riskPerShare">$0.00</span>
+                                    </div>
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label" data-lang="max-loss">Max Loss</span>
+                                        <span class="calc-result-value negative" id="riskMaxLoss">$0.00</span>
+                                    </div>
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label" data-lang="position-cost">Position Cost</span>
+                                        <span class="calc-result-value neutral" id="riskPositionCost">$0.00</span>
+                                    </div>
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label" data-lang="account-utilization">Account Utilization</span>
+                                        <span class="calc-result-value neutral" id="riskAccountUtil">0.00%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-grid">
+                    <div class="trade-entry">
+                        <h2 data-lang="record-trade">Record Trade</h2>
+                        
+                        <form id="tradeForm">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label data-lang="symbol">Symbol</label>
+                                    <input type="text" id="symbol" placeholder="AAPL" required>
+                                </div>
+                                <div class="form-group">
+                                    <label data-lang="shares">Shares</label>
+                                    <input type="number" id="shares" placeholder="100" required oninput="calculatePnL()">
+                                </div>
+                                <div class="form-group">
+                                    <label data-lang="buy-price">Buy Price</label>
+                                    <input type="number" id="buyPrice" step="0.0001" placeholder="150.25" required oninput="calculatePnL()">
+                                </div>
+                                <div class="form-group">
+                                    <label data-lang="sell-price">Sell Price</label>
+                                    <input type="number" id="sellPrice" step="0.0001" placeholder="155.50" required oninput="calculatePnL()">
+                                </div>
+                                <div class="form-group">
+                                    <label data-lang="return-pct">Return %</label>
+                                    <input type="text" id="returnPct" readonly style="background: #0f172a; color: #10b981;">
+                                </div>
+                                <div class="form-group">
+                                    <label data-lang="pnl">P&L</label>
+                                    <input type="text" id="pnlDisplay" readonly style="background: #0f172a; color: #10b981;">
+                                </div>
+                                <div class="form-group">
+                                    <label data-lang="entry-time">Entry Time</label>
+                                    <div class="time-input-container">
+                                        <input type="time" id="entryTime" value="">
+                                        <button type="button" class="time-edit-btn" onclick="toggleTimeEdit()" data-lang="edit">Edit</button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label data-lang="exit-time">Exit Time</label>
+                                    <input type="time" id="exitTime" value="" onchange="calculateHoldingTime()">
+                                </div>
+                                <div class="form-group">
+                                    <label data-lang="holding-time">Holding Time</label>
+                                    <input type="text" id="holdingTimeDisplay" readonly style="background: #0f172a; color: #64748b;">
+                                </div>
+                                <div class="form-group">
+                                    <label data-lang="amount">Amount ($)</label>
+                                    <input type="text" id="amountDisplay" readonly style="background: #0f172a; color: #94a3b8;">
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-secondary" onclick="resetForm()" data-lang="reset">Reset</button>
+                                <button type="submit" class="btn btn-primary" data-lang="add-trade">Add Trade</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div>
+                        <div class="stats-sidebar">
+                            <div class="sidebar-title-stats" data-lang="performance">Performance</div>
+                            <div class="sidebar-stat">
+                                <span class="sidebar-stat-label" data-lang="best-trade">Best Trade</span>
+                                <span class="sidebar-stat-value positive" id="bestTrade">$0.00</span>
+                            </div>
+                            <div class="sidebar-stat">
+                                <span class="sidebar-stat-label" data-lang="worst-trade">Worst Trade</span>
+                                <span class="sidebar-stat-value negative" id="worstTrade">$0.00</span>
+                            </div>
+                            <div class="sidebar-stat">
+                                <span class="sidebar-stat-label" data-lang="avg-win">Avg Win</span>
+                                <span class="sidebar-stat-value positive" id="avgWin">$0.00</span>
+                            </div>
+                            <div class="sidebar-stat">
+                                <span class="sidebar-stat-label" data-lang="avg-loss">Avg Loss</span>
+                                <span class="sidebar-stat-value negative" id="avgLoss">$0.00</span>
+                            </div>
+                            <div class="sidebar-stat">
+                                <span class="sidebar-stat-label" data-lang="total-invested">Total Invested</span>
+                                <span class="sidebar-stat-value neutral" id="totalVolume">$0.00</span>
+                            </div>
+                            <div class="sidebar-stat">
+                                <span class="sidebar-stat-label" data-lang="profit-factor">Profit Factor</span>
+                                <span class="sidebar-stat-value" id="profitFactorSidebar">0.00</span>
+                            </div>
+                        </div>
+
+                        <div class="daily-fees-section">
+                            <div class="daily-fees-title" data-lang="daily-fees">Daily Fees</div>
+                            <input type="number" id="dailyFees" class="daily-fees-input" placeholder="0.00" step="0.01" onchange="saveDailyFees()">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="trades-section">
+                    <div class="trades-header">
+                        <h2 data-lang="trade-history">Trade History</h2>
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <button id="deleteSelectedBtn" class="btn btn-secondary" onclick="deleteSelectedTrades()" style="display: none; background: #dc2626; border-color: #dc2626;" data-lang="delete-selected">Delete Selected</button>
+                            <div class="period-summary" id="periodSummary"></div>
+                        </div>
+                    </div>
+                    <table class="trades-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;">
+                                    <input type="checkbox" id="selectAllTrades" onchange="toggleAllTrades()" style="accent-color: #3b82f6;">
+                                </th>
+                                <th data-lang="date">Date</th>
+                                <th data-lang="symbol">Symbol</th>
+                                <th data-lang="buy-price">Buy Price</th>
+                                <th data-lang="sell-price">Sell Price</th>
+                                <th data-lang="shares">Shares</th>
+                                <th data-lang="amount">Amount</th>
+                                <th data-lang="time">Time</th>
+                                <th data-lang="pnl">P&L</th>
+                                <th data-lang="return-pct">Return %</th>
+                                <th data-lang="actions">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tradesTableBody">
+                            <tr>
+                                <td colspan="10">
+                                    <div class="empty-state">
+                                        <div class="empty-state-icon">📊</div>
+                                        <div data-lang="no-trades">No trades recorded yet</div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Calendar page -->
+            <div id="calendar" class="page">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title" data-lang="calendar-title">Calendar View</h1>
+                        <p class="page-subtitle" data-lang="calendar-subtitle">Visualize your trading performance over time</p>
+                    </div>
+                </div>
+
+                <div class="calendar-container">
+                    <div class="calendar-main-grid">
+                        <div class="calendar-left">
+                            <div class="calendar-controls">
+                                <div class="calendar-nav">
+                                    <button onclick="changeMonth(-1)">← Previous</button>
+                                    <h2 class="calendar-title" id="calendarTitle">January 2024</h2>
+                                    <button onclick="changeMonth(1)">Next →</button>
+                                </div>
+                                
+                                <button class="btn btn-secondary" onclick="clearCalendarRange()" style="padding: 6px 12px; font-size: 12px;" data-lang="clear-selection">Clear Selection</button>
+                            </div>
+
+                            <div class="calendar-selection-info" id="calendarSelectionInfo" data-lang="calendar-help">
+                                Click and drag on calendar to select date range, or click on a day to see details
+                            </div>
+
+                            <div class="calendar-stats-summary" id="calendarStatsSummary">
+                                <div class="calendar-stat-item">
+                                    <div class="calendar-stat-label" data-lang="selected-period">Selected Period</div>
+                                    <div class="calendar-stat-value neutral" id="calendarPeriodLabel">Current Month</div>
+                                </div>
+                                <div class="calendar-stat-item">
+                                    <div class="calendar-stat-label" data-lang="total-trades">Total Trades</div>
+                                    <div class="calendar-stat-value neutral" id="calendarTotalTrades">0</div>
+                                </div>
+                                <div class="calendar-stat-item">
+                                    <div class="calendar-stat-label" data-lang="total-pl">Total P/L</div>
+                                    <div class="calendar-stat-value" id="calendarTotalPL">$0.00</div>
+                                </div>
+                                <div class="calendar-stat-item">
+                                    <div class="calendar-stat-label" data-lang="avg-daily-pl">Avg Daily P/L</div>
+                                    <div class="calendar-stat-value" id="calendarAvgDaily">$0.00</div>
+                                </div>
+                                <div class="calendar-stat-item">
+                                    <div class="calendar-stat-label" data-lang="best-day">Best Day</div>
+                                    <div class="calendar-stat-value positive" id="calendarBestDay">$0.00</div>
+                                </div>
+                                <div class="calendar-stat-item">
+                                    <div class="calendar-stat-label" data-lang="worst-day">Worst Day</div>
+                                    <div class="calendar-stat-value negative" id="calendarWorstDay">$0.00</div>
+                                </div>
+                            </div>
+                            
+                            <div class="calendar-grid" id="calendarGrid">
+                                <div class="calendar-day-header">Sun</div>
+                                <div class="calendar-day-header">Mon</div>
+                                <div class="calendar-day-header">Tue</div>
+                                <div class="calendar-day-header">Wed</div>
+                                <div class="calendar-day-header">Thu</div>
+                                <div class="calendar-day-header">Fri</div>
+                                <div class="calendar-day-header">Sat</div>
+                                <div class="calendar-day-header" id="weekPnlHeader" style="display: none;">Week P/L</div>
+                            </div>
+                        </div>
+
+                        <!-- Right sidebar -->
+                        <div class="calendar-sidebar">
+                            <div class="sidebar-title-calendar" data-lang="weekly-summary">Weekly Summary</div>
+                            
+                            <div class="weekly-summary" id="weeklySummary">
+                                <div class="weekly-item">
+                                    <span class="weekly-label" data-lang="selected-week">Selected Week</span>
+                                    <span class="weekly-value neutral" id="selectedWeekLabel">-</span>
+                                </div>
+                                <div class="weekly-item">
+                                    <span class="weekly-label" data-lang="week-trades">Week Trades</span>
+                                    <span class="weekly-value neutral" id="selectedWeekTrades">0</span>
+                                </div>
+                                <div class="weekly-item">
+                                    <span class="weekly-label" data-lang="week-pnl">Week P/L</span>
+                                    <span class="weekly-value" id="selectedWeekPnl">$0.00</span>
+                                </div>
+                                <div class="weekly-item">
+                                    <span class="weekly-label" data-lang="week-win-rate">Week Win Rate</span>
+                                    <span class="weekly-value" id="selectedWeekWinRate">0%</span>
+                                </div>
+                                <div class="weekly-item">
+                                    <span class="weekly-label" data-lang="week-best-day">Best Day</span>
+                                    <span class="weekly-value positive" id="selectedWeekBestDay">$0.00</span>
+                                </div>
+                                <div class="weekly-item">
+                                    <span class="weekly-label" data-lang="week-worst-day">Worst Day</span>
+                                    <span class="weekly-value negative" id="selectedWeekWorstDay">$0.00</span>
+                                </div>
+                            </div>
+                           
+                            <!-- Day details section -->
+                            <div class="day-details" id="dayDetails" style="display: none;">
+                                <div class="day-details-title" id="dayDetailsTitle">Selected Day</div>
+                                <div id="dayTradesList">
+                                    <!-- Individual trades for selected day -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Annual Heatmap moved here - below main calendar -->
+                    <div class="annual-heatmap-container">
+                        <div class="annual-heatmap-title" id="annualHeatmapTitle">2024 Trading Overview</div>
+                        <div class="annual-heatmap-grid" id="annualHeatmapGrid">
+                            <!-- Month heatmaps will be generated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enhanced Analytics page -->
+            <div id="analysis" class="page">
+                <div class="analytics-container">
+                    <div class="analytics-header">
+                        <div class="analytics-title-section">
+                            <div class="analytics-tabs">
+                                <button class="analytics-tab active" onclick="showAnalyticsSection('detail')" data-lang="detail">Detail</button>
+                                <button class="analytics-tab" onclick="showAnalyticsSection('charts')" data-lang="charts">Charts</button>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-controls">
+                            <div class="date-range-selector">
+                                <input type="date" id="analyticsStartDate" class="date-range-input">
+                                <span style="color: #64748b;">to</span>
+                                <input type="date" id="analyticsEndDate" class="date-range-input">
+                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="clearAnalyticsRange()">Clear</button>
+                            </div>
+                            <button class="filter-btn active" onclick="setAnalyticsPeriod('all')" data-lang="all-time">All Time</button>
+                            <button class="filter-btn" onclick="setAnalyticsPeriod('month')" data-lang="this-month">This Month</button>
+                            <button class="filter-btn" onclick="setAnalyticsPeriod('week')" data-lang="this-week">This Week</button>
+                            <button class="filter-btn" onclick="setAnalyticsPeriod('day')" data-lang="today">Today</button>
+                        </div>
+                    </div>
+
+                    <!-- Performance Summary Cards -->
+                    <div class="performance-summary">
+                        <div class="performance-summary-title" data-lang="performance-summary">Performance Summary</div>
+                        <div class="summary-cards">
+                            <div class="summary-card">
+                                <div class="summary-card-value" id="summaryNetProfit">$0.00</div>
+                                <div class="summary-card-label" data-lang="net-profit">Net Profit</div>
+                            </div>
+                            <div class="summary-card">
+                                <div class="summary-card-value neutral" id="summaryTotalTrades">0</div>
+                                <div class="summary-card-label" data-lang="total-trades">Total Trades</div>
+                            </div>
+                            <div class="summary-card">
+                                <div class="summary-card-value" id="summaryWinRate">0%</div>
+                                <div class="summary-card-label" data-lang="win-rate">Win Rate</div>
+                            </div>
+                            <div class="summary-card">
+                                <div class="summary-card-value" id="summaryProfitFactor">0.00</div>
+                                <div class="summary-card-label" data-lang="profit-factor">Profit Factor</div>
+                            </div>
+                            <div class="summary-card">
+                                <div class="summary-card-value" id="summaryLargestWin">$0.00</div>
+                                <div class="summary-card-label" data-lang="largest-win">Largest Win</div>
+                            </div>
+                            <div class="summary-card">
+                                <div class="summary-card-value" id="summaryLargestLoss">$0.00</div>
+                                <div class="summary-card-label" data-lang="largest-loss">Largest Loss</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Detail Section -->
+                    <div class="detail-section active" id="detailSection">
+                        <div class="detail-grid">
+                            <!-- Trading Performance -->
+                            <div class="detail-card">
+                                <div class="detail-card-header" data-lang="trading-performance" onclick="toggleDetailCard(this)">
+                                    Trading Performance
+                                    <span class="collapse-icon">▼</span>
+                                </div>
+                                <div class="detail-card-content">
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="total-pl">Total P&L</span>
+                                        <span class="detail-value" id="detailTotalPL">$0.00</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="total-gain">Total Gain</span>
+                                        <span class="detail-value positive" id="detailTotalGain">$0.00</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="total-loss">Total Loss</span>
+                                        <span class="detail-value negative" id="detailTotalLoss">$0.00</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="total-fees">Total Fees</span>
+                                        <span class="detail-value neutral" id="detailTotalFees">$0.00</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="total-volume">Total Volume</span>
+                                        <span class="detail-value neutral" id="detailTotalVolume">$0.00</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="profit-factor">Profit Factor</span>
+                                        <span class="detail-value" id="detailProfitFactor">0.00</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Win/Loss Statistics -->
+                            <div class="detail-card">
+                                <div class="detail-card-header" data-lang="win-loss-stats" onclick="toggleDetailCard(this)">
+                                    Win/Loss Statistics
+                                    <span class="collapse-icon">▼</span>
+                                </div>
+                                <div class="detail-card-content">
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="winning-trades">Winning Trades</span>
+                                        <span class="detail-value positive" id="detailWinningTrades">0 (0%)</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="losing-trades">Losing Trades</span>
+                                        <span class="detail-value negative" id="detailLosingTrades">0 (0%)</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="avg-winning-trade">Avg Winning Trade</span>
+                                        <span class="detail-value positive" id="detailAvgWinningTrade">$0.00</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="avg-losing-trade">Avg Losing Trade</span>
+                                        <span class="detail-value negative" id="detailAvgLosingTrade">$0.00</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="largest-win">Largest Win</span>
+                                        <span class="detail-value positive" id="detailLargestWin">$0.00</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="largest-loss">Largest Loss</span>
+                                        <span class="detail-value negative" id="detailLargestLoss">$0.00</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Daily Performance -->
+                            <div class="detail-card">
+                                <div class="detail-card-header" data-lang="daily-performance" onclick="toggleDetailCard(this)">
+                                    Daily Performance
+                                    <span class="collapse-icon">▼</span>
+                                </div>
+                                <div class="detail-card-content">
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="daily-per-win">Daily P&L per Win</span>
+                                        <span class="detail-value positive" id="detailDailyPerWin">$0.00</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="daily-per-loss">Daily P&L per Loss</span>
+                                        <span class="detail-value negative" id="detailDailyPerLoss">$0.00</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="daily-per-fees">Daily Fees per Day</span>
+                                        <span class="detail-value neutral" id="detailDailyPerFees">$0.00</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="best-trading-day">Best Trading Day</span>
+                                        <span class="detail-value positive" id="detailBestTradingDay">$0.00</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="worst-trading-day">Worst Trading Day</span>
+                                        <span class="detail-value negative" id="detailWorstTradingDay">$0.00</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="avg-daily-pl">Avg Daily P&L</span>
+                                        <span class="detail-value" id="detailAvgDailyPL">$0.00</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Time Analysis -->
+                            <div class="detail-card">
+                                <div class="detail-card-header" data-lang="time-analysis" onclick="toggleDetailCard(this)">
+                                    Time Analysis
+                                    <span class="collapse-icon">▼</span>
+                                </div>
+                                <div class="detail-card-content">
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="avg-hold-time">Avg Hold Time</span>
+                                        <span class="detail-value neutral" id="detailAvgHoldTime">0m</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="shortest-hold">Shortest Hold</span>
+                                        <span class="detail-value neutral" id="detailShortestHold">0m</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="longest-hold">Longest Hold</span>
+                                        <span class="detail-value neutral" id="detailLongestHold">0m</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="best-trading-hour">Best Trading Hour</span>
+                                        <span class="detail-value" id="detailBestHour">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="worst-trading-hour">Worst Trading Hour</span>
+                                        <span class="detail-value" id="detailWorstHour">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="best-day-week">Best Day of Week</span>
+                                        <span class="detail-value" id="detailBestDayOfWeek">-</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Trading Activity -->
+                            <div class="detail-card">
+                                <div class="detail-card-header" data-lang="trading-activity" onclick="toggleDetailCard(this)">
+                                    Trading Activity
+                                    <span class="collapse-icon">▼</span>
+                                </div>
+                                <div class="detail-card-content">
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="trading-days">Trading Days</span>
+                                        <span class="detail-value neutral" id="detailTradingDays">0</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="avg-trades-per-day">Avg Trades per Day</span>
+                                        <span class="detail-value neutral" id="detailAvgTradesPerDay">0.00</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="max-trades-day">Max Trades in Day</span>
+                                        <span class="detail-value neutral" id="detailMaxTradesDay">0</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="avg-position-size">Avg Position Size</span>
+                                        <span class="detail-value neutral" id="detailAvgPositionSize">$0</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="largest-position">Largest Position</span>
+                                        <span class="detail-value neutral" id="detailLargestPosition">$0</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="smallest-position">Smallest Position</span>
+                                        <span class="detail-value neutral" id="detailSmallestPosition">$0</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Streak Analysis -->
+                            <div class="detail-card">
+                                <div class="detail-card-header" data-lang="streak-analysis" onclick="toggleDetailCard(this)">
+                                    Streak Analysis
+                                    <span class="collapse-icon">▼</span>
+                                </div>
+                                <div class="detail-card-content">
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="current-streak">Current Streak</span>
+                                        <span class="detail-value" id="detailCurrentStreak">0</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="max-win-streak">Max Win Streak</span>
+                                        <span class="detail-value positive" id="detailMaxWinStreak">0</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="max-loss-streak">Max Loss Streak</span>
+                                        <span class="detail-value negative" id="detailMaxLossStreak">0</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="current-win-streak">Current Win Streak</span>
+                                        <span class="detail-value" id="detailCurrentWinStreak">0</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="current-loss-streak">Current Loss Streak</span>
+                                        <span class="detail-value" id="detailCurrentLossStreak">0</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="avg-win-streak">Avg Win Streak</span>
+                                        <span class="detail-value" id="detailAvgWinStreak">0.00</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Symbol Performance -->
+                            <div class="detail-card">
+                                <div class="detail-card-header" data-lang="symbol-performance" onclick="toggleDetailCard(this)">
+                                    Symbol Performance
+                                    <span class="collapse-icon">▼</span>
+                                </div>
+                                <div class="detail-card-content">
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="most-profitable-symbol">Most Profitable</span>
+                                        <span class="detail-value" id="detailMostProfitableSymbol">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="least-profitable-symbol">Least Profitable</span>
+                                        <span class="detail-value" id="detailLeastProfitableSymbol">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="most-traded-symbol">Most Traded</span>
+                                        <span class="detail-value" id="detailMostTradedSymbol">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="unique-symbols">Unique Symbols</span>
+                                        <span class="detail-value neutral" id="detailUniqueSymbols">0</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="symbol-win-rate">Best Symbol Win Rate</span>
+                                        <span class="detail-value" id="detailBestSymbolWinRate">0%</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="symbol-avg-return">Best Symbol Avg Return</span>
+                                        <span class="detail-value" id="detailBestSymbolReturn">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Risk Management -->
+                            <div class="detail-card">
+                                <div class="detail-card-header" data-lang="risk-management" onclick="toggleDetailCard(this)">
+                                    Risk Management
+                                    <span class="collapse-icon">▼</span>
+                                </div>
+                                <div class="detail-card-content">
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="max-drawdown">Max Drawdown</span>
+                                        <span class="detail-value negative" id="detailMaxDrawdown">$0.00</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="current-drawdown">Current Drawdown</span>
+                                        <span class="detail-value" id="detailCurrentDrawdown">$0.00</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="recovery-factor">Recovery Factor</span>
+                                        <span class="detail-value" id="detailRecoveryFactor">0.00</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="max-daily-loss">Max Daily Loss</span>
+                                        <span class="detail-value negative" id="detailMaxDailyLoss">$0.00</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="max-daily-gain">Max Daily Gain</span>
+                                        <span class="detail-value positive" id="detailMaxDailyGain">$0.00</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="risk-reward-ratio">Avg Risk/Reward</span>
+                                        <span class="detail-value" id="detailRiskRewardRatio">0.00</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Basic Charts Section in Detail -->
+                        <div class="basic-charts-section">
+                            <div class="basic-charts-title" data-lang="basic-charts">Basic Performance Charts</div>
+                            <div class="basic-charts-grid">
+                                <div class="basic-chart-card">
+                                    <div class="basic-chart-header" data-lang="cumulative-pl">Cumulative P&L</div>
+                                    <div class="basic-chart-content">
+                                        <canvas id="basicCumulativePLChart" class="chart-canvas"></canvas>
+                                    </div>
+                                </div>
+                                <div class="basic-chart-card">
+                                    <div class="basic-chart-header" data-lang="win-loss-ratio">Win/Loss Distribution</div>
+                                    <div class="basic-chart-content">
+                                        <canvas id="basicWinLossChart" class="chart-canvas"></canvas>
+                                    </div>
+                                </div>
+                                <div class="basic-chart-card">
+                                    <div class="basic-chart-header" data-lang="daily-pl">Daily P&L</div>
+                                    <div class="basic-chart-content">
+                                        <canvas id="basicDailyPLChart" class="chart-canvas"></canvas>
+                                    </div>
+                                </div>
+                                <div class="basic-chart-card">
+                                    <div class="basic-chart-header" data-lang="monthly-performance">Monthly Performance</div>
+                                    <div class="basic-chart-content">
+                                        <canvas id="basicMonthlyChart" class="chart-canvas"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Advanced Charts Section -->
+                    <div class="chart-section" id="chartSection">
+                        <div class="advanced-charts-grid">
+                            <div class="chart-container">
+                                <div class="chart-header" data-lang="equity-curve">Equity Curve</div>
+                                <div class="chart-content">
+                                    <canvas id="equityCurveChart" class="chart-canvas"></canvas>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <div class="chart-header" data-lang="drawdown-chart">Drawdown Analysis</div>
+                                <div class="chart-content">
+                                    <canvas id="drawdownChart" class="chart-canvas"></canvas>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <div class="chart-header" data-lang="symbol-performance-chart">Symbol Performance</div>
+                                <div class="chart-content">
+                                    <canvas id="symbolPerformanceChart" class="chart-canvas"></canvas>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <div class="chart-header" data-lang="time-distribution">Time Distribution</div>
+                                <div class="chart-content">
+                                    <canvas id="timeDistributionChart" class="chart-canvas"></canvas>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <div class="chart-header" data-lang="return-distribution">Return Distribution</div>
+                                <div class="chart-content">
+                                    <canvas id="returnDistributionChart" class="chart-canvas"></canvas>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <div class="chart-header" data-lang="volume-analysis">Volume Analysis</div>
+                                <div class="chart-content">
+                                    <canvas id="volumeAnalysisChart" class="chart-canvas"></canvas>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <div class="chart-header" data-lang="correlation-matrix">Performance Correlation</div>
+                                <div class="chart-content">
+                                    <canvas id="correlationMatrixChart" class="chart-canvas"></canvas>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <div class="chart-header" data-lang="performance-attribution">Performance Attribution</div>
+                                <div class="chart-content">
+                                    <canvas id="performanceAttributionChart" class="chart-canvas"></canvas>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <div class="chart-header" data-lang="trade-duration-analysis">Trade Duration Analysis</div>
+                                <div class="chart-content">
+                                    <canvas id="tradeDurationAnalysisChart" class="chart-canvas"></canvas>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <div class="chart-header" data-lang="win-rate-by-time">Win Rate by Time</div>
+                                <div class="chart-content">
+                                    <canvas id="winRateByTimeChart" class="chart-canvas"></canvas>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <div class="chart-header" data-lang="position-sizing-analysis">Position Sizing Analysis</div>
+                                <div class="chart-content">
+                                    <canvas id="positionSizingAnalysisChart" class="chart-canvas"></canvas>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <div class="chart-header" data-lang="trading-efficiency-metrics">Trading Efficiency Metrics</div>
+                                <div class="chart-content">
+                                    <canvas id="tradingEfficiencyMetricsChart" class="chart-canvas"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Psychology page -->
+            <div id="psychology" class="page">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title" data-lang="psychology-title">Trading Psychology Analytics</h1>
+                        <p class="page-subtitle" data-lang="psychology-subtitle">Quantified psychological performance analysis</p>
+                    </div>
+                    <div class="psychology-controls">
+                        <div class="psychology-tabs">
+                            <button class="psychology-tab active" onclick="showPsychologySection('input')" data-lang="daily-input">Daily Input</button>
+                            <button class="psychology-tab" onclick="showPsychologySection('metrics')" data-lang="metrics-dashboard">Metrics Dashboard</button>
+                            <button class="psychology-tab" onclick="showPsychologySection('bias-analysis')" data-lang="bias-analysis">Bias Analysis</button>
+                            <button class="psychology-tab" onclick="showPsychologySection('patterns')" data-lang="pattern-insights">Pattern Insights</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Daily Input Section -->
+                <div id="psychologyInputSection" class="psychology-section active">
+                    <div class="psychology-container">
+                        <h2 class="psychology-header" data-lang="daily-data-input">Daily Data Input</h2>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 24px;">
+                            <!-- Biological Data -->
+                            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
+                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="biological-data">Biological Data</h3>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="sleep-hours">Sleep Hours</label>
+                                    <input type="number" id="sleepHours" step="0.5" min="0" max="12" placeholder="7.5" 
+                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                </div>
+                            </div>
+                            
+                            <!-- Trading Environment -->
+                            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
+                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="trading-environment">Trading Environment</h3>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="start-time">Start Time</label>
+                                    <input type="time" id="startTime" 
+                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                </div>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="end-time">End Time</label>
+                                    <input type="time" id="endTime" 
+                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                </div>
+                                
+                                <div>
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="environment-type">Environment Type</label>
+                                    <select id="environmentType" style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                        <option value="home">Home</option>
+                                        <option value="cafe">Cafe</option>
+                                        <option value="office">Office</option>
+                                        <option value="hotel">Hotel</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Economic Pressure -->
+                            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
+                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="economic-pressure">Economic Pressure</h3>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="account-balance">Account Balance ($)</label>
+                                    <input type="number" id="accountBalance" min="0" placeholder="10000" oninput="updateTargetPercentages()"
+                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                </div>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="daily-target">Daily P&L Target ($)</label>
+                                    <div style="display: flex; gap: 8px; align-items: center;">
+                                        <input type="number" id="dailyTarget" placeholder="200" oninput="updateTargetPercentages()"
+                                               style="flex: 1; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                        <span id="dailyTargetPercent" style="color: #64748b; font-size: 12px; min-width: 40px;">0%</span>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="max-daily-loss">Max Daily Loss ($)</label>
+                                    <div style="display: flex; gap: 8px; align-items: center;">
+                                        <input type="number" id="maxDailyLoss" placeholder="500" oninput="updateTargetPercentages()"
+                                               style="flex: 1; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                        <span id="maxLossPercent" style="color: #64748b; font-size: 12px; min-width: 40px;">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Emotional State -->
+                            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
+                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="emotional-state">Emotional State</h3>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="stress-level">Stress Level (1-5)</label>
+                                    <input type="range" id="stressLevel" min="1" max="5" value="3" oninput="updateSliderDisplay('stressLevel', 'stressValue')"
+                                           style="width: 100%; accent-color: #3b82f6;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+                                        <span style="color: #64748b; font-size: 11px;">Low</span>
+                                        <span id="stressValue" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">3</span>
+                                        <span style="color: #64748b; font-size: 11px;">High</span>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="confidence-level">Confidence Level (1-5)</label>
+                                    <input type="range" id="confidenceLevel" min="1" max="5" value="3" oninput="updateSliderDisplay('confidenceLevel', 'confidenceValue')"
+                                           style="width: 100%; accent-color: #3b82f6;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+                                        <span style="color: #64748b; font-size: 11px;">Low</span>
+                                        <span id="confidenceValue" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">3</span>
+                                        <span style="color: #64748b; font-size: 11px;">High</span>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="focus-level">Focus Level (1-5)</label>
+                                    <input type="range" id="focusLevel" min="1" max="5" value="3" oninput="updateSliderDisplay('focusLevel', 'focusValue')"
+                                           style="width: 100%; accent-color: #3b82f6;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+                                        <span style="color: #64748b; font-size: 11px;">Low</span>
+                                        <span id="focusValue" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">3</span>
+                                        <span style="color: #64748b; font-size: 11px;">High</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div style="display: flex; gap: 12px; justify-content: center; margin-bottom: 24px;">
+                            <button class="psychology-save-btn" onclick="savePsychologyData()" data-lang="save-psychology-data">Save Psychology Data</button>
+                            <button class="psychology-save-btn" onclick="calculateDailyScore()" style="background: #3b82f6;" data-lang="calculate-score">Calculate Daily Score</button>
+                            <button class="psychology-save-btn" onclick="resetPsychologyData()" style="background: #ef4444;" data-lang="reset-psychology-data">Reset Data</button>
+                        </div>
+                        
+                        <!-- Enhanced Visual Dashboard -->
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 32px;">
+                            <!-- Sleep Performance Card -->
+                            <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid #334155; border-radius: 12px; padding: 20px; position: relative; overflow: hidden;">
+                                <div style="position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%); pointer-events: none;"></div>
+                                <div style="position: relative; z-index: 1;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                                        <h3 style="color: #10b981; font-size: 16px; font-weight: 600;" data-lang="sleep-performance">Sleep Performance</h3>
+                                        <div style="width: 40px; height: 40px; background: rgba(16, 185, 129, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                            <span style="font-size: 20px;">🛌</span>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px;">
+                                        <span id="sleepHoursDisplay" style="font-size: 28px; font-weight: 700; color: #e4e4e7;">0</span>
+                                        <span style="color: #94a3b8; font-size: 14px;">hours</span>
+                                    </div>
+                                    <div id="sleepQualityIndicator" style="height: 4px; background: #334155; border-radius: 2px; overflow: hidden;">
+                                        <div id="sleepQualityBar" style="height: 100%; background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981); width: 0%; transition: width 0.3s ease;"></div>
+                                    </div>
+                                    <div id="sleepStatus" style="color: #94a3b8; font-size: 12px; margin-top: 8px;">No data</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Environment Card -->
+                            <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid #334155; border-radius: 12px; padding: 20px; position: relative; overflow: hidden;">
+                                <div style="position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%); pointer-events: none;"></div>
+                                <div style="position: relative; z-index: 1;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                                        <h3 style="color: #3b82f6; font-size: 16px; font-weight: 600;" data-lang="environment-score">Environment Score</h3>
+                                        <div style="width: 40px; height: 40px; background: rgba(59, 130, 246, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                            <span style="font-size: 20px;">🏢</span>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                                        <div style="width: 60px; height: 60px; position: relative;">
+                                            <svg style="width: 100%; height: 100%; transform: rotate(-90deg);">
+                                                <circle cx="30" cy="30" r="25" stroke="#334155" stroke-width="4" fill="none"></circle>
+                                                <circle id="environmentCircle" cx="30" cy="30" r="25" stroke="#3b82f6" stroke-width="4" fill="none" 
+                                                        stroke-dasharray="157" stroke-dashoffset="157" style="transition: stroke-dashoffset 0.5s ease;"></circle>
+                                            </svg>
+                                            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                                                <span id="environmentScore" style="font-size: 14px; font-weight: 700; color: #e4e4e7;">0</span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div id="environmentTypeDisplay" style="color: #e4e4e7; font-size: 14px; font-weight: 600;">-</div>
+                                            <div id="environmentStatus" style="color: #94a3b8; font-size: 12px;">No data</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Emotional State Card -->
+                            <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid #334155; border-radius: 12px; padding: 20px; position: relative; overflow: hidden;">
+                                <div style="position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%); pointer-events: none;"></div>
+                                <div style="position: relative; z-index: 1;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                                        <h3 style="color: #8b5cf6; font-size: 16px; font-weight: 600;" data-lang="emotional-readiness">Emotional Readiness</h3>
+                                        <div style="width: 40px; height: 40px; background: rgba(139, 92, 246, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                            <span style="font-size: 20px;">🧠</span>
+                                        </div>
+                                    </div>
+                                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px;">
+                                        <div style="text-align: center;">
+                                            <div id="stressDisplay" style="font-size: 18px; font-weight: 700; color: #e4e4e7;">3</div>
+                                            <div style="color: #94a3b8; font-size: 10px;">Stress</div>
+                                        </div>
+                                        <div style="text-align: center;">
+                                            <div id="confidenceDisplay" style="font-size: 18px; font-weight: 700; color: #e4e4e7;">3</div>
+                                            <div style="color: #94a3b8; font-size: 10px;">Confidence</div>
+                                        </div>
+                                        <div style="text-align: center;">
+                                            <div id="focusDisplay" style="font-size: 18px; font-weight: 700; color: #e4e4e7;">3</div>
+                                            <div style="color: #94a3b8; font-size: 10px;">Focus</div>
+                                        </div>
+                                    </div>
+                                    <div id="emotionalStatus" style="color: #94a3b8; font-size: 12px; text-align: center;">No data</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Risk Assessment Card -->
+                            <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid #334155; border-radius: 12px; padding: 20px; position: relative; overflow: hidden;">
+                                <div style="position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(245, 158, 11, 0.1) 0%, transparent 70%); pointer-events: none;"></div>
+                                <div style="position: relative; z-index: 1;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                                        <h3 style="color: #f59e0b; font-size: 16px; font-weight: 600;" data-lang="risk-assessment">Risk Assessment</h3>
+                                        <div style="width: 40px; height: 40px; background: rgba(245, 158, 11, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                            <span style="font-size: 20px;">⚠️</span>
+                                        </div>
+                                    </div>
+                                    <div style="margin-bottom: 12px;">
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                            <span style="color: #94a3b8; font-size: 12px;">Target Risk</span>
+                                            <span id="targetRiskPercent" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">0%</span>
+                                        </div>
+                                        <div style="background: #334155; height: 6px; border-radius: 3px; overflow: hidden;">
+                                            <div id="targetRiskBar" style="height: 100%; background: linear-gradient(90deg, #10b981, #f59e0b, #ef4444); width: 0%; transition: width 0.3s ease;"></div>
+                                        </div>
+                                    </div>
+                                    <div style="margin-bottom: 8px;">
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                            <span style="color: #94a3b8; font-size: 12px;">Max Loss Risk</span>
+                                            <span id="maxLossRiskPercent" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">0%</span>
+                                        </div>
+                                        <div style="background: #334155; height: 6px; border-radius: 3px; overflow: hidden;">
+                                            <div id="maxLossRiskBar" style="height: 100%; background: linear-gradient(90deg, #10b981, #f59e0b, #ef4444); width: 0%; transition: width 0.3s ease;"></div>
+                                        </div>
+                                    </div>
+                                    <div id="riskStatus" style="color: #94a3b8; font-size: 12px; text-align: center;">No data</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Performance Chart Section -->
+                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 24px; margin-bottom: 24px;">
+                            <h3 style="color: #f8fafc; font-size: 18px; font-weight: 600; margin-bottom: 20px; text-align: center;" data-lang="psychology-performance-chart">Psychology vs Performance Analysis</h3>
+                            <div style="height: 300px; display: flex; align-items: center; justify-content: center;">
+                                <canvas id="psychologyPerformanceChart" style="max-width: 100%; max-height: 100%;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Metrics Dashboard Section -->
+                <div id="psychologyMetricsSection" class="psychology-section">
+                    <div class="psychology-container">
+                        <h2 class="psychology-header" data-lang="psychology-dashboard">Psychology Dashboard</h2>
+                        
+                        <!-- Daily Psychology Score -->
+                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                            <h3 style="color: #f8fafc; font-size: 18px; margin-bottom: 16px; text-align: center;" data-lang="daily-psychology-score">Daily Psychology Score</h3>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                                <div id="sleepFactorCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="sleep-factor">Sleep Factor</div>
+                                    <div id="sleepFactorScore" style="color: #f8fafc; font-size: 24px; font-weight: 700; margin-bottom: 4px;">0/25</div>
+                                    <div id="sleepFactorStatus" style="color: #64748b; font-size: 11px;">No data</div>
+                                </div>
+                                
+                                <div id="stressFactorCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="stress-factor">Stress Factor</div>
+                                    <div id="stressFactorScore" style="color: #f8fafc; font-size: 24px; font-weight: 700; margin-bottom: 4px;">0/25</div>
+                                    <div id="stressFactorStatus" style="color: #64748b; font-size: 11px;">No data</div>
+                                </div>
+                                
+                                <div id="disciplineFactorCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="discipline-factor">Discipline Factor</div>
+                                    <div id="disciplineFactorScore" style="color: #f8fafc; font-size: 24px; font-weight: 700; margin-bottom: 4px;">0/25</div>
+                                    <div id="disciplineFactorStatus" style="color: #64748b; font-size: 11px;">No data</div>
+                                </div>
+                                
+                                <div id="consistencyFactorCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="consistency-factor">Consistency Factor</div>
+                                    <div id="consistencyFactorScore" style="color: #f8fafc; font-size: 24px; font-weight: 700; margin-bottom: 4px;">0/25</div>
+                                    <div id="consistencyFactorStatus" style="color: #64748b; font-size: 11px;">No data</div>
+                                </div>
+                                
+                                <div id="totalScoreCard" style="background: #0f172a; border: 2px solid #3b82f6; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="total-score">Total Score</div>
+                                    <div id="totalPsychScore" style="color: #3b82f6; font-size: 28px; font-weight: 700; margin-bottom: 4px;">0/100</div>
+                                    <div id="totalScoreStatus" style="color: #64748b; font-size: 11px;">No data</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Weekly Bias Risk Assessment -->
+                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                            <h3 style="color: #f8fafc; font-size: 18px; margin-bottom: 16px; text-align: center;" data-lang="weekly-bias-risk">Weekly Bias Risk Assessment</h3>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+                                <div id="overconfidenceRiskCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="overconfidence-risk">Overconfidence Risk</div>
+                                    <div id="overconfidenceRisk" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">Low</div>
+                                    <div id="overconfidenceDetails" style="color: #64748b; font-size: 11px;">Calibration Error: 0.0%</div>
+                                </div>
+                                
+                                <div id="lossAversionRiskCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="loss-aversion-risk">Loss Aversion Risk</div>
+                                    <div id="lossAversionRisk" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">Low</div>
+                                    <div id="lossAversionDetails" style="color: #64748b; font-size: 11px;">Disposition Ratio: 0.0</div>
+                                </div>
+                                
+                                <div id="anchoringRiskCard" style="background: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="anchoring-risk">Anchoring Risk</div>
+                                    <div id="anchoringRisk" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">Low</div>
+                                    <div id="anchoringDetails" style="color: #64748b; font-size: 11px;">Entry Price Dependency: 0%</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Performance Correlation -->
+                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px;">
+                            <h3 style="color: #f8fafc; font-size: 18px; margin-bottom: 16px; text-align: center;" data-lang="performance-correlation">Performance Correlation Analysis</h3>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="sleep-performance">Sleep vs Performance</div>
+                                    <div id="sleepCorrelation" style="color: #f8fafc; font-size: 18px; font-weight: 700;">+0.00</div>
+                                </div>
+                                
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="caffeine-performance">Caffeine vs Performance</div>
+                                    <div id="caffeineCorrelation" style="color: #f8fafc; font-size: 18px; font-weight: 700;">+0.00</div>
+                                </div>
+                                
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="timing-performance">Timing vs Performance</div>
+                                    <div id="timingCorrelation" style="color: #f8fafc; font-size: 18px; font-weight: 700;">+0.00</div>
+                                </div>
+                                
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="confidence-performance">Confidence vs Performance</div>
+                                    <div id="confidenceCorrelation" style="color: #f8fafc; font-size: 18px; font-weight: 700;">+0.00</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bias Analysis Section -->
+                <div id="psychologyBiasSection" class="psychology-section">
+                    <div class="psychology-container">
+                        <h2 class="psychology-header" data-lang="bias-analysis-title">Quantified Bias Analysis</h2>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 24px;">
+                            <!-- Overconfidence Bias -->
+                            <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px;">
+                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="overconfidence-bias">Overconfidence Bias</h3>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                        <span style="color: #94a3b8; font-size: 13px;" data-lang="calibration-error">Calibration Error</span>
+                                        <span id="calibrationError" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0.0%</span>
+                                    </div>
+                                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
+                                        <div id="calibrationErrorBar" style="height: 100%; background: #10b981; width: 0%; transition: width 0.3s ease;"></div>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                        <span style="color: #94a3b8; font-size: 13px;" data-lang="overtrading-index">Overtrading Index</span>
+                                        <span id="overtradingIndex" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0%</span>
+                                    </div>
+                                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
+                                        <div id="overtradingBar" style="height: 100%; background: #f59e0b; width: 0%; transition: width 0.3s ease;"></div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                        <span style="color: #94a3b8; font-size: 13px;" data-lang="position-deviation">Position Size Deviation</span>
+                                        <span id="positionDeviation" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0.0</span>
+                                    </div>
+                                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
+                                        <div id="positionDeviationBar" style="height: 100%; background: #3b82f6; width: 0%; transition: width 0.3s ease;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Loss Aversion -->
+                            <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px;">
+                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="loss-aversion-bias">Loss Aversion Bias</h3>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                        <span style="color: #94a3b8; font-size: 13px;" data-lang="disposition-ratio">Disposition Ratio</span>
+                                        <span id="dispositionRatio" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">1.0</span>
+                                    </div>
+                                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
+                                        <div id="dispositionBar" style="height: 100%; background: #ef4444; width: 0%; transition: width 0.3s ease;"></div>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                        <span style="color: #94a3b8; font-size: 13px;" data-lang="stop-loss-execution">Stop Loss Execution Rate</span>
+                                        <span id="stopLossRate" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0%</span>
+                                    </div>
+                                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
+                                        <div id="stopLossBar" style="height: 100%; background: #10b981; width: 0%; transition: width 0.3s ease;"></div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                        <span style="color: #94a3b8; font-size: 13px;" data-lang="stop-loss-modification">Stop Loss Modification Rate</span>
+                                        <span id="stopLossModRate" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0%</span>
+                                    </div>
+                                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
+                                        <div id="stopLossModBar" style="height: 100%; background: #8b5cf6; width: 0%; transition: width 0.3s ease;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Anchoring Bias -->
+                            <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px;">
+                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="anchoring-bias">Anchoring Bias</h3>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                        <span style="color: #94a3b8; font-size: 13px;" data-lang="entry-price-dependency">Entry Price Dependency</span>
+                                        <span id="entryPriceDep" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0%</span>
+                                    </div>
+                                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
+                                        <div id="entryPriceBar" style="height: 100%; background: #06b6d4; width: 0%; transition: width 0.3s ease;"></div>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                        <span style="color: #94a3b8; font-size: 13px;" data-lang="round-number-bias">Round Number Bias</span>
+                                        <span id="roundNumberBias" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0%</span>
+                                    </div>
+                                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
+                                        <div id="roundNumberBar" style="height: 100%; background: #f59e0b; width: 0%; transition: width 0.3s ease;"></div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                        <span style="color: #94a3b8; font-size: 13px;" data-lang="recent-high-anchor">Recent High Anchor</span>
+                                        <span id="recentHighAnchor" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">0%</span>
+                                    </div>
+                                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
+                                        <div id="recentHighBar" style="height: 100%; background: #ef4444; width: 0%; transition: width 0.3s ease;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Weekly Risk Summary -->
+                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-top: 24px;">
+                            <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="weekly-risk-summary">Weekly Risk Summary</h3>
+                            
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="overall-bias-risk">Overall Bias Risk</div>
+                                    <div id="overallBiasRisk" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">Low</div>
+                                    <div id="overallBiasScore" style="color: #64748b; font-size: 11px;">Score: 0/100</div>
+                                </div>
+                                
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="risk-trend">Risk Trend</div>
+                                    <div id="riskTrend" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">Stable</div>
+                                    <div id="riskTrendDetails" style="color: #64748b; font-size: 11px;">Last 7 days</div>
+                                </div>
+                                
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="action-needed">Action Needed</div>
+                                    <div id="actionNeeded" style="color: #f8fafc; font-size: 20px; font-weight: 700; margin-bottom: 4px;">None</div>
+                                    <div id="actionDetails" style="color: #64748b; font-size: 11px;">All metrics normal</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pattern Insights Section -->
+                <div id="psychologyPatternsSection" class="psychology-section">
+                    <div class="psychology-container">
+                        <h2 class="psychology-header" data-lang="pattern-insights-title">Pattern Insights & Recommendations</h2>
+                        
+                        <!-- Time-Based Performance -->
+                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                            <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="time-based-performance">Time-Based Performance Analysis</h3>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="best-trading-hour">Best Trading Hour</div>
+                                    <div id="bestTradingHour" style="color: #10b981; font-size: 18px; font-weight: 700; margin-bottom: 4px;">--:--</div>
+                                    <div id="bestHourPerformance" style="color: #64748b; font-size: 11px;">Win Rate: --%</div>
+                                </div>
+                                
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="worst-trading-hour">Worst Trading Hour</div>
+                                    <div id="worstTradingHour" style="color: #ef4444; font-size: 18px; font-weight: 700; margin-bottom: 4px;">--:--</div>
+                                    <div id="worstHourPerformance" style="color: #64748b; font-size: 11px;">Win Rate: --%</div>
+                                </div>
+                                
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="optimal-sleep-range">Optimal Sleep Range</div>
+                                    <div id="optimalSleepRange" style="color: #3b82f6; font-size: 18px; font-weight: 700; margin-bottom: 4px;">-.- hours</div>
+                                    <div id="sleepRangePerformance" style="color: #64748b; font-size: 11px;">Avg P&L: $--</div>
+                                </div>
+                                
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="delay-impact">Start Delay Impact</div>
+                                    <div id="delayImpact" style="color: #f59e0b; font-size: 18px; font-weight: 700; margin-bottom: 4px;">--min</div>
+                                    <div id="delayPerformance" style="color: #64748b; font-size: 11px;">Performance drop: --%</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Consecutive Trades Pattern -->
+                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                            <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="consecutive-pattern">Consecutive Trades Pattern</h3>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
+                                    <div style="color: #94a3b8; font-size: 14px; margin-bottom: 12px;" data-lang="after-losses">Performance After Losses</div>
+                                    <div style="color: #e4e4e7; font-size: 13px; margin-bottom: 8px;">After 1 loss: <span id="after1Loss" style="font-weight: 600;">--%</span></div>
+                                    <div style="color: #e4e4e7; font-size: 13px; margin-bottom: 8px;">After 2 losses: <span id="after2Losses" style="font-weight: 600;">--%</span></div>
+                                    <div style="color: #e4e4e7; font-size: 13px;">After 3+ losses: <span id="after3Losses" style="font-weight: 600;">--%</span></div>
+                                </div>
+                                
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
+                                    <div style="color: #94a3b8; font-size: 14px; margin-bottom: 12px;" data-lang="after-wins">Performance After Wins</div>
+                                    <div style="color: #e4e4e7; font-size: 13px; margin-bottom: 8px;">After 1 win: <span id="after1Win" style="font-weight: 600;">--%</span></div>
+                                    <div style="color: #e4e4e7; font-size: 13px; margin-bottom: 8px;">After 2 wins: <span id="after2Wins" style="font-weight: 600;">--%</span></div>
+                                    <div style="color: #e4e4e7; font-size: 13px;">After 3+ wins: <span id="after3Wins" style="font-weight: 600;">--%</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- AI-Generated Insights -->
+                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px;">
+                            <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="ai-insights">AI-Generated Insights</h3>
+                            <div id="aiInsightsList" style="display: grid; gap: 12px;">
+                                <div style="background: #0f172a; border-left: 4px solid #3b82f6; padding: 12px 16px; border-radius: 0 6px 6px 0;">
+                                    <div style="color: #e4e4e7; font-size: 14px; line-height: 1.5;" data-lang="no-insights">Collect more psychology data to generate personalized insights.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Notes page -->
+            <div id="notes" class="page">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title" data-lang="notes-title">Trading Notes</h1>
+                        <p class="page-subtitle" data-lang="notes-subtitle">Document your trading insights and thoughts</p>
+                    </div>
+                    <div class="notes-controls">
+                        <button class="btn btn-primary" onclick="showNoteEditor()" data-lang="new-note">New Note</button>
+                    </div>
+                </div>
+
+                <div class="notes-container">
+                    <!-- Notes Tabs -->
+                    <div class="notes-tabs">
+    <button class="notes-tab active" onclick="showNotesSection('all')" data-lang="all-notes">All</button>
+    <button class="notes-tab" onclick="showNotesSection('daily')" data-lang="daily-review">Daily Review</button>
+    <button class="notes-tab" onclick="showNotesSection('strategy')" data-lang="strategy">Strategy</button>
+    <button class="notes-tab" onclick="showNotesSection('general')" data-lang="general">General</button>
+</div>
+
+                    <!-- Note Editor -->
+                    <div id="noteEditor" class="note-editor" style="display: none;">
+                        <div class="note-formatting-toolbar">
+                            <button class="formatting-btn" onclick="toggleBold()" title="Bold">B</button>
+                            <button class="formatting-btn" onclick="toggleItalic()" title="Italic">I</button>
+                            <button class="formatting-btn" onclick="toggleUnderline()" title="Underline">U</button>
+                            <select class="font-selector" id="fontSelector" onchange="changeFont()">
+                                <option value="'Source Code Pro', monospace">Source Code Pro</option>
+                                <option value="'JetBrains Mono', monospace">JetBrains Mono</option>
+                                <option value="'Inter', sans-serif">Inter</option>
+                                <option value="'Georgia', serif">Georgia</option>
+                            </select>
+                            <div class="color-picker">
+                                <div class="color-option" style="background-color: #e4e4e7;" onmousedown="event.preventDefault(); changeTextColor('#e4e4e7');"></div>
+                                <div class="color-option" style="background-color: #10b981;" onmousedown="event.preventDefault(); changeTextColor('#10b981');"></div>
+                                <div class="color-option" style="background-color: #ef4444;" onmousedown="event.preventDefault(); changeTextColor('#ef4444');"></div>
+                                <div class="color-option" style="background-color: #3b82f6;" onmousedown="event.preventDefault(); changeTextColor('#3b82f6');"></div>
+                                <div class="color-option" style="background-color: #f59e0b;" onmousedown="event.preventDefault(); changeTextColor('#f59e0b');"></div>
+                                <div class="color-option" style="background-color: #8b5cf6;" onmousedown="event.preventDefault(); changeTextColor('#8b5cf6');"></div>
+                            </div>
+                        </div>
+                        <input type="text" id="noteTitle" class="note-title-input" placeholder="Enter note title..." data-lang="note-title-placeholder">
+                        <div id="noteContentEditor" class="note-content-input" contenteditable="true" data-placeholder="Write your note here..."></div>
+                        <div class="note-actions">
+                            <button class="btn btn-secondary" onclick="cancelNote()" data-lang="cancel">Cancel</button>
+                            <button class="btn btn-primary" onclick="saveNote()" data-lang="save-note">Save Note</button>
+                        </div>
+                    </div>
+
+                    <!-- Note View Mode -->
+                    <div id="noteViewMode" class="note-view-mode" style="display: none;">
+                        <div class="note-view-title" id="noteViewTitle"></div>
+                        <div class="note-view-content" id="noteViewContent"></div>
+                        <div class="note-view-actions">
+                            <button class="btn btn-secondary" onclick="backToNotesList()" data-lang="back">Back</button>
+                            <button class="btn btn-primary" onclick="editCurrentNote()" data-lang="edit">Edit</button>
+                        </div>
+                    </div>
+
+                    <!-- Notes Sections -->
+                    <div id="allNotesSection" class="note-section active">
+    <div id="allNotesList" class="notes-list">
+        <div class="empty-state">
+            <div class="empty-state-icon">📝</div>
+            <div data-lang="no-notes">No notes written yet. Click "New Note" to start.</div>
+        </div>
+    </div>
+</div>
+                    
+                    <div id="dailyNotesSection" class="note-section">
+                        <div id="dailyNotesList" class="notes-list">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">📝</div>
+                                <div data-lang="no-daily-notes">No daily review notes yet. Click "New Note" to start.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="strategyNotesSection" class="note-section">
+                        <div id="strategyNotesList" class="notes-list">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">📊</div>
+                                <div data-lang="no-strategy-notes">No strategy notes yet. Click "New Note" to start.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="generalNotesSection" class="note-section">
+                        <div id="generalNotesList" class="notes-list">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">📄</div>
+                                <div data-lang="no-general-notes">No general notes yet. Click "New Note" to start.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trade List page -->
+            <div id="trades" class="page">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title" data-lang="tradelist-title">Trade List</h1>
+                        <p class="page-subtitle" data-lang="tradelist-subtitle">Complete list of all your trades</p>
+                    </div>
+                    <div class="date-range-selector">
+                        <input type="date" id="tradesStartDate" class="date-range-input">
+                        <span style="color: #64748b;">to</span>
+                        <input type="date" id="tradesEndDate" class="date-range-input">
+                        <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="clearTradesRange()">Clear</button>
+                    </div>
+                </div>
+                
+                <div class="trades-section">
+                    <div class="trades-header">
+                        <h2 data-lang="trade-history">Trade History</h2>
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <button id="deleteSelectedListBtn" class="btn btn-secondary" onclick="deleteSelectedTradesList()" style="display: none; background: #dc2626; border-color: #dc2626;" data-lang="delete-selected">Delete Selected</button>
+                            <div class="period-summary" id="allTradesSummary"></div>
+                        </div>
+                    </div>
+                    <table class="trades-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;">
+                                    <input type="checkbox" id="selectAllTradesList" onchange="toggleAllTradesList()" style="accent-color: #3b82f6;">
+                                </th>
+                                <th data-lang="date">Date</th>
+                                <th data-lang="symbol">Symbol</th>
+                                <th data-lang="buy-price">Buy Price</th>
+                                <th data-lang="sell-price">Sell Price</th>
+                                <th data-lang="shares">Shares</th>
+                                <th data-lang="amount">Amount</th>
+                                <th data-lang="time">Time</th>
+                                <th data-lang="pnl">P&L</th>
+                                <th data-lang="return-pct">Return %</th>
+                                <th data-lang="actions">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="allTradesTableBody">
+                            <tr>
+                                <td colspan="10">
+                                    <div class="empty-state">
+                                        <div class="empty-state-icon">📊</div>
+                                        <div data-lang="no-trades">No trades recorded yet</div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Settings page -->
+            <div id="settings" class="page">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title" data-lang="settings-title">Settings</h1>
+                        <p class="page-subtitle" data-lang="settings-subtitle">Configure your trading journal preferences</p>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3 data-lang="general-settings">General Settings</h3>
+                    <div class="settings-option">
+                        <label data-lang="default-language">Default Language</label>
+                        <select id="settingsLanguageSelect" onchange="changeLanguageFromSettings()">
+                            <option value="en">English</option>
+                            <option value="ko">한국어</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3 data-lang="data-management">Data Management</h3>
+                    <button class="settings-btn" onclick="exportData()" data-lang="export-data">Export Data</button>
+                    <button class="settings-btn" onclick="importData()" data-lang="import-data">Import Data</button>
+                    <input type="file" id="importFileInput" accept=".json" style="display: none;" onchange="handleFileImport()">
+                </div>
+
+                <div class="settings-section">
+                    <h3 data-lang="danger-zone">Danger Zone</h3>
+                    <button class="settings-btn danger" onclick="clearAllData()" data-lang="clear-all-data">Clear All Data</button>
+                </div>
+            </div>
+        </main>
+    </div>
+     <script src="js/config.js"></script>
+     <script src="js/utils.js"></script>
+     <script src="js/main.js"></script>
+     <script src="js/calendar.js"></script>
+     <script src="js/trading.js"></script>
+     <script src="js/analytics.js"></script>
+     <script src="js/notes.js"></script>
+     <script src="js/psychology.js"></script>
+ </body>
+ </html>
