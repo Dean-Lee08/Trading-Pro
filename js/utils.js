@@ -1,5 +1,7 @@
 // Utility Functions
 
+function _el(id) { return document.getElementById(id); }
+
 // Function to get EST trading date
 function getESTTradingDate(date = new Date()) {
     return new Date(date);
