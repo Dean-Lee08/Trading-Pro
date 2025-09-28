@@ -690,4 +690,3 @@ const translations = {
         'emotional-state': '감정 상태'
     }
 };
-        '
