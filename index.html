@@ -2663,6 +2663,60 @@
         .psychology-section.active {
             display: block;
         }
+
+        /* Slider customization */
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            border: 2px solid #1e293b;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            border: 2px solid #1e293b;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        input[type="range"]::-webkit-slider-track {
+            background: #334155;
+            height: 6px;
+            border-radius: 3px;
+        }
+
+        input[type="range"]::-moz-range-track {
+            background: #334155;
+            height: 6px;
+            border-radius: 3px;
+            border: none;
+        }
+
+        /* Psychology chart container */
+        .psychology-chart-container {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 24px;
+            min-height: 450px;
+        }
+
+        .psychology-chart-title {
+            color: #f8fafc;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -3812,40 +3866,56 @@
                             
                             <!-- Emotional State -->
                             <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
-                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="emotional-state">Emotional State</h3>
+                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="emotional-state">감정상태</h3>
                                 
+                                <!-- 날짜 선택 -->
                                 <div style="margin-bottom: 16px;">
-                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="stress-level">Stress Level (1-5)</label>
-                                    <input type="number" id="stressLevel" min="1" max="5" value="3" 
-                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="target-date">대상 날짜</label>
+                                    <input type="date" id="psychologyTargetDate" style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;" onchange="loadPsychologyDataForDate()">
                                 </div>
                                 
-                                <div style="margin-bottom: 16px;">
-                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="confidence-level">Confidence Level (1-5)</label>
-                                    <input type="number" id="confidenceLevel" min="1" max="5" value="3" 
-                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="stress-level">스트레스 수준</label>
+                                    <div style="position: relative; margin-bottom: 8px;">
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                            <span style="color: #64748b; font-size: 11px;">Low</span>
+                                            <span id="stressLevelValue" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">3</span>
+                                            <span style="color: #64748b; font-size: 11px;">High</span>
+                                        </div>
+                                        <input type="range" id="stressLevel" min="1" max="5" value="3" 
+                                               style="width: 100%; height: 6px; border-radius: 3px; background: #334155; outline: none; -webkit-appearance: none;"
+                                               oninput="updateSliderValue('stressLevel', 'stressLevelValue')">
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="confidence-level">자신감 수준</label>
+                                    <div style="position: relative; margin-bottom: 8px;">
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                            <span style="color: #64748b; font-size: 11px;">Low</span>
+                                            <span id="confidenceLevelValue" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">3</span>
+                                            <span style="color: #64748b; font-size: 11px;">High</span>
+                                        </div>
+                                        <input type="range" id="confidenceLevel" min="1" max="5" value="3" 
+                                               style="width: 100%; height: 6px; border-radius: 3px; background: #334155; outline: none; -webkit-appearance: none;"
+                                               oninput="updateSliderValue('confidenceLevel', 'confidenceLevelValue')">
+                                    </div>
                                 </div>
                                 
                                 <div>
-                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;" data-lang="focus-level">Focus Level (1-5)</label>
-                                    <input type="number" id="focusLevel" min="1" max="5" value="3" 
-                                           style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;">
+                                    <label style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="focus-level">집중력 수준</label>
+                                    <div style="position: relative;">
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                            <span style="color: #64748b; font-size: 11px;">Low</span>
+                                            <span id="focusLevelValue" style="color: #e4e4e7; font-size: 13px; font-weight: 600;">3</span>
+                                            <span style="color: #64748b; font-size: 11px;">High</span>
+                                        </div>
+                                        <input type="range" id="focusLevel" min="1" max="5" value="3" 
+                                               style="width: 100%; height: 6px; border-radius: 3px; background: #334155; outline: none; -webkit-appearance: none;"
+                                               oninput="updateSliderValue('focusLevel', 'focusLevelValue')">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div style="display: flex; gap: 12px; justify-content: center;">
-                            <button onclick="savePsychologyData()" 
-                                    style="background: #3b82f6; border: none; color: white; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;" 
-                                    data-lang="save-psychology-data">Save Psychology Data</button>
-                            <button onclick="calculateDailyScore()" 
-                                    style="background: #10b981; border: none; color: white; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;" 
-                                    data-lang="calculate-score">Calculate Daily Score</button>
-                            <button onclick="resetPsychologyData()" 
-                                    style="background: #ef4444; border: none; color: white; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;" 
-                                    data-lang="reset-data">Reset Data</button>
-                        </div>
-                    </div>
 
                     <!-- Psychology vs Performance Analysis Chart -->
                     <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 24px; margin-top: 24px;">
@@ -6378,6 +6448,18 @@
             if (savedFees) {
                 dailyFees = JSON.parse(savedFees);
             }
+
+            // 심리 섹션 초기화
+            const psychologyTargetDate = document.getElementById('psychologyTargetDate');
+            if (psychologyTargetDate) {
+                psychologyTargetDate.value = formatTradingDate(currentTradingDate);
+                loadPsychologyDataForDate();
+            }
+            
+            // 슬라이더 초기값 설정
+            updateSliderValue('stressLevel', 'stressLevelValue');
+            updateSliderValue('confidenceLevel', 'confidenceLevelValue');
+            updateSliderValue('focusLevel', 'focusLevelValue');
             
             currentTradingDate = getESTTradingDate(new Date());
             updateCurrentDateDisplay();
@@ -8144,42 +8226,36 @@ function applyCustomRisk() {
 
         // Psychology functions
         function savePsychologyData() {
-            const currentDate = formatTradingDate(currentTradingDate);
+            const targetDate = document.getElementById('psychologyTargetDate').value || formatTradingDate(currentTradingDate);
             
             const data = {
-                date: currentDate,
+                date: targetDate,
                 timestamp: new Date().toISOString(),
                 
                 // Biological data
                 sleepHours: parseFloat(document.getElementById('sleepHours').value) || 0,
-                sleepQuality: parseInt(document.getElementById('sleepQuality').value) || 3,
-                caffeineIntake: parseFloat(document.getElementById('caffeineIntake').value) || 0,
-                energyLevel: parseInt(document.getElementById('energyLevel').value) || 3,
                 
                 // Time & environment
-                plannedStartTime: document.getElementById('plannedStartTime').value || '09:30',
-                actualStartTime: document.getElementById('actualStartTime').value || '',
-                marketDelay: parseInt(document.getElementById('marketDelay').value) || 0,
-                tradingEnvironment: document.getElementById('tradingEnvironment').value || 'home-quiet',
+                startTime: document.getElementById('startTime').value || '09:30',
+                endTime: document.getElementById('endTime').value || '',
+                environmentType: document.getElementById('environmentType').value || 'home-quiet',
                 
                 // Economic pressure
-                accountBalance: parseFloat(document.getElementById('psychAccountBalance').value) || 0,
-                pressureLevel: parseInt(document.getElementById('pressureLevel').value) || 3,
+                accountBalance: parseFloat(document.getElementById('accountBalance').value) || 0,
                 dailyTarget: parseFloat(document.getElementById('dailyTarget').value) || 0,
                 maxDailyLoss: parseFloat(document.getElementById('maxDailyLoss').value) || 0,
                 
                 // Emotional state
-                preMarketMood: parseInt(document.getElementById('preMarketMood').value) || 3,
-                confidenceLevel: parseInt(document.getElementById('confidenceLevel').value) || 3,
                 stressLevel: parseInt(document.getElementById('stressLevel').value) || 3,
+                confidenceLevel: parseInt(document.getElementById('confidenceLevel').value) || 3,
                 focusLevel: parseInt(document.getElementById('focusLevel').value) || 3
             };
             
-            psychologyData[currentDate] = data;
+            psychologyData[targetDate] = data;
             localStorage.setItem('tradingPlatformPsychologyData', JSON.stringify(psychologyData));
             
             updatePsychologyMetrics();
-            generatePsychologyInsights();
+            updatePsychologyChart();
             showToast(currentLanguage === 'ko' ? '심리 데이터가 저장되었습니다' : 'Psychology data saved');
         }
 
@@ -9003,6 +9079,188 @@ function applyCustomRisk() {
                     </div>
                 `).join('');
             }
+        }
+
+        }
+        
+        // 슬라이더 값 업데이트 함수
+        function updateSliderValue(sliderId, valueId) {
+            const slider = document.getElementById(sliderId);
+            const valueElement = document.getElementById(valueId);
+            if (slider && valueElement) {
+                valueElement.textContent = slider.value;
+            }
+        }
+
+        // 날짜별 심리 데이터 로드 함수
+        function loadPsychologyDataForDate() {
+            const targetDate = document.getElementById('psychologyTargetDate').value;
+            if (!targetDate) return;
+            
+            const data = psychologyData[targetDate];
+            if (data) {
+                // 기존 데이터가 있으면 로드
+                document.getElementById('sleepHours').value = data.sleepHours || '';
+                document.getElementById('startTime').value = data.startTime || '09:30';
+                document.getElementById('endTime').value = data.endTime || '';
+                document.getElementById('environmentType').value = data.environmentType || 'home-quiet';
+                document.getElementById('accountBalance').value = data.accountBalance || '';
+                document.getElementById('dailyTarget').value = data.dailyTarget || '';
+                document.getElementById('maxDailyLoss').value = data.maxDailyLoss || '';
+                
+                // 슬라이더 값 설정
+                document.getElementById('stressLevel').value = data.stressLevel || 3;
+                document.getElementById('confidenceLevel').value = data.confidenceLevel || 3;
+                document.getElementById('focusLevel').value = data.focusLevel || 3;
+                
+                // 슬라이더 값 표시 업데이트
+                updateSliderValue('stressLevel', 'stressLevelValue');
+                updateSliderValue('confidenceLevel', 'confidenceLevelValue');
+                updateSliderValue('focusLevel', 'focusLevelValue');
+            } else {
+                // 새로운 날짜면 기본값으로 리셋
+                resetPsychologyForm();
+            }
+            
+            updatePsychologyChart();
+        }
+
+        // 심리 폼 리셋 함수
+        function resetPsychologyForm() {
+            document.getElementById('sleepHours').value = '';
+            document.getElementById('startTime').value = '09:30';
+            document.getElementById('endTime').value = '';
+            document.getElementById('environmentType').value = 'home-quiet';
+            document.getElementById('accountBalance').value = '';
+            document.getElementById('dailyTarget').value = '';
+            document.getElementById('maxDailyLoss').value = '';
+            
+            document.getElementById('stressLevel').value = 3;
+            document.getElementById('confidenceLevel').value = 3;
+            document.getElementById('focusLevel').value = 3;
+            
+            updateSliderValue('stressLevel', 'stressLevelValue');
+            updateSliderValue('confidenceLevel', 'confidenceLevelValue');
+            updateSliderValue('focusLevel', 'focusLevelValue');
+        }
+
+        // 심리 vs 성과 차트 업데이트 함수
+        function updatePsychologyChart() {
+            const canvas = document.getElementById('psychologyPerformanceChart');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return;
+            
+            // 기존 차트 제거
+            if (window.psychologyChart) {
+                window.psychologyChart.destroy();
+            }
+            
+            // 심리 데이터와 거래 성과 매칭
+            const chartData = [];
+            const labels = [];
+            
+            Object.entries(psychologyData).forEach(([date, psychData]) => {
+                const dayTrades = trades.filter(trade => trade.date === date);
+                if (dayTrades.length > 0) {
+                    const dayPnL = dayTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+                    const fees = dailyFees[date] || 0;
+                    const netPnL = dayPnL - fees;
+                    
+                    labels.push(new Date(date).toLocaleDateString());
+                    chartData.push({
+                        x: date,
+                        sleepHours: psychData.sleepHours || 0,
+                        stressLevel: psychData.stressLevel || 3,
+                        performance: netPnL
+                    });
+                }
+            });
+            
+            if (chartData.length === 0) {
+                // 데이터가 없을 때 빈 차트 표시
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#64748b';
+                ctx.font = '14px Inter';
+                ctx.textAlign = 'center';
+                ctx.fillText('심리 데이터를 수집하여 차트를 생성하세요', canvas.width / 2, canvas.height / 2);
+                return;
+            }
+            
+            // Chart.js로 차트 생성
+            window.psychologyChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: '수면 시간',
+                            data: chartData.map(d => d.sleepHours),
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: '일일 손익',
+                            data: chartData.map(d => d.performance),
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            yAxisID: 'y1'
+                        },
+                        {
+                            label: '스트레스 수준',
+                            data: chartData.map(d => d.stressLevel),
+                            borderColor: '#ef4444',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            yAxisID: 'y'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#e4e4e7'
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#94a3b8' },
+                            grid: { color: '#334155' }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            ticks: { color: '#94a3b8' },
+                            grid: { color: '#334155' },
+                            title: {
+                                display: true,
+                                text: '수면 시간 / 스트레스',
+                                color: '#94a3b8'
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            ticks: { color: '#94a3b8' },
+                            grid: {
+                                drawOnChartArea: false,
+                            },
+                            title: {
+                                display: true,
+                                text: '일일 손익 ($)',
+                                color: '#94a3b8'
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         function getInsightColor(type) {
