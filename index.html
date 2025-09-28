@@ -1450,6 +1450,27 @@
             flex-wrap: wrap;
         }
 
+        .filter-btn {
+            background: #334155;
+            border: 1px solid #475569;
+            color: #e4e4e7;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn:hover {
+            background: #475569;
+        }
+
+        .filter-btn.active {
+            background: #3b82f6;
+            border-color: #3b82f6;
+            color: white;
+        }
+
         /* Detail View */
         .detail-section {
             display: none;
@@ -3279,7 +3300,11 @@
                                 <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="clearAnalyticsRange()">Clear</button>
                             </div>
                             <button class="filter-btn active" onclick="setAnalyticsPeriod('all')" data-lang="all-time">All Time</button>
+                            <button class="filter-btn" onclick="setAnalyticsPeriod('month')" data-lang="this-month">This Month</button>
+                            <button class="filter-btn" onclick="setAnalyticsPeriod('week')" data-lang="this-week">This Week</button>
+                            <button class="filter-btn" onclick="setAnalyticsPeriod('day')" data-lang="today">Today</button>
                         </div>
+                    </div>
 
                     <!-- Performance Summary Cards -->
                     <div class="performance-summary">
@@ -4581,6 +4606,9 @@
                 'danger-zone': 'Danger Zone',
                 'clear-all-data': 'Clear All Data',
                 'all-time': 'All Time',
+                'this-month': 'This Month',
+                'this-week': 'This Week',
+                'today': 'Today',
                 'detail': 'Detail',
                 'charts': 'Charts',
                 'net-profit': 'Net Profit',
@@ -4903,6 +4931,9 @@
                 'danger-zone': '위험 구역',
                 'clear-all-data': '모든 데이터 삭제',
                 'all-time': '전체 기간',
+                'this-month': '이번 달',
+                'this-week': '이번 주',
+                'today': '오늘',
                 'detail': '상세',
                 'charts': '차트',
                 'net-profit': '순이익',
@@ -7060,8 +7091,30 @@
                     return true;
                 });
             } else {
-                // Apply period filter - only 'all' supported
-                filteredTrades = trades;
+                // Apply period filter
+                const now = new Date();
+                const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                
+                switch (analyticsPeriod) {
+                    case 'day':
+                        const todayStr = formatTradingDate(today);
+                        filteredTrades = trades.filter(trade => trade.date === todayStr);
+                        break;
+                    case 'week':
+                        const weekAgo = new Date(today);
+                        weekAgo.setDate(weekAgo.getDate() - 7);
+                        const weekAgoStr = formatTradingDate(weekAgo);
+                        filteredTrades = trades.filter(trade => trade.date >= weekAgoStr);
+                        break;
+                    case 'month':
+                        const monthAgo = new Date(today);
+                        monthAgo.setMonth(monthAgo.getMonth() - 1);
+                        const monthAgoStr = formatTradingDate(monthAgo);
+                        filteredTrades = trades.filter(trade => trade.date >= monthAgoStr);
+                        break;
+                    default:
+                        filteredTrades = trades;
+                }
             }
             
             return filteredTrades;
@@ -8339,24 +8392,20 @@ function applyCustomRisk() {
             }
             
             // Calculate Sleep Factor (0-25 points)
-            const sleepFactor = calculateSleepFactor(todayData.sleepHours);
+            const sleepFactor = calculateSleepFactor(todayData.sleepHours, todayData.stressLevel, todayData.focusLevel);
             updateMetricCard('sleepFactorCard', 'sleepFactor', 'sleepFactorStatus', sleepFactor, 25);
             
-            // Calculate Stress Factor (0-25 points) - 수정된 매개변수
+            // Calculate Stress Factor (0-25 points)
             const stressFactor = calculateStressFactor(todayData.sleepHours, todayData.stressLevel, todayData.focusLevel);
-            updateMetricCard('stressFactorCard', 'stressFactor', 'stressFactorStatus', stressFactor, 25);
+            updateMetricCard('stressFactorCard', 'stressFactorScore', 'stressFactorStatus', stressFactor, 25);
             
-            // Calculate Environment Factor (0-25 points)
-            const environmentFactor = calculateEnvironmentFactor(todayData.environmentType, todayData.focusLevel);
-            updateMetricCard('environmentFactorCard', 'environmentFactor', 'environmentFactorStatus', environmentFactor, 25);
+            // Calculate Discipline Factor (0-25 points)
+            const disciplineFactor = calculateDisciplineFactor();
+            updateMetricCard('disciplineFactorCard', 'disciplineFactorScore', 'disciplineFactorStatus', disciplineFactor, 25);
             
-            // Calculate Pressure Index (0-25 points)
-            const pressureIndex = calculatePressureIndex(todayData.stressLevel, todayData.accountBalance, todayData.dailyTarget);
-            updateMetricCard('pressureIndexCard', 'pressureIndex', 'pressureIndexStatus', pressureIndex, 25);
-            
-            // Calculate Emotional Readiness (0-25 points)
-            const emotionalReadiness = calculateEmotionalReadiness(todayData.confidenceLevel, todayData.confidenceLevel);
-            updateMetricCard('emotionalReadinessCard', 'emotionalReadiness', 'emotionalReadinessStatus', emotionalReadiness, 25);
+            // Calculate Consistency Factor (0-25 points)
+            const consistencyFactor = calculateConsistencyFactor();
+            updateMetricCard('consistencyFactorCard', 'consistencyFactorScore', 'consistencyFactorStatus', consistencyFactor, 25);
             
             // Calculate Daily Psychology Score (0-100)
             const dailyScore = sleepFactor + stressFactor + environmentFactor + pressureIndex + emotionalReadiness;
@@ -8368,7 +8417,7 @@ function applyCustomRisk() {
             }
         }
 
-        function calculateSleepFactor(sleepHours, sleepQuality) {
+        function calculateSleepQualityFactor(sleepHours, sleepQuality) {
             if (!sleepHours) return 0;
             
             let baseScore = Math.min(sleepHours >= 7 ? 20 : (sleepHours * 20 / 7), 20);
@@ -8463,6 +8512,18 @@ function applyCustomRisk() {
             }
         }
 
+        function safeUpdateElement(id, value, className = null) {
+            const element = document.getElementById(id);
+            if (element) {
+                if (typeof value === 'string' || typeof value === 'number') {
+                    element.textContent = value;
+                }
+                if (className) {
+                    element.className = className;
+                }
+            }
+        }
+
         function calculateStressFactor(sleepHours, stressLevel, focusLevel) {
             let baseScore = 25;
             
@@ -8484,18 +8545,6 @@ function applyCustomRisk() {
             }
             
             return Math.max(0, Math.min(25, baseScore));
-        }
-
-        function resetPsychologyMetrics() {
-            const metrics = ['dailyPsychScore', 'sleepFactor', 'stressFactor', 'environmentFactor', 'pressureIndex', 'emotionalReadiness'];
-            const cards = ['dailyPsychScoreCard', 'sleepFactorCard', 'stressFactorCard', 'environmentFactorCard', 'pressureIndexCard', 'emotionalReadinessCard'];
-            const statuses = ['dailyPsychStatus', 'sleepFactorStatus', 'stressFactorStatus', 'environmentFactorStatus', 'pressureIndexStatus', 'emotionalReadinessStatus'];
-            
-            metrics.forEach((metricId, index) => {
-                document.getElementById(metricId).textContent = '0';
-                document.getElementById(statuses[index]).textContent = 'No data';
-                document.getElementById(cards[index]).className = 'psychology-metric-card';
-            });
         }
 
         function generatePsychologyInsights() {
@@ -9329,9 +9378,14 @@ function applyCustomRisk() {
                     return;
                 }
                 
-                // 기존 차트가 있다면 제거
-                if (window.psychologyChart && typeof window.psychologyChart.destroy === 'function') {
-                    window.psychologyChart.destroy();
+               // 기존 차트가 있다면 안전하게 제거
+                if (typeof window.psychologyChart !== 'undefined' && window.psychologyChart && typeof window.psychologyChart.destroy === 'function') {
+                    try {
+                        window.psychologyChart.destroy();
+                        window.psychologyChart = null;
+                    } catch (error) {
+                        console.warn('Chart destruction error:', error);
+                    }
                 }
                 
                 const chartData = preparePsychologyChartData();
