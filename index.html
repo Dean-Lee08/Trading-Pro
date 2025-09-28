@@ -3289,8 +3289,8 @@
                             <div class="analytics-tabs">
                                 <button class="analytics-tab active" onclick="showAnalyticsSection('detail')" data-lang="detail">Detail</button>
                                 <button class="analytics-tab" onclick="showAnalyticsSection('charts')" data-lang="charts">Charts</button>
+                                <button class="analytics-tab" onclick="showAnalyticsSection('patterns')" data-lang="pattern-insights">Pattern Insights</button>
                             </div>
-                        </div>
                         
                         <div class="filter-controls">
                             <div class="date-range-selector">
@@ -3725,6 +3725,73 @@
                 </div>
             </div>
 
+                <!-- Pattern Insights Section -->
+                    <div class="detail-section" id="patternsSection">
+                        <div class="psychology-container">
+                            <h2 class="psychology-header" data-lang="pattern-insights-title">Pattern Insights & Recommendations</h2>
+                            
+                            <!-- Time-Based Performance -->
+                            <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="time-based-performance">Time-Based Performance Analysis</h3>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                                    <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                        <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="best-trading-hour">Best Trading Hour</div>
+                                        <div id="bestTradingHour" style="color: #10b981; font-size: 18px; font-weight: 700; margin-bottom: 4px;">--:--</div>
+                                        <div id="bestHourPerformance" style="color: #64748b; font-size: 11px;">Win Rate: --%</div>
+                                    </div>
+                                    
+                                    <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                        <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="worst-trading-hour">Worst Trading Hour</div>
+                                        <div id="worstTradingHour" style="color: #ef4444; font-size: 18px; font-weight: 700; margin-bottom: 4px;">--:--</div>
+                                        <div id="worstHourPerformance" style="color: #64748b; font-size: 11px;">Win Rate: --%</div>
+                                    </div>
+                                    
+                                    <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                        <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="optimal-sleep-range">Optimal Sleep Range</div>
+                                        <div id="optimalSleepRange" style="color: #3b82f6; font-size: 18px; font-weight: 700; margin-bottom: 4px;">-.- hours</div>
+                                        <div id="sleepRangePerformance" style="color: #64748b; font-size: 11px;">Avg P&L: $--</div>
+                                    </div>
+                                    
+                                    <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                                        <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="delay-impact">Start Delay Impact</div>
+                                        <div id="delayImpact" style="color: #f59e0b; font-size: 18px; font-weight: 700; margin-bottom: 4px;">--min</div>
+                                        <div id="delayPerformance" style="color: #64748b; font-size: 11px;">Performance drop: --%</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Consecutive Trades Pattern -->
+                            <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="consecutive-pattern">Consecutive Trades Pattern</h3>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+                                    <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
+                                        <div style="color: #94a3b8; font-size: 14px; margin-bottom: 12px;" data-lang="after-losses">Performance After Losses</div>
+                                        <div style="color: #e4e4e7; font-size: 13px; margin-bottom: 8px;">After 1 loss: <span id="after1Loss" style="font-weight: 600;">--%</span></div>
+                                        <div style="color: #e4e4e7; font-size: 13px; margin-bottom: 8px;">After 2 losses: <span id="after2Losses" style="font-weight: 600;">--%</span></div>
+                                        <div style="color: #e4e4e7; font-size: 13px;">After 3+ losses: <span id="after3Losses" style="font-weight: 600;">--%</span></div>
+                                    </div>
+                                    
+                                    <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
+                                        <div style="color: #94a3b8; font-size: 14px; margin-bottom: 12px;" data-lang="after-wins">Performance After Wins</div>
+                                        <div style="color: #e4e4e7; font-size: 13px; margin-bottom: 8px;">After 1 win: <span id="after1Win" style="font-weight: 600;">--%</span></div>
+                                        <div style="color: #e4e4e7; font-size: 13px; margin-bottom: 8px;">After 2 wins: <span id="after2Wins" style="font-weight: 600;">--%</span></div>
+                                        <div style="color: #e4e4e7; font-size: 13px;">After 3+ wins: <span id="after3Wins" style="font-weight: 600;">--%</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- AI-Generated Insights -->
+                            <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px;">
+                                <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="ai-insights">AI-Generated Insights</h3>
+                                <div id="aiInsightsList" style="display: grid; gap: 12px;">
+                                    <div style="background: #0f172a; border-left: 4px solid #3b82f6; padding: 12px 16px; border-radius: 0 6px 6px 0;">
+                                        <div style="color: #e4e4e7; font-size: 14px; line-height: 1.5;" data-lang="no-insights">Collect more psychology data to generate personalized insights.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
             <!-- Psychology page -->
             <div id="psychology" class="page">
                 <div class="page-header">
@@ -3735,12 +3802,8 @@
                     <div class="psychology-controls">
                         <div class="psychology-tabs">
                             <button class="psychology-tab active" onclick="showPsychologySection('input')" data-lang="daily-input">Daily Input</button>
-                            <button class="psychology-tab" onclick="showPsychologySection('metrics')" data-lang="metrics-dashboard">Metrics Dashboard</button>
                             <button class="psychology-tab" onclick="showPsychologySection('bias-analysis')" data-lang="bias-analysis">Bias Analysis</button>
-                            <button class="psychology-tab" onclick="showPsychologySection('patterns')" data-lang="pattern-insights">Pattern Insights</button>
                         </div>
-                    </div>
-                </div>
 
                 <!-- Daily Input Section -->
                 <div id="psychologyInputSection" class="psychology-section active">
@@ -4215,74 +4278,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Pattern Insights Section -->
-                <div id="psychologyPatternsSection" class="psychology-section">
-                    <div class="psychology-container">
-                        <h2 class="psychology-header" data-lang="pattern-insights-title">Pattern Insights & Recommendations</h2>
-                        
-                        <!-- Time-Based Performance -->
-                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
-                            <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="time-based-performance">Time-Based Performance Analysis</h3>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="best-trading-hour">Best Trading Hour</div>
-                                    <div id="bestTradingHour" style="color: #10b981; font-size: 18px; font-weight: 700; margin-bottom: 4px;">--:--</div>
-                                    <div id="bestHourPerformance" style="color: #64748b; font-size: 11px;">Win Rate: --%</div>
-                                </div>
-                                
-                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="worst-trading-hour">Worst Trading Hour</div>
-                                    <div id="worstTradingHour" style="color: #ef4444; font-size: 18px; font-weight: 700; margin-bottom: 4px;">--:--</div>
-                                    <div id="worstHourPerformance" style="color: #64748b; font-size: 11px;">Win Rate: --%</div>
-                                </div>
-                                
-                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="optimal-sleep-range">Optimal Sleep Range</div>
-                                    <div id="optimalSleepRange" style="color: #3b82f6; font-size: 18px; font-weight: 700; margin-bottom: 4px;">-.- hours</div>
-                                    <div id="sleepRangePerformance" style="color: #64748b; font-size: 11px;">Avg P&L: $--</div>
-                                </div>
-                                
-                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;" data-lang="delay-impact">Start Delay Impact</div>
-                                    <div id="delayImpact" style="color: #f59e0b; font-size: 18px; font-weight: 700; margin-bottom: 4px;">--min</div>
-                                    <div id="delayPerformance" style="color: #64748b; font-size: 11px;">Performance drop: --%</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Consecutive Trades Pattern -->
-                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
-                            <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="consecutive-pattern">Consecutive Trades Pattern</h3>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
-                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
-                                    <div style="color: #94a3b8; font-size: 14px; margin-bottom: 12px;" data-lang="after-losses">Performance After Losses</div>
-                                    <div style="color: #e4e4e7; font-size: 13px; margin-bottom: 8px;">After 1 loss: <span id="after1Loss" style="font-weight: 600;">--%</span></div>
-                                    <div style="color: #e4e4e7; font-size: 13px; margin-bottom: 8px;">After 2 losses: <span id="after2Losses" style="font-weight: 600;">--%</span></div>
-                                    <div style="color: #e4e4e7; font-size: 13px;">After 3+ losses: <span id="after3Losses" style="font-weight: 600;">--%</span></div>
-                                </div>
-                                
-                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
-                                    <div style="color: #94a3b8; font-size: 14px; margin-bottom: 12px;" data-lang="after-wins">Performance After Wins</div>
-                                    <div style="color: #e4e4e7; font-size: 13px; margin-bottom: 8px;">After 1 win: <span id="after1Win" style="font-weight: 600;">--%</span></div>
-                                    <div style="color: #e4e4e7; font-size: 13px; margin-bottom: 8px;">After 2 wins: <span id="after2Wins" style="font-weight: 600;">--%</span></div>
-                                    <div style="color: #e4e4e7; font-size: 13px;">After 3+ wins: <span id="after3Wins" style="font-weight: 600;">--%</span></div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- AI-Generated Insights -->
-                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px;">
-                            <h3 style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;" data-lang="ai-insights">AI-Generated Insights</h3>
-                            <div id="aiInsightsList" style="display: grid; gap: 12px;">
-                                <div style="background: #0f172a; border-left: 4px solid #3b82f6; padding: 12px 16px; border-radius: 0 6px 6px 0;">
-                                    <div style="color: #e4e4e7; font-size: 14px; line-height: 1.5;" data-lang="no-insights">Collect more psychology data to generate personalized insights.</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             
             <!-- Notes page -->
             <div id="notes" class="page">
@@ -5864,7 +5859,6 @@
             document.querySelectorAll('.analytics-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
-            // event.target 대신 직접 요소 찾기
             document.querySelector(`[onclick="showAnalyticsSection('${sectionName}')"]`).classList.add('active');
             
             // Show/hide sections
@@ -5878,6 +5872,9 @@
             } else if (sectionName === 'charts') {
                 document.getElementById('chartSection').classList.add('active');
                 setTimeout(async () => await updateAdvancedCharts(), 100);
+            } else if (sectionName === 'patterns') {
+                document.getElementById('patternsSection').classList.add('active');
+                setTimeout(() => updatePatternInsights(), 100);
             }
         }
 
@@ -8648,19 +8645,13 @@ function applyCustomRisk() {
                 let targetSectionId;
                 switch(section) {
                     case 'input':
-                        targetSectionId = 'psychologyInputSection';
-                        break;
-                    case 'metrics':
-                        targetSectionId = 'psychologyMetricsSection';
-                        break;
-                    case 'bias-analysis':
-                        targetSectionId = 'psychologyBiasSection';
-                        break;
-                    case 'patterns':
-                        targetSectionId = 'psychologyPatternsSection';
-                        break;
-                    default:
-                        targetSectionId = 'psychologyInputSection';
+                    targetSectionId = 'psychologyInputSection';
+                    break;
+                case 'bias-analysis':
+                    targetSectionId = 'psychologyBiasSection';
+                    break;
+                default:
+                    targetSectionId = 'psychologyInputSection';
                 }
                 
                 const targetSection = document.getElementById(targetSectionId);
