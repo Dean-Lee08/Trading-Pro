@@ -3733,11 +3733,6 @@
                         <p class="page-subtitle" data-lang="psychology-subtitle">Quantified psychological performance analysis</p>
                     </div>
                     <div class="psychology-controls">
-                        <div class="date-navigation">
-                            <button class="date-nav-btn" onclick="changeTradingDate(-1)" title="Previous day">←</button>
-                            <div class="current-date-display" id="psychologyCurrentDate" onclick="openDatePicker()" style="min-width: 120px; text-align: center;"></div>
-                            <button class="date-nav-btn" onclick="changeTradingDate(1)" title="Next day">→</button>
-                        </div>
                         <div class="psychology-tabs">
                             <button class="psychology-tab active" onclick="showPsychologySection('input')" data-lang="daily-input">Daily Input</button>
                             <button class="psychology-tab" onclick="showPsychologySection('metrics')" data-lang="metrics-dashboard">Metrics Dashboard</button>
@@ -3745,6 +3740,7 @@
                             <button class="psychology-tab" onclick="showPsychologySection('patterns')" data-lang="pattern-insights">Pattern Insights</button>
                         </div>
                     </div>
+                </div>
 
                 <!-- Daily Input Section -->
                 <div id="psychologyInputSection" class="psychology-section active">
@@ -3864,6 +3860,119 @@
                                     data-lang="reset-data">Reset Data</button>
                         </div>
                     </div>
+
+                        <!-- Enhanced Visual Dashboard -->
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 32px;">
+                            <!-- Sleep Performance Card -->
+                            <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid #334155; border-radius: 12px; padding: 20px; position: relative; overflow: hidden;">
+                                <div style="position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%); pointer-events: none;"></div>
+                                <div style="position: relative; z-index: 1;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                                        <h3 style="color: #10b981; font-size: 16px; font-weight: 600;" data-lang="sleep-performance">Sleep Performance</h3>
+                                        <div style="width: 40px; height: 40px; background: rgba(16, 185, 129, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                            <span style="font-size: 20px;">🛌</span>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px;">
+                                        <span id="sleepHoursDisplay" style="font-size: 28px; font-weight: 700; color: #e4e4e7;">0</span>
+                                        <span style="color: #94a3b8; font-size: 14px;">hours</span>
+                                    </div>
+                                    <div id="sleepQualityIndicator" style="height: 4px; background: #334155; border-radius: 2px; overflow: hidden;">
+                                        <div id="sleepQualityBar" style="height: 100%; background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981); width: 0%; transition: width 0.3s ease;"></div>
+                                    </div>
+                                    <div id="sleepStatus" style="color: #94a3b8; font-size: 12px; margin-top: 8px;">No data</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Environment Card -->
+                            <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid #334155; border-radius: 12px; padding: 20px; position: relative; overflow: hidden;">
+                                <div style="position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%); pointer-events: none;"></div>
+                                <div style="position: relative; z-index: 1;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                                        <h3 style="color: #3b82f6; font-size: 16px; font-weight: 600;" data-lang="environment-score">Environment Score</h3>
+                                        <div style="width: 40px; height: 40px; background: rgba(59, 130, 246, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                            <span style="font-size: 20px;">🏢</span>
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                                        <div style="width: 60px; height: 60px; position: relative;">
+                                            <svg style="width: 100%; height: 100%; transform: rotate(-90deg);">
+                                                <circle cx="30" cy="30" r="25" stroke="#334155" stroke-width="4" fill="none"></circle>
+                                                <circle id="environmentCircle" cx="30" cy="30" r="25" stroke="#3b82f6" stroke-width="4" fill="none" 
+                                                        stroke-dasharray="157" stroke-dashoffset="157" style="transition: stroke-dashoffset 0.5s ease;"></circle>
+                                            </svg>
+                                            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                                                <span id="environmentScore" style="font-size: 14px; font-weight: 700; color: #e4e4e7;">0</span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div id="environmentTypeDisplay" style="color: #e4e4e7; font-size: 14px; font-weight: 600;">-</div>
+                                            <div id="environmentStatus" style="color: #94a3b8; font-size: 12px;">No data</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Emotional State Card -->
+                            <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid #334155; border-radius: 12px; padding: 20px; position: relative; overflow: hidden;">
+                                <div style="position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%); pointer-events: none;"></div>
+                                <div style="position: relative; z-index: 1;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                                        <h3 style="color: #8b5cf6; font-size: 16px; font-weight: 600;" data-lang="emotional-readiness">Emotional Readiness</h3>
+                                        <div style="width: 40px; height: 40px; background: rgba(139, 92, 246, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                            <span style="font-size: 20px;">🧠</span>
+                                        </div>
+                                    </div>
+                                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px;">
+                                        <div style="text-align: center;">
+                                            <div id="stressDisplay" style="font-size: 18px; font-weight: 700; color: #e4e4e7;">3</div>
+                                            <div style="color: #94a3b8; font-size: 10px;">Stress</div>
+                                        </div>
+                                        <div style="text-align: center;">
+                                            <div id="confidenceDisplay" style="font-size: 18px; font-weight: 700; color: #e4e4e7;">3</div>
+                                            <div style="color: #94a3b8; font-size: 10px;">Confidence</div>
+                                        </div>
+                                        <div style="text-align: center;">
+                                            <div id="focusDisplay" style="font-size: 18px; font-weight: 700; color: #e4e4e7;">3</div>
+                                            <div style="color: #94a3b8; font-size: 10px;">Focus</div>
+                                        </div>
+                                    </div>
+                                    <div id="emotionalStatus" style="color: #94a3b8; font-size: 12px; text-align: center;">No data</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Risk Assessment Card -->
+                            <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid #334155; border-radius: 12px; padding: 20px; position: relative; overflow: hidden;">
+                                <div style="position: absolute; top: -50%; right: -50%; width: 100%; height: 100%; background: radial-gradient(circle, rgba(245, 158, 11, 0.1) 0%, transparent 70%); pointer-events: none;"></div>
+                                <div style="position: relative; z-index: 1;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                                        <h3 style="color: #f59e0b; font-size: 16px; font-weight: 600;" data-lang="risk-assessment">Risk Assessment</h3>
+                                        <div style="width: 40px; height: 40px; background: rgba(245, 158, 11, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                            <span style="font-size: 20px;">⚠️</span>
+                                        </div>
+                                    </div>
+                                    <div style="margin-bottom: 12px;">
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                            <span style="color: #94a3b8; font-size: 12px;">Target Risk</span>
+                                            <span id="targetRiskPercent" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">0%</span>
+                                        </div>
+                                        <div style="background: #334155; height: 6px; border-radius: 3px; overflow: hidden;">
+                                            <div id="targetRiskBar" style="height: 100%; background: linear-gradient(90deg, #10b981, #f59e0b, #ef4444); width: 0%; transition: width 0.3s ease;"></div>
+                                        </div>
+                                    </div>
+                                    <div style="margin-bottom: 8px;">
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                            <span style="color: #94a3b8; font-size: 12px;">Max Loss Risk</span>
+                                            <span id="maxLossRiskPercent" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">0%</span>
+                                        </div>
+                                        <div style="background: #334155; height: 6px; border-radius: 3px; overflow: hidden;">
+                                            <div id="maxLossRiskBar" style="height: 100%; background: linear-gradient(90deg, #10b981, #f59e0b, #ef4444); width: 0%; transition: width 0.3s ease;"></div>
+                                        </div>
+                                    </div>
+                                    <div id="riskStatus" style="color: #94a3b8; font-size: 12px; text-align: center;">No data</div>
+                                </div>
+                            </div>
+                        </div>
 
                     <!-- Psychology vs Performance Analysis Chart -->
                     <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 24px; margin-top: 24px;">
@@ -4741,17 +4850,10 @@
                 'stress-level': 'Stress Level (1-5)',
                 'focus-level': 'Focus Level (1-5)',
                 'emotional-state': 'Emotional State',
-                'pattern-insights-title': 'Pattern Insights & Recommendations',
-                'time-based-performance': 'Time-Based Performance Analysis',
-                'best-trading-hour': 'Best Trading Hour',
-                'worst-trading-hour': 'Worst Trading Hour',
-                'optimal-sleep-range': 'Optimal Sleep Range',
-                'delay-impact': 'Start Delay Impact',
-                'consecutive-pattern': 'Consecutive Trades Pattern',
-                'after-losses': 'Performance After Losses',
-                'after-wins': 'Performance After Wins',
-                'ai-insights': 'AI-Generated Insights',
-                'no-insights': 'Collect more psychology data to generate personalized insights.'
+                'sleep-performance': 'Sleep Performance',
+                'environment-score': 'Environment Score',
+                'emotional-readiness': 'Emotional Readiness',
+                'risk-assessment': 'Risk Assessment'
             },
             ko: {
                 'dashboard': '대시보드',
@@ -5077,17 +5179,10 @@
                 'stress-level': '스트레스 수준 (1-5)',
                 'focus-level': '집중력 수준 (1-5)',
                 'emotional-state': '감정 상태',
-                'pattern-insights-title': '패턴 인사이트 및 권장사항',
-                'time-based-performance': '시간대별 성과 분석',
-                'best-trading-hour': '최고 거래시간',
-                'worst-trading-hour': '최악 거래시간',
-                'optimal-sleep-range': '최적 수면 범위',
-                'delay-impact': '시작 지연 영향',
-                'consecutive-pattern': '연속 거래 패턴',
-                'after-losses': '손실 후 성과',
-                'after-wins': '수익 후 성과',
-                'ai-insights': 'AI 생성 인사이트',
-                'no-insights': '더 많은 심리 데이터를 수집하여 개인화된 인사이트를 생성하세요.'
+                'sleep-performance': '수면 vs 성과',
+                'environment-score': 'Environment Score',
+                'emotional-readiness': '감정적 준비도',
+                'risk-assessment': 'Risk Assessment'
             }
         };
         
@@ -6403,6 +6498,164 @@
     });
 }
 
+        // Slider display update function
+        function updateSliderDisplay(sliderId, displayId) {
+            const slider = document.getElementById(sliderId);
+            const display = document.getElementById(displayId);
+            if (slider && display) {
+                display.textContent = slider.value;
+                
+                // Update emotional state cards
+                updateEmotionalStateCards();
+            }
+        }
+
+        // Target percentage update function
+        function updateTargetPercentages() {
+            const balance = parseFloat(document.getElementById('accountBalance').value) || 0;
+            const target = parseFloat(document.getElementById('dailyTarget').value) || 0;
+            const maxLoss = parseFloat(document.getElementById('maxDailyLoss').value) || 0;
+            
+            const targetPercent = document.getElementById('dailyTargetPercent');
+            const lossPercent = document.getElementById('maxLossPercent');
+            
+            if (targetPercent) {
+                if (balance > 0 && target > 0) {
+                    targetPercent.textContent = ((target / balance) * 100).toFixed(1) + '%';
+                } else {
+                    targetPercent.textContent = '0%';
+                }
+            }
+            
+            if (lossPercent) {
+                if (balance > 0 && maxLoss > 0) {
+                    lossPercent.textContent = ((maxLoss / balance) * 100).toFixed(1) + '%';
+                } else {
+                    lossPercent.textContent = '0%';
+                }
+            }
+            
+            updateRiskAssessmentCard();
+        }
+
+        // Update emotional state cards
+        function updateEmotionalStateCards() {
+            const stress = parseInt(document.getElementById('stressLevel').value) || 3;
+            const confidence = parseInt(document.getElementById('confidenceLevel').value) || 3;
+            const focus = parseInt(document.getElementById('focusLevel').value) || 3;
+            
+            document.getElementById('stressDisplay').textContent = stress;
+            document.getElementById('confidenceDisplay').textContent = confidence;
+            document.getElementById('focusDisplay').textContent = focus;
+            
+            // Update emotional status
+            const avgEmotional = (confidence + focus + (6 - stress)) / 3;
+            let status = '';
+            if (avgEmotional >= 4.5) status = 'Excellent';
+            else if (avgEmotional >= 3.5) status = 'Good';
+            else if (avgEmotional >= 2.5) status = 'Fair';
+            else status = 'Poor';
+            
+            document.getElementById('emotionalStatus').textContent = status;
+        }
+
+        // Update sleep performance card
+        function updateSleepPerformanceCard() {
+            const sleepHours = parseFloat(document.getElementById('sleepHours').value) || 0;
+            
+            document.getElementById('sleepHoursDisplay').textContent = sleepHours.toFixed(1);
+            
+            // Update sleep quality bar
+            let qualityPercent = 0;
+            let status = 'No data';
+            
+            if (sleepHours > 0) {
+                if (sleepHours >= 7 && sleepHours <= 8) {
+                    qualityPercent = 100;
+                    status = 'Optimal';
+                } else if (sleepHours >= 6 && sleepHours < 7) {
+                    qualityPercent = 75;
+                    status = 'Good';
+                } else if (sleepHours >= 5 && sleepHours < 6) {
+                    qualityPercent = 50;
+                    status = 'Fair';
+                } else if (sleepHours > 8) {
+                    qualityPercent = 60;
+                    status = 'Too much';
+                } else {
+                    qualityPercent = 25;
+                    status = 'Poor';
+                }
+            }
+            
+            document.getElementById('sleepQualityBar').style.width = qualityPercent + '%';
+            document.getElementById('sleepStatus').textContent = status;
+        }
+
+        // Update environment score card
+        function updateEnvironmentScoreCard() {
+            const envType = document.getElementById('environmentType').value;
+            const focus = parseInt(document.getElementById('focusLevel').value) || 3;
+            
+            let baseScore = 50;
+            const envScores = {
+                'home-quiet': 100,
+                'office': 80,
+                'home-noisy': 60,
+                'cafe': 40,
+                'other': 50
+            };
+            
+            baseScore = envScores[envType] || 50;
+            const finalScore = Math.min(100, baseScore + (focus - 3) * 10);
+            
+            document.getElementById('environmentScore').textContent = finalScore;
+            document.getElementById('environmentTypeDisplay').textContent = envType.replace('-', ' ').toUpperCase();
+            
+            // Update circle progress
+            const circumference = 157;
+            const progress = (finalScore / 100) * circumference;
+            document.getElementById('environmentCircle').style.strokeDashoffset = circumference - progress;
+            
+            let status = '';
+            if (finalScore >= 80) status = 'Excellent';
+            else if (finalScore >= 60) status = 'Good';
+            else if (finalScore >= 40) status = 'Fair';
+            else status = 'Poor';
+            
+            document.getElementById('environmentStatus').textContent = status;
+        }
+
+        // Update risk assessment card
+        function updateRiskAssessmentCard() {
+            const balance = parseFloat(document.getElementById('accountBalance').value) || 0;
+            const target = parseFloat(document.getElementById('dailyTarget').value) || 0;
+            const maxLoss = parseFloat(document.getElementById('maxDailyLoss').value) || 0;
+            
+            let targetRisk = 0;
+            let maxLossRisk = 0;
+            
+            if (balance > 0) {
+                targetRisk = (target / balance) * 100;
+                maxLossRisk = (maxLoss / balance) * 100;
+            }
+            
+            document.getElementById('targetRiskPercent').textContent = targetRisk.toFixed(1) + '%';
+            document.getElementById('maxLossRiskPercent').textContent = maxLossRisk.toFixed(1) + '%';
+            
+            document.getElementById('targetRiskBar').style.width = Math.min(targetRisk * 10, 100) + '%';
+            document.getElementById('maxLossRiskBar').style.width = Math.min(maxLossRisk * 10, 100) + '%';
+            
+            let status = 'No data';
+            if (balance > 0) {
+                if (targetRisk <= 2 && maxLossRisk <= 5) status = 'Conservative';
+                else if (targetRisk <= 5 && maxLossRisk <= 10) status = 'Moderate';
+                else status = 'Aggressive';
+            }
+            
+            document.getElementById('riskStatus').textContent = status;
+        }
+
         // Page initialization
         document.addEventListener('DOMContentLoaded', async function() {
     await waitForChart();
@@ -6438,6 +6691,12 @@
             document.getElementById('editTradeForm').addEventListener('submit', handleEditTradeSubmit);
             document.getElementById('entryTime').addEventListener('change', calculateHoldingTime);
             document.getElementById('exitTime').addEventListener('change', calculateHoldingTime);
+            // Psychology input event listeners
+            document.getElementById('sleepHours').addEventListener('input', updateAllPsychologyCards);
+            document.getElementById('environmentType').addEventListener('change', updateAllPsychologyCards);
+            document.getElementById('accountBalance').addEventListener('input', updateTargetPercentages);
+            document.getElementById('dailyTarget').addEventListener('input', updateTargetPercentages);
+            document.getElementById('maxDailyLoss').addEventListener('input', updateTargetPercentages);
             
             // Dashboard date range listeners
             document.getElementById('dashboardStartDate').addEventListener('change', function() {
@@ -8220,7 +8479,16 @@ function applyCustomRisk() {
             
             updatePsychologyMetrics();
             generatePsychologyInsights();
+            updateAllPsychologyCards();
             showToast(currentLanguage === 'ko' ? '심리 데이터가 저장되었습니다' : 'Psychology data saved');
+        }
+
+        // Update all psychology cards
+        function updateAllPsychologyCards() {
+            updateSleepPerformanceCard();
+            updateEnvironmentScoreCard();
+            updateEmotionalStateCards();
+            updateRiskAssessmentCard();
         }
 
         function resetPsychologyData() {
@@ -8255,10 +8523,6 @@ function applyCustomRisk() {
                 if (document.getElementById('psychologyInsightsList')) {
                     generatePsychologyInsights();
                 }
-                // 차트 업데이트 시도
-                setTimeout(() => {
-                    updatePsychologyChart();
-                }, 100);
                 return;
             }
             
@@ -8290,137 +8554,8 @@ function applyCustomRisk() {
             if (document.getElementById('psychologyInsightsList')) {
                 generatePsychologyInsights();
             }
-            
-            // 차트 업데이트
-            setTimeout(() => {
-                updatePsychologyChart();
-            }, 100);
         }
 
-        // Psychology Chart Update Function
-        function updatePsychologyChart() {
-            const canvas = document.getElementById('psychologyPerformanceChart');
-            if (!canvas) return;
-
-            // 심리학 데이터와 거래 성과 데이터 수집
-            const psychDataDates = Object.keys(psychologyData).sort();
-            const chartData = {
-                labels: [],
-                datasets: [
-                    {
-                        label: currentLanguage === 'ko' ? '수면 시간' : 'Sleep Hours',
-                        data: [],
-                        borderColor: '#10b981',
-                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                        yAxisID: 'y',
-                        tension: 0.4
-                    },
-                    {
-                        label: currentLanguage === 'ko' ? '일일 손익' : 'Daily P&L',
-                        data: [],
-                        borderColor: '#3b82f6',
-                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                        yAxisID: 'y1',
-                        tension: 0.4
-                    },
-                    {
-                        label: currentLanguage === 'ko' ? '스트레스 수준' : 'Stress Level',
-                        data: [],
-                        borderColor: '#ef4444',
-                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                        yAxisID: 'y2',
-                        tension: 0.4
-                    }
-                ]
-            };
-
-            // 최근 10일 데이터 처리
-            const recentDates = psychDataDates.slice(-10);
-            
-            recentDates.forEach(date => {
-                const psychData = psychologyData[date];
-                const dayTrades = trades.filter(trade => trade.date === date);
-                const dailyPnL = dayTrades.reduce((sum, trade) => sum + trade.pnl, 0);
-                const dailyFee = dailyFees[date] || 0;
-                const netPnL = dailyPnL - dailyFee;
-                
-                chartData.labels.push(new Date(date).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' }));
-                chartData.datasets[0].data.push(psychData.sleepHours || 0);
-                chartData.datasets[1].data.push(netPnL);
-                chartData.datasets[2].data.push(psychData.stressLevel || 3);
-            });
-
-            // 기존 차트 제거
-            if (window.psychologyChart) {
-                window.psychologyChart.destroy();
-            }
-
-            // 새 차트 생성
-            const ctx = canvas.getContext('2d');
-            window.psychologyChart = new Chart(ctx, {
-                type: 'line',
-                data: chartData,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false,
-                    },
-                    plugins: {
-                        legend: {
-                            labels: {
-                                color: '#e4e4e7'
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: '#1e293b',
-                            titleColor: '#e4e4e7',
-                            bodyColor: '#e4e4e7',
-                            borderColor: '#334155',
-                            borderWidth: 1
-                        }
-                    },
-                    scales: {
-                        x: {
-                            ticks: { color: '#94a3b8' },
-                            grid: { color: '#334155' }
-                        },
-                        y: {
-                            type: 'linear',
-                            display: true,
-                            position: 'left',
-                            ticks: { color: '#94a3b8' },
-                            grid: { color: '#334155' },
-                            title: {
-                                display: true,
-                                text: currentLanguage === 'ko' ? '수면 시간' : 'Sleep Hours',
-                                color: '#10b981'
-                            }
-                        },
-                        y1: {
-                            type: 'linear',
-                            display: true,
-                            position: 'right',
-                            ticks: { color: '#94a3b8' },
-                            grid: { drawOnChartArea: false },
-                            title: {
-                                display: true,
-                                text: currentLanguage === 'ko' ? '일일 손익' : 'Daily P&L',
-                                color: '#3b82f6'
-                            }
-                        },
-                        y2: {
-                            type: 'linear',
-                            display: false,
-                            min: 1,
-                            max: 5
-                        }
-                    }
-                }
-            });
-        }
-        
         function calculateSleepFactor(sleepHours, sleepQuality) {
             if (!sleepHours) return 0;
             
@@ -9990,41 +10125,6 @@ function applyCustomRisk() {
                 showToast(currentLanguage === 'ko' ? 
                     `${tradesToDelete.length}개의 거래가 삭제되었습니다` : 
                     `${tradesToDelete.length} trades deleted`);
-            }
-        }
-
-        // Slider display update function
-        function updateSliderDisplay(sliderId, displayId) {
-            const slider = document.getElementById(sliderId);
-            const display = document.getElementById(displayId);
-            if (slider && display) {
-                display.textContent = slider.value;
-            }
-        }
-
-        // Target percentage update function
-        function updateTargetPercentages() {
-            const balance = parseFloat(document.getElementById('accountBalance').value) || 0;
-            const target = parseFloat(document.getElementById('dailyTarget').value) || 0;
-            const maxLoss = parseFloat(document.getElementById('maxDailyLoss').value) || 0;
-            
-            const targetPercent = document.getElementById('dailyTargetPercent');
-            const lossPercent = document.getElementById('maxLossPercent');
-            
-            if (targetPercent) {
-                if (balance > 0 && target > 0) {
-                    targetPercent.textContent = ((target / balance) * 100).toFixed(1) + '%';
-                } else {
-                    targetPercent.textContent = '0%';
-                }
-            }
-            
-            if (lossPercent) {
-                if (balance > 0 && maxLoss > 0) {
-                    lossPercent.textContent = ((maxLoss / balance) * 100).toFixed(1) + '%';
-                } else {
-                    lossPercent.textContent = '0%';
-                }
             }
         }
         
