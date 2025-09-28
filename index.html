@@ -8052,18 +8052,31 @@
         }
 
         function calculatePosition() {
-            const balance = parseFloat(document.getElementById('calcAccountBalance').value) || 0;
-            const winRate = parseFloat(document.getElementById('calcWinRate').value) / 100 || 0;
-            const avgWin = parseFloat(document.getElementById('calcAvgWin').value) || 0;
-            const avgLoss = parseFloat(document.getElementById('calcAvgLoss').value) || 0;
+            const balance = parseFloat(document.getElementById('calcAccountBalance')?.value) || 0;
+            const winRate = parseFloat(document.getElementById('calcWinRate')?.value) / 100 || 0;
+            const avgWin = parseFloat(document.getElementById('calcAvgWin')?.value) || 0;
+            const avgLoss = parseFloat(document.getElementById('calcAvgLoss')?.value) || 0;
+            
+            const recommendedSizeEl = document.getElementById('recommendedSize');
+            const accountUtilEl = document.getElementById('accountUtil');
+            const expectedValEl = document.getElementById('expectedVal');
+            
+            if (!recommendedSizeEl || !accountUtilEl || !expectedValEl) {
+                console.warn('Position calculator elements not found');
+                return;
+            }
             
             if (avgLoss === 0 || balance === 0) {
-                document.getElementById('recommendedSize').textContent = '$0';
-                document.getElementById('accountUtil').textContent = '0%';
-                document.getElementById('expectedVal').textContent = '$0';
-                document.getElementById('expectedVal').className = 'sidebar-stat-value';
-                document.getElementById('kellyStatus').textContent = 'Safe';
-                document.getElementById('kellyStatus').className = 'sidebar-stat-value positive';
+                recommendedSizeEl.textContent = '$0';
+                accountUtilEl.textContent = '0%';
+                expectedValEl.textContent = '$0';
+                expectedValEl.className = 'sidebar-stat-value';
+                
+                const kellyStatusEl = document.getElementById('kellyStatus');
+                if (kellyStatusEl) {
+                    kellyStatusEl.textContent = 'Safe';
+                    kellyStatusEl.className = 'sidebar-stat-value positive';
+                }
                 return;
             }
             
@@ -8075,23 +8088,26 @@
             const fullKelly = balance * kellyFraction;
             
             const recommendedPosition = fullKelly * selectedKellyMultiplier;
-            document.getElementById('recommendedSize').textContent = '$' + recommendedPosition.toFixed(0);
+            recommendedSizeEl.textContent = '$' + recommendedPosition.toFixed(0);
             
             const utilization = (recommendedPosition / balance) * 100;
-            document.getElementById('accountUtil').textContent = utilization.toFixed(1) + '%';
+            accountUtilEl.textContent = utilization.toFixed(1) + '%';
             
             const expectedValue = (p * avgWin - q * avgLoss) * (recommendedPosition / Math.max(avgWin, 1));
-            document.getElementById('expectedVal').textContent = '$' + expectedValue.toFixed(0);
-            document.getElementById('expectedVal').className = 'sidebar-stat-value ' + (expectedValue >= 0 ? 'positive' : 'negative');
+            expectedValEl.textContent = '$' + expectedValue.toFixed(0);
+            expectedValEl.className = 'sidebar-stat-value ' + (expectedValue >= 0 ? 'positive' : 'negative');
             
             const kellyPercent = kellyFraction * 100;
             let riskLevel = 'Safe';
             if (kellyPercent > 25) riskLevel = 'High';
             else if (kellyPercent > 15) riskLevel = 'Medium';
             
-            document.getElementById('kellyStatus').textContent = riskLevel;
-            document.getElementById('kellyStatus').className = 'sidebar-stat-value ' + 
-                (riskLevel === 'Safe' ? 'positive' : riskLevel === 'Medium' ? 'neutral' : 'negative');
+            const kellyStatusEl = document.getElementById('kellyStatus');
+            if (kellyStatusEl) {
+                kellyStatusEl.textContent = riskLevel;
+                kellyStatusEl.className = 'sidebar-stat-value ' + 
+                    (riskLevel === 'Safe' ? 'positive' : riskLevel === 'Medium' ? 'neutral' : 'negative');
+            }
         }
 
         function selectKellyMultiplier(element) {
@@ -8105,37 +8121,44 @@
         }
 
         function autoLoadTradeData() {
-    if (!trades || trades.length === 0) {
-        alert('거래 이력이 없습니다.');
-        return;
-    }
-    
-    const recentTrades = trades.slice(-20);
-    const wins = recentTrades.filter(trade => trade.pnl > 0);
-    const losses = recentTrades.filter(trade => trade.pnl < 0);
-    
-    if (losses.length === 0) {
-        alert('손실 거래가 없어 계산할 수 없습니다.');
-        return;
-    }
-    
-    const winRate = (wins.length / recentTrades.length) * 100;
-    const avgWin = wins.length > 0 ? wins.reduce((sum, trade) => sum + trade.pnl, 0) / wins.length : 0;
-    const avgLoss = Math.abs(losses.reduce((sum, trade) => sum + trade.pnl, 0) / losses.length);
-    
-    // Kelly 계산기 입력 필드에 값 설정
-    document.getElementById('calcWinRate').value = winRate.toFixed(1);
-    document.getElementById('calcAvgWin').value = avgWin.toFixed(0);
-    document.getElementById('calcAvgLoss').value = avgLoss.toFixed(0);
-    
-    // 사이드바에도 표시
-    document.getElementById('recentWinRateCalc').textContent = winRate.toFixed(1) + '%';
-    document.getElementById('plRatioCalc').textContent = (avgWin / avgLoss).toFixed(2);
-    
-    // 계산 실행
-    calculatePosition();
-    showToast('거래 이력에서 데이터를 불러왔습니다');
-}
+            if (!trades || trades.length === 0) {
+                alert('거래 이력이 없습니다.');
+                return;
+            }
+            
+            const recentTrades = trades.slice(-20);
+            const wins = recentTrades.filter(trade => trade.pnl > 0);
+            const losses = recentTrades.filter(trade => trade.pnl < 0);
+            
+            if (losses.length === 0) {
+                alert('손실 거래가 없어 계산할 수 없습니다.');
+                return;
+            }
+            
+            const winRate = (wins.length / recentTrades.length) * 100;
+            const avgWin = wins.length > 0 ? wins.reduce((sum, trade) => sum + trade.pnl, 0) / wins.length : 0;
+            const avgLoss = Math.abs(losses.reduce((sum, trade) => sum + trade.pnl, 0) / losses.length);
+            
+            // Kelly 계산기 입력 필드에 값 설정
+            const calcWinRateEl = document.getElementById('calcWinRate');
+            const calcAvgWinEl = document.getElementById('calcAvgWin');
+            const calcAvgLossEl = document.getElementById('calcAvgLoss');
+            
+            if (calcWinRateEl) calcWinRateEl.value = winRate.toFixed(1);
+            if (calcAvgWinEl) calcAvgWinEl.value = avgWin.toFixed(0);
+            if (calcAvgLossEl) calcAvgLossEl.value = avgLoss.toFixed(0);
+            
+            // 사이드바에도 표시
+            const recentWinRateCalcEl = document.getElementById('recentWinRateCalc');
+            const plRatioCalcEl = document.getElementById('plRatioCalc');
+            
+            if (recentWinRateCalcEl) recentWinRateCalcEl.textContent = winRate.toFixed(1) + '%';
+            if (plRatioCalcEl) plRatioCalcEl.textContent = (avgWin / avgLoss).toFixed(2);
+            
+            // 계산 실행
+            calculatePosition();
+            showToast('거래 이력에서 데이터를 불러왔습니다');
+        }
 
         // Calculator Tab Management
         function showCalculatorTab(tabName) {
@@ -8168,44 +8191,50 @@
 
         // Risk Calculator Functions
         function calculateRiskPosition() {
-    const balance = parseFloat(document.getElementById('riskAccountBalance').value) || 0;
-    const riskPercent = parseFloat(document.getElementById('riskPercentage').value) || 0;
-    const entryPrice = parseFloat(document.getElementById('riskEntryPrice').value) || 0;
-    const stopPrice = parseFloat(document.getElementById('riskStopPrice').value) || 0;
-    
-    if (balance === 0 || entryPrice === 0 || stopPrice === 0 || entryPrice === stopPrice) {
-        resetRiskCalculatorDisplay();
-        return;
-    }
-    
-    const riskAmount = balance * (riskPercent / 100);
-    const riskPerShare = Math.abs(entryPrice - stopPrice);
-    const sharesQuantity = Math.floor(riskAmount / riskPerShare);
-    const positionSize = sharesQuantity * entryPrice;
-    const actualMaxLoss = sharesQuantity * riskPerShare;
-    const accountUtilization = (positionSize / balance) * 100;
-    
-    // 기존 사이드바 업데이트 (포지션 분석)
-    document.getElementById('recommendedSize').textContent = '$' + positionSize.toFixed(0);
-    document.getElementById('accountUtil').textContent = accountUtilization.toFixed(1) + '%';
-    document.getElementById('expectedVal').textContent = '-$' + actualMaxLoss.toFixed(0);
-    
-    // 새로운 사이드바 업데이트 (자동 분석)
-    document.getElementById('riskPositionSizeSidebar').textContent = '$' + positionSize.toFixed(0);
-    document.getElementById('riskSharesQuantitySidebar').textContent = sharesQuantity.toString();
-    document.getElementById('riskPerShareSidebar').textContent = '$' + riskPerShare.toFixed(2);
-    document.getElementById('riskMaxLossSidebar').textContent = '$' + actualMaxLoss.toFixed(2);
-    document.getElementById('riskPositionCostSidebar').textContent = '$' + positionSize.toFixed(2);
-    
-    // 기존 결과 섹션 업데이트
-    document.getElementById('riskPositionSize').textContent = '$' + positionSize.toFixed(0);
-    document.getElementById('riskSharesQuantity').textContent = sharesQuantity.toString();
-    document.getElementById('riskPerShare').textContent = '$' + riskPerShare.toFixed(2);
-    document.getElementById('riskMaxLoss').textContent = '$' + actualMaxLoss.toFixed(2);
-    document.getElementById('riskPositionCost').textContent = '$' + positionSize.toFixed(2);
-    document.getElementById('riskAccountUtil').textContent = accountUtilization.toFixed(2) + '%';
-}
-
+            const balance = parseFloat(document.getElementById('riskAccountBalance')?.value) || 0;
+            const riskPercent = parseFloat(document.getElementById('riskPercentage')?.value) || 0;
+            const entryPrice = parseFloat(document.getElementById('riskEntryPrice')?.value) || 0;
+            const stopPrice = parseFloat(document.getElementById('riskStopPrice')?.value) || 0;
+            
+            if (balance === 0 || entryPrice === 0 || stopPrice === 0 || entryPrice === stopPrice) {
+                resetRiskCalculatorDisplay();
+                return;
+            }
+            
+            const riskAmount = balance * (riskPercent / 100);
+            const riskPerShare = Math.abs(entryPrice - stopPrice);
+            const sharesQuantity = Math.floor(riskAmount / riskPerShare);
+            const positionSize = sharesQuantity * entryPrice;
+            const actualMaxLoss = sharesQuantity * riskPerShare;
+            const accountUtilization = (positionSize / balance) * 100;
+            
+            // 안전한 요소 업데이트 함수
+            const updateElement = (id, value) => {
+                const element = document.getElementById(id);
+                if (element) element.textContent = value;
+            };
+            
+            // 기존 사이드바 업데이트 (포지션 분석)
+            updateElement('recommendedSize', '$' + positionSize.toFixed(0));
+            updateElement('accountUtil', accountUtilization.toFixed(1) + '%');
+            updateElement('expectedVal', '-$' + actualMaxLoss.toFixed(0));
+            
+            // 새로운 사이드바 업데이트 (자동 분석)
+            updateElement('riskPositionSizeSidebar', '$' + positionSize.toFixed(0));
+            updateElement('riskSharesQuantitySidebar', sharesQuantity.toString());
+            updateElement('riskPerShareSidebar', '$' + riskPerShare.toFixed(2));
+            updateElement('riskMaxLossSidebar', '$' + actualMaxLoss.toFixed(2));
+            updateElement('riskPositionCostSidebar', '$' + positionSize.toFixed(2));
+            
+            // 기존 결과 섹션 업데이트
+            updateElement('riskPositionSize', '$' + positionSize.toFixed(0));
+            updateElement('riskSharesQuantity', sharesQuantity.toString());
+            updateElement('riskPerShare', '$' + riskPerShare.toFixed(2));
+            updateElement('riskMaxLoss', '$' + actualMaxLoss.toFixed(2));
+            updateElement('riskPositionCost', '$' + positionSize.toFixed(2));
+            updateElement('riskAccountUtil', accountUtilization.toFixed(2) + '%');
+        }
+        
         function setRiskPreset(percent) {
             document.querySelectorAll('.risk-preset-btn').forEach(btn => {
                 btn.classList.remove('active');
@@ -8228,27 +8257,33 @@
         }
 
         function resetRiskCalculatorDisplay() {
-    // 기존 결과 섹션 초기화
-    document.getElementById('riskPositionSize').textContent = '$0';
-    document.getElementById('riskSharesQuantity').textContent = '0';
-    document.getElementById('riskPerShare').textContent = '$0.00';
-    document.getElementById('riskMaxLoss').textContent = '$0.00';
-    document.getElementById('riskPositionCost').textContent = '$0.00';
-    document.getElementById('riskAccountUtil').textContent = '0.00%';
-    
-    // 포지션 분석 사이드바 초기화
-    document.getElementById('recommendedSize').textContent = '$0';
-    document.getElementById('accountUtil').textContent = '0%';
-    document.getElementById('expectedVal').textContent = '$0';
-    
-    // 자동 분석 사이드바 초기화
-    document.getElementById('riskPositionSizeSidebar').textContent = '$0';
-    document.getElementById('riskSharesQuantitySidebar').textContent = '0';
-    document.getElementById('riskPerShareSidebar').textContent = '$0.00';
-    document.getElementById('riskMaxLossSidebar').textContent = '$0.00';
-    document.getElementById('riskPositionCostSidebar').textContent = '$0.00';
-}
-
+            // 안전한 요소 업데이트 함수
+            const updateElement = (id, value) => {
+                const element = document.getElementById(id);
+                if (element) element.textContent = value;
+            };
+            
+            // 기존 결과 섹션 초기화
+            updateElement('riskPositionSize', '$0');
+            updateElement('riskSharesQuantity', '0');
+            updateElement('riskPerShare', '$0.00');
+            updateElement('riskMaxLoss', '$0.00');
+            updateElement('riskPositionCost', '$0.00');
+            updateElement('riskAccountUtil', '0.00%');
+            
+            // 포지션 분석 사이드바 초기화
+            updateElement('recommendedSize', '$0');
+            updateElement('accountUtil', '0%');
+            updateElement('expectedVal', '$0');
+            
+            // 자동 분석 사이드바 초기화
+            updateElement('riskPositionSizeSidebar', '$0');
+            updateElement('riskSharesQuantitySidebar', '0');
+            updateElement('riskPerShareSidebar', '$0.00');
+            updateElement('riskMaxLossSidebar', '$0.00');
+            updateElement('riskPositionCostSidebar', '$0.00');
+        }
+        
         function toggleCustomRisk() {
     document.querySelectorAll('.risk-preset-btn').forEach(btn => {
         btn.classList.remove('active');
@@ -8279,33 +8314,38 @@ function applyCustomRisk() {
         function savePsychologyData() {
             const currentDate = formatTradingDate(currentTradingDate);
             
+            // 안전한 요소 접근을 위한 헬퍼 함수
+            const getElementValue = (id, defaultValue = 0) => {
+                const element = document.getElementById(id);
+                return element ? (parseFloat(element.value) || defaultValue) : defaultValue;
+            };
+            
+            const getElementStringValue = (id, defaultValue = '') => {
+                const element = document.getElementById(id);
+                return element ? (element.value || defaultValue) : defaultValue;
+            };
+            
             const data = {
                 date: currentDate,
                 timestamp: new Date().toISOString(),
                 
                 // Biological data
-                sleepHours: parseFloat(document.getElementById('sleepHours').value) || 0,
-                sleepQuality: parseInt(document.getElementById('sleepQuality').value) || 3,
-                caffeineIntake: parseFloat(document.getElementById('caffeineIntake').value) || 0,
-                energyLevel: parseInt(document.getElementById('energyLevel').value) || 3,
+                sleepHours: getElementValue('sleepHours'),
                 
                 // Time & environment
-                plannedStartTime: document.getElementById('plannedStartTime').value || '09:30',
-                actualStartTime: document.getElementById('actualStartTime').value || '',
-                marketDelay: parseInt(document.getElementById('marketDelay').value) || 0,
-                tradingEnvironment: document.getElementById('tradingEnvironment').value || 'home-quiet',
+                startTime: getElementStringValue('startTime', '09:30'),
+                endTime: getElementStringValue('endTime'),
+                environmentType: getElementStringValue('environmentType', 'home'),
                 
                 // Economic pressure
-                accountBalance: parseFloat(document.getElementById('psychAccountBalance').value) || 0,
-                pressureLevel: parseInt(document.getElementById('pressureLevel').value) || 3,
-                dailyTarget: parseFloat(document.getElementById('dailyTarget').value) || 0,
-                maxDailyLoss: parseFloat(document.getElementById('maxDailyLoss').value) || 0,
+                accountBalance: getElementValue('accountBalance'),
+                dailyTarget: getElementValue('dailyTarget'),
+                maxDailyLoss: getElementValue('maxDailyLoss'),
                 
                 // Emotional state
-                preMarketMood: parseInt(document.getElementById('preMarketMood').value) || 3,
-                confidenceLevel: parseInt(document.getElementById('confidenceLevel').value) || 3,
-                stressLevel: parseInt(document.getElementById('stressLevel').value) || 3,
-                focusLevel: parseInt(document.getElementById('focusLevel').value) || 3
+                stressLevel: getElementValue('stressLevel', 3),
+                confidenceLevel: getElementValue('confidenceLevel', 3),
+                focusLevel: getElementValue('focusLevel', 3)
             };
             
             psychologyData[currentDate] = data;
@@ -8315,7 +8355,7 @@ function applyCustomRisk() {
             generatePsychologyInsights();
             showToast(currentLanguage === 'ko' ? '심리 데이터가 저장되었습니다' : 'Psychology data saved');
         }
-
+        
         function resetPsychologyData() {
             const confirmMessage = currentLanguage === 'ko' ? 
                 '심리 데이터를 초기화하시겠습니까?' : 
@@ -9156,19 +9196,26 @@ function applyCustomRisk() {
         }
 
         function updateTargetPercentages() {
-            const balance = parseFloat(document.getElementById('accountBalance').value) || 0;
-            const target = parseFloat(document.getElementById('dailyTarget').value) || 0;
-            const maxLoss = parseFloat(document.getElementById('maxDailyLoss').value) || 0;
+            const balanceEl = document.getElementById('accountBalance');
+            const targetEl = document.getElementById('dailyTarget');
+            const maxLossEl = document.getElementById('maxDailyLoss');
+            
+            const balance = balanceEl ? parseFloat(balanceEl.value) || 0 : 0;
+            const target = targetEl ? parseFloat(targetEl.value) || 0 : 0;
+            const maxLoss = maxLossEl ? parseFloat(maxLossEl.value) || 0 : 0;
+            
+            const targetPercentEl = document.getElementById('dailyTargetPercent');
+            const lossPercentEl = document.getElementById('maxLossPercent');
             
             if (balance > 0) {
                 const targetPercent = (target / balance * 100).toFixed(1);
                 const lossPercent = (maxLoss / balance * 100).toFixed(1);
                 
-                document.getElementById('dailyTargetPercent').textContent = `${targetPercent}%`;
-                document.getElementById('maxLossPercent').textContent = `${lossPercent}%`;
+                if (targetPercentEl) targetPercentEl.textContent = `${targetPercent}%`;
+                if (lossPercentEl) lossPercentEl.textContent = `${lossPercent}%`;
             } else {
-                document.getElementById('dailyTargetPercent').textContent = '0%';
-                document.getElementById('maxLossPercent').textContent = '0%';
+                if (targetPercentEl) targetPercentEl.textContent = '0%';
+                if (lossPercentEl) lossPercentEl.textContent = '0%';
             }
             updateVisualCards();
         }
