@@ -2699,24 +2699,6 @@
             border-radius: 3px;
             border: none;
         }
-
-        /* Psychology chart container */
-        .psychology-chart-container {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 24px;
-            margin-top: 24px;
-            min-height: 450px;
-        }
-
-        .psychology-chart-title {
-            color: #f8fafc;
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            text-align: center;
-        }
     </style>
 </head>
 <body>
@@ -3916,6 +3898,20 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 12px; justify-content: center;">
+                            <button onclick="savePsychologyData()" 
+                                    style="background: #3b82f6; border: none; color: white; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;" 
+                                    data-lang="save-psychology-data">Save Psychology Data</button>
+                            <button onclick="calculateDailyScore()" 
+                                    style="background: #10b981; border: none; color: white; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;" 
+                                    data-lang="calculate-score">Calculate Daily Score</button>
+                            <button onclick="resetPsychologyData()" 
+                                    style="background: #ef4444; border: none; color: white; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;" 
+                                    data-lang="reset-data">Reset Data</button>
+                        </div>
+                    </div>
 
                     <!-- Psychology vs Performance Analysis Chart -->
                     <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 24px; margin-top: 24px;">
@@ -6442,12 +6438,6 @@
         // document.getElementById('languageSelect').value = currentLanguage; // 이 줄 삭제
         document.getElementById('settingsLanguageSelect').value = currentLanguage;
     }
-            
-            // Load daily fees
-            const savedFees = localStorage.getItem('tradingPlatformDailyFees');
-            if (savedFees) {
-                dailyFees = JSON.parse(savedFees);
-            }
 
             // 심리 섹션 초기화
             const psychologyTargetDate = document.getElementById('psychologyTargetDate');
@@ -6460,6 +6450,12 @@
             updateSliderValue('stressLevel', 'stressLevelValue');
             updateSliderValue('confidenceLevel', 'confidenceLevelValue');
             updateSliderValue('focusLevel', 'focusLevelValue');
+            
+            // Load daily fees
+            const savedFees = localStorage.getItem('tradingPlatformDailyFees');
+            if (savedFees) {
+                dailyFees = JSON.parse(savedFees);
+            }
             
             currentTradingDate = getESTTradingDate(new Date());
             updateCurrentDateDisplay();
@@ -9081,8 +9077,6 @@ function applyCustomRisk() {
             }
         }
 
-        }
-        
         // 슬라이더 값 업데이트 함수
         function updateSliderValue(sliderId, valueId) {
             const slider = document.getElementById(sliderId);
