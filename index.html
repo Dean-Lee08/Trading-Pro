@@ -3300,11 +3300,7 @@
                                 <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="clearAnalyticsRange()">Clear</button>
                             </div>
                             <button class="filter-btn active" onclick="setAnalyticsPeriod('all')" data-lang="all-time">All Time</button>
-                            <button class="filter-btn" onclick="setAnalyticsPeriod('month')" data-lang="this-month">This Month</button>
-                            <button class="filter-btn" onclick="setAnalyticsPeriod('week')" data-lang="this-week">This Week</button>
-                            <button class="filter-btn" onclick="setAnalyticsPeriod('day')" data-lang="today">Today</button>
                         </div>
-                    </div>
 
                     <!-- Performance Summary Cards -->
                     <div class="performance-summary">
@@ -4606,9 +4602,6 @@
                 'danger-zone': 'Danger Zone',
                 'clear-all-data': 'Clear All Data',
                 'all-time': 'All Time',
-                'this-month': 'This Month',
-                'this-week': 'This Week',
-                'today': 'Today',
                 'detail': 'Detail',
                 'charts': 'Charts',
                 'net-profit': 'Net Profit',
@@ -4931,9 +4924,6 @@
                 'danger-zone': '위험 구역',
                 'clear-all-data': '모든 데이터 삭제',
                 'all-time': '전체 기간',
-                'this-month': '이번 달',
-                'this-week': '이번 주',
-                'today': '오늘',
                 'detail': '상세',
                 'charts': '차트',
                 'net-profit': '순이익',
@@ -7091,29 +7081,9 @@
                     return true;
                 });
             } else {
-                // Apply period filter
-                const now = new Date();
-                const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-                
-                switch (analyticsPeriod) {
-                    case 'day':
-                        const todayStr = formatTradingDate(today);
-                        filteredTrades = trades.filter(trade => trade.date === todayStr);
-                        break;
-                    case 'week':
-                        const weekAgo = new Date(today);
-                        weekAgo.setDate(weekAgo.getDate() - 7);
-                        const weekAgoStr = formatTradingDate(weekAgo);
-                        filteredTrades = trades.filter(trade => trade.date >= weekAgoStr);
-                        break;
-                    case 'month':
-                        const monthAgo = new Date(today);
-                        monthAgo.setMonth(monthAgo.getMonth() - 1);
-                        const monthAgoStr = formatTradingDate(monthAgo);
-                        filteredTrades = trades.filter(trade => trade.date >= monthAgoStr);
-                        break;
-                    default:
-                        filteredTrades = trades;
+                // Apply period filter - only 'all' period supported now
+                if (analyticsPeriod === 'all') {
+                    filteredTrades = trades;
                 }
             }
             
