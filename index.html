@@ -8408,8 +8408,8 @@ function applyCustomRisk() {
             updateMetricCard('consistencyFactorCard', 'consistencyFactorScore', 'consistencyFactorStatus', consistencyFactor, 25);
             
             // Calculate Daily Psychology Score (0-100)
-            const dailyScore = sleepFactor + stressFactor + environmentFactor + pressureIndex + emotionalReadiness;
-            updateMetricCard('dailyPsychScoreCard', 'dailyPsychScore', 'dailyPsychStatus', dailyScore, 100);
+            const dailyScore = sleepFactor + stressFactor + disciplineFactor + consistencyFactor;
+            updateMetricCard('totalScoreCard', 'totalPsychScore', 'totalScoreStatus', dailyScore, 100);
 
             // generatePsychologyInsights 호출 전 요소 존재 확인
             if (document.getElementById('psychologyInsightsList')) {
@@ -8424,26 +8424,6 @@ function applyCustomRisk() {
             let qualityBonus = (sleepQuality - 3) * 1.25;
             
             return Math.max(0, Math.min(25, baseScore + qualityBonus));
-        }
-
-        function calculateEnvironmentFactor(environment, focusLevel) {
-            let baseScore = 15;
-            
-            // Environment scoring
-            const envScores = {
-                'home-quiet': 10,
-                'office': 7,
-                'home-noisy': 5,
-                'cafe': 3,
-                'other': 5
-            };
-            
-            baseScore += envScores[environment] || 5;
-            
-            // Focus adjustment
-            baseScore += (focusLevel - 3) * 2;
-            
-            return Math.max(0, Math.min(25, baseScore));
         }
 
         function calculatePressureIndex(pressureLevel, accountBalance, dailyTarget) {
