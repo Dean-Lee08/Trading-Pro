@@ -8656,55 +8656,58 @@ function applyCustomRisk() {
 
         // Enhanced Psychology System Functions
         function showPsychologySection(section) {
-            // 탭 상태 업데이트
-            document.querySelectorAll('.psychology-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            // 섹션 표시/숨기기
-            document.querySelectorAll('.psychology-section').forEach(sec => {
-                sec.classList.remove('active');
-            });
-            
-            // 섹션 ID 매핑
-            let targetSectionId;
-            switch(section) {
-                case 'input':
-                    targetSectionId = 'psychologyInputSection';
-                    break;
-                case 'metrics':
-                    targetSectionId = 'psychologyMetricsSection';
-                    break;
-                case 'bias-analysis':
-                    targetSectionId = 'psychologyBiasSection';
-                    break;
-                case 'patterns':
-                    targetSectionId = 'psychologyPatternsSection';
-                    break;
-                default:
-                    targetSectionId = 'psychologyInputSection';
-            }
-            
-            const targetSection = document.getElementById(targetSectionId);
-            if (targetSection) {
-                targetSection.classList.add('active');
-            }
-            
-            // 해당 섹션의 데이터 업데이트
-            if (section === 'metrics') {
-                updatePsychologyMetrics();
-            } else if (section === 'bias-analysis') {
-                updateBiasAnalysis();
-            } else if (section === 'patterns') {
-                updatePatternInsights();
-            }
+            try {
+                // 탭 상태 업데이트
+                document.querySelectorAll('.psychology-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                event.target.classList.add('active');
+                
+                // 섹션 표시/숨기기
+                document.querySelectorAll('.psychology-section').forEach(sec => {
+                    sec.classList.remove('active');
+                });
+                
+                // 섹션 ID 매핑
+                let targetSectionId;
+                switch(section) {
+                    case 'input':
+                        targetSectionId = 'psychologyInputSection';
+                        break;
+                    case 'metrics':
+                        targetSectionId = 'psychologyMetricsSection';
+                        break;
+                    case 'bias-analysis':
+                        targetSectionId = 'psychologyBiasSection';
+                        break;
+                    case 'patterns':
+                        targetSectionId = 'psychologyPatternsSection';
+                        break;
+                    default:
+                        targetSectionId = 'psychologyInputSection';
+                }
+                
+                const targetSection = document.getElementById(targetSectionId);
+                if (targetSection) {
+                    targetSection.classList.add('active');
+                }
+                
+                // 해당 섹션의 데이터 업데이트
+                if (section === 'metrics') {
+                    updatePsychologyMetrics();
+                } else if (section === 'bias-analysis') {
+                    updateBiasAnalysis();
+                } else if (section === 'patterns') {
+                    updatePatternInsights();
+                }
 
-            if (section === 'input') {
-                setTimeout(() => {
-                    updateVisualCards();
-                    createPsychologyChart();
-                }, 100);
+                if (section === 'input') {
+                    setTimeout(() => {
+                        updateVisualCards();
+                    }, 100);
+                }
+            } catch (error) {
+                console.error('Error showing psychology section:', error);
             }
         }
 
@@ -9221,40 +9224,65 @@ function applyCustomRisk() {
         }
 
         function updateVisualCards() {
-            updateSleepCard();
-            updateEnvironmentCard();
-            updateEmotionalCard();
-            updateRiskCard();
+            try {
+                updateSleepCard();
+                updateEnvironmentCard();
+                updateEmotionalCard();
+                updateRiskCard();
+                
+                // 차트 업데이트 (딜레이를 주어 DOM 업데이트 후 실행)
+                setTimeout(() => {
+                    createPsychologyChart();
+                }, 100);
+            } catch (error) {
+                console.error('Error updating visual cards:', error);
+            }
         }
 
         function updateSleepCard() {
-            const sleepHours = parseFloat(document.getElementById('sleepHours').value) || 0;
-            document.getElementById('sleepHoursDisplay').textContent = sleepHours;
-            
-            let quality = 0;
-            let status = 'No data';
-            
-            if (sleepHours > 0) {
-                if (sleepHours >= 7 && sleepHours <= 8) {
-                    quality = 100;
-                    status = 'Optimal sleep range';
-                } else if (sleepHours >= 6 && sleepHours < 7) {
-                    quality = 75;
-                    status = 'Adequate sleep';
-                } else if (sleepHours >= 5 && sleepHours < 6) {
-                    quality = 50;
-                    status = 'Below optimal';
-                } else if (sleepHours < 5) {
-                    quality = 25;
-                    status = 'Sleep deprived';
-                } else if (sleepHours > 8) {
-                    quality = 60;
-                    status = 'Oversleep detected';
+            try {
+                const sleepHoursEl = document.getElementById('sleepHours');
+                const sleepHours = sleepHoursEl ? parseFloat(sleepHoursEl.value) || 0 : 0;
+                
+                const sleepHoursDisplayEl = document.getElementById('sleepHoursDisplay');
+                if (sleepHoursDisplayEl) {
+                    sleepHoursDisplayEl.textContent = sleepHours;
                 }
+                
+                let quality = 0;
+                let status = 'No data';
+                
+                if (sleepHours > 0) {
+                    if (sleepHours >= 7 && sleepHours <= 8) {
+                        quality = 100;
+                        status = currentLanguage === 'ko' ? '최적 수면 범위' : 'Optimal sleep range';
+                    } else if (sleepHours >= 6 && sleepHours < 7) {
+                        quality = 75;
+                        status = currentLanguage === 'ko' ? '적절한 수면' : 'Adequate sleep';
+                    } else if (sleepHours >= 5 && sleepHours < 6) {
+                        quality = 50;
+                        status = currentLanguage === 'ko' ? '최적치 이하' : 'Below optimal';
+                    } else if (sleepHours < 5) {
+                        quality = 25;
+                        status = currentLanguage === 'ko' ? '수면 부족' : 'Sleep deprived';
+                    } else if (sleepHours > 8) {
+                        quality = 60;
+                        status = currentLanguage === 'ko' ? '과수면 감지' : 'Oversleep detected';
+                    }
+                }
+                
+                const sleepQualityBarEl = document.getElementById('sleepQualityBar');
+                if (sleepQualityBarEl) {
+                    sleepQualityBarEl.style.width = `${quality}%`;
+                }
+                
+                const sleepStatusEl = document.getElementById('sleepStatus');
+                if (sleepStatusEl) {
+                    sleepStatusEl.textContent = status;
+                }
+            } catch (error) {
+                console.error('Error updating sleep card:', error);
             }
-            
-            document.getElementById('sleepQualityBar').style.width = `${quality}%`;
-            document.getElementById('sleepStatus').textContent = status;
         }
 
         function updateEnvironmentCard() {
@@ -9345,106 +9373,222 @@ function applyCustomRisk() {
         }
 
         async function createPsychologyChart() {
-            await waitForChart();
-            
-            const ctx = document.getElementById('psychologyPerformanceChart');
-            if (!ctx) return;
-            
-            if (window.psychologyChart) {
-                window.psychologyChart.destroy();
-            }
-            
-            const chartData = preparePsychologyChartData();
-            
-            window.psychologyChart = new Chart(ctx, {
-                type: 'scatter',
-                data: {
-                    datasets: [{
-                        label: 'Sleep vs Performance',
-                        data: chartData.sleepData,
-                        backgroundColor: 'rgba(16, 185, 129, 0.6)',
-                        borderColor: '#10b981',
-                        pointRadius: 6
-                    }, {
-                        label: 'Stress vs Performance',
-                        data: chartData.stressData,
-                        backgroundColor: 'rgba(239, 68, 68, 0.6)',
-                        borderColor: '#ef4444',
-                        pointRadius: 6
-                    }, {
-                        label: 'Focus vs Performance',
-                        data: chartData.focusData,
-                        backgroundColor: 'rgba(59, 130, 246, 0.6)',
-                        borderColor: '#3b82f6',
-                        pointRadius: 6
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            labels: {
-                                color: '#e4e4e7',
-                                usePointStyle: true
+            try {
+                await waitForChart();
+                
+                const ctx = document.getElementById('psychologyPerformanceChart');
+                if (!ctx) {
+                    console.warn('Psychology chart canvas not found');
+                    return;
+                }
+                
+                // 기존 차트가 있다면 제거
+                if (window.psychologyChart && typeof window.psychologyChart.destroy === 'function') {
+                    window.psychologyChart.destroy();
+                }
+                
+                const chartData = preparePsychologyChartData();
+                
+                // 데이터가 없으면 기본 메시지 표시
+                if (!chartData || (chartData.sleepData.length === 0 && chartData.stressData.length === 0 && chartData.focusData.length === 0)) {
+                    const parent = ctx.parentElement;
+                    if (parent) {
+                        parent.innerHTML = `
+                            <div style="display: flex; align-items: center; justify-content: center; height: 300px; color: #64748b; font-size: 14px;">
+                                ${currentLanguage === 'ko' ? '심리 데이터와 거래 기록을 수집하여 차트를 생성하세요' : 'Collect psychology data and trading records to generate chart'}
+                            </div>
+                        `;
+                    }
+                    return;
+                }
+                
+                // 차트 설정
+                const chartConfig = {
+                    type: 'scatter',
+                    data: {
+                        datasets: []
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            intersect: false,
+                            mode: 'point'
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    color: '#e4e4e7',
+                                    usePointStyle: true,
+                                    padding: 20
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                                titleColor: '#e4e4e7',
+                                bodyColor: '#e4e4e7',
+                                borderColor: '#334155',
+                                borderWidth: 1,
+                                callbacks: {
+                                    title: function(context) {
+                                        return context[0].dataset.label;
+                                    },
+                                    label: function(context) {
+                                        const factor = context.dataset.label.includes('Sleep') ? 'hours' : 'level';
+                                        return `${context.dataset.label}: ${context.parsed.x} ${factor}, ${context.parsed.y.toFixed(1)}% win rate`;
+                                    }
+                                }
                             }
                         },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return `${context.dataset.label}: ${context.parsed.y.toFixed(0)}% performance`;
+                        scales: {
+                            x: {
+                                type: 'linear',
+                                position: 'bottom',
+                                title: {
+                                    display: true,
+                                    text: currentLanguage === 'ko' ? '심리 요인' : 'Psychology Factor',
+                                    color: '#94a3b8'
+                                },
+                                ticks: { 
+                                    color: '#94a3b8',
+                                    stepSize: 1
+                                },
+                                grid: { 
+                                    color: '#334155',
+                                    drawBorder: false
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: currentLanguage === 'ko' ? '승률 (%)' : 'Win Rate (%)',
+                                    color: '#94a3b8'
+                                },
+                                min: 0,
+                                max: 100,
+                                ticks: { 
+                                    color: '#94a3b8',
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
+                                },
+                                grid: { 
+                                    color: '#334155',
+                                    drawBorder: false
                                 }
                             }
                         }
-                    },
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Psychology Factor',
-                                color: '#94a3b8'
-                            },
-                            ticks: { color: '#94a3b8' },
-                            grid: { color: '#334155' }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'Trading Performance (%)',
-                                color: '#94a3b8'
-                            },
-                            ticks: { color: '#94a3b8' },
-                            grid: { color: '#334155' }
-                        }
                     }
+                };
+                
+                // 데이터셋 추가
+                if (chartData.sleepData.length > 0) {
+                    chartConfig.data.datasets.push({
+                        label: currentLanguage === 'ko' ? '수면 vs 성과' : 'Sleep vs Performance',
+                        data: chartData.sleepData,
+                        backgroundColor: 'rgba(16, 185, 129, 0.7)',
+                        borderColor: '#10b981',
+                        pointRadius: 8,
+                        pointHoverRadius: 10,
+                        showLine: false
+                    });
                 }
-            });
+                
+                if (chartData.stressData.length > 0) {
+                    chartConfig.data.datasets.push({
+                        label: currentLanguage === 'ko' ? '스트레스 vs 성과' : 'Stress vs Performance',
+                        data: chartData.stressData,
+                        backgroundColor: 'rgba(239, 68, 68, 0.7)',
+                        borderColor: '#ef4444',
+                        pointRadius: 8,
+                        pointHoverRadius: 10,
+                        showLine: false
+                    });
+                }
+                
+                if (chartData.focusData.length > 0) {
+                    chartConfig.data.datasets.push({
+                        label: currentLanguage === 'ko' ? '집중력 vs 성과' : 'Focus vs Performance',
+                        data: chartData.focusData,
+                        backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                        borderColor: '#3b82f6',
+                        pointRadius: 8,
+                        pointHoverRadius: 10,
+                        showLine: false
+                    });
+                }
+                
+                // 차트 생성
+                window.psychologyChart = new Chart(ctx, chartConfig);
+                
+            } catch (error) {
+                console.error('Error creating psychology chart:', error);
+                const ctx = document.getElementById('psychologyPerformanceChart');
+                if (ctx && ctx.parentElement) {
+                    ctx.parentElement.innerHTML = `
+                        <div style="display: flex; align-items: center; justify-content: center; height: 300px; color: #ef4444; font-size: 14px;">
+                            ${currentLanguage === 'ko' ? '차트 생성 중 오류가 발생했습니다' : 'Error creating chart'}
+                        </div>
+                    `;
+                }
+            }
         }
 
         function preparePsychologyChartData() {
-            const sleepData = [];
-            const stressData = [];
-            const focusData = [];
-            
-            Object.entries(psychologyData).forEach(([date, psyData]) => {
-                const dayTrades = trades.filter(trade => trade.date === date);
-                if (dayTrades.length > 0) {
-                    const dayPnL = dayTrades.reduce((sum, trade) => sum + trade.pnl, 0);
-                    const winRate = dayTrades.filter(trade => trade.pnl > 0).length / dayTrades.length * 100;
-                    
-                    if (psyData.sleepHours) {
-                        sleepData.push({ x: psyData.sleepHours, y: winRate });
-                    }
-                    if (psyData.stressLevel) {
-                        stressData.push({ x: psyData.stressLevel, y: winRate });
-                    }
-                    if (psyData.focusLevel) {
-                        focusData.push({ x: psyData.focusLevel, y: winRate });
-                    }
+            try {
+                const sleepData = [];
+                const stressData = [];
+                const focusData = [];
+                
+                if (!psychologyData || typeof psychologyData !== 'object') {
+                    return { sleepData, stressData, focusData };
                 }
-            });
-            
-            return { sleepData, stressData, focusData };
+                
+                Object.entries(psychologyData).forEach(([date, psyData]) => {
+                    if (!psyData || typeof psyData !== 'object') return;
+                    
+                    const dayTrades = trades.filter(trade => trade && trade.date === date);
+                    if (dayTrades.length === 0) return;
+                    
+                    // 일일 승률 계산
+                    const winningTrades = dayTrades.filter(trade => trade.pnl > 0);
+                    const winRate = dayTrades.length > 0 ? (winningTrades.length / dayTrades.length * 100) : 0;
+                    
+                    // 수면 데이터
+                    if (psyData.sleepHours && typeof psyData.sleepHours === 'number' && psyData.sleepHours > 0) {
+                        sleepData.push({ 
+                            x: psyData.sleepHours, 
+                            y: winRate,
+                            date: date 
+                        });
+                    }
+                    
+                    // 스트레스 데이터
+                    if (psyData.stressLevel && typeof psyData.stressLevel === 'number') {
+                        stressData.push({ 
+                            x: psyData.stressLevel, 
+                            y: winRate,
+                            date: date 
+                        });
+                    }
+                    
+                    // 집중력 데이터
+                    if (psyData.focusLevel && typeof psyData.focusLevel === 'number') {
+                        focusData.push({ 
+                            x: psyData.focusLevel, 
+                            y: winRate,
+                            date: date 
+                        });
+                    }
+                });
+                
+                return { sleepData, stressData, focusData };
+                
+            } catch (error) {
+                console.error('Error preparing psychology chart data:', error);
+                return { sleepData: [], stressData: [], focusData: [] };
+            }
         }
 
         function getInsightColor(type) {
@@ -9562,41 +9706,35 @@ function applyCustomRisk() {
             const todayData = psychologyData[currentDate];
 
             if (todayData) {
-                const sleepHours = document.getElementById('sleepHours');
-                if (sleepHours) sleepHours.value = todayData.sleepHours || '';
+                // 안전한 요소 업데이트
+                const updateElement = (id, value) => {
+                    const element = document.getElementById(id);
+                    if (element) element.value = value;
+                };
 
-                const startTime = document.getElementById('startTime');
-                if (startTime) startTime.value = todayData.startTime || '09:30';
+                updateElement('sleepHours', todayData.sleepHours || '');
+                updateElement('startTime', todayData.startTime || '09:30');
+                updateElement('endTime', todayData.endTime || '');
+                updateElement('environmentType', todayData.environmentType || 'home');
+                updateElement('accountBalance', todayData.accountBalance || '');
+                updateElement('dailyTarget', todayData.dailyTarget || '');
+                updateElement('maxDailyLoss', todayData.maxDailyLoss || '');
+                updateElement('stressLevel', todayData.stressLevel || 3);
+                updateElement('confidenceLevel', todayData.confidenceLevel || 3);
+                updateElement('focusLevel', todayData.focusLevel || 3);
 
-                const endTime = document.getElementById('endTime');
-                if (endTime) endTime.value = todayData.endTime || '';
-
-                const environmentType = document.getElementById('environmentType');
-                if (environmentType) environmentType.value = todayData.environmentType || 'home';
-
-                const accountBalance = document.getElementById('accountBalance');
-                if (accountBalance) accountBalance.value = todayData.accountBalance || '';
-
-                const dailyTarget = document.getElementById('dailyTarget');
-                if (dailyTarget) dailyTarget.value = todayData.dailyTarget || '';
-
-                const maxDailyLoss = document.getElementById('maxDailyLoss');
-                if (maxDailyLoss) maxDailyLoss.value = todayData.maxDailyLoss || '';
-
-                const stressLevel = document.getElementById('stressLevel');
-                if (stressLevel) stressLevel.value = todayData.stressLevel || 3;
-
-                const confidenceLevel = document.getElementById('confidenceLevel');
-                if (confidenceLevel) confidenceLevel.value = todayData.confidenceLevel || 3;
-
-                const focusLevel = document.getElementById('focusLevel');
-                if (focusLevel) focusLevel.value = todayData.focusLevel || 3;
-
-                updateVisualCards();
-                createPsychologyChart();
+                // 차트 업데이트는 약간의 딜레이 후 실행
+                setTimeout(() => {
+                    updateVisualCards();
+                }, 200);
+            } else {
+                // 기본값으로 차트 생성
+                setTimeout(() => {
+                    createPsychologyChart();
+                }, 200);
             }
         }
-
+        
         // Annual Heatmap Functions
         // Annual Heatmap Functions
         function renderAnnualHeatmap() {
