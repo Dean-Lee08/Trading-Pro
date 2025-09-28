@@ -8204,62 +8204,6 @@ function applyCustomRisk() {
                 showToast(currentLanguage === 'ko' ? '심리 데이터가 초기화되었습니다' : 'Psychology data has been reset');
             }
         }
-
-        function loadPsychologyData() {
-    try {
-        const saved = localStorage.getItem('tradingPlatformPsychologyData');
-        if (saved) {
-            psychologyData = JSON.parse(saved);
-        } else {
-            psychologyData = {};
-        }
-    } catch (error) {
-        console.error('Error loading psychology data:', error);
-        psychologyData = {};
-    }
-
-    // Load today's data if available
-    const currentDate = formatTradingDate(currentTradingDate);
-    const todayData = psychologyData[currentDate];
-
-    if (todayData) {
-        const sleepHours = document.getElementById('sleepHours');
-        if (sleepHours) sleepHours.value = todayData.sleepHours || '';
-
-        const sleepQuality = document.getElementById('sleepQuality');
-        if (sleepQuality) sleepQuality.value = todayData.sleepQuality || 3;
-
-        const energyLevel = document.getElementById('energyLevel');
-        if (energyLevel) energyLevel.value = todayData.energyLevel || 3;
-
-        const actualStartTime = document.getElementById('actualStartTime');
-        if (actualStartTime) actualStartTime.value = todayData.actualStartTime || '';
-
-        const tradingEnvironment = document.getElementById('tradingEnvironment');
-        if (tradingEnvironment) tradingEnvironment.value = todayData.tradingEnvironment || 'home-quiet';
-
-        const psychAccountBalance = document.getElementById('psychAccountBalance');
-        if (psychAccountBalance) psychAccountBalance.value = todayData.accountBalance || '';
-
-        const dailyTarget = document.getElementById('dailyTarget');
-        if (dailyTarget) dailyTarget.value = todayData.dailyTarget || '';
-
-        const maxDailyLoss = document.getElementById('maxDailyLoss');
-        if (maxDailyLoss) maxDailyLoss.value = todayData.maxDailyLoss || '';
-
-        const preMarketMood = document.getElementById('preMarketMood');
-        if (preMarketMood) preMarketMood.value = todayData.preMarketMood || 3;
-
-        const confidenceLevel = document.getElementById('confidenceLevel');
-        if (confidenceLevel) confidenceLevel.value = todayData.confidenceLevel || 3;
-
-        const stressLevel = document.getElementById('stressLevel');
-        if (stressLevel) stressLevel.value = todayData.stressLevel || 3;
-
-        const focusLevel = document.getElementById('focusLevel');
-        if (focusLevel) focusLevel.value = todayData.focusLevel || 3;
-    }
-}
         
         function updatePsychologyMetrics() {
             const currentDate = formatTradingDate(currentTradingDate);
@@ -8267,7 +8211,10 @@ function applyCustomRisk() {
             
             if (!todayData) {
                 resetPsychologyMetrics();
-                generatePsychologyInsights();
+                // generatePsychologyInsights 호출 전 요소 존재 확인
+                if (document.getElementById('psychologyInsightsList')) {
+                    generatePsychologyInsights();
+                }
                 return;
             }
             
@@ -8295,7 +8242,10 @@ function applyCustomRisk() {
             const dailyScore = sleepFactor + stressFactor + environmentFactor + pressureIndex + emotionalReadiness;
             updateMetricCard('dailyPsychScoreCard', 'dailyPsychScore', 'dailyPsychStatus', dailyScore, 100);
 
-            generatePsychologyInsights();
+            // generatePsychologyInsights 호출 전 요소 존재 확인
+            if (document.getElementById('psychologyInsightsList')) {
+                generatePsychologyInsights();
+            }
         }
 
         function calculateSleepFactor(sleepHours, sleepQuality) {
@@ -8416,57 +8366,6 @@ function applyCustomRisk() {
             return Math.max(0, Math.min(25, baseScore));
         }
 
-        function calculateEnvironmentFactor(environment, focusLevel) {
-            let baseScore = 15;
-            
-            // Environment scoring
-            const envScores = {
-                'home-quiet': 10,
-                'office': 7,
-                'home-noisy': 5,
-                'cafe': 3,
-                'other': 5
-            };
-            
-            baseScore += envScores[environment] || 5;
-            
-            // Focus adjustment
-            baseScore += (focusLevel - 3) * 2;
-            
-            return Math.max(0, Math.min(25, baseScore));
-        }
-
-        function calculatePressureIndex(stressLevel, accountBalance, dailyTarget) {
-            let baseScore = 25;
-            
-            // Pressure penalty
-            baseScore -= (stressLevel - 3) * 5;
-            
-            // Target vs balance ratio check
-            if (accountBalance && dailyTarget) {
-                const targetRatio = dailyTarget / accountBalance;
-                if (targetRatio > 0.05) { // More than 5% daily target
-                    baseScore -= 8;
-                } else if (targetRatio > 0.03) { // More than 3% daily target
-                    baseScore -= 4;
-                }
-            }
-            
-            return Math.max(0, Math.min(25, baseScore));
-        }
-
-        function calculateEmotionalReadiness(confidenceLevel, focusLevel) {
-            let baseScore = 15;
-            
-            // Confidence adjustment (-4 to +4)
-            baseScore += (confidenceLevel - 3) * 2;
-            
-            // Focus adjustment
-            baseScore += (focusLevel - 3) * 2;
-            
-            return Math.max(0, Math.min(25, baseScore));
-        }
-
         function resetPsychologyMetrics() {
             const metrics = ['dailyPsychScore', 'sleepFactor', 'stressFactor', 'environmentFactor', 'pressureIndex', 'emotionalReadiness'];
             const cards = ['dailyPsychScoreCard', 'sleepFactorCard', 'stressFactorCard', 'environmentFactorCard', 'pressureIndexCard', 'emotionalReadinessCard'];
@@ -8483,6 +8382,12 @@ function applyCustomRisk() {
             const currentDate = formatTradingDate(currentTradingDate);
             const todayData = psychologyData[currentDate];
             const insightsList = document.getElementById('psychologyInsightsList');
+            
+            // 요소가 존재하지 않는 경우 처리
+            if (!insightsList) {
+                console.warn('psychologyInsightsList element not found');
+                return;
+            }
             
             if (!todayData) {
                 insightsList.innerHTML = `
@@ -9196,40 +9101,7 @@ function applyCustomRisk() {
             const winRate = (after3Losses.reduce((sum, val) => sum + val, 0) / after3Losses.length) * 100;
             return { after3Losses: winRate };
         }
-
-        // 기존 savePsychologyData 함수 업데이트
-        function savePsychologyData() {
-            const currentDate = formatTradingDate(currentTradingDate);
-            
-            const data = {
-                date: currentDate,
-                timestamp: new Date().toISOString(),
-                
-                // Biological data
-                sleepHours: parseFloat(document.getElementById('sleepHours').value) || 0,
-                
-                // Trading environment
-                startTime: document.getElementById('startTime').value || '09:30',
-                endTime: document.getElementById('endTime').value || '',
-                environmentType: document.getElementById('environmentType').value || 'home-quiet',
-                
-                // Economic pressure
-                accountBalance: parseFloat(document.getElementById('accountBalance').value) || 0,
-                dailyTarget: parseFloat(document.getElementById('dailyTarget').value) || 0,
-                maxDailyLoss: parseFloat(document.getElementById('maxDailyLoss').value) || 0,
-                
-                // Emotional state
-                stressLevel: parseInt(document.getElementById('stressLevel').value) || 3,
-                confidenceLevel: parseInt(document.getElementById('confidenceLevel').value) || 3,
-                focusLevel: parseInt(document.getElementById('focusLevel').value) || 3
-            };
-            
-            psychologyData[currentDate] = data;
-            localStorage.setItem('tradingPlatformPsychologyData', JSON.stringify(psychologyData));
-            
-            showToast(currentLanguage === 'ko' ? '심리 데이터가 저장되었습니다' : 'Psychology data saved');
-        }
-
+        
         // 기존 loadPsychologyData 함수 업데이트
         function loadPsychologyData() {
             try {
@@ -9249,11 +9121,9 @@ function applyCustomRisk() {
             const todayData = psychologyData[currentDate];
 
             if (todayData) {
-                // Biological data
                 const sleepHours = document.getElementById('sleepHours');
                 if (sleepHours) sleepHours.value = todayData.sleepHours || '';
 
-                // Trading environment
                 const startTime = document.getElementById('startTime');
                 if (startTime) startTime.value = todayData.startTime || '09:30';
 
@@ -9263,7 +9133,6 @@ function applyCustomRisk() {
                 const environmentType = document.getElementById('environmentType');
                 if (environmentType) environmentType.value = todayData.environmentType || 'home-quiet';
 
-                // Economic pressure
                 const accountBalance = document.getElementById('accountBalance');
                 if (accountBalance) accountBalance.value = todayData.accountBalance || '';
 
@@ -9273,7 +9142,6 @@ function applyCustomRisk() {
                 const maxDailyLoss = document.getElementById('maxDailyLoss');
                 if (maxDailyLoss) maxDailyLoss.value = todayData.maxDailyLoss || '';
 
-                // Emotional state
                 const stressLevel = document.getElementById('stressLevel');
                 if (stressLevel) stressLevel.value = todayData.stressLevel || 3;
 
