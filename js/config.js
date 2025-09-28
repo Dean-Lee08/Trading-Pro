@@ -4,9 +4,6 @@ let notes = [];
 let dailyFees = {};
 let currentTradingDate = new Date();
 let calendarDate = new Date();
-let translations = {};
-let notes = [];
-let categoryNotes = [];
 let calendarStartDate = null;
 let calendarEndDate = null;
 let isSelecting = false;
@@ -32,11 +29,11 @@ let selectedWeekPnl = null;
 let selectedTradesList = new Set();
 let selectedTrades = new Set();
 
-// Chart instances
+/* Chart instances containers */
 let basicCharts = {};
 let advancedCharts = {};
 
-// Dashboard Section Management
+/* Dashboard state */
 let currentDashboardSection = 'trading';
 let selectedKellyMultiplier = 0.1;
 
