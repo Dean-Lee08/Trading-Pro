@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Platform Pro</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="toast-notification" id="toastNotification">Data saved successfully!</div>
+    <button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
+    
+    <!-- Date picker modal -->
+    <div class="date-picker-modal" id="datePickerModal">
+        <div class="date-picker-content">
+            <div class="date-picker-title">Select Trading Date</div>
+            <input type="date" id="datePickerInput" class="date-picker-input">
+            <div class="date-picker-actions">
+                <button class="btn btn-secondary" onclick="closeDatePicker()">Cancel</button>
+                <button class="btn btn-primary" onclick="applySelectedDate()">Apply</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
