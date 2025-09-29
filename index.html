@@ -8377,23 +8377,6 @@ function applyCustomRisk() {
                 showToast(currentLanguage === 'ko' ? '심리 데이터가 초기화되었습니다' : 'Psychology data has been reset');
             }
         }
-
-function resetPsychologyMetrics() {
-    // Sleep Factor 초기화
-    updateMetricCard('sleepFactorCard', 'sleepFactor', 'sleepFactorStatus', 0, 25);
-
-    // Stress Factor 초기화
-    updateMetricCard('stressFactorCard', 'stressFactorScore', 'stressFactorStatus', 0, 25);
-
-    // Discipline Factor 초기화
-    updateMetricCard('disciplineFactorCard', 'disciplineFactorScore', 'disciplineFactorStatus', 0, 25);
-
-    // Consistency Factor 초기화
-    updateMetricCard('consistencyFactorCard', 'consistencyFactorScore', 'consistencyFactorStatus', 0, 25);
-
-    // Total Score 초기화
-    updateMetricCard('totalScoreCard', 'totalPsychScore', 'totalScoreStatus', 0, 100);
-}
         
         function updatePsychologyMetrics() {
             const currentDate = formatTradingDate(currentTradingDate);
