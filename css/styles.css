@@ -2345,7 +2345,7 @@
             background: #3b82f6;
             border-color: #3b82f6;
             color: white;
-       }
+        }
 
             /* 리스크 비율 input 강제 스타일링 */
 #riskPercentage {
@@ -2656,5 +2656,3 @@
         .psychology-section.active {
             display: block;
         }
-
-
