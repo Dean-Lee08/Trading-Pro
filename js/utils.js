@@ -35,7 +35,10 @@ function changeLanguageFromSettings() {
     currentLanguage = select.value;
     updateLanguage();
     updateStats();
-    updateDetailedAnalytics();
+    // updateDetailedAnalytics 함수가 정의되어 있는지 확인
+    if (typeof updateDetailedAnalytics === 'function') {
+        updateDetailedAnalytics();
+    }
     localStorage.setItem('tradingPlatformLanguage', currentLanguage);
 }
 
@@ -80,22 +83,35 @@ function showPage(pageId) {
     event.target.closest('.nav-item').classList.add('active');
     
     if (pageId === 'analysis') {
-        updateDetailedAnalytics();
+        // 함수가 정의되어 있는지 확인
+        if (typeof updateDetailedAnalytics === 'function') {
+            updateDetailedAnalytics();
+        }
         if (currentAnalyticsSection === 'detail') {
-            setTimeout(updateBasicCharts, 100);
+            if (typeof updateBasicCharts === 'function') {
+                setTimeout(updateBasicCharts, 100);
+            }
         } else {
-            setTimeout(updateAdvancedCharts, 100);
+            if (typeof updateAdvancedCharts === 'function') {
+                setTimeout(updateAdvancedCharts, 100);
+            }
         }
     }
     
     if (pageId === 'notes') {
-        renderAllNotesSections();
+        if (typeof renderAllNotesSections === 'function') {
+            renderAllNotesSections();
+        }
     }
 
     if (pageId === 'psychology') {
         setTimeout(() => {
-            loadPsychologyData();
-            updatePsychologyMetrics();
+            if (typeof loadPsychologyData === 'function') {
+                loadPsychologyData();
+            }
+            if (typeof updatePsychologyMetrics === 'function') {
+                updatePsychologyMetrics();
+            }
         }, 100);
     }
     
