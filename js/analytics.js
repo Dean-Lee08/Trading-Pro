@@ -1,5 +1,3 @@
-// Analytics related functions
-
 // Analytics section management
 function showAnalyticsSection(sectionName) {
     currentAnalyticsSection = sectionName;
@@ -276,11 +274,11 @@ async function updateAdvancedCharts() {
 
     // Restore canvas elements
     const chartIds = [
-            'equityCurveChart', 'drawdownChart', 'symbolPerformanceChart', 'timeDistributionChart',
-            'returnDistributionChart', 'volumeAnalysisChart', 'correlationMatrixChart',
-            'performanceAttributionChart', 'tradeDurationAnalysisChart',
-            'winRateByTimeChart', 'positionSizingAnalysisChart', 'tradingEfficiencyMetricsChart'
-        ];
+        'equityCurveChart', 'drawdownChart', 'symbolPerformanceChart', 'timeDistributionChart',
+        'returnDistributionChart', 'volumeAnalysisChart', 'correlationMatrixChart',
+        'performanceAttributionChart', 'tradeDurationAnalysisChart',
+        'winRateByTimeChart', 'positionSizingAnalysisChart', 'tradingEfficiencyMetricsChart'
+    ];
     
     chartIds.forEach(chartId => {
         const existing = document.getElementById(chartId);
@@ -296,7 +294,6 @@ async function updateAdvancedCharts() {
     const uniqueSymbols = [...new Set(filteredTrades.map(trade => trade.symbol))];
 
     // 1. Equity Curve
-    // 일일 P&L 집계
     const equityDailyPL = {};
     filteredTrades.forEach(trade => {
         if (!equityDailyPL[trade.date]) {
@@ -305,7 +302,6 @@ async function updateAdvancedCharts() {
         equityDailyPL[trade.date] += trade.pnl;
     });
 
-    // 날짜순으로 정렬하고 누적 equity 계산
     const equitySortedDates = Object.keys(equityDailyPL).sort();
     const equityData = [];
     let equity = 0;
@@ -330,7 +326,6 @@ async function updateAdvancedCharts() {
     });
 
     // 2. Drawdown Chart
-    // 일일 P&L 집계
     const drawdownDailyPL = {};
     filteredTrades.forEach(trade => {
         if (!drawdownDailyPL[trade.date]) {
@@ -339,7 +334,6 @@ async function updateAdvancedCharts() {
         drawdownDailyPL[trade.date] += trade.pnl;
     });
 
-    // 날짜순으로 정렬하고 drawdown 계산
     const drawdownSortedDates = Object.keys(drawdownDailyPL).sort();
     const drawdownData = [];
     let peak = 0;
@@ -443,7 +437,7 @@ async function updateAdvancedCharts() {
         }]
     });
 
-    // 7. Volume Analysis
+    // 6. Volume Analysis
     const volumeData = filteredTrades.map((trade, index) => ({
         x: index + 1,
         y: trade.amount
@@ -457,7 +451,7 @@ async function updateAdvancedCharts() {
         }]
     });
 
-    // 8. Performance Correlation (Volume vs P&L)
+    // 7. Performance Correlation (Volume vs P&L)
     const correlationData = [];
     filteredTrades.forEach((trade, index) => {
         correlationData.push({
@@ -474,7 +468,7 @@ async function updateAdvancedCharts() {
         }]
     });
 
-    // 11. Performance Attribution
+    // 8. Performance Attribution
     const attributionData = [];
     uniqueSymbols.forEach(symbol => {
         const symbolTrades = filteredTrades.filter(trade => trade.symbol === symbol);
@@ -496,7 +490,7 @@ async function updateAdvancedCharts() {
         }]
     });
 
-    // 12. Trade Duration Analysis
+    // 9. Trade Duration Analysis
     const durationStats = {};
     filteredTrades.forEach(trade => {
         if (trade.holdingTime) {
@@ -530,7 +524,7 @@ async function updateAdvancedCharts() {
         }]
     });
 
-    // 14. Win Rate by Time
+    // 10. Win Rate by Time
     const timeWinRate = {};
     filteredTrades.forEach(trade => {
         if (trade.entryTime) {
@@ -576,7 +570,7 @@ async function updateAdvancedCharts() {
         }
     });
 
-    // 15. Position Sizing Analysis
+    // 11. Position Sizing Analysis
     const positionSizes = filteredTrades.map(trade => trade.amount);
     const sizeRanges = {
         '0-1000': 0, '1000-2500': 0, '2500-5000': 0,
@@ -599,7 +593,7 @@ async function updateAdvancedCharts() {
         }]
     });
 
-    // 16. Trading Efficiency Metrics
+    // 12. Trading Efficiency Metrics
     const wins = filteredTrades.filter(trade => trade.pnl > 0);
     const losses = filteredTrades.filter(trade => trade.pnl < 0);
     
@@ -610,7 +604,7 @@ async function updateAdvancedCharts() {
 
     const efficiencyData = [
         { label: 'Win Rate', value: winRate },
-        { label: 'Profit Factor', value: Math.min(profitFactor * 10, 100) }, // Scale for radar
+        { label: 'Profit Factor', value: Math.min(profitFactor * 10, 100) },
         { label: 'Avg Win/Loss', value: avgLoss > 0 ? Math.min((avgWin / avgLoss) * 10, 100) : 0 }
     ];
 
@@ -641,7 +635,6 @@ function setAnalyticsPeriod(period) {
         btn.classList.remove('active');
     });
     
-    // event.target 대신 직접 요소 찾기
     document.querySelector(`[onclick="setAnalyticsPeriod('${period}')"]`).classList.add('active');
     updateDetailedAnalytics();
 }
@@ -649,7 +642,6 @@ function setAnalyticsPeriod(period) {
 function getFilteredTradesForAnalytics() {
     let filteredTrades = trades;
     
-    // Apply custom date range if set
     if (analyticsStartDate || analyticsEndDate) {
         filteredTrades = trades.filter(trade => {
             const tradeDate = trade.date;
@@ -658,7 +650,6 @@ function getFilteredTradesForAnalytics() {
             return true;
         });
     } else {
-        // Apply period filter
         const now = new Date();
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         
@@ -695,7 +686,6 @@ function updateDetailedAnalytics() {
         return;
     }
     
-    // Calculate basic metrics
     const totalPL = filteredTrades.reduce((sum, trade) => sum + trade.pnl, 0);
     const uniqueDatesForFees = [...new Set(filteredTrades.map(trade => trade.date))];
     const totalDailyFees = uniqueDatesForFees.reduce((sum, date) => sum + (dailyFees[date] || 0), 0);
@@ -725,7 +715,6 @@ function updateDetailedAnalytics() {
     document.getElementById('summaryLargestLoss').textContent = `$${largestLoss.toFixed(2)}`;
     document.getElementById('summaryLargestLoss').className = `summary-card-value negative`;
 
-    // Update detail cards
     updateTradingPerformanceDetails(filteredTrades, totalPL, totalWins, totalLosses, totalDailyFees);
     updateWinLossStatistics(filteredTrades, wins, losses, winRate);
     updateDailyPerformanceDetails(filteredTrades, uniqueDatesForFees, totalDailyFees);
@@ -735,7 +724,6 @@ function updateDetailedAnalytics() {
     updateSymbolPerformanceDetails(filteredTrades);
     updateRiskManagementDetails(filteredTrades);
 
-    // Update basic charts if in detail section
     if (currentAnalyticsSection === 'detail') {
         setTimeout(async () => await updateBasicCharts(), 100);
     }
@@ -765,14 +753,13 @@ function updateWinLossStatistics(filteredTrades, wins, losses, winRate) {
 
     document.getElementById('detailWinningTrades').textContent = `${wins.length} (${winRate.toFixed(1)}%)`;
     document.getElementById('detailLosingTrades').textContent = `${losses.length} (${(100 - winRate).toFixed(1)}%)`;
-    document.getElementById('detailAvgWinningTrade').textContent = `${avgWinningTrade.toFixed(2)}`;
-    document.getElementById('detailAvgLosingTrade').textContent = `${avgLosingTrade.toFixed(2)}`;
-    document.getElementById('detailLargestWin').textContent = `${largestWin.toFixed(2)}`;
-    document.getElementById('detailLargestLoss').textContent = `${largestLoss.toFixed(2)}`;
+    document.getElementById('detailAvgWinningTrade').textContent = `$${avgWinningTrade.toFixed(2)}`;
+    document.getElementById('detailAvgLosingTrade').textContent = `$${avgLosingTrade.toFixed(2)}`;
+    document.getElementById('detailLargestWin').textContent = `$${largestWin.toFixed(2)}`;
+    document.getElementById('detailLargestLoss').textContent = `$${largestLoss.toFixed(2)}`;
 }
 
 function updateDailyPerformanceDetails(filteredTrades, uniqueDatesForFees, totalDailyFees) {
-    // Calculate daily P/L
     const dailyStats = {};
     filteredTrades.forEach(trade => {
         if (!dailyStats[trade.date]) {
@@ -781,7 +768,6 @@ function updateDailyPerformanceDetails(filteredTrades, uniqueDatesForFees, total
         dailyStats[trade.date].tradePL += trade.pnl;
     });
 
-    // Apply daily fees and determine win/loss days
     const dailyPLsWithFees = [];
     Object.keys(dailyStats).forEach(date => {
         const fee = dailyFees[date] || 0;
@@ -795,22 +781,20 @@ function updateDailyPerformanceDetails(filteredTrades, uniqueDatesForFees, total
     const winDays = Object.values(dailyStats).filter(data => data.winDays > 0).length;
     const lossDays = Object.values(dailyStats).filter(data => data.lossDays > 0).length;
     const bestTradingDay = dailyPLsWithFees.length > 0 ? Math.max(...dailyPLsWithFees) : 0;
-    // 모든 날이 수익일 때는 최악의 날을 0으로 표시
     const worstTradingDay = dailyPLsWithFees.length > 0 && dailyPLsWithFees.some(pnl => pnl < 0) ? Math.min(...dailyPLsWithFees) : 0;
     const avgDailyPL = dailyPLsWithFees.length > 0 ? dailyPLsWithFees.reduce((sum, pnl) => sum + pnl, 0) / dailyPLsWithFees.length : 0;
     const avgDailyFees = uniqueDatesForFees.length > 0 ? totalDailyFees / uniqueDatesForFees.length : 0;
 
-    document.getElementById('detailDailyPerWin').textContent = winDays > 0 ? `${(dailyPLsWithFees.filter(pnl => pnl > 0).reduce((sum, pnl) => sum + pnl, 0) / winDays).toFixed(2)}` : '$0.00';
-    document.getElementById('detailDailyPerLoss').textContent = lossDays > 0 ? `${(dailyPLsWithFees.filter(pnl => pnl < 0).reduce((sum, pnl) => sum + pnl, 0) / lossDays).toFixed(2)}` : '$0.00';
-    document.getElementById('detailDailyPerFees').textContent = `${avgDailyFees.toFixed(2)}`;
-    document.getElementById('detailBestTradingDay').textContent = `${bestTradingDay.toFixed(2)}`;
-    document.getElementById('detailWorstTradingDay').textContent = `${worstTradingDay.toFixed(2)}`;
-    document.getElementById('detailAvgDailyPL').textContent = `${avgDailyPL.toFixed(2)}`;
+    document.getElementById('detailDailyPerWin').textContent = winDays > 0 ? `$${(dailyPLsWithFees.filter(pnl => pnl > 0).reduce((sum, pnl) => sum + pnl, 0) / winDays).toFixed(2)}` : '$0.00';
+    document.getElementById('detailDailyPerLoss').textContent = lossDays > 0 ? `$${(dailyPLsWithFees.filter(pnl => pnl < 0).reduce((sum, pnl) => sum + pnl, 0) / lossDays).toFixed(2)}` : '$0.00';
+    document.getElementById('detailDailyPerFees').textContent = `$${avgDailyFees.toFixed(2)}`;
+    document.getElementById('detailBestTradingDay').textContent = `$${bestTradingDay.toFixed(2)}`;
+    document.getElementById('detailWorstTradingDay').textContent = `$${worstTradingDay.toFixed(2)}`;
+    document.getElementById('detailAvgDailyPL').textContent = `$${avgDailyPL.toFixed(2)}`;
     document.getElementById('detailAvgDailyPL').className = `detail-value ${avgDailyPL >= 0 ? 'positive' : 'negative'}`;
 }
 
 function updateTimeAnalysisDetails(filteredTrades) {
-    // Hold time analysis
     const holdTimes = filteredTrades
         .filter(trade => trade.holdingTime)
         .map(trade => parseInt(trade.holdingTime.replace('m', '')));
@@ -820,7 +804,6 @@ function updateTimeAnalysisDetails(filteredTrades) {
     const shortestHold = holdTimes.length > 0 ? Math.min(...holdTimes) : 0;
     const longestHold = holdTimes.length > 0 ? Math.max(...holdTimes) : 0;
 
-    // Hour analysis
     const hourStats = {};
     filteredTrades.forEach(trade => {
         if (trade.entryTime) {
@@ -838,7 +821,6 @@ function updateTimeAnalysisDetails(filteredTrades) {
     const worstHour = Object.entries(hourStats)
         .sort((a, b) => a[1].totalPL - b[1].totalPL)[0];
 
-    // Day of week analysis
     const dayStats = {};
     const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const daysOfWeekKo = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
@@ -859,9 +841,9 @@ function updateTimeAnalysisDetails(filteredTrades) {
     document.getElementById('detailShortestHold').textContent = `${shortestHold}m`;
     document.getElementById('detailLongestHold').textContent = `${longestHold}m`;
     document.getElementById('detailBestHour').textContent = bestHour ? 
-        `${bestHour[0]}:00 (${bestHour[1].totalPL.toFixed(2)})` : '-';
+        `${bestHour[0]}:00 ($${bestHour[1].totalPL.toFixed(2)})` : '-';
     document.getElementById('detailWorstHour').textContent = worstHour ? 
-        `${worstHour[0]}:00 (${worstHour[1].totalPL.toFixed(2)})` : '-';
+        `${worstHour[0]}:00 ($${worstHour[1].totalPL.toFixed(2)})` : '-';
     document.getElementById('detailBestDayOfWeek').textContent = bestDayOfWeek ? 
         (currentLanguage === 'ko' ? daysOfWeekKo[bestDayOfWeek[0]] : daysOfWeek[bestDayOfWeek[0]]) : '-';
 }
@@ -870,7 +852,6 @@ function updateTradingActivityDetails(filteredTrades, uniqueDatesForFees) {
     const tradingDays = uniqueDatesForFees.length;
     const avgTradesPerDay = tradingDays > 0 ? filteredTrades.length / tradingDays : 0;
     
-    // Calculate trades per day
     const tradesPerDay = {};
     filteredTrades.forEach(trade => {
         tradesPerDay[trade.date] = (tradesPerDay[trade.date] || 0) + 1;
@@ -885,9 +866,9 @@ function updateTradingActivityDetails(filteredTrades, uniqueDatesForFees) {
     document.getElementById('detailTradingDays').textContent = tradingDays;
     document.getElementById('detailAvgTradesPerDay').textContent = avgTradesPerDay.toFixed(2);
     document.getElementById('detailMaxTradesDay').textContent = maxTradesDay;
-    document.getElementById('detailAvgPositionSize').textContent = `${avgPositionSize.toFixed(0)}`;
-    document.getElementById('detailLargestPosition').textContent = `${largestPosition.toFixed(0)}`;
-    document.getElementById('detailSmallestPosition').textContent = `${smallestPosition.toFixed(0)}`;
+    document.getElementById('detailAvgPositionSize').textContent = `$${avgPositionSize.toFixed(0)}`;
+    document.getElementById('detailLargestPosition').textContent = `$${largestPosition.toFixed(0)}`;
+    document.getElementById('detailSmallestPosition').textContent = `$${smallestPosition.toFixed(0)}`;
 }
 
 function updateStreakAnalysisDetails(filteredTrades) {
@@ -932,7 +913,6 @@ function updateStreakAnalysisDetails(filteredTrades) {
 
     const avgWinStreak = totalWinStreaks > 0 ? winStreaks.reduce((sum, streak) => sum + streak, 0) / totalWinStreaks : 0;
 
-    // Get current streaks
     const recentTrades = sortedTrades.slice(-10);
     let recentWinStreak = 0;
     let recentLossStreak = 0;
@@ -984,9 +964,9 @@ function updateSymbolPerformanceDetails(filteredTrades) {
         const bestAvgReturn = symbolEntries.sort((a, b) => (b[1].totalReturn / b[1].count) - (a[1].totalReturn / a[1].count))[0];
 
         document.getElementById('detailMostProfitableSymbol').textContent = 
-            `${mostProfitable[0]} (${mostProfitable[1].totalPL.toFixed(2)})`;
+            `${mostProfitable[0]} ($${mostProfitable[1].totalPL.toFixed(2)})`;
         document.getElementById('detailLeastProfitableSymbol').textContent = 
-            `${leastProfitable[0]} (${leastProfitable[1].totalPL.toFixed(2)})`;
+            `${leastProfitable[0]} ($${leastProfitable[1].totalPL.toFixed(2)})`;
         document.getElementById('detailMostTradedSymbol').textContent = 
             `${mostTraded[0]} (${mostTraded[1].count} trades)`;
         document.getElementById('detailUniqueSymbols').textContent = symbolEntries.length;
@@ -1004,7 +984,6 @@ function updateSymbolPerformanceDetails(filteredTrades) {
 }
 
 function updateRiskManagementDetails(filteredTrades) {
-    // Drawdown calculation
     const sortedTrades = [...filteredTrades].sort((a, b) => new Date(a.date) - new Date(b.date));
     let cumulativePL = 0;
     let peak = 0;
@@ -1025,7 +1004,6 @@ function updateRiskManagementDetails(filteredTrades) {
         }
     });
 
-    // Daily P/L analysis with fees
     const dailyStats = {};
     filteredTrades.forEach(trade => {
         if (!dailyStats[trade.date]) {
@@ -1034,7 +1012,6 @@ function updateRiskManagementDetails(filteredTrades) {
         dailyStats[trade.date] += trade.pnl;
     });
 
-    // Apply fees to daily stats
     Object.keys(dailyStats).forEach(date => {
         const fee = dailyFees[date] || 0;
         dailyStats[date] -= fee;
@@ -1042,33 +1019,29 @@ function updateRiskManagementDetails(filteredTrades) {
 
     const dailyPLs = Object.values(dailyStats);
     const maxDailyGain = dailyPLs.length > 0 ? Math.max(...dailyPLs) : 0;
-    // 모든 날이 수익일 때는 최악의 날을 0으로 표시
     const maxDailyLoss = dailyPLs.length > 0 && dailyPLs.some(pnl => pnl < 0) ? Math.min(...dailyPLs) : 0;
 
-    // Recovery factor
     const totalReturn = filteredTrades.reduce((sum, trade) => sum + trade.pnl, 0);
     const recoveryFactor = maxDrawdown > 0 ? totalReturn / maxDrawdown : 0;
 
-    // Risk/Reward ratio (simplified)
     const wins = filteredTrades.filter(trade => trade.pnl > 0);
     const losses = filteredTrades.filter(trade => trade.pnl < 0);
     const avgWin = wins.length > 0 ? wins.reduce((sum, trade) => sum + trade.pnl, 0) / wins.length : 0;
     const avgLoss = losses.length > 0 ? Math.abs(losses.reduce((sum, trade) => sum + trade.pnl, 0) / losses.length) : 0;
     const riskRewardRatio = avgLoss > 0 ? avgWin / avgLoss : 0;
 
-    document.getElementById('detailMaxDrawdown').textContent = `${maxDrawdown.toFixed(2)}`;
-    document.getElementById('detailCurrentDrawdown').textContent = `${currentDrawdown.toFixed(2)}`;
+    document.getElementById('detailMaxDrawdown').textContent = `$${maxDrawdown.toFixed(2)}`;
+    document.getElementById('detailCurrentDrawdown').textContent = `$${currentDrawdown.toFixed(2)}`;
     document.getElementById('detailCurrentDrawdown').className = `detail-value ${currentDrawdown === 0 ? 'positive' : 'negative'}`;
     document.getElementById('detailRecoveryFactor').textContent = recoveryFactor.toFixed(2);
     document.getElementById('detailRecoveryFactor').className = `detail-value ${recoveryFactor >= 1 ? 'positive' : 'negative'}`;
-    document.getElementById('detailMaxDailyGain').textContent = `${maxDailyGain.toFixed(2)}`;
-    document.getElementById('detailMaxDailyLoss').textContent = `${maxDailyLoss.toFixed(2)}`;
+    document.getElementById('detailMaxDailyGain').textContent = `$${maxDailyGain.toFixed(2)}`;
+    document.getElementById('detailMaxDailyLoss').textContent = `$${maxDailyLoss.toFixed(2)}`;
     document.getElementById('detailRiskRewardRatio').textContent = riskRewardRatio.toFixed(2);
     document.getElementById('detailRiskRewardRatio').className = `detail-value ${riskRewardRatio >= 1 ? 'positive' : 'negative'}`;
 }
 
 function resetDetailedAnalyticsDisplay() {
-    // Reset summary cards
     document.getElementById('summaryNetProfit').textContent = '$0.00';
     document.getElementById('summaryNetProfit').className = 'summary-card-value';
     document.getElementById('summaryTotalTrades').textContent = '0';
@@ -1081,7 +1054,6 @@ function resetDetailedAnalyticsDisplay() {
     document.getElementById('summaryLargestLoss').textContent = '$0.00';
     document.getElementById('summaryLargestLoss').className = 'summary-card-value';
 
-    // Reset all detail values
     const detailElements = [
         'detailTotalPL', 'detailTotalGain', 'detailTotalLoss', 'detailTotalFees', 'detailTotalVolume', 'detailProfitFactor',
         'detailWinningTrades', 'detailLosingTrades', 'detailAvgWinningTrade', 'detailAvgLosingTrade', 'detailLargestWin', 'detailLargestLoss',
@@ -1101,7 +1073,7 @@ function resetDetailedAnalyticsDisplay() {
                 element.textContent = '0 (0%)';
             } else if (id.includes('Time')) {
                 element.textContent = '0m';
-            } else if (id.includes(') || id.includes('PL') || id.includes('Gain') || id.includes('Loss') || 
+            } else if (id.includes('$') || id.includes('PL') || id.includes('Gain') || id.includes('Loss') || 
                       id.includes('Fees') || id.includes('Volume') || id.includes('Position') || id.includes('Drawdown')) {
                 element.textContent = '$0.00';
             } else {
@@ -1111,7 +1083,6 @@ function resetDetailedAnalyticsDisplay() {
         }
     });
 
-    // Reset special text fields
     document.getElementById('detailBestHour').textContent = '-';
     document.getElementById('detailWorstHour').textContent = '-';
     document.getElementById('detailBestDayOfWeek').textContent = '-';
@@ -1122,13 +1093,11 @@ function resetDetailedAnalyticsDisplay() {
     document.getElementById('detailBestSymbolReturn').textContent = '-';
 }
 
-// Detail card collapse function
 function toggleDetailCard(header) {
     const card = header.parentElement;
     card.classList.toggle('collapsed');
 }
 
-// Analytics date range functions
 function clearAnalyticsRange() {
     analyticsStartDate = null;
     analyticsEndDate = null;
