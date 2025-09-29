@@ -1,6 +1,5 @@
+// js/utils.js
 // Utility Functions
-
-function _el(id) { return document.getElementById(id); }
 
 // Function to get EST trading date
 function getESTTradingDate(date = new Date()) {
@@ -35,11 +34,19 @@ function changeLanguageFromSettings() {
     currentLanguage = select.value;
     updateLanguage();
     updateStats();
-    // 함수가 정의되어 있는지 확인 후 호출
-    if (typeof updateDetailedAnalytics === 'function') {
-        updateDetailedAnalytics();
-    }
+    updateDetailedAnalytics();
     localStorage.setItem('tradingPlatformLanguage', currentLanguage);
+}
+
+// Toast notification
+function showToast(message) {
+    const toast = document.getElementById('toastNotification');
+    toast.textContent = message;
+    toast.classList.add('show');
+    
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 2000);
 }
 
 // Chart.js loading helper
@@ -58,18 +65,11 @@ function waitForChart() {
     });
 }
 
-// Toast notification
-function showToast(message) {
-    const toast = document.getElementById('toastNotification');
-    toast.textContent = message;
-    toast.classList.add('show');
-    
-    setTimeout(() => {
-        toast.classList.remove('show');
-    }, 2000);
+// Navigation functions
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
 }
 
-// Navigation functions
 function showPage(pageId) {
     document.querySelectorAll('.page').forEach(page => {
         page.classList.remove('active');
@@ -83,45 +83,28 @@ function showPage(pageId) {
     event.target.closest('.nav-item').classList.add('active');
     
     if (pageId === 'analysis') {
-        // 함수가 정의되어 있는지 확인
-        if (typeof updateDetailedAnalytics === 'function') {
-            updateDetailedAnalytics();
-        }
+        updateDetailedAnalytics();
         if (currentAnalyticsSection === 'detail') {
-            if (typeof updateBasicCharts === 'function') {
-                setTimeout(updateBasicCharts, 100);
-            }
+            setTimeout(updateBasicCharts, 100);
         } else {
-            if (typeof updateAdvancedCharts === 'function') {
-                setTimeout(updateAdvancedCharts, 100);
-            }
+            setTimeout(updateAdvancedCharts, 100);
         }
     }
     
     if (pageId === 'notes') {
-        if (typeof renderAllNotesSections === 'function') {
-            renderAllNotesSections();
-        }
+        renderAllNotesSections();
     }
 
     if (pageId === 'psychology') {
         setTimeout(() => {
-            if (typeof loadPsychologyData === 'function') {
-                loadPsychologyData();
-            }
-            if (typeof updatePsychologyMetrics === 'function') {
-                updatePsychologyMetrics();
-            }
+            loadPsychologyData();
+            updatePsychologyMetrics();
         }, 100);
     }
     
     if (window.innerWidth <= 768) {
         document.getElementById('sidebar').classList.remove('open');
     }
-}
-
-function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('open');
 }
 
 // Date management functions
