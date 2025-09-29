@@ -5,10 +5,20 @@
 document.addEventListener('DOMContentLoaded', async function() {
     await waitForChart();
     
+    // 언어 설정을 가장 먼저 로드하고 적용
     const savedLanguage = localStorage.getItem('tradingPlatformLanguage');
     if (savedLanguage) {
         currentLanguage = savedLanguage;
-        document.getElementById('settingsLanguageSelect').value = currentLanguage;
+    } else {
+        // 기본 언어를 한국어로 설정
+        currentLanguage = 'ko';
+        localStorage.setItem('tradingPlatformLanguage', 'ko');
+    }
+    
+    // Settings 페이지의 언어 선택기 동기화
+    const settingsLangSelect = document.getElementById('settingsLanguageSelect');
+    if (settingsLangSelect) {
+        settingsLangSelect.value = currentLanguage;
     }
         
     // Load daily fees
@@ -18,12 +28,15 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
     
     currentTradingDate = getESTTradingDate(new Date());
-    updateCurrentDateDisplay();
-    updateLanguage();
     
+    // 데이터 로드
     loadTrades();
     loadNotes();
     loadPsychologyData();
+    
+    // UI 업데이트 (언어 적용 후)
+    updateLanguage();
+    updateCurrentDateDisplay();
     updateStats();
     renderCalendar();
     renderAllNotesSections();
