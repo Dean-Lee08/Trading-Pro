@@ -1,4 +1,3 @@
-// Calendar related functions
 function renderCalendar() {
     const grid = document.getElementById('calendarGrid');
     const year = calendarDate.getFullYear();
@@ -365,7 +364,6 @@ function updateCalendarStats() {
     }
 }
 
-// Annual Heatmap Functions
 function renderAnnualHeatmap() {
     const currentYear = calendarDate.getFullYear();
     const heatmapGrid = document.getElementById('annualHeatmapGrid');
@@ -650,7 +648,6 @@ function navigateToMonth() {
     }
 }
 
-// 기존 showWeekDetails 함수를 완전히 교체
 function showWeekDetails(weekNumber, weekTrades, weekPnl) {
     // 기존 선택된 week P/L 초기화
     document.querySelectorAll('.calendar-week-pnl').forEach(weekEl => {
@@ -717,12 +714,12 @@ function showWeekDetails(weekNumber, weekTrades, weekPnl) {
         
     document.getElementById('selectedWeekLabel').textContent = weekText;
     document.getElementById('selectedWeekTrades').textContent = weekTrades.length;
-    document.getElementById('selectedWeekPnl').textContent = `${weekPnl.toFixed(2)}`;
+    document.getElementById('selectedWeekPnl').textContent = `$${weekPnl.toFixed(2)}`;
     document.getElementById('selectedWeekPnl').className = `weekly-value ${weekPnl >= 0 ? 'positive' : 'negative'}`;
     document.getElementById('selectedWeekWinRate').textContent = `${winRate.toFixed(1)}%`;
     document.getElementById('selectedWeekWinRate').className = `weekly-value ${winRate >= 50 ? 'positive' : 'negative'}`;
-    document.getElementById('selectedWeekBestDay').textContent = `${bestDay.toFixed(2)}`;
-    document.getElementById('selectedWeekWorstDay').textContent = worstDay < 0 ? `${worstDay.toFixed(2)}` : '$0.00';
+    document.getElementById('selectedWeekBestDay').textContent = `$${bestDay.toFixed(2)}`;
+    document.getElementById('selectedWeekWorstDay').textContent = worstDay < 0 ? `$${worstDay.toFixed(2)}` : '$0.00';
     
     // 기존 상세 정보 제거
     let existingWeekDetails = document.getElementById('weekTickerDetails');
@@ -793,10 +790,10 @@ function showWeekDetails(weekNumber, weekTrades, weekPnl) {
                     <div style="background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 8px; margin-bottom: 8px; font-size: 12px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
                             <span style="font-weight: 600; color: #e4e4e7;">${symbol}</span>
-                            <span style="font-weight: 600;" class="${stats.totalPnL >= 0 ? 'positive' : 'negative'}">${stats.totalPnL.toFixed(2)}</span>
+                            <span style="font-weight: 600;" class="${stats.totalPnL >= 0 ? 'positive' : 'negative'}">$${stats.totalPnL.toFixed(2)}</span>
                         </div>
                         <div style="font-size: 11px; color: #64748b;">
-                            ${currentLanguage === 'ko' ? 'Cost Basis' : 'Cost Basis'}: ${avgCostBasis.toFixed(2)} | ${stats.tradeCount} ${currentLanguage === 'ko' ? '거래' : 'trade'}${stats.tradeCount !== 1 && currentLanguage !== 'ko' ? 's' : ''}
+                            ${currentLanguage === 'ko' ? 'Cost Basis' : 'Cost Basis'}: $${avgCostBasis.toFixed(2)} | ${stats.tradeCount} ${currentLanguage === 'ko' ? '거래' : 'trade'}${stats.tradeCount !== 1 && currentLanguage !== 'ko' ? 's' : ''}
                         </div>
                     </div>
                 `;
