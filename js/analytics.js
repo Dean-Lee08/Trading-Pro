@@ -27,13 +27,23 @@ async function createBasicChart(canvasId, type, data, options = {}) {
     try {
         await waitForChart();
         const ctx = document.getElementById(canvasId);
-        if (!ctx) return null;
+        if (!ctx) {
+            console.warn(`Canvas ${canvasId} not found`);
+            return null;
+        }
 
-        // 기존 차트가 있다면 완전히 제거
+        // 기존 차트 완전히 제거
         if (basicCharts[canvasId]) {
-            basicCharts[canvasId].destroy();
+            try {
+                basicCharts[canvasId].destroy();
+            } catch (e) {
+                console.warn('Chart destruction warning:', e);
+            }
             delete basicCharts[canvasId];
         }
+
+        // Canvas 초기화
+        ctx.getContext('2d').clearRect(0, 0, ctx.width, ctx.height);
 
         const defaultOptions = {
             responsive: true,
