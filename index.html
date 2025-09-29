@@ -215,6 +215,7 @@
                 <!-- Position Calculator Section -->
                 <div class="position-calculator-section" id="positionCalculatorSection">
                     <div class="calculator-main-grid">
+                        <!-- 왼쪽: Stats Sidebar -->
                         <div class="stats-sidebar">
                             <div class="sidebar-title-stats" data-lang="position-analysis">Position Analysis</div>
                             
@@ -231,31 +232,33 @@
                                 <span class="sidebar-stat-value" id="expectedVal">$0</span>
                             </div>
 
+                            <!-- 자동 분석 섹션 -->
                             <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #334155;">
-    <div class="sidebar-title-stats" style="font-size: 14px;" data-lang="auto-analysis">자동 분석</div>
-    <div class="sidebar-stat">
-        <span class="sidebar-stat-label" data-lang="position-size">포지션 크기</span>
-        <span class="sidebar-stat-value positive" id="riskPositionSizeSidebar">$0</span>
-    </div>
-    <div class="sidebar-stat">
-        <span class="sidebar-stat-label" data-lang="shares-quantity">주식 수량</span>
-        <span class="sidebar-stat-value neutral" id="riskSharesQuantitySidebar">0</span>
-    </div>
-    <div class="sidebar-stat">
-        <span class="sidebar-stat-label" data-lang="risk-per-share">주당 리스크</span>
-        <span class="sidebar-stat-value neutral" id="riskPerShareSidebar">$0.00</span>
-    </div>
-    <div class="sidebar-stat">
-        <span class="sidebar-stat-label" data-lang="max-loss">최대 손실</span>
-        <span class="sidebar-stat-value negative" id="riskMaxLossSidebar">$0.00</span>
-    </div>
-    <div class="sidebar-stat">
-        <span class="sidebar-stat-label" data-lang="position-cost">포지션 비용</span>
-        <span class="sidebar-stat-value neutral" id="riskPositionCostSidebar">$0.00</span>
-    </div>
-</div>
+                                <div class="sidebar-title-stats" style="font-size: 14px;" data-lang="auto-analysis">자동 분석</div>
+                                <div class="sidebar-stat">
+                                    <span class="sidebar-stat-label" data-lang="position-size">포지션 크기</span>
+                                    <span class="sidebar-stat-value positive" id="riskPositionSizeSidebar">$0</span>
+                                </div>
+                                <div class="sidebar-stat">
+                                    <span class="sidebar-stat-label" data-lang="shares-quantity">주식 수량</span>
+                                    <span class="sidebar-stat-value neutral" id="riskSharesQuantitySidebar">0</span>
+                                </div>
+                                <div class="sidebar-stat">
+                                    <span class="sidebar-stat-label" data-lang="risk-per-share">주당 리스크</span>
+                                    <span class="sidebar-stat-value neutral" id="riskPerShareSidebar">$0.00</span>
+                                </div>
+                                <div class="sidebar-stat">
+                                    <span class="sidebar-stat-label" data-lang="max-loss">최대 손실</span>
+                                    <span class="sidebar-stat-value negative" id="riskMaxLossSidebar">$0.00</span>
+                                </div>
+                                <div class="sidebar-stat">
+                                    <span class="sidebar-stat-label" data-lang="position-cost">포지션 비용</span>
+                                    <span class="sidebar-stat-value neutral" id="riskPositionCostSidebar">$0.00</span>
+                                </div>
+                            </div>
                         </div>
 
+                        <!-- 오른쪽: Calculator Container -->
                         <div class="calculator-container">
                             <!-- Calculator Tabs -->
                             <div style="display: flex; background: #0f172a; border: 1px solid #334155; border-radius: 8px; overflow: hidden; margin-bottom: 20px;">
@@ -265,26 +268,26 @@
                             
                             <!-- Kelly Calculator Content -->
                             <div id="kellyCalculator" class="calculator-content">
-    <h2 class="calculator-title" data-lang="kelly-criterion-calculator">Kelly Criterion Calculator</h2>
+                                <h2 class="calculator-title" data-lang="kelly-criterion-calculator">Kelly Criterion Calculator</h2>
                                 
                                 <div class="calc-grid">
-    <div class="calc-input-group">
-        <label class="calc-label" data-lang="account-balance">계좌 잔고 ($)</label>
-        <input type="number" class="calc-input" id="calcAccountBalance" value="" oninput="calculatePosition()">
-    </div>
-    <div class="calc-input-group">
-        <label class="calc-label" data-lang="win-rate-input">승률 (%)</label>
-        <input type="number" class="calc-input" id="calcWinRate" value="" min="0" max="100" oninput="calculatePosition()">
-    </div>
-    <div class="calc-input-group">
-        <label class="calc-label" data-lang="average-win">평균 수익 ($)</label>
-        <input type="number" class="calc-input" id="calcAvgWin" value="" oninput="calculatePosition()">
-    </div>
-    <div class="calc-input-group">
-        <label class="calc-label" data-lang="average-loss">평균 손실 ($)</label>
-        <input type="number" class="calc-input" id="calcAvgLoss" value="" oninput="calculatePosition()">
-    </div>
-</div>
+                                    <div class="calc-input-group">
+                                        <label class="calc-label" data-lang="account-balance">계좌 잔고 ($)</label>
+                                        <input type="number" class="calc-input" id="calcAccountBalance" value="" oninput="calculatePosition()">
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label class="calc-label" data-lang="win-rate-input">승률 (%)</label>
+                                        <input type="number" class="calc-input" id="calcWinRate" value="" min="0" max="100" oninput="calculatePosition()">
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label class="calc-label" data-lang="average-win">평균 수익 ($)</label>
+                                        <input type="number" class="calc-input" id="calcAvgWin" value="" oninput="calculatePosition()">
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label class="calc-label" data-lang="average-loss">평균 손실 ($)</label>
+                                        <input type="number" class="calc-input" id="calcAvgLoss" value="" oninput="calculatePosition()">
+                                    </div>
+                                </div>
 
                                 <div class="calc-input-group">
                                     <button class="btn btn-secondary" onclick="autoLoadTradeData()" style="width: 100%;" data-lang="auto-load-trade-data">
@@ -311,34 +314,34 @@
 
                             <!-- Risk Calculator Content -->
                             <div id="riskCalculator" class="calculator-content" style="display: none;">
-    <h2 class="calculator-title" data-lang="risk-management-calculator">Risk Management Calculator</h2>
+                                <h2 class="calculator-title" data-lang="risk-management-calculator">Risk Management Calculator</h2>
                                 
                                 <div class="calc-grid">
-    <div class="calc-input-group">
-        <label class="calc-label" data-lang="account-balance">계좌 잔고 ($)</label>
-        <input type="number" class="calc-input" id="riskAccountBalance" value="" oninput="calculateRiskPosition()">
-    </div>
-    <div class="calc-input-group">
-        <label class="calc-label" data-lang="risk-percentage">리스크 비율 (%)</label>
-        <input type="number" class="calc-input" id="riskPercentage" value="" min="0.1" max="10" step="1" oninput="calculateRiskPosition()">
-    </div>
-    <div class="calc-input-group">
-        <label class="calc-label" data-lang="entry-price">진입 가격 ($)</label>
-        <input type="number" class="calc-input" id="riskEntryPrice" value="" step="0.01" oninput="calculateRiskPosition()">
-    </div>
-    <div class="calc-input-group">
-        <label class="calc-label" data-lang="stop-loss-price">손절 가격 ($)</label>
-        <input type="number" class="calc-input" id="riskStopPrice" value="" step="0.01" oninput="calculateRiskPosition()">
-    </div>
-</div>
+                                    <div class="calc-input-group">
+                                        <label class="calc-label" data-lang="account-balance">계좌 잔고 ($)</label>
+                                        <input type="number" class="calc-input" id="riskAccountBalance" value="" oninput="calculateRiskPosition()">
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label class="calc-label" data-lang="risk-percentage">리스크 비율 (%)</label>
+                                        <input type="number" class="calc-input" id="riskPercentage" value="2" min="0.1" max="10" step="0.1" oninput="calculateRiskPosition()">
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label class="calc-label" data-lang="entry-price">진입 가격 ($)</label>
+                                        <input type="number" class="calc-input" id="riskEntryPrice" value="" step="0.01" oninput="calculateRiskPosition()">
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label class="calc-label" data-lang="stop-loss-price">손절 가격 ($)</label>
+                                        <input type="number" class="calc-input" id="riskStopPrice" value="" step="0.01" oninput="calculateRiskPosition()">
+                                    </div>
+                                </div>
 
                                 <div class="risk-preset-section">
-                                    <div class="risk-preset-title">리스크 비율</div>
+                                    <div class="risk-preset-title" data-lang="risk-presets">리스크 비율</div>
                                     <div class="risk-preset-buttons" style="gap: 4px;">
-                                        <button class="risk-preset-btn" style="background: #374151 !important; border: 1px solid #4b5563 !important; color: #e4e4e7 !important; padding: 8px 16px !important; border-radius: 6px !important; cursor: pointer !important; font-size: 13px !important; font-weight: 500 !important; transition: all 0.2s ease !important; min-width: 60px !important;" onclick="setRiskPreset(1)">1%</button>
-                                        <button class="risk-preset-btn active" style="background: #3b82f6 !important; border: 1px solid #3b82f6 !important; color: white !important; padding: 8px 16px !important; border-radius: 6px !important; cursor: pointer !important; font-size: 13px !important; font-weight: 500 !important; transition: all 0.2s ease !important; min-width: 60px !important;" onclick="setRiskPreset(2)">2%</button>
-                                        <button class="risk-preset-btn" style="background: #374151 !important; border: 1px solid #4b5563 !important; color: #e4e4e7 !important; padding: 8px 16px !important; border-radius: 6px !important; cursor: pointer !important; font-size: 13px !important; font-weight: 500 !important; transition: all 0.2s ease !important; min-width: 60px !important;" onclick="setRiskPreset(3)">3%</button>
-                                        <button class="risk-preset-btn" style="background: #374151 !important; border: 1px solid #4b5563 !important; color: #e4e4e7 !important; padding: 8px 16px !important; border-radius: 6px !important; cursor: pointer !important; font-size: 13px !important; font-weight: 500 !important; transition: all 0.2s ease !important; min-width: 60px !important;" onclick="setRiskPreset(5)">5%</button>
+                                        <button class="risk-preset-btn" onclick="setRiskPreset(1)">1%</button>
+                                        <button class="risk-preset-btn active" onclick="setRiskPreset(2)">2%</button>
+                                        <button class="risk-preset-btn" onclick="setRiskPreset(3)">3%</button>
+                                        <button class="risk-preset-btn" onclick="setRiskPreset(5)">5%</button>
                                     </div>
                                 </div>
 
