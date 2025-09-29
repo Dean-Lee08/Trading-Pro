@@ -57,48 +57,69 @@ function showPsychologySection(section) {
 
 // Psychology Data Management
 function savePsychologyData() {
-    const currentDate = formatTradingDate(currentTradingDate);
-    
-    // 안전한 요소 접근을 위한 헬퍼 함수
-    const getElementValue = (id, defaultValue = 0) => {
-        const element = document.getElementById(id);
-        return element ? (parseFloat(element.value) || defaultValue) : defaultValue;
-    };
-    
-    const getElementStringValue = (id, defaultValue = '') => {
-        const element = document.getElementById(id);
-        return element ? (element.value || defaultValue) : defaultValue;
-    };
-    
-    const data = {
-        date: currentDate,
-        timestamp: new Date().toISOString(),
+    try {
+        const currentDate = formatTradingDate(currentTradingDate);
         
-        // Biological data
-        sleepHours: getElementValue('sleepHours'),
+        // 안전한 요소 접근을 위한 헬퍼 함수
+        const getElementValue = (id, defaultValue = 0) => {
+            const element = document.getElementById(id);
+            if (!element) {
+                console.warn(`Element not found: ${id}`);
+                return defaultValue;
+            }
+            const value = parseFloat(element.value);
+            return isNaN(value) ? defaultValue : value;
+        };
         
-        // Time & environment
-        startTime: getElementStringValue('startTime', '09:30'),
-        endTime: getElementStringValue('endTime'),
-        environmentType: getElementStringValue('environmentType', 'home'),
+        const getElementStringValue = (id, defaultValue = '') => {
+            const element = document.getElementById(id);
+            if (!element) {
+                console.warn(`Element not found: ${id}`);
+                return defaultValue;
+            }
+            return element.value || defaultValue;
+        };
         
-        // Economic pressure
-        accountBalance: getElementValue('accountBalance'),
-        dailyTarget: getElementValue('dailyTarget'),
-        maxDailyLoss: getElementValue('maxDailyLoss'),
+        const data = {
+            date: currentDate,
+            timestamp: new Date().toISOString(),
+            
+            // Biological data
+            sleepHours: getElementValue('sleepHours'),
+            
+            // Time & environment
+            startTime: getElementStringValue('startTime', '09:30'),
+            endTime: getElementStringValue('endTime'),
+            environmentType: getElementStringValue('environmentType', 'home'),
+            
+            // Economic pressure
+            accountBalance: getElementValue('accountBalance'),
+            dailyTarget: getElementValue('dailyTarget'),
+            maxDailyLoss: getElementValue('maxDailyLoss'),
+            
+            // Emotional state
+            stressLevel: getElementValue('stressLevel', 3),
+            confidenceLevel: getElementValue('confidenceLevel', 3),
+            focusLevel: getElementValue('focusLevel', 3)
+        };
         
-        // Emotional state
-        stressLevel: getElementValue('stressLevel', 3),
-        confidenceLevel: getElementValue('confidenceLevel', 3),
-        focusLevel: getElementValue('focusLevel', 3)
-    };
-    
-    psychologyData[currentDate] = data;
-    localStorage.setItem('tradingPlatformPsychologyData', JSON.stringify(psychologyData));
-    
-    updatePsychologyMetrics();
-    generatePsychologyInsights();
-    showToast(currentLanguage === 'ko' ? '심리 데이터가 저장되었습니다' : 'Psychology data saved');
+        psychologyData[currentDate] = data;
+        
+        try {
+            localStorage.setItem('tradingPlatformPsychologyData', JSON.stringify(psychologyData));
+        } catch (storageError) {
+            console.error('Failed to save to localStorage:', storageError);
+            alert(currentLanguage === 'ko' ? '데이터 저장 실패. 브라우저 저장 공간을 확인하세요.' : 'Failed to save data. Please check browser storage.');
+            return;
+        }
+        
+        updatePsychologyMetrics();
+        generatePsychologyInsights();
+        showToast(currentLanguage === 'ko' ? '심리 데이터가 저장되었습니다' : 'Psychology data saved');
+    } catch (error) {
+        console.error('Error saving psychology data:', error);
+        alert(currentLanguage === 'ko' ? '데이터 저장 중 오류가 발생했습니다.' : 'Error occurred while saving data.');
+    }
 }
 
 function resetPsychologyData() {
@@ -477,24 +498,69 @@ function updateTargetPercentages() {
 
 function updateVisualCards() {
     try {
-        // 모든 DOM 요소 존재 확인 후 실행
-        if (!document.getElementById('sleepHoursDisplay') ||
-            !document.getElementById('environmentScore') ||
-            !document.getElementById('stressDisplay')) {
-            console.warn('Psychology visual card elements not ready');
+        // 필수 DOM 요소들의 존재 여부 확인
+        const requiredElements = [
+            'sleepHoursDisplay',
+            'sleepQualityBar',
+            'sleepStatus',
+            'environmentScore',
+            'environmentTypeDisplay',
+            'environmentStatus',
+            'stressDisplay',
+            'confidenceDisplay',
+            'focusDisplay',
+            'emotionalStatus'
+        ];
+        
+        // 모든 필수 요소가 존재하는지 확인
+        const allElementsExist = requiredElements.every(id => {
+            const exists = document.getElementById(id) !== null;
+            if (!exists) {
+                console.warn(`Required element not found: ${id}`);
+            }
+            return exists;
+        });
+        
+        if (!allElementsExist) {
+            console.warn('Some psychology visual card elements are not ready');
             return;
         }
         
-        updateSleepCard();
-        updateEnvironmentCard();
-        updateEmotionalCard();
-        updateRiskCard();
+        // 각 카드 업데이트를 개별적으로 try-catch
+        try {
+            updateSleepCard();
+        } catch (error) {
+            console.error('Error updating sleep card:', error);
+        }
         
+        try {
+            updateEnvironmentCard();
+        } catch (error) {
+            console.error('Error updating environment card:', error);
+        }
+        
+        try {
+            updateEmotionalCard();
+        } catch (error) {
+            console.error('Error updating emotional card:', error);
+        }
+        
+        try {
+            updateRiskCard();
+        } catch (error) {
+            console.error('Error updating risk card:', error);
+        }
+        
+        // 차트 생성은 약간의 딜레이 후
         setTimeout(() => {
-            createPsychologyChart();
+            try {
+                createPsychologyChart();
+            } catch (error) {
+                console.error('Error creating psychology chart:', error);
+            }
         }, 100);
     } catch (error) {
-        console.error('Error updating visual cards:', error);
+        console.error('Error in updateVisualCards:', error);
     }
 }
 
