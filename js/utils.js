@@ -35,7 +35,7 @@ function changeLanguageFromSettings() {
     currentLanguage = select.value;
     updateLanguage();
     updateStats();
-    // updateDetailedAnalytics 함수가 정의되어 있는지 확인
+    // 함수가 정의되어 있는지 확인 후 호출
     if (typeof updateDetailedAnalytics === 'function') {
         updateDetailedAnalytics();
     }
