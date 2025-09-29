@@ -1,8 +1,10 @@
+// js/main.js
 // Main Application Initialization and Core Functions
 
 // Page initialization
 document.addEventListener('DOMContentLoaded', async function() {
     await waitForChart();
+    
     const savedLanguage = localStorage.getItem('tradingPlatformLanguage');
     if (savedLanguage) {
         currentLanguage = savedLanguage;
@@ -127,6 +129,81 @@ function loadTrades() {
     }
 }
 
+function saveNotes() {
+    try {
+        localStorage.setItem('tradingPlatformNotes', JSON.stringify(notes));
+    } catch (error) {
+        console.error('Error saving notes:', error);
+    }
+}
+
+function loadNotes() {
+    try {
+        const saved = localStorage.getItem('tradingPlatformNotes');
+        if (saved) {
+            notes = JSON.parse(saved);
+            notes = notes.map(note => ({
+                ...note,
+                category: note.category || 'general',
+                textColor: note.textColor || '#94a3b8',
+                font: note.font || "'Inter', sans-serif",
+                pinned: note.pinned || false
+            }));
+        } else {
+            notes = [];
+        }
+    } catch (error) {
+        console.error('Error loading notes:', error);
+        notes = [];
+    }
+}
+
+function loadPsychologyData() {
+    try {
+        const saved = localStorage.getItem('tradingPlatformPsychologyData');
+        if (saved) {
+            psychologyData = JSON.parse(saved);
+        } else {
+            psychologyData = {};
+        }
+    } catch (error) {
+        console.error('Error loading psychology data:', error);
+        psychologyData = {};
+    }
+
+    const currentDate = formatTradingDate(currentTradingDate);
+    const todayData = psychologyData[currentDate];
+
+    if (todayData) {
+        // 안전한 요소 업데이트
+        const updateElement = (id, value) => {
+            const element = document.getElementById(id);
+            if (element) element.value = value;
+        };
+
+        updateElement('sleepHours', todayData.sleepHours || '');
+        updateElement('startTime', todayData.startTime || '09:30');
+        updateElement('endTime', todayData.endTime || '');
+        updateElement('environmentType', todayData.environmentType || 'home');
+        updateElement('accountBalance', todayData.accountBalance || '');
+        updateElement('dailyTarget', todayData.dailyTarget || '');
+        updateElement('maxDailyLoss', todayData.maxDailyLoss || '');
+        updateElement('stressLevel', todayData.stressLevel || 3);
+        updateElement('confidenceLevel', todayData.confidenceLevel || 3);
+        updateElement('focusLevel', todayData.focusLevel || 3);
+
+        // 차트 업데이트는 약간의 딜레이 후 실행
+        setTimeout(() => {
+            updateVisualCards();
+        }, 200);
+    } else {
+        // 기본값으로 차트 생성
+        setTimeout(() => {
+            createPsychologyChart();
+        }, 200);
+    }
+}
+
 // Statistics update function
 function updateStats() {
     const filteredTrades = getFilteredDashboardTrades();
@@ -165,7 +242,7 @@ function updateStats() {
     const totalLosses = Math.abs(losses.reduce((sum, trade) => sum + trade.pnl, 0));
     const profitFactor = totalLosses > 0 ? totalWins / totalLosses : 0;
 
-    document.getElementById('totalPL').textContent = `${netPL.toFixed(2)}`;
+    document.getElementById('totalPL').textContent = `$${netPL.toFixed(2)}`;
     document.getElementById('totalPL').className = `stat-value ${netPL >= 0 ? 'positive' : 'negative'}`;
     
     document.getElementById('totalTrades').textContent = filteredTrades.length.toString();
@@ -174,12 +251,12 @@ function updateStats() {
     
     document.getElementById('winLossCount').textContent = `${wins.length}W / ${losses.length}L`;
     
-    document.getElementById('bestTrade').textContent = `${bestTrade.toFixed(2)}`;
-    document.getElementById('worstTrade').textContent = `${worstTrade.toFixed(2)}`;
+    document.getElementById('bestTrade').textContent = `$${bestTrade.toFixed(2)}`;
+    document.getElementById('worstTrade').textContent = `$${worstTrade.toFixed(2)}`;
     
-    document.getElementById('avgWin').textContent = `${avgWin.toFixed(2)}`;
-    document.getElementById('avgLoss').textContent = `${avgLoss.toFixed(2)}`;
-    document.getElementById('totalVolume').textContent = `${totalVolume.toFixed(2)}`;
+    document.getElementById('avgWin').textContent = `$${avgWin.toFixed(2)}`;
+    document.getElementById('avgLoss').textContent = `$${avgLoss.toFixed(2)}`;
+    document.getElementById('totalVolume').textContent = `$${totalVolume.toFixed(2)}`;
     
     document.getElementById('profitFactorSidebar').textContent = profitFactor.toFixed(2);
     document.getElementById('profitFactorSidebar').className = `sidebar-stat-value ${profitFactor >= 1 ? 'positive' : 'negative'}`;
@@ -231,9 +308,9 @@ function updateTradesTable(tradesToShow, tableBodyId) {
                     <td>${trade.buyPrice.toFixed(4)}</td>
                     <td>${trade.sellPrice.toFixed(4)}</td>
                     <td>${shares}</td>
-                    <td>${amount.toFixed(2)}</td>
+                    <td>$${amount.toFixed(2)}</td>
                     <td>${trade.holdingTime || 'N/A'}</td>
-                    <td class="${trade.pnl >= 0 ? 'positive' : 'negative'}">${trade.pnl.toFixed(2)}</td>
+                    <td class="${trade.pnl >= 0 ? 'positive' : 'negative'}">$${trade.pnl.toFixed(2)}</td>
                     <td class="${trade.returnPct >= 0 ? 'positive' : 'negative'}">${trade.returnPct.toFixed(2)}%</td>
                     <td>
                         <button class="action-btn" onclick="editTrade(${trade.id})" title="Edit trade">✏️</button>
@@ -259,9 +336,9 @@ function updateTradesTable(tradesToShow, tableBodyId) {
                     <td>${trade.buyPrice.toFixed(4)}</td>
                     <td>${trade.sellPrice.toFixed(4)}</td>
                     <td>${shares}</td>
-                    <td>${amount.toFixed(2)}</td>
+                    <td>$${amount.toFixed(2)}</td>
                     <td>${trade.holdingTime || 'N/A'}</td>
-                    <td class="${trade.pnl >= 0 ? 'positive' : 'negative'}">${trade.pnl.toFixed(2)}</td>
+                    <td class="${trade.pnl >= 0 ? 'positive' : 'negative'}">$${trade.pnl.toFixed(2)}</td>
                     <td class="${trade.returnPct >= 0 ? 'positive' : 'negative'}">${trade.returnPct.toFixed(2)}%</td>
                     <td>
                         <button class="action-btn" onclick="editTrade(${trade.id})" title="Edit trade">✏️</button>
@@ -359,7 +436,8 @@ function exportData() {
     const exportData = {
         trades: trades,
         notes: notes,
-        dailyFees: dailyFees
+        dailyFees: dailyFees,
+        psychologyData: psychologyData
     };
     const dataStr = JSON.stringify(exportData, null, 2);
     const dataBlob = new Blob([dataStr], {type: 'application/json'});
@@ -386,21 +464,29 @@ function handleFileImport() {
                 if (importedData.trades && Array.isArray(importedData.trades)) {
                     trades = importedData.trades.map(trade => ({
                         ...trade,
-                        notes: trade.notes || ''
+                        notes: trade.notes || '',
+                        shares: trade.shares || (trade.amount && trade.buyPrice ? Math.round(trade.amount / trade.buyPrice) : 0),
+                        amount: trade.amount || (trade.shares && trade.buyPrice ? trade.shares * trade.buyPrice : 0)
                     }));
                     if (importedData.notes && Array.isArray(importedData.notes)) {
                         notes = importedData.notes.map(note => ({
                             ...note,
                             category: note.category || 'general',
-                            font: note.font || "'Source Code Pro', monospace"
+                            font: note.font || "'Inter', sans-serif",
+                            textColor: note.textColor || '#94a3b8',
+                            pinned: note.pinned || false
                         }));
                     }
                     if (importedData.dailyFees) {
                         dailyFees = importedData.dailyFees;
                     }
+                    if (importedData.psychologyData) {
+                        psychologyData = importedData.psychologyData;
+                    }
                     saveTrades();
                     saveNotes();
                     localStorage.setItem('tradingPlatformDailyFees', JSON.stringify(dailyFees));
+                    localStorage.setItem('tradingPlatformPsychologyData', JSON.stringify(psychologyData));
                     updateStats();
                     renderCalendar();
                     renderAllNotesSections();
@@ -428,9 +514,11 @@ function clearAllData() {
         trades = [];
         notes = [];
         dailyFees = {};
+        psychologyData = {};
         saveTrades();
         saveNotes();
         localStorage.setItem('tradingPlatformDailyFees', JSON.stringify(dailyFees));
+        localStorage.setItem('tradingPlatformPsychologyData', JSON.stringify(psychologyData));
         updateStats();
         renderCalendar();
         renderAllNotesSections();
@@ -439,5 +527,199 @@ function clearAllData() {
         clearCalendarRange();
         loadDailyFees();
         showToast(currentLanguage === 'ko' ? '모든 데이터가 삭제됨' : 'All data cleared');
+    }
+}
+
+// Trade selection functions for dashboard
+function toggleTradeSelection(tradeId) {
+    if (!selectedTrades) {
+        selectedTrades = new Set();
+    }
+    
+    if (selectedTrades.has(tradeId)) {
+        selectedTrades.delete(tradeId);
+    } else {
+        selectedTrades.add(tradeId);
+    }
+    updateDeleteButtonVisibility();
+    updateSelectAllCheckbox();
+}
+
+function toggleAllTrades() {
+    if (!selectedTrades) {
+        selectedTrades = new Set();
+    }
+    
+    const selectAllCheckbox = document.getElementById('selectAllTrades');
+    const isChecked = selectAllCheckbox.checked;
+    
+    const filteredTrades = getFilteredDashboardTrades();
+    
+    if (isChecked) {
+        filteredTrades.forEach(trade => selectedTrades.add(trade.id));
+    } else {
+        filteredTrades.forEach(trade => selectedTrades.delete(trade.id));
+    }
+    
+    updateTradesTable(filteredTrades, 'tradesTableBody');
+}
+
+function updateSelectAllCheckbox() {
+    const selectAllCheckbox = document.getElementById('selectAllTrades');
+    if (!selectAllCheckbox) return;
+    
+    if (!selectedTrades) {
+        selectedTrades = new Set();
+    }
+    
+    const filteredTrades = getFilteredDashboardTrades();
+    
+    if (filteredTrades.length === 0) {
+        selectAllCheckbox.indeterminate = false;
+        selectAllCheckbox.checked = false;
+        return;
+    }
+    
+    const selectedCount = filteredTrades.filter(trade => selectedTrades.has(trade.id)).length;
+    
+    if (selectedCount === 0) {
+        selectAllCheckbox.indeterminate = false;
+        selectAllCheckbox.checked = false;
+    } else if (selectedCount === filteredTrades.length) {
+        selectAllCheckbox.indeterminate = false;
+        selectAllCheckbox.checked = true;
+    } else {
+        selectAllCheckbox.indeterminate = true;
+        selectAllCheckbox.checked = false;
+    }
+}
+
+function updateDeleteButtonVisibility() {
+    if (!selectedTrades) {
+        selectedTrades = new Set();
+    }
+    
+    const deleteBtn = document.getElementById('deleteSelectedBtn');
+    if (deleteBtn) {
+        if (selectedTrades.size > 0) {
+            deleteBtn.style.display = 'block';
+            deleteBtn.textContent = currentLanguage === 'ko' ? 
+                `선택된 거래 삭제 (${selectedTrades.size})` : 
+                `Delete Selected (${selectedTrades.size})`;
+        } else {
+            deleteBtn.style.display = 'none';
+        }
+    }
+}
+
+function deleteSelectedTrades() {
+    if (selectedTrades.size === 0) return;
+    
+    const confirmMessage = currentLanguage === 'ko' ? 
+        `선택된 ${selectedTrades.size}개의 거래를 삭제하시겠습니까?` : 
+        `Are you sure you want to delete ${selectedTrades.size} selected trades?`;
+    
+    if (confirm(confirmMessage)) {
+        const tradesToDelete = Array.from(selectedTrades);
+        trades = trades.filter(trade => !selectedTrades.has(trade.id));
+        selectedTrades.clear();
+        
+        saveTrades();
+        updateStats();
+        renderCalendar();
+        updateAllTradesList();
+        updateDetailedAnalytics();
+        
+        showToast(currentLanguage === 'ko' ? 
+            `${tradesToDelete.length}개의 거래가 삭제되었습니다` : 
+            `${tradesToDelete.length} trades deleted`);
+    }
+}
+
+// Trade selection functions for trade list page
+function toggleTradeListSelection(tradeId) {
+    if (selectedTradesList.has(tradeId)) {
+        selectedTradesList.delete(tradeId);
+    } else {
+        selectedTradesList.add(tradeId);
+    }
+    updateDeleteListButtonVisibility();
+    updateSelectAllListCheckbox();
+}
+
+function toggleAllTradesList() {
+    const selectAllCheckbox = document.getElementById('selectAllTradesList');
+    const isChecked = selectAllCheckbox.checked;
+    
+    const filteredTrades = getFilteredTradesList();
+    
+    if (isChecked) {
+        filteredTrades.forEach(trade => selectedTradesList.add(trade.id));
+    } else {
+        filteredTrades.forEach(trade => selectedTradesList.delete(trade.id));
+    }
+    
+    updateTradesTable(filteredTrades, 'allTradesTableBody');
+}
+
+function updateSelectAllListCheckbox() {
+    const selectAllCheckbox = document.getElementById('selectAllTradesList');
+    const filteredTrades = getFilteredTradesList();
+    
+    if (filteredTrades.length === 0) {
+        selectAllCheckbox.indeterminate = false;
+        selectAllCheckbox.checked = false;
+        return;
+    }
+    
+    const selectedCount = filteredTrades.filter(trade => selectedTradesList.has(trade.id)).length;
+    
+    if (selectedCount === 0) {
+        selectAllCheckbox.indeterminate = false;
+        selectAllCheckbox.checked = false;
+    } else if (selectedCount === filteredTrades.length) {
+        selectAllCheckbox.indeterminate = false;
+        selectAllCheckbox.checked = true;
+    } else {
+        selectAllCheckbox.indeterminate = true;
+        selectAllCheckbox.checked = false;
+    }
+}
+
+function updateDeleteListButtonVisibility() {
+    const deleteBtn = document.getElementById('deleteSelectedListBtn');
+    if (deleteBtn) {
+        if (selectedTradesList.size > 0) {
+            deleteBtn.style.display = 'block';
+            deleteBtn.textContent = currentLanguage === 'ko' ? 
+                `선택된 거래 삭제 (${selectedTradesList.size})` : 
+                `Delete Selected (${selectedTradesList.size})`;
+        } else {
+            deleteBtn.style.display = 'none';
+        }
+    }
+}
+
+function deleteSelectedTradesList() {
+    if (selectedTradesList.size === 0) return;
+    
+    const confirmMessage = currentLanguage === 'ko' ? 
+        `선택된 ${selectedTradesList.size}개의 거래를 삭제하시겠습니까?` : 
+        `Are you sure you want to delete ${selectedTradesList.size} selected trades?`;
+    
+    if (confirm(confirmMessage)) {
+        const tradesToDelete = Array.from(selectedTradesList);
+        trades = trades.filter(trade => !selectedTradesList.has(trade.id));
+        selectedTradesList.clear();
+        
+        saveTrades();
+        updateStats();
+        renderCalendar();
+        updateAllTradesList();
+        updateDetailedAnalytics();
+        
+        showToast(currentLanguage === 'ko' ? 
+            `${tradesToDelete.length}개의 거래가 삭제되었습니다` : 
+            `${tradesToDelete.length} trades deleted`);
     }
 }
