@@ -1,3 +1,7 @@
+// Utility Functions
+
+function _el(id) { return document.getElementById(id); }
+
 // Function to get EST trading date
 function getESTTradingDate(date = new Date()) {
     return new Date(date);
@@ -35,17 +39,6 @@ function changeLanguageFromSettings() {
     localStorage.setItem('tradingPlatformLanguage', currentLanguage);
 }
 
-// Toast notification
-function showToast(message) {
-    const toast = document.getElementById('toastNotification');
-    toast.textContent = message;
-    toast.classList.add('show');
-    
-    setTimeout(() => {
-        toast.classList.remove('show');
-    }, 2000);
-}
-
 // Chart.js loading helper
 function waitForChart() {
     return new Promise((resolve) => {
@@ -60,6 +53,17 @@ function waitForChart() {
             }, 100);
         }
     });
+}
+
+// Toast notification
+function showToast(message) {
+    const toast = document.getElementById('toastNotification');
+    toast.textContent = message;
+    toast.classList.add('show');
+    
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 2000);
 }
 
 // Navigation functions
@@ -104,29 +108,134 @@ function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('open');
 }
 
+// Date management functions
+function updateCurrentDateDisplay() {
+    const dateStr = currentTradingDate.toLocaleDateString(currentLanguage === 'ko' ? 'ko-KR' : 'en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    });
+    document.getElementById('currentDateDisplay').textContent = dateStr;
+}
+
+function openDatePicker() {
+    const modal = document.getElementById('datePickerModal');
+    const input = document.getElementById('datePickerInput');
+    
+    const estTradingDate = getESTTradingDate(currentTradingDate);
+    const dateString = estTradingDate.getFullYear() + '-' + 
+        String(estTradingDate.getMonth() + 1).padStart(2, '0') + '-' + 
+        String(estTradingDate.getDate()).padStart(2, '0');
+    
+    input.value = dateString;
+    modal.style.display = 'flex';
+}
+
+function closeDatePicker() {
+    document.getElementById('datePickerModal').style.display = 'none';
+}
+
+function applySelectedDate() {
+    const input = document.getElementById('datePickerInput');
+    if (input.value) {
+        currentTradingDate = new Date(input.value + 'T12:00:00');
+        updateCurrentDateDisplay();
+        updateStats();
+        loadDailyFees();
+        closeDatePicker();
+    }
+}
+
+function changeTradingDate(direction) {
+    const newDate = new Date(currentTradingDate);
+    newDate.setDate(newDate.getDate() + direction);
+    currentTradingDate = newDate;
+    updateCurrentDateDisplay();
+    updateStats();
+    updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
+    loadDailyFees();
+    showToast(direction > 0 ? 'Next day' : 'Previous day');
+}
+
 // Detail card collapse function
 function toggleDetailCard(header) {
     const card = header.parentElement;
     card.classList.toggle('collapsed');
 }
 
-// Safe element update helper
-function safeUpdateElement(id, value, className = null) {
-    const element = document.getElementById(id);
-    if (element) {
-        if (typeof value === 'string' || typeof value === 'number') {
-            element.textContent = value;
-        }
-        if (className) {
-            element.className = className;
-        }
-    }
+// Dashboard date range functions
+function clearDashboardRange() {
+    dashboardStartDate = null;
+    dashboardEndDate = null;
+    document.getElementById('dashboardStartDate').value = '';
+    document.getElementById('dashboardEndDate').value = '';
+    updateStats();
+    updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
 }
 
-// Standard deviation calculation
-function calculateStandardDeviation(values) {
-    const avg = values.reduce((sum, val) => sum + val, 0) / values.length;
-    const squaredDiffs = values.map(val => Math.pow(val - avg, 2));
-    const variance = squaredDiffs.reduce((sum, diff) => sum + diff, 0) / values.length;
-    return Math.sqrt(variance);
+function getFilteredDashboardTrades() {
+    let filteredTrades = trades;
+    const currentDate = formatTradingDate(currentTradingDate);
+    
+    if (dashboardStartDate || dashboardEndDate) {
+        filteredTrades = trades.filter(trade => {
+            const tradeDate = trade.date;
+            if (dashboardStartDate && tradeDate < dashboardStartDate) return false;
+            if (dashboardEndDate && tradeDate > dashboardEndDate) return false;
+            return true;
+        });
+    } else {
+        filteredTrades = trades.filter(trade => trade.date === currentDate);
+    }
+    
+    return filteredTrades;
+}
+
+// Analytics date range functions
+function clearAnalyticsRange() {
+    analyticsStartDate = null;
+    analyticsEndDate = null;
+    document.getElementById('analyticsStartDate').value = '';
+    document.getElementById('analyticsEndDate').value = '';
+    updateDetailedAnalytics();
+}
+
+// Trades page date range functions
+function clearTradesRange() {
+    tradesStartDate = null;
+    tradesEndDate = null;
+    document.getElementById('tradesStartDate').value = '';
+    document.getElementById('tradesEndDate').value = '';
+    updateAllTradesList();
+}
+
+function getFilteredTradesList() {
+    if (tradesStartDate || tradesEndDate) {
+        return trades.filter(trade => {
+            const tradeDate = trade.date;
+            if (tradesStartDate && tradeDate < tradesStartDate) return false;
+            if (tradesEndDate && tradeDate > tradesEndDate) return false;
+            return true;
+        });
+    }
+    return trades;
+}
+
+// Daily fees functions
+function saveDailyFees() {
+    const currentDate = formatTradingDate(currentTradingDate);
+    const feesValue = parseFloat(document.getElementById('dailyFees').value) || 0;
+    dailyFees[currentDate] = feesValue;
+    localStorage.setItem('tradingPlatformDailyFees', JSON.stringify(dailyFees));
+    showToast('Daily fees saved');
+}
+
+function loadDailyFees() {
+    const currentDate = formatTradingDate(currentTradingDate);
+    const feesInput = document.getElementById('dailyFees');
+    if (dailyFees[currentDate]) {
+        feesInput.value = dailyFees[currentDate];
+    } else {
+        feesInput.value = '';
+    }
 }
