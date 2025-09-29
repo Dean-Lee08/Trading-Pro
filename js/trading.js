@@ -1,5 +1,3 @@
-// Trading Functions
-
 // Time related functions
 function toggleTimeEdit() {
     timeEditMode = !timeEditMode;
@@ -54,7 +52,6 @@ function calculateHoldingTime() {
     }
 }
 
-// Trade calculation functions
 function calculatePnL() {
     const shares = parseFloat(document.getElementById('shares').value) || 0;
     const buyPrice = parseFloat(document.getElementById('buyPrice').value) || 0;
@@ -245,7 +242,356 @@ function handleEditTradeSubmit(event) {
     showToast(`${updatedTrade.symbol} updated`);
 }
 
-// Position Calculator Functions
+function updateStats() {
+    const filteredTrades = getFilteredDashboardTrades();
+    
+    if (filteredTrades.length === 0) {
+        document.getElementById('totalPL').textContent = '$0.00';
+        document.getElementById('totalTrades').textContent = '0';
+        document.getElementById('winRate').textContent = '0%';
+        document.getElementById('winLossCount').textContent = '0W / 0L';
+        document.getElementById('bestTrade').textContent = '$0.00';
+        document.getElementById('worstTrade').textContent = '$0.00';
+        document.getElementById('avgWin').textContent = '$0.00';
+        document.getElementById('avgLoss').textContent = '$0.00';
+        document.getElementById('totalVolume').textContent = '$0.00';
+        document.getElementById('profitFactorSidebar').textContent = '0.00';
+        return;
+    }
+
+    const totalPL = filteredTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+    const currentDate = formatTradingDate(currentTradingDate);
+    const dailyFee = dailyFees[currentDate] || 0;
+    const netPL = totalPL - dailyFee;
+    const wins = filteredTrades.filter(trade => trade.pnl > 0);
+    const losses = filteredTrades.filter(trade => trade.pnl < 0);
+    const winRate = filteredTrades.length > 0 ? (wins.length / filteredTrades.length) * 100 : 0;
+    
+    const pnls = filteredTrades.map(trade => trade.pnl);
+    const bestTrade = Math.max(...pnls);
+    const worstTrade = Math.min(...pnls);
+    
+    const avgWin = wins.length > 0 ? wins.reduce((sum, trade) => sum + trade.pnl, 0) / wins.length : 0;
+    const avgLoss = losses.length > 0 ? losses.reduce((sum, trade) => sum + trade.pnl, 0) / losses.length : 0;
+    const totalVolume = filteredTrades.reduce((sum, trade) => sum + trade.amount, 0);
+    
+    const totalWins = wins.reduce((sum, trade) => sum + trade.pnl, 0);
+    const totalLosses = Math.abs(losses.reduce((sum, trade) => sum + trade.pnl, 0));
+    const profitFactor = totalLosses > 0 ? totalWins / totalLosses : 0;
+
+    document.getElementById('totalPL').textContent = `$${netPL.toFixed(2)}`;
+    document.getElementById('totalPL').className = `stat-value ${netPL >= 0 ? 'positive' : 'negative'}`;
+    
+    document.getElementById('totalTrades').textContent = filteredTrades.length.toString();
+    document.getElementById('winRate').textContent = `${winRate.toFixed(1)}%`;
+    document.getElementById('winRate').className = `stat-value ${winRate >= 50 ? 'positive' : 'negative'}`;
+    
+    document.getElementById('winLossCount').textContent = `${wins.length}W / ${losses.length}L`;
+    
+    document.getElementById('bestTrade').textContent = `$${bestTrade.toFixed(2)}`;
+    document.getElementById('worstTrade').textContent = `$${worstTrade.toFixed(2)}`;
+    
+    document.getElementById('avgWin').textContent = `$${avgWin.toFixed(2)}`;
+    document.getElementById('avgLoss').textContent = `$${avgLoss.toFixed(2)}`;
+    document.getElementById('totalVolume').textContent = `$${totalVolume.toFixed(2)}`;
+    
+    document.getElementById('profitFactorSidebar').textContent = profitFactor.toFixed(2);
+    document.getElementById('profitFactorSidebar').className = `sidebar-stat-value ${profitFactor >= 1 ? 'positive' : 'negative'}`;
+}
+
+function updateTradesTable(tradesToShow, tableBodyId) {
+    const tableBody = document.getElementById(tableBodyId);
+    
+    if (tradesToShow.length === 0) {
+        const colspan = '11';
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="${colspan}">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📊</div>
+                        <div data-lang="no-trades">No trades recorded yet</div>
+                    </div>
+                </td>
+            </tr>
+        `;
+        updateLanguage();
+        return;
+    }
+    
+    const sortedTrades = [...tradesToShow].sort((a, b) => {
+        const dateTimeA = new Date(a.date + 'T' + (a.exitTime || a.entryTime || '00:00') + ':00');
+        const dateTimeB = new Date(b.date + 'T' + (b.exitTime || b.entryTime || '00:00') + ':00');
+        
+        if (a.date !== b.date) {
+            return new Date(b.date) - new Date(a.date);
+        }
+        
+        return dateTimeB - dateTimeA;
+    });
+    
+    if (tableBodyId === 'tradesTableBody') {
+        // 대시보드 테이블
+        const currentSelectedTrades = selectedTrades || new Set();
+        tableBody.innerHTML = sortedTrades.map(trade => {
+            const shares = trade.shares || (trade.amount && trade.buyPrice ? Math.round(trade.amount / trade.buyPrice) : 0);
+            const amount = trade.amount || (shares * trade.buyPrice);
+            const isSelected = currentSelectedTrades.has(trade.id);
+            return `
+                <tr>
+                    <td><input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleTradeSelection(${trade.id})" style="accent-color: #3b82f6;"></td>
+                    <td>${new Date(trade.date).toLocaleDateString()}</td>
+                    <td><strong>${trade.symbol}</strong></td>
+                    <td>${trade.buyPrice.toFixed(4)}</td>
+                    <td>${trade.sellPrice.toFixed(4)}</td>
+                    <td>${shares}</td>
+                    <td>$${amount.toFixed(2)}</td>
+                    <td>${trade.holdingTime || 'N/A'}</td>
+                    <td class="${trade.pnl >= 0 ? 'positive' : 'negative'}">$${trade.pnl.toFixed(2)}</td>
+                    <td class="${trade.returnPct >= 0 ? 'positive' : 'negative'}">${trade.returnPct.toFixed(2)}%</td>
+                    <td>
+                        <button class="action-btn" onclick="editTrade(${trade.id})" title="Edit trade">✏️</button>
+                        <button class="action-btn" onclick="deleteTrade(${trade.id})" title="Delete trade">🗑️</button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+        updateDeleteButtonVisibility();
+        updateSelectAllCheckbox();
+    } else {
+        // 거래 목록 페이지 테이블
+        const currentSelectedTradesList = selectedTradesList || new Set();
+        tableBody.innerHTML = sortedTrades.map(trade => {
+            const shares = trade.shares || (trade.amount && trade.buyPrice ? Math.round(trade.amount / trade.buyPrice) : 0);
+            const amount = trade.amount || (shares * trade.buyPrice);
+            const isSelected = currentSelectedTradesList.has(trade.id);
+            return `
+                <tr>
+                    <td><input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleTradeListSelection(${trade.id})" style="accent-color: #3b82f6;"></td>
+                    <td>${new Date(trade.date).toLocaleDateString()}</td>
+                    <td><strong>${trade.symbol}</strong></td>
+                    <td>${trade.buyPrice.toFixed(4)}</td>
+                    <td>${trade.sellPrice.toFixed(4)}</td>
+                    <td>${shares}</td>
+                    <td>$${amount.toFixed(2)}</td>
+                    <td>${trade.holdingTime || 'N/A'}</td>
+                    <td class="${trade.pnl >= 0 ? 'positive' : 'negative'}">$${trade.pnl.toFixed(2)}</td>
+                    <td class="${trade.returnPct >= 0 ? 'positive' : 'negative'}">${trade.returnPct.toFixed(2)}%</td>
+                    <td>
+                        <button class="action-btn" onclick="editTrade(${trade.id})" title="Edit trade">✏️</button>
+                        <button class="action-btn" onclick="deleteTrade(${trade.id})" title="Delete trade">🗑️</button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+        updateDeleteListButtonVisibility();
+        updateSelectAllListCheckbox();
+    }
+}
+
+function updateAllTradesList() {
+    const filteredTrades = getFilteredTradesList();
+    updateTradesTable(filteredTrades, 'allTradesTableBody');
+    const tradesText = currentLanguage === 'ko' ? '거래' : 'trades';
+    document.getElementById('allTradesSummary').textContent = `${filteredTrades.length} ${tradesText}`;
+    
+    // Update dashboard table as well
+    updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
+    const dashboardTrades = getFilteredDashboardTrades();
+    document.getElementById('periodSummary').textContent = `${dashboardTrades.length} ${tradesText}`;
+}
+
+function toggleTradeSelection(tradeId) {
+    if (!selectedTrades) {
+        selectedTrades = new Set();
+    }
+    
+    if (selectedTrades.has(tradeId)) {
+        selectedTrades.delete(tradeId);
+    } else {
+        selectedTrades.add(tradeId);
+    }
+    updateDeleteButtonVisibility();
+    updateSelectAllCheckbox();
+}
+
+function toggleAllTrades() {
+    if (!selectedTrades) {
+        selectedTrades = new Set();
+    }
+    
+    const selectAllCheckbox = document.getElementById('selectAllTrades');
+    const isChecked = selectAllCheckbox.checked;
+    
+    const filteredTrades = getFilteredDashboardTrades();
+    
+    if (isChecked) {
+        filteredTrades.forEach(trade => selectedTrades.add(trade.id));
+    } else {
+        filteredTrades.forEach(trade => selectedTrades.delete(trade.id));
+    }
+    
+    updateTradesTable(filteredTrades, 'tradesTableBody');
+}
+
+function updateSelectAllCheckbox() {
+    const selectAllCheckbox = document.getElementById('selectAllTrades');
+    if (!selectAllCheckbox) return;
+    
+    if (!selectedTrades) {
+        selectedTrades = new Set();
+    }
+    
+    const filteredTrades = getFilteredDashboardTrades();
+    
+    if (filteredTrades.length === 0) {
+        selectAllCheckbox.indeterminate = false;
+        selectAllCheckbox.checked = false;
+        return;
+    }
+    
+    const selectedCount = filteredTrades.filter(trade => selectedTrades.has(trade.id)).length;
+    
+    if (selectedCount === 0) {
+        selectAllCheckbox.indeterminate = false;
+        selectAllCheckbox.checked = false;
+    } else if (selectedCount === filteredTrades.length) {
+        selectAllCheckbox.indeterminate = false;
+        selectAllCheckbox.checked = true;
+    } else {
+        selectAllCheckbox.indeterminate = true;
+        selectAllCheckbox.checked = false;
+    }
+}
+
+function updateDeleteButtonVisibility() {
+    if (!selectedTrades) {
+        selectedTrades = new Set();
+    }
+    
+    const deleteBtn = document.getElementById('deleteSelectedBtn');
+    if (deleteBtn) {
+        if (selectedTrades.size > 0) {
+            deleteBtn.style.display = 'block';
+            deleteBtn.textContent = currentLanguage === 'ko' ? 
+                `선택된 거래 삭제 (${selectedTrades.size})` : 
+                `Delete Selected (${selectedTrades.size})`;
+        } else {
+            deleteBtn.style.display = 'none';
+        }
+    }
+}
+
+function deleteSelectedTrades() {
+    if (selectedTrades.size === 0) return;
+    
+    const confirmMessage = currentLanguage === 'ko' ? 
+        `선택된 ${selectedTrades.size}개의 거래를 삭제하시겠습니까?` : 
+        `Are you sure you want to delete ${selectedTrades.size} selected trades?`;
+    
+    if (confirm(confirmMessage)) {
+        const tradesToDelete = Array.from(selectedTrades);
+        trades = trades.filter(trade => !selectedTrades.has(trade.id));
+        selectedTrades.clear();
+        
+        saveTrades();
+        updateStats();
+        renderCalendar();
+        updateAllTradesList();
+        updateDetailedAnalytics();
+        
+        showToast(currentLanguage === 'ko' ? 
+            `${tradesToDelete.length}개의 거래가 삭제되었습니다` : 
+            `${tradesToDelete.length} trades deleted`);
+    }
+}
+
+function toggleTradeListSelection(tradeId) {
+    if (selectedTradesList.has(tradeId)) {
+        selectedTradesList.delete(tradeId);
+    } else {
+        selectedTradesList.add(tradeId);
+    }
+    updateDeleteListButtonVisibility();
+    updateSelectAllListCheckbox();
+}
+
+function toggleAllTradesList() {
+    const selectAllCheckbox = document.getElementById('selectAllTradesList');
+    const isChecked = selectAllCheckbox.checked;
+    
+    const filteredTrades = getFilteredTradesList();
+    
+    if (isChecked) {
+        filteredTrades.forEach(trade => selectedTradesList.add(trade.id));
+    } else {
+        filteredTrades.forEach(trade => selectedTradesList.delete(trade.id));
+    }
+    
+    updateTradesTable(filteredTrades, 'allTradesTableBody');
+}
+
+function updateSelectAllListCheckbox() {
+    const selectAllCheckbox = document.getElementById('selectAllTradesList');
+    const filteredTrades = getFilteredTradesList();
+    
+    if (filteredTrades.length === 0) {
+        selectAllCheckbox.indeterminate = false;
+        selectAllCheckbox.checked = false;
+        return;
+    }
+    
+    const selectedCount = filteredTrades.filter(trade => selectedTradesList.has(trade.id)).length;
+    
+    if (selectedCount === 0) {
+        selectAllCheckbox.indeterminate = false;
+        selectAllCheckbox.checked = false;
+    } else if (selectedCount === filteredTrades.length) {
+        selectAllCheckbox.indeterminate = false;
+        selectAllCheckbox.checked = true;
+    } else {
+        selectAllCheckbox.indeterminate = true;
+        selectAllCheckbox.checked = false;
+    }
+}
+
+function updateDeleteListButtonVisibility() {
+    const deleteBtn = document.getElementById('deleteSelectedListBtn');
+    if (deleteBtn) {
+        if (selectedTradesList.size > 0) {
+            deleteBtn.style.display = 'block';
+            deleteBtn.textContent = currentLanguage === 'ko' ? 
+                `선택된 거래 삭제 (${selectedTradesList.size})` : 
+                `Delete Selected (${selectedTradesList.size})`;
+        } else {
+            deleteBtn.style.display = 'none';
+        }
+    }
+}
+
+function deleteSelectedTradesList() {
+    if (selectedTradesList.size === 0) return;
+    
+    const confirmMessage = currentLanguage === 'ko' ? 
+        `선택된 ${selectedTradesList.size}개의 거래를 삭제하시겠습니까?` : 
+        `Are you sure you want to delete ${selectedTradesList.size} selected trades?`;
+    
+    if (confirm(confirmMessage)) {
+        const tradesToDelete = Array.from(selectedTradesList);
+        trades = trades.filter(trade => !selectedTradesList.has(trade.id));
+        selectedTradesList.clear();
+        
+        saveTrades();
+        updateStats();
+        renderCalendar();
+        updateAllTradesList();
+        updateDetailedAnalytics();
+        
+        showToast(currentLanguage === 'ko' ? 
+            `${tradesToDelete.length}개의 거래가 삭제되었습니다` : 
+            `${tradesToDelete.length} trades deleted`);
+    }
+}
+
 function calculatePosition() {
     const balance = parseFloat(document.getElementById('calcAccountBalance')?.value) || 0;
     const winRate = parseFloat(document.getElementById('calcWinRate')?.value) / 100 || 0;
@@ -355,7 +701,6 @@ function autoLoadTradeData() {
     showToast('거래 이력에서 데이터를 불러왔습니다');
 }
 
-// Risk Calculator Functions
 function calculateRiskPosition() {
     const balance = parseFloat(document.getElementById('riskAccountBalance')?.value) || 0;
     const riskPercent = parseFloat(document.getElementById('riskPercentage')?.value) || 0;
@@ -450,196 +795,67 @@ function resetRiskCalculatorDisplay() {
     updateElement('riskPositionCostSidebar', '$0.00');
 }
 
-// Trade selection functions for dashboard
-function toggleTradeSelection(tradeId) {
-    if (!selectedTrades) {
-        selectedTrades = new Set();
+function showCalculatorTab(tabName) {
+    // Update tab states
+    document.querySelectorAll('.position-calc-tab').forEach(tab => {
+        tab.classList.remove('active');
+        tab.style.background = 'transparent';
+        tab.style.color = '#94a3b8';
+    });
+    
+    // Activate clicked tab - event.target 대신 직접 찾기
+    const targetTab = document.querySelector(`[onclick="showCalculatorTab('${tabName}')"]`);
+    if (targetTab) {
+        targetTab.classList.add('active');
+        targetTab.style.background = '#3b82f6';
+        targetTab.style.color = 'white';
     }
     
-    if (selectedTrades.has(tradeId)) {
-        selectedTrades.delete(tradeId);
-    } else {
-        selectedTrades.add(tradeId);
-    }
-    updateDeleteButtonVisibility();
-    updateSelectAllCheckbox();
-}
-
-function toggleAllTrades() {
-    if (!selectedTrades) {
-        selectedTrades = new Set();
-    }
-    
-    const selectAllCheckbox = document.getElementById('selectAllTrades');
-    const isChecked = selectAllCheckbox.checked;
-    
-    const filteredTrades = getFilteredDashboardTrades();
-    
-    if (isChecked) {
-        filteredTrades.forEach(trade => selectedTrades.add(trade.id));
-    } else {
-        filteredTrades.forEach(trade => selectedTrades.delete(trade.id));
-    }
-    
-    updateTradesTable(filteredTrades, 'tradesTableBody');
-}
-
-function updateSelectAllCheckbox() {
-    const selectAllCheckbox = document.getElementById('selectAllTrades');
-    if (!selectAllCheckbox) return;
-    
-    if (!selectedTrades) {
-        selectedTrades = new Set();
-    }
-    
-    const filteredTrades = getFilteredDashboardTrades();
-    
-    if (filteredTrades.length === 0) {
-        selectAllCheckbox.indeterminate = false;
-        selectAllCheckbox.checked = false;
-        return;
-    }
-    
-    const selectedCount = filteredTrades.filter(trade => selectedTrades.has(trade.id)).length;
-    
-    if (selectedCount === 0) {
-        selectAllCheckbox.indeterminate = false;
-        selectAllCheckbox.checked = false;
-    } else if (selectedCount === filteredTrades.length) {
-        selectAllCheckbox.indeterminate = false;
-        selectAllCheckbox.checked = true;
-    } else {
-        selectAllCheckbox.indeterminate = true;
-        selectAllCheckbox.checked = false;
+    // Show/hide content
+    if (tabName === 'kelly') {
+        document.getElementById('kellyCalculator').style.display = 'block';
+        document.getElementById('riskCalculator').style.display = 'none';
+        setTimeout(() => calculatePosition(), 100);
+    } else if (tabName === 'risk') {
+        document.getElementById('kellyCalculator').style.display = 'none';
+        document.getElementById('riskCalculator').style.display = 'block';
+        setTimeout(() => calculateRiskPosition(), 100);
     }
 }
 
-function updateDeleteButtonVisibility() {
-    if (!selectedTrades) {
-        selectedTrades = new Set();
-    }
+function showDashboardSection(section) {
+    currentDashboardSection = section;
     
-    const deleteBtn = document.getElementById('deleteSelectedBtn');
-    if (deleteBtn) {
-        if (selectedTrades.size > 0) {
-            deleteBtn.style.display = 'block';
-            deleteBtn.textContent = currentLanguage === 'ko' ? 
-                `선택된 거래 삭제 (${selectedTrades.size})` : 
-                `Delete Selected (${selectedTrades.size})`;
-        } else {
-            deleteBtn.style.display = 'none';
-        }
-    }
-}
-
-function deleteSelectedTrades() {
-    if (selectedTrades.size === 0) return;
+    // 탭 상태 업데이트
+    document.querySelectorAll('.dashboard-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    event.target.classList.add('active');
     
-    const confirmMessage = currentLanguage === 'ko' ? 
-        `선택된 ${selectedTrades.size}개의 거래를 삭제하시겠습니까?` : 
-        `Are you sure you want to delete ${selectedTrades.size} selected trades?`;
+    // 섹션 표시/숨기기
+    const positionSection = document.getElementById('positionCalculatorSection');
+    const dashboardGrid = document.querySelector('.dashboard-grid');
+    const tradesSection = document.querySelector('.trades-section');
+    const statsOverview = document.querySelector('.stats-overview');
     
-    if (confirm(confirmMessage)) {
-        const tradesToDelete = Array.from(selectedTrades);
-        trades = trades.filter(trade => !selectedTrades.has(trade.id));
-        selectedTrades.clear();
+    if (section === 'trading') {
+        if (positionSection) positionSection.style.display = 'none';
+        if (dashboardGrid) dashboardGrid.style.display = 'grid';
+        if (tradesSection) tradesSection.style.display = 'block';
+        if (statsOverview) statsOverview.style.display = 'grid';
+    } else if (section === 'position-calc' || section === 'risk-calc') {
+        if (positionSection) positionSection.style.display = 'block';
+        if (dashboardGrid) dashboardGrid.style.display = 'none';
+        if (tradesSection) tradesSection.style.display = 'none';
+        if (statsOverview) statsOverview.style.display = 'none';
         
-        saveTrades();
-        updateStats();
-        renderCalendar();
-        updateAllTradesList();
-        updateDetailedAnalytics();
-        
-        showToast(currentLanguage === 'ko' ? 
-            `${tradesToDelete.length}개의 거래가 삭제되었습니다` : 
-            `${tradesToDelete.length} trades deleted`);
-    }
-}
-
-// Trade selection functions for trade list page
-function toggleTradeListSelection(tradeId) {
-    if (selectedTradesList.has(tradeId)) {
-        selectedTradesList.delete(tradeId);
-    } else {
-        selectedTradesList.add(tradeId);
-    }
-    updateDeleteListButtonVisibility();
-    updateSelectAllListCheckbox();
-}
-
-function toggleAllTradesList() {
-    const selectAllCheckbox = document.getElementById('selectAllTradesList');
-    const isChecked = selectAllCheckbox.checked;
-    
-    const filteredTrades = getFilteredTradesList();
-    
-    if (isChecked) {
-        filteredTrades.forEach(trade => selectedTradesList.add(trade.id));
-    } else {
-        filteredTrades.forEach(trade => selectedTradesList.delete(trade.id));
-    }
-    
-    updateTradesTable(filteredTrades, 'allTradesTableBody');
-}
-
-function updateSelectAllListCheckbox() {
-    const selectAllCheckbox = document.getElementById('selectAllTradesList');
-    const filteredTrades = getFilteredTradesList();
-    
-    if (filteredTrades.length === 0) {
-        selectAllCheckbox.indeterminate = false;
-        selectAllCheckbox.checked = false;
-        return;
-    }
-    
-    const selectedCount = filteredTrades.filter(trade => selectedTradesList.has(trade.id)).length;
-    
-    if (selectedCount === 0) {
-        selectAllCheckbox.indeterminate = false;
-        selectAllCheckbox.checked = false;
-    } else if (selectedCount === filteredTrades.length) {
-        selectAllCheckbox.indeterminate = false;
-        selectAllCheckbox.checked = true;
-    } else {
-        selectAllCheckbox.indeterminate = true;
-        selectAllCheckbox.checked = false;
-    }
-}
-
-function updateDeleteListButtonVisibility() {
-    const deleteBtn = document.getElementById('deleteSelectedListBtn');
-    if (deleteBtn) {
-        if (selectedTradesList.size > 0) {
-            deleteBtn.style.display = 'block';
-            deleteBtn.textContent = currentLanguage === 'ko' ? 
-                `선택된 거래 삭제 (${selectedTradesList.size})` : 
-                `Delete Selected (${selectedTradesList.size})`;
-        } else {
-            deleteBtn.style.display = 'none';
-        }
-    }
-}
-
-function deleteSelectedTradesList() {
-    if (selectedTradesList.size === 0) return;
-    
-    const confirmMessage = currentLanguage === 'ko' ? 
-        `선택된 ${selectedTradesList.size}개의 거래를 삭제하시겠습니까?` : 
-        `Are you sure you want to delete ${selectedTradesList.size} selected trades?`;
-    
-    if (confirm(confirmMessage)) {
-        const tradesToDelete = Array.from(selectedTradesList);
-        trades = trades.filter(trade => !selectedTradesList.has(trade.id));
-        selectedTradesList.clear();
-        
-        saveTrades();
-        updateStats();
-        renderCalendar();
-        updateAllTradesList();
-        updateDetailedAnalytics();
-        
-        showToast(currentLanguage === 'ko' ? 
-            `${tradesToDelete.length}개의 거래가 삭제되었습니다` : 
-            `${tradesToDelete.length} trades deleted`);
+        // 적절한 탭 활성화
+        setTimeout(() => {
+            if (section === 'position-calc') {
+                showCalculatorTab('kelly');
+            } else if (section === 'risk-calc') {
+                showCalculatorTab('risk');
+            }
+        }, 100);
     }
 }
