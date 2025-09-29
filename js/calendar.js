@@ -1,6 +1,4 @@
 // Calendar related functions
-
-// Calendar related functions
 function renderCalendar() {
     const grid = document.getElementById('calendarGrid');
     const year = calendarDate.getFullYear();
@@ -605,10 +603,6 @@ function renderAnnualHeatmap() {
         heatmapGrid.appendChild(monthContainer);
     }
 }
-
-// Month Details Modal Functions
-let selectedMonthYear = null;
-let selectedMonth = null;
 
 function showMonthDetails(year, month) {
     selectedMonthYear = year;
