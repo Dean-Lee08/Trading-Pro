@@ -2347,27 +2347,27 @@
             color: white;
         }
 
-            /* 리스크 비율 input 강제 스타일링 */
 #riskPercentage {
-    background: #0f172a !important;
-    border: 1px solid #334155 !important;
-    color: #e4e4e7 !important;
-    -webkit-appearance: none !important;
-    -moz-appearance: textfield !important;
-    appearance: none !important;
+    width: 100%;
+    background: #0f172a;
+    border: 1px solid #334155;
+    color: #e4e4e7;
+    padding: 8px 10px;
+    font-size: 14px;
+    border-radius: 6px;
+    transition: border-color 0.2s ease;
 }
 
 #riskPercentage:focus {
-    outline: none !important;
-    border-color: #3b82f6 !important;
-    background: #0f172a !important;
+    outline: none;
+    border-color: #3b82f6;
 }
 
-/* number input의 화살표 버튼 스타일링 */
+/* number input 화살표 제거 (선택사항) */
 #riskPercentage::-webkit-outer-spin-button,
 #riskPercentage::-webkit-inner-spin-button {
-    -webkit-appearance: none !important;
-    margin: 0 !important;
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 /* Firefox용 number input 스타일 */
