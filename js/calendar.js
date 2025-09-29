@@ -13,8 +13,18 @@ function renderCalendar() {
     const startDate = new Date(firstDay);
     startDate.setDate(startDate.getDate() - firstDay.getDay());
     
-    const existingDays = grid.querySelectorAll('.calendar-day, .calendar-week-pnl');
-    existingDays.forEach(day => day.remove());
+    // 기존 이벤트 리스너 제거를 위해 그리드 클론
+    const newGrid = grid.cloneNode(false);
+    
+    // 헤더만 복사
+    const headers = grid.querySelectorAll('.calendar-day-header');
+    headers.forEach(header => newGrid.appendChild(header.cloneNode(true)));
+    
+    // 기존 그리드 교체
+    grid.parentNode.replaceChild(newGrid, grid);
+    
+    // 새로운 그리드 참조 업데이트
+    const currentGrid = document.getElementById('calendarGrid');
     
     const showWeekPnl = window.innerWidth > 768;
     const header = document.getElementById('weekPnlHeader');
@@ -29,8 +39,14 @@ function renderCalendar() {
     
     updateCalendarStats();
     
-    // 기존 이벤트 리스너 제거
-    document.removeEventListener('mouseup', endRangeSelection);
+    // 전역 mouseup 이벤트 리스너 제거 후 재등록
+    const existingListener = window._calendarMouseUpListener;
+    if (existingListener) {
+        document.removeEventListener('mouseup', existingListener);
+    }
+    
+    window._calendarMouseUpListener = endRangeSelection;
+    document.addEventListener('mouseup', endRangeSelection);
     
     for (let week = 0; week < 6; week++) {
         let weekTrades = [];
@@ -100,7 +116,7 @@ function renderCalendar() {
                 }
             });
             
-            grid.appendChild(dayElement);
+            currentGrid.appendChild(dayElement);
         }
         
         if (showWeekPnl) {
@@ -122,7 +138,7 @@ function renderCalendar() {
                 weekPnlElement.appendChild(weekTradesCount);
             }
             
-            grid.appendChild(weekPnlElement);
+            currentGrid.appendChild(weekPnlElement);
         }
     }
     
