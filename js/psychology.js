@@ -442,7 +442,12 @@ function updateSliderDisplay(sliderId, displayId) {
     if (slider && display) {
         display.textContent = slider.value;
     }
-    updateVisualCards();
+    // updateVisualCards 호출 전 DOM 준비 확인
+    setTimeout(() => {
+        if (document.getElementById('sleepHoursDisplay')) {
+            updateVisualCards();
+        }
+    }, 50);
 }
 
 function updateTargetPercentages() {
@@ -472,12 +477,19 @@ function updateTargetPercentages() {
 
 function updateVisualCards() {
     try {
+        // 모든 DOM 요소 존재 확인 후 실행
+        if (!document.getElementById('sleepHoursDisplay') ||
+            !document.getElementById('environmentScore') ||
+            !document.getElementById('stressDisplay')) {
+            console.warn('Psychology visual card elements not ready');
+            return;
+        }
+        
         updateSleepCard();
         updateEnvironmentCard();
         updateEmotionalCard();
         updateRiskCard();
         
-        // 차트 업데이트 (딜레이를 주어 DOM 업데이트 후 실행)
         setTimeout(() => {
             createPsychologyChart();
         }, 100);
