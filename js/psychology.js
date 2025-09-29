@@ -653,7 +653,7 @@ function generatePsychologyInsights() {
    ====================== */
 async function createPsychologyChart() {
     try {
-        await _waitForChart();
+        await waitForChart();
 
         const ctx = _el('psychologyPerformanceChart');
         if (!ctx) { console.warn('psychology chart canvas not found'); return; }
