@@ -1,3 +1,4 @@
+// js/config.js
 // Global variables
 let trades = [];
 let notes = [];
@@ -41,7 +42,7 @@ let selectedKellyMultiplier = 0.1;
 let selectedMonthYear = null;
 let selectedMonth = null;
 
-// Language translations (enhanced with new terms)
+// Language translations
 const translations = {
     en: {
         'dashboard': 'Dashboard',
@@ -248,12 +249,9 @@ const translations = {
         'position-cost': 'Position Cost',
         'risk-ratio': 'Risk Ratio',
         'stop-distance': 'Stop Distance',
-        'kelly-calculator': 'Kelly Calculator',
-        'risk-calculator': 'Risk Calculator',
         'risk-management-calculator': 'Risk Management Calculator',
         'risk-presets': 'Risk Ratio',
         'trading-record': 'Trading Record',
-        'position-calculator': 'Position Calculator',
         'amount': 'Amount ($)',
         'psychology': 'Psychology',
         'psychology-title': 'Trading Psychology',
@@ -300,13 +298,10 @@ const translations = {
         'weekly-summary': 'Weekly Summary',
         'selected-week': 'Selected Week',
         'week-trades': 'Week Trades',
-        'week-pnl': 'Week P/L',
         'week-win-rate': 'Week Win Rate',
         'week-best-day': 'Best Day',
         'week-worst-day': 'Worst Day',
         'week-trade-details': 'Week Trade Details',
-        'cost-basis': 'Cost Basis',
-        'trade-count': 'Trades',
         'cost-basis': 'Cost Basis',
         'trade-count': 'Trades',
         'delete-selected': 'Delete Selected',
@@ -316,9 +311,7 @@ const translations = {
         'pattern-insights': 'Pattern Insights',
         'daily-data-input': 'Daily Data Input',
         'biological-data': 'Biological Data',
-        'caffeine-intake': 'Caffeine Intake (mg)',
         'screen-time': 'Screen Time Before Trading (hours)',
-        'trading-environment': 'Trading Environment',
         'planned-start': 'Planned Start Time',
         'actual-start': 'Actual Start Time',
         'environment-type': 'Environment Type',
@@ -331,8 +324,6 @@ const translations = {
         'calculate-score': 'Calculate Daily Score',
         'psychology-dashboard': 'Psychology Dashboard',
         'daily-psychology-score': 'Daily Psychology Score',
-        'sleep-factor': 'Sleep Factor',
-        'stress-factor': 'Stress Factor',
         'discipline-factor': 'Discipline Factor',
         'consistency-factor': 'Consistency Factor',
         'total-score': 'Total Score',
@@ -362,11 +353,7 @@ const translations = {
         'overall-bias-risk': 'Overall Bias Risk',
         'risk-trend': 'Risk Trend',
         'action-needed': 'Action Needed',
-        'start-time': 'Start Time',
-        'end-time': 'End Time',
-        'stress-level': 'Stress Level (1-5)',
-        'focus-level': 'Focus Level (1-5)',
-        'emotional-state': 'Emotional State'
+        'end-time': 'End Time'
     },
     ko: {
         'dashboard': '대시보드',
@@ -573,12 +560,9 @@ const translations = {
         'position-cost': '포지션 비용',
         'risk-ratio': '리스크 비율',
         'stop-distance': '손절 거리',
-        'kelly-calculator': '켈리 계산기',
-        'risk-calculator': '리스크 계산기',
         'risk-management-calculator': '리스크 관리 계산기',
         'risk-presets': '리스크 비율',
         'trading-record': '거래 기록',
-        'position-calculator': '포지션 계산기',
         'amount': '금액 ($)',
         'psychology': '심리',
         'psychology-title': '트레이딩 심리',
@@ -625,13 +609,10 @@ const translations = {
         'weekly-summary': '주간 요약',
         'selected-week': '선택된 주',
         'week-trades': '주간 거래',
-        'week-pnl': '주간 손익',
         'week-win-rate': '주간 승률',
         'week-best-day': '최고의 날',
         'week-worst-day': '최악의 날',
         'week-trade-details': '주간 거래 세부사항',
-        'cost-basis': '평균단가',
-        'trade-count': '거래',
         'cost-basis': '평균단가',
         'trade-count': '거래',
         'delete-selected': '선택된 거래 삭제',
@@ -641,9 +622,7 @@ const translations = {
         'pattern-insights': '패턴 인사이트',
         'daily-data-input': '일일 데이터 입력',
         'biological-data': '생체 데이터',
-        'caffeine-intake': '카페인 섭취량 (mg)',
         'screen-time': '거래 전 스크린 타임 (시간)',
-        'trading-environment': '거래 환경',
         'planned-start': '계획된 시작 시간',
         'actual-start': '실제 시작 시간',
         'environment-type': '환경 유형',
@@ -656,8 +635,6 @@ const translations = {
         'calculate-score': '일일 점수 계산',
         'psychology-dashboard': '심리 대시보드',
         'daily-psychology-score': '일일 심리 점수',
-        'sleep-factor': '수면 요인',
-        'stress-factor': '스트레스 요인',
         'discipline-factor': '규율 요인',
         'consistency-factor': '일관성 요인',
         'total-score': '총점',
@@ -687,10 +664,6 @@ const translations = {
         'overall-bias-risk': '전체 편향 위험',
         'risk-trend': '위험 추세',
         'action-needed': '필요한 조치',
-        'start-time': '시작 시간',
-        'end-time': '종료 시간',
-        'stress-level': '스트레스 수준 (1-5)',
-        'focus-level': '집중력 수준 (1-5)',
-        'emotional-state': '감정 상태'
+        'end-time': '종료 시간'
     }
 };
