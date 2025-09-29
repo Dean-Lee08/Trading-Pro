@@ -769,3 +769,26 @@ function preparePsychologyChartData() {
         return { sleepData: [], stressData: [], focusData: [] };
     }
 }
+
+// psychology.js 파일 맨 아래에 추가
+function updateSliderDisplay(sliderId, displayId) {
+    const slider = _el(sliderId);
+    const display = _el(displayId);
+    if (slider && display) {
+        display.textContent = slider.value;
+    }
+}
+
+function updateTargetPercentages() {
+    const balance = parseFloat(_el('accountBalance')?.value) || 0;
+    const target = parseFloat(_el('dailyTarget')?.value) || 0;
+    const maxLoss = parseFloat(_el('maxDailyLoss')?.value) || 0;
+    
+    if (balance > 0) {
+        const targetPercent = _el('dailyTargetPercent');
+        const lossPercent = _el('maxLossPercent');
+        
+        if (targetPercent) targetPercent.textContent = `${(target / balance * 100).toFixed(1)}%`;
+        if (lossPercent) lossPercent.textContent = `${(maxLoss / balance * 100).toFixed(1)}%`;
+    }
+}
