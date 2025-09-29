@@ -29,13 +29,17 @@ let selectedWeekPnl = null;
 let selectedTradesList = new Set();
 let selectedTrades = new Set();
 
-/* Chart instances containers */
+// Chart instances
 let basicCharts = {};
 let advancedCharts = {};
 
-/* Dashboard state */
+// Dashboard Section Management
 let currentDashboardSection = 'trading';
 let selectedKellyMultiplier = 0.1;
+
+// Month Details Modal
+let selectedMonthYear = null;
+let selectedMonth = null;
 
 // Language translations (enhanced with new terms)
 const translations = {
