@@ -653,7 +653,7 @@ function generatePsychologyInsights() {
    ====================== */
 async function createPsychologyChart() {
     try {
-        await waitForChart();
+        await waitForChart();  // ✅ _waitForChart()에서 waitForChart()로 수정
 
         const ctx = _el('psychologyPerformanceChart');
         if (!ctx) { console.warn('psychology chart canvas not found'); return; }
