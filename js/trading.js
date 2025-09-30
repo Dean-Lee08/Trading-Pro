@@ -665,11 +665,18 @@ function showDashboardSection(section) {
     const statsOverview = document.querySelector('.stats-overview');
     
     if (section === 'trading') {
+        // Body 클래스 제거 - 이 줄만 추가
+        document.body.classList.remove('position-calculator-active');
+        
         if (positionSection) positionSection.style.display = 'none';
         if (dashboardGrid) dashboardGrid.style.display = 'grid';
         if (tradesSection) tradesSection.style.display = 'block';
         if (statsOverview) statsOverview.style.display = 'grid';
+        
     } else if (section === 'position-calc' || section === 'risk-calc') {
+        // Body 클래스 추가 - 이 줄만 추가
+        document.body.classList.add('position-calculator-active');
+        
         if (positionSection) positionSection.style.display = 'block';
         if (dashboardGrid) dashboardGrid.style.display = 'none';
         if (tradesSection) tradesSection.style.display = 'none';
