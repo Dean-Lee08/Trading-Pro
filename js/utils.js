@@ -367,36 +367,6 @@ async function createAdvancedChart(canvasId, type, data, options = {}) {
 
 // ==================== Element Update Utilities ====================
 
-/**
- * 안전한 요소 업데이트
- */
-function safeUpdateElement(id, value, className = null) {
-    const element = document.getElementById(id);
-    if (element) {
-        if (typeof value === 'string' || typeof value === 'number') {
-            element.textContent = value;
-        }
-        if (className) {
-            element.className = className;
-        }
-    }
-}
-
-/**
- * 요소 값 가져오기 (안전)
- */
-function getElementValue(id, defaultValue = 0) {
-    const element = document.getElementById(id);
-    return element ? (parseFloat(element.value) || defaultValue) : defaultValue;
-}
-
-/**
- * 요소 문자열 값 가져오기 (안전)
- */
-function getElementStringValue(id, defaultValue = '') {
-    const element = document.getElementById(id);
-    return element ? (element.value || defaultValue) : defaultValue;
-}
 
 // ==================== Data Export/Import Utilities ====================
 
