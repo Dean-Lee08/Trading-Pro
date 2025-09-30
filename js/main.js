@@ -64,9 +64,19 @@ function updateCurrentDateDisplay() {
 }
 
 function changeTradingDate(days) {
-    const currentDate = new Date(currentTradingDate);
-    currentDate.setDate(currentDate.getDate() + days);
-    currentTradingDate = formatTradingDate(getESTTradingDate(currentDate));
+    // currentTradingDate가 Date 객체인지 확인
+    let date;
+    if (typeof currentTradingDate === 'string') {
+        date = new Date(currentTradingDate + 'T12:00:00');
+    } else if (currentTradingDate instanceof Date) {
+        date = new Date(currentTradingDate);
+    } else {
+        date = new Date();
+    }
+    
+    date.setDate(date.getDate() + days);
+    currentTradingDate = formatTradingDate(date);
+    
     updateCurrentDateDisplay();
     updateStats();
     updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
@@ -601,8 +611,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         dailyFees = JSON.parse(savedFees);
     }
     
-    // Initialize current date
-    currentTradingDate = getESTTradingDate(new Date());
+    // Initialize current date - 문자열 형식으로 저장
+    const now = new Date();
+    currentTradingDate = formatTradingDate(now);
     updateCurrentDateDisplay();
     updateLanguage();
     
