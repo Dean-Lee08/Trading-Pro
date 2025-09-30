@@ -733,3 +733,27 @@ function updatePsychologyDisplay() {
     updateVisualCards();
     updatePsychologyMetrics();
 }
+
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('dashboard-tab')) {
+        const tabText = e.target.textContent.trim();
+        
+        setTimeout(() => {
+            const statsOverview = document.querySelector('.stats-overview');
+            const dateRangeSelector = document.querySelector('.date-range-selector');
+            const dateNavigation = document.querySelector('.date-navigation');
+            
+            if (tabText.includes('Position Calculator') || tabText.includes('계산기')) {
+                if (statsOverview) statsOverview.style.display = 'none';
+                if (dateRangeSelector) dateRangeSelector.style.display = 'none';
+                if (dateNavigation) dateNavigation.style.display = 'none';
+                console.log('포지션 계산기 활성화 - 요소 숨김');
+            } else if (tabText.includes('거래') || tabText.includes('Trading')) {
+                if (statsOverview) statsOverview.style.display = 'grid';
+                if (dateRangeSelector) dateRangeSelector.style.display = 'flex';
+                if (dateNavigation) dateNavigation.style.display = 'flex';
+                console.log('거래 기록 활성화 - 요소 표시');
+            }
+        }, 50);
+    }
+});
