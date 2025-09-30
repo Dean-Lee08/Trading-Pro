@@ -760,10 +760,16 @@ function clearTradesRange() {
  * 일일 수수료 저장
  */
 function saveDailyFees() {
-    const currentDate = formatTradingDate(currentTradingDate);
+    // currentTradingDate를 문자열로 확실하게 변환
+    const currentDate = typeof currentTradingDate === 'string' 
+        ? currentTradingDate 
+        : formatTradingDate(currentTradingDate);
+    
     const feesValue = parseFloat(document.getElementById('dailyFees').value) || 0;
     dailyFees[currentDate] = feesValue;
     localStorage.setItem('tradingPlatformDailyFees', JSON.stringify(dailyFees));
+    updateStats();
+    updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
     showToast('Daily fees saved');
 }
 
@@ -771,8 +777,14 @@ function saveDailyFees() {
  * 일일 수수료 불러오기
  */
 function loadDailyFees() {
-    const currentDate = formatTradingDate(currentTradingDate);
+    // currentTradingDate를 문자열로 확실하게 변환
+    const currentDate = typeof currentTradingDate === 'string' 
+        ? currentTradingDate 
+        : formatTradingDate(currentTradingDate);
+    
     const feesInput = document.getElementById('dailyFees');
+    if (!feesInput) return;
+    
     if (dailyFees[currentDate]) {
         feesInput.value = dailyFees[currentDate];
     } else {
