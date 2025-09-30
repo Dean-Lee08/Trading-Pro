@@ -663,25 +663,26 @@ function showDashboardSection(section) {
     const dashboardGrid = document.querySelector('.dashboard-grid');
     const tradesSection = document.querySelector('.trades-section');
     const statsOverview = document.querySelector('.stats-overview');
-    const dateNavigation = document.querySelector('.date-navigation');
-    const dateRangeSelector = document.querySelector('.date-range-selector');
+    
+    // 날짜 관련 요소들을 개별적으로 선택
+    const dateRangeSelector = document.querySelector('.page-header-info .date-range-selector');
+    const dateNavigation = document.querySelector('.page-header-info .date-navigation');
     
     if (section === 'trading') {
         if (positionSection) positionSection.style.display = 'none';
         if (dashboardGrid) dashboardGrid.style.display = 'grid';
         if (tradesSection) tradesSection.style.display = 'block';
         if (statsOverview) statsOverview.style.display = 'grid';
-        if (dateNavigation) dateNavigation.style.display = 'flex';
         if (dateRangeSelector) dateRangeSelector.style.display = 'flex';
+        if (dateNavigation) dateNavigation.style.display = 'flex';
         
     } else if (section === 'position-calc' || section === 'risk-calc') {
         if (positionSection) positionSection.style.display = 'block';
         if (dashboardGrid) dashboardGrid.style.display = 'none';
         if (tradesSection) tradesSection.style.display = 'none';
-        // 이 두 줄이 핵심: stats-overview와 날짜 관련 요소 숨기기
         if (statsOverview) statsOverview.style.display = 'none';
-        if (dateNavigation) dateNavigation.style.display = 'none';
         if (dateRangeSelector) dateRangeSelector.style.display = 'none';
+        if (dateNavigation) dateNavigation.style.display = 'none';
         
         // 적절한 탭 활성화
         setTimeout(() => {
