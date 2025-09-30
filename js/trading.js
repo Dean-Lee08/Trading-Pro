@@ -656,55 +656,20 @@ function showDashboardSection(section) {
     document.querySelectorAll('.dashboard-tab').forEach(tab => {
         tab.classList.remove('active');
     });
-    event.target.classList.add('active');
+    if (event && event.target) {
+        event.target.classList.add('active');
+    }
     
-    // 모든 주요 섹션 요소 가져오기
+    const tradingSection = document.getElementById('tradingSection');
     const positionSection = document.getElementById('positionCalculatorSection');
-    const dashboardGrid = document.querySelector('.dashboard-grid');
-    const tradesSection = document.querySelector('.trades-section');
-    const statsOverview = document.querySelector('.stats-overview');
-    
-    // 거래 기록 섹션 전용 요소들
-    const tradingSectionElements = document.querySelectorAll('.trading-section-only');
-    
-    console.log('Switching to section:', section);
-    console.log('Trading section elements found:', tradingSectionElements.length);
     
     if (section === 'trading') {
-        // 포지션 계산기 숨기기
-        if (positionSection) {
-            positionSection.style.display = 'none';
-            positionSection.classList.remove('active');
-        }
-        
-        // 거래 기록 관련 요소들 표시
-        if (dashboardGrid) dashboardGrid.style.display = 'grid';
-        if (tradesSection) tradesSection.style.display = 'block';
-        if (statsOverview) statsOverview.style.display = 'grid';
-        
-        // 거래 섹션 전용 요소들 표시
-        tradingSectionElements.forEach(el => {
-            el.style.display = 'flex';
-        });
-        
+        if (tradingSection) tradingSection.style.display = 'block';
+        if (positionSection) positionSection.style.display = 'none';
     } else if (section === 'position-calc' || section === 'risk-calc') {
-        // 포지션 계산기 표시
-        if (positionSection) {
-            positionSection.style.display = 'block';
-            positionSection.classList.add('active');
-        }
+        if (tradingSection) tradingSection.style.display = 'none';
+        if (positionSection) positionSection.style.display = 'block';
         
-        // 거래 기록 관련 요소들 숨기기
-        if (dashboardGrid) dashboardGrid.style.display = 'none';
-        if (tradesSection) tradesSection.style.display = 'none';
-        if (statsOverview) statsOverview.style.display = 'none';
-        
-        // 거래 섹션 전용 요소들 숨기기
-        tradingSectionElements.forEach(el => {
-            el.style.display = 'none';
-        });
-        
-        // 적절한 계산기 탭 활성화
         setTimeout(() => {
             if (section === 'position-calc') {
                 showCalculatorTab('kelly');
