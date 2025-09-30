@@ -667,6 +667,9 @@ function showDashboardSection(section) {
     // 거래 기록 섹션 전용 요소들
     const tradingSectionElements = document.querySelectorAll('.trading-section-only');
     
+    console.log('Switching to section:', section);
+    console.log('Trading section elements found:', tradingSectionElements.length);
+    
     if (section === 'trading') {
         // 포지션 계산기 숨기기
         if (positionSection) {
@@ -696,7 +699,7 @@ function showDashboardSection(section) {
         if (tradesSection) tradesSection.style.display = 'none';
         if (statsOverview) statsOverview.style.display = 'none';
         
-        // 거래 섹션 전용 요소들 숨기기 (날짜 선택 등)
+        // 거래 섹션 전용 요소들 숨기기
         tradingSectionElements.forEach(el => {
             el.style.display = 'none';
         });
