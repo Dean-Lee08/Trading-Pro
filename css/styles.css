@@ -139,6 +139,12 @@
             flex-wrap: wrap;
         }
 
+.page-header-info .trading-section-only {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
         .current-date-display {
             background: #1e293b;
             border: 1px solid #334155;
@@ -2034,6 +2040,42 @@
             overflow: hidden;
         }
 
+/* Trading section only elements - 거래 기록에만 표시 */
+        .trading-section-only {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        /* 포지션 계산기 활성 시 거래 전용 요소 숨김 */
+        .position-calculator-section[style*="display: block"] ~ .stats-overview,
+        .position-calculator-section[style*="display: block"] ~ * .stats-overview {
+            display: none !important;
+        }
+
+        /* CSS :has() 선택자를 사용한 숨김 처리 */
+        body:has(.position-calculator-section[style*="display: block"]) .trading-section-only {
+            display: none !important;
+        }
+
+        body:has(.position-calculator-section[style*="display: block"]) .stats-overview {
+            display: none !important;
+        }
+
+        /* 대시보드 그리드가 숨겨졌을 때 */
+        .dashboard-grid[style*="display: none"] ~ .stats-overview {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .trading-section-only {
+                flex-direction: column;
+                width: 100%;
+                gap: 12px;
+            }
+        }
+
         .dashboard-tab {
             background: transparent;
             border: none;
@@ -2060,14 +2102,44 @@
             color: white;
         }
 
-        .position-calculator-section {
-            display: none;
-        }
+/* Position Calculator Section */
+.position-calculator-section {
+    display: none;
+}
 
-        .position-calculator-section .stats-overview {
-            display: none !important;
-        }
-        
+/* Trading section only elements - 거래 기록에만 표시되는 요소들 */
+.trading-section-only {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* 포지션 계산기가 활성화되면 거래 전용 요소들 숨김 */
+.position-calculator-section[style*="display: block"] ~ .stats-overview,
+.position-calculator-section[style*="display: block"] ~ * .stats-overview {
+    display: none !important;
+}
+
+/* 포지션 계산기 활성 시 모든 거래 전용 요소 숨김 */
+body:has(.position-calculator-section[style*="display: block"]) .trading-section-only {
+    display: none !important;
+}
+
+/* 대시보드 그리드가 숨겨졌을 때 관련 요소들도 숨김 */
+.dashboard-grid[style*="display: none"] ~ .stats-overview {
+    display: none !important;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+    .trading-section-only {
+        flex-direction: column;
+        width: 100%;
+        gap: 12px;
+    }
+}
+     
         .calculator-main-grid {
             display: grid;
             grid-template-columns: 300px 1fr;
