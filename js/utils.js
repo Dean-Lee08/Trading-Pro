@@ -13,28 +13,44 @@ function getESTTradingDate(date = new Date()) {
  * 저장용 날짜 포맷 (YYYY-MM-DD)
  */
 function formatTradingDate(date) {
-    // 문자열인 경우 그대로 반환
+    // 이미 문자열 형식(YYYY-MM-DD)인 경우 그대로 반환
     if (typeof date === 'string') {
-        return date;
+        // 유효한 날짜 형식인지 확인
+        if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+            return date;
+        }
+        // 문자열이지만 날짜 형식이 아닌 경우 Date 객체로 변환 시도
+        date = new Date(date);
     }
-    // Date 객체인 경우 포맷팅
-    if (date instanceof Date) {
-        return date.getFullYear() + '-' + 
-            String(date.getMonth() + 1).padStart(2, '0') + '-' + 
-            String(date.getDate()).padStart(2, '0');
+    
+    // Date 객체가 아닌 경우 현재 날짜 사용
+    if (!(date instanceof Date) || isNaN(date.getTime())) {
+        date = new Date();
     }
-    // 그 외의 경우 현재 날짜 반환
-    const now = new Date();
-    return now.getFullYear() + '-' + 
-        String(now.getMonth() + 1).padStart(2, '0') + '-' + 
-        String(now.getDate()).padStart(2, '0');
+    
+    // Date 객체를 YYYY-MM-DD 형식으로 변환
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    
+    return `${year}-${month}-${day}`;
 }
 
 /**
  * 현재 날짜 표시 업데이트
  */
 function updateCurrentDateDisplay() {
-    const dateStr = currentTradingDate.toLocaleDateString(
+    // currentTradingDate를 Date 객체로 변환
+    let displayDate;
+    if (typeof currentTradingDate === 'string') {
+        displayDate = new Date(currentTradingDate + 'T12:00:00');
+    } else if (currentTradingDate instanceof Date) {
+        displayDate = currentTradingDate;
+    } else {
+        displayDate = new Date();
+    }
+    
+    const dateStr = displayDate.toLocaleDateString(
         currentLanguage === 'ko' ? 'ko-KR' : 'en-US',
         {
             year: 'numeric',
@@ -42,7 +58,11 @@ function updateCurrentDateDisplay() {
             day: 'numeric'
         }
     );
-    document.getElementById('currentDateDisplay').textContent = dateStr;
+    
+    const displayElement = document.getElementById('currentDateDisplay');
+    if (displayElement) {
+        displayElement.textContent = dateStr;
+    }
 }
 
 /**
