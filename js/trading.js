@@ -652,7 +652,6 @@ function deleteSelectedTradesList() {
 function showDashboardSection(section) {
     currentDashboardSection = section;
     
-    // 탭 상태 업데이트
     document.querySelectorAll('.dashboard-tab').forEach(tab => {
         tab.classList.remove('active');
     });
@@ -664,18 +663,14 @@ function showDashboardSection(section) {
     const positionSection = document.getElementById('positionCalculatorSection');
     
     if (section === 'trading') {
-        if (tradingSection) tradingSection.style.display = 'block';
-        if (positionSection) positionSection.style.display = 'none';
-    } else if (section === 'position-calc' || section === 'risk-calc') {
-        if (tradingSection) tradingSection.style.display = 'none';
-        if (positionSection) positionSection.style.display = 'block';
+        tradingSection.style.display = 'block';
+        positionSection.style.display = 'none';
+    } else {
+        tradingSection.style.display = 'none';
+        positionSection.style.display = 'block';
         
         setTimeout(() => {
-            if (section === 'position-calc') {
-                showCalculatorTab('kelly');
-            } else if (section === 'risk-calc') {
-                showCalculatorTab('risk');
-            }
+            if (section === 'position-calc') showCalculatorTab('kelly');
         }, 100);
     }
 }
