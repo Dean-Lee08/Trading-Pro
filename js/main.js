@@ -602,18 +602,27 @@ document.addEventListener('DOMContentLoaded', async function() {
     const savedLanguage = localStorage.getItem('tradingPlatformLanguage');
     if (savedLanguage) {
         currentLanguage = savedLanguage;
-        document.getElementById('settingsLanguageSelect').value = currentLanguage;
+        const settingsSelect = document.getElementById('settingsLanguageSelect');
+        if (settingsSelect) {
+            settingsSelect.value = currentLanguage;
+        }
     }
     
     // Load daily fees
     const savedFees = localStorage.getItem('tradingPlatformDailyFees');
     if (savedFees) {
-        dailyFees = JSON.parse(savedFees);
+        try {
+            dailyFees = JSON.parse(savedFees);
+        } catch (error) {
+            console.error('Error loading daily fees:', error);
+            dailyFees = {};
+        }
     }
     
     // Initialize current date - 문자열 형식으로 저장
     const now = new Date();
     currentTradingDate = formatTradingDate(now);
+    
     updateCurrentDateDisplay();
     updateLanguage();
     
@@ -630,68 +639,88 @@ document.addEventListener('DOMContentLoaded', async function() {
     loadDailyFees();
     
     // Set up form handlers
-    document.getElementById('tradeForm').addEventListener('submit', handleTradeSubmit);
-    document.getElementById('editTradeForm').addEventListener('submit', handleEditTradeSubmit);
-    document.getElementById('entryTime').addEventListener('change', calculateHoldingTime);
-    document.getElementById('exitTime').addEventListener('change', calculateHoldingTime);
+    const tradeForm = document.getElementById('tradeForm');
+    const editTradeForm = document.getElementById('editTradeForm');
+    const entryTime = document.getElementById('entryTime');
+    const exitTime = document.getElementById('exitTime');
+    
+    if (tradeForm) tradeForm.addEventListener('submit', handleTradeSubmit);
+    if (editTradeForm) editTradeForm.addEventListener('submit', handleEditTradeSubmit);
+    if (entryTime) entryTime.addEventListener('change', calculateHoldingTime);
+    if (exitTime) exitTime.addEventListener('change', calculateHoldingTime);
     
     // Dashboard date range listeners
-    document.getElementById('dashboardStartDate').addEventListener('change', function() {
-        dashboardStartDate = this.value;
-        updateStats();
-        updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
-    });
+    const dashboardStartDate = document.getElementById('dashboardStartDate');
+    const dashboardEndDate = document.getElementById('dashboardEndDate');
     
-    document.getElementById('dashboardEndDate').addEventListener('change', function() {
-        dashboardEndDate = this.value;
-        updateStats();
-        updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
-    });
+    if (dashboardStartDate) {
+        dashboardStartDate.addEventListener('change', function() {
+            window.dashboardStartDate = this.value;
+            updateStats();
+            updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
+        });
+    }
+    
+    if (dashboardEndDate) {
+        dashboardEndDate.addEventListener('change', function() {
+            window.dashboardEndDate = this.value;
+            updateStats();
+            updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
+        });
+    }
 
     // Analytics date range listeners
-    document.getElementById('analyticsStartDate').addEventListener('change', function() {
-        analyticsStartDate = this.value;
-        updateDetailedAnalytics();
-    });
+    const analyticsStartDate = document.getElementById('analyticsStartDate');
+    const analyticsEndDate = document.getElementById('analyticsEndDate');
     
-    document.getElementById('analyticsEndDate').addEventListener('change', function() {
-        analyticsEndDate = this.value;
-        updateDetailedAnalytics();
-    });
+    if (analyticsStartDate) {
+        analyticsStartDate.addEventListener('change', function() {
+            window.analyticsStartDate = this.value;
+            updateDetailedAnalytics();
+        });
+    }
+    
+    if (analyticsEndDate) {
+        analyticsEndDate.addEventListener('change', function() {
+            window.analyticsEndDate = this.value;
+            updateDetailedAnalytics();
+        });
+    }
 
     // Trades page date range listeners
-    document.getElementById('tradesStartDate').addEventListener('change', function() {
-        tradesStartDate = this.value;
-        updateAllTradesList();
-    });
+    const tradesStartDate = document.getElementById('tradesStartDate');
+    const tradesEndDate = document.getElementById('tradesEndDate');
     
-    document.getElementById('tradesEndDate').addEventListener('change', function() {
-        tradesEndDate = this.value;
-        updateAllTradesList();
-    });
+    if (tradesStartDate) {
+        tradesStartDate.addEventListener('change', function() {
+            window.tradesStartDate = this.value;
+            updateAllTradesList();
+        });
+    }
+    
+    if (tradesEndDate) {
+        tradesEndDate.addEventListener('change', function() {
+            window.tradesEndDate = this.value;
+            updateAllTradesList();
+        });
+    }
     
     // Modal click outside to close
-    document.getElementById('datePickerModal').addEventListener('click', function(e) {
-        if (e.target === this) {
-            closeDatePicker();
-        }
-    });
-
-    document.getElementById('editTradeModal').addEventListener('click', function(e) {
-        if (e.target === this) {
-            closeEditTradeModal();
-        }
-    });
-
-    document.getElementById('monthDetailsModal').addEventListener('click', function(e) {
-        if (e.target === this) {
-            closeMonthDetails();
-        }
-    });
-
-    document.getElementById('weekDetailsModal').addEventListener('click', function(e) {
-        if (e.target === this) {
-            closeWeekDetails();
+    const modals = [
+        { id: 'datePickerModal', closeFunc: closeDatePicker },
+        { id: 'editTradeModal', closeFunc: closeEditTradeModal },
+        { id: 'monthDetailsModal', closeFunc: closeMonthDetails },
+        { id: 'weekDetailsModal', closeFunc: closeWeekDetails }
+    ];
+    
+    modals.forEach(modal => {
+        const element = document.getElementById(modal.id);
+        if (element) {
+            element.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    modal.closeFunc();
+                }
+            });
         }
     });
 });
