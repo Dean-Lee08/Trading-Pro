@@ -618,6 +618,15 @@ document.addEventListener('DOMContentLoaded', async function() {
             dailyFees = {};
         }
     }
+
+    // 대시보드 초기 상태 설정
+    const positionSection = document.getElementById('positionCalculatorSection');
+    if (positionSection) {
+        positionSection.style.display = 'none';
+    }
+    
+    // 거래 기록 섹션을 기본으로 표시
+    showDashboardSection('trading');
     
     // Initialize current date - 문자열 형식으로 저장
     const now = new Date();
