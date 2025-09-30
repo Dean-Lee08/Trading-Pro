@@ -667,6 +667,7 @@ function showDashboardSection(section) {
     // 날짜 관련 요소들을 개별적으로 선택
     const dateRangeSelector = document.querySelector('.page-header-info .date-range-selector');
     const dateNavigation = document.querySelector('.page-header-info .date-navigation');
+    const dashboardTabs = document.querySelector('.dashboard-tabs');
     
     if (section === 'trading') {
         if (positionSection) positionSection.style.display = 'none';
@@ -675,6 +676,7 @@ function showDashboardSection(section) {
         if (statsOverview) statsOverview.style.display = 'grid';
         if (dateRangeSelector) dateRangeSelector.style.display = 'flex';
         if (dateNavigation) dateNavigation.style.display = 'flex';
+        if (dashboardTabs) dashboardTabs.style.display = 'flex';
         
     } else if (section === 'position-calc' || section === 'risk-calc') {
         if (positionSection) positionSection.style.display = 'block';
@@ -683,6 +685,8 @@ function showDashboardSection(section) {
         if (statsOverview) statsOverview.style.display = 'none';
         if (dateRangeSelector) dateRangeSelector.style.display = 'none';
         if (dateNavigation) dateNavigation.style.display = 'none';
+        // 대시보드 탭은 포지션 계산기에서도 표시되어야 함
+        if (dashboardTabs) dashboardTabs.style.display = 'flex';
         
         // 적절한 탭 활성화
         setTimeout(() => {
