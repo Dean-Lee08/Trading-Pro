@@ -602,8 +602,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
     
     // Initialize current date
-    const now = new Date();
-    currentTradingDate = formatTradingDate(getESTTradingDate(now));
+    currentTradingDate = getESTTradingDate(new Date());
     updateCurrentDateDisplay();
     updateLanguage();
     
@@ -618,7 +617,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     updateDetailedAnalytics();
     calculateHoldingTime();
     loadDailyFees();
-    updatePsychologyDisplay(); 
     
     // Set up form handlers
     document.getElementById('tradeForm').addEventListener('submit', handleTradeSubmit);
