@@ -2076,6 +2076,55 @@
             }
         }
 
+/* Page header info 레이아웃 수정 */
+.page-header-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* Trading section only wrapper */
+.page-header-info .trading-section-only {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Dashboard tabs는 항상 우측에 위치 */
+.page-header-info .dashboard-tabs {
+    margin-left: auto;
+}
+
+/* 포지션 계산기 활성 시 trading-section-only 숨김 */
+.page-header-info .trading-section-only {
+    transition: all 0.3s ease;
+}
+
+body:has(.position-calculator-section[style*="display: block"]) .page-header-info .trading-section-only {
+    display: none !important;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+    .page-header-info {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    
+    .page-header-info .trading-section-only {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .page-header-info .dashboard-tabs {
+        margin-left: 0;
+        width: 100%;
+    }
+}
+
         .dashboard-tab {
             background: transparent;
             border: none;
