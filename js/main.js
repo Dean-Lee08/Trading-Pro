@@ -684,3 +684,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     });
 });
+
+/**
+ * 심리 화면 표시 업데이트
+ */
+function updatePsychologyDisplay() {
+    loadPsychologyData();
+    updateVisualCards();
+    updatePsychologyMetrics();
+}
