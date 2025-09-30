@@ -2857,72 +2857,10 @@
   <!-- Chart.js 라이브러리 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
   
-  <!-- Config 파일 먼저 로드 -->
+  <!-- javaScript 파일들 -->
   <script src="js/config.js"></script>
-  
+  <script src="js/utils.js"></script>
   <script>
-    // Chart.js loading helper
-    function waitForChart() {
-        return new Promise((resolve) => {
-            if (typeof Chart !== 'undefined') {
-                resolve();
-            } else {
-                const checkChart = setInterval(() => {
-                    if (typeof Chart !== 'undefined') {
-                        clearInterval(checkChart);
-                        resolve();
-                    }
-                }, 100);
-            }
-        });
-    }
-
-    // Function to get EST trading date
-    function getESTTradingDate(date = new Date()) {
-        return new Date(date);
-    }
-
-    // Function to format date for storage (EST trading date)
-    function formatTradingDate(date) {
-        return date.getFullYear() + '-' + 
-            String(date.getMonth() + 1).padStart(2, '0') + '-' + 
-            String(date.getDate()).padStart(2, '0');
-    }
-
-    // Language functions
-    function updateLanguage() {
-        document.querySelectorAll('[data-lang]').forEach(element => {
-            const key = element.getAttribute('data-lang');
-            if (translations[currentLanguage][key]) {
-                if (element.tagName === 'INPUT' && element.hasAttribute('placeholder')) {
-                    element.placeholder = translations[currentLanguage][key];
-                } else if (element.tagName === 'TEXTAREA' && element.hasAttribute('placeholder')) {
-                    element.placeholder = translations[currentLanguage][key];
-                } else {
-                    element.textContent = translations[currentLanguage][key];
-                }
-            }
-        });
-    }
-
-    function changeLanguageFromSettings() {
-        const select = document.getElementById('settingsLanguageSelect');
-        currentLanguage = select.value;
-        updateLanguage();
-        updateStats();
-        updateDetailedAnalytics();
-        localStorage.setItem('tradingPlatformLanguage', currentLanguage);
-    }
-
-        // Date management functions
-        function updateCurrentDateDisplay() {
-            const dateStr = currentTradingDate.toLocaleDateString(currentLanguage === 'ko' ? 'ko-KR' : 'en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric'
-            });
-            document.getElementById('currentDateDisplay').textContent = dateStr;
-        }
 
         function openDatePicker() {
             const modal = document.getElementById('datePickerModal');
@@ -2961,12 +2899,6 @@
             updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
             loadDailyFees();
             showToast(direction > 0 ? 'Next day' : 'Previous day');
-        }
-
-        // Detail card collapse function
-        function toggleDetailCard(header) {
-            const card = header.parentElement;
-            card.classList.toggle('collapsed');
         }
 
         // Notes section functions
@@ -3156,17 +3088,6 @@
             } else {
                 feesInput.value = '';
             }
-        }
-
-        // Toast notification
-        function showToast(message) {
-            const toast = document.getElementById('toastNotification');
-            toast.textContent = message;
-            toast.classList.add('show');
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 2000);
         }
 
         // Enhanced Notes functions with categories
@@ -3432,14 +3353,6 @@
     }).join('');
 }
 
-        function saveNotes() {
-            try {
-                localStorage.setItem('tradingPlatformNotes', JSON.stringify(notes));
-            } catch (error) {
-                console.error('Error saving notes:', error);
-            }
-        }
-
         function toggleNotePreview(buttonElement) {
     const noteId = parseInt(buttonElement.getAttribute('data-note-id'));
     const category = buttonElement.getAttribute('data-category');
@@ -3531,28 +3444,7 @@
                 showToast(message);
             }
         }
-
-        function loadNotes() {
-    try {
-        const saved = localStorage.getItem('tradingPlatformNotes');
-        if (saved) {
-            notes = JSON.parse(saved);
-            notes = notes.map(note => ({
-                ...note,
-                category: note.category || 'general',
-                textColor: note.textColor || '#94a3b8',
-                font: note.font || "'Inter', sans-serif",
-                pinned: note.pinned || false
-            }));
-        } else {
-            notes = [];
-        }
-    } catch (error) {
-        console.error('Error loading notes:', error);
-        notes = [];
-    }
-}
-
+   
         // Analytics section management
         function showAnalyticsSection(sectionName) {
             currentAnalyticsSection = sectionName;
@@ -3577,101 +3469,6 @@
                 setTimeout(async () => await updateAdvancedCharts(), 100);
             }
         }
-
-        async function createBasicChart(canvasId, type, data, options = {}) {
-            try {
-                await waitForChart();
-                const ctx = document.getElementById(canvasId);
-                if (!ctx) return null;
-
-                // 기존 차트가 있다면 완전히 제거
-                if (basicCharts[canvasId]) {
-                    basicCharts[canvasId].destroy();
-                    delete basicCharts[canvasId];
-                }
-
-                const defaultOptions = {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            labels: {
-                                color: '#e4e4e7'
-                            }
-                        }
-                    },
-                    scales: type !== 'pie' && type !== 'doughnut' ? {
-                        x: {
-                            ticks: { color: '#94a3b8' },
-                            grid: { color: '#334155' }
-                        },
-                        y: {
-                            ticks: { color: '#94a3b8' },
-                            grid: { color: '#334155' }
-                        }
-                    } : {}
-                };
-
-                basicCharts[canvasId] = new Chart(ctx, {
-                    type: type,
-                    data: data,
-                    options: { ...defaultOptions, ...options }
-                });
-
-                return basicCharts[canvasId];
-            } catch (error) {
-                console.error(`Error creating basic chart ${canvasId}:`, error);
-                return null;
-            }
-        }
-
-        async function createAdvancedChart(canvasId, type, data, options = {}) {
-            try {
-                await waitForChart();
-                const ctx = document.getElementById(canvasId);
-                if (!ctx) return null;
-
-                // Destroy existing chart if it exists
-                if (advancedCharts[canvasId]) {
-                    advancedCharts[canvasId].destroy();
-                }
-
-                const defaultOptions = {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            labels: {
-                                color: '#e4e4e7'
-                            }
-                        }
-                    },
-                    scales: type !== 'pie' && type !== 'doughnut' ? {
-                        x: {
-                            ticks: { color: '#94a3b8' },
-                            grid: { color: '#334155' }
-                        },
-                        y: {
-                            ticks: { color: '#94a3b8' },
-                            grid: { color: '#334155' }
-                        }
-                    } : {}
-                };
-
-                advancedCharts[canvasId] = new Chart(ctx, {
-                    type: type,
-                    data: data,
-                    options: { ...defaultOptions, ...options }
-                });
-
-                return advancedCharts[canvasId];
-            } catch (error) {
-                console.error(`Error creating advanced chart ${canvasId}:`, error);
-                return null;
-            }
-        }
-
-        // Continue with rest of JavaScript functions...
         
         async function updateBasicCharts() {
             const filteredTrades = getFilteredTradesForAnalytics();
@@ -4285,48 +4082,6 @@
             });
         });
 
-        // Navigation functions
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-            });
-            
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            
-            document.getElementById(pageId).classList.add('active');
-            event.target.closest('.nav-item').classList.add('active');
-            
-            if (pageId === 'analysis') {
-                updateDetailedAnalytics();
-                if (currentAnalyticsSection === 'detail') {
-                    setTimeout(updateBasicCharts, 100);
-                } else {
-                    setTimeout(updateAdvancedCharts, 100);
-                }
-            }
-            
-            if (pageId === 'notes') {
-                renderAllNotesSections();
-            }
-
-            if (pageId === 'psychology') {
-                setTimeout(() => {
-    loadPsychologyData();
-    updatePsychologyMetrics();
-}, 100);
-            }
-            
-            if (window.innerWidth <= 768) {
-                document.getElementById('sidebar').classList.remove('open');
-            }
-        }
-
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
-        }
-
         // Time related functions
         function toggleTimeEdit() {
             timeEditMode = !timeEditMode;
@@ -4354,30 +4109,6 @@
                     exitTime.value = currentTime;
                 }
                 calculateHoldingTime();
-            }
-        }
-
-        function calculateHoldingTime() {
-            const entryTime = document.getElementById('entryTime').value;
-            const exitTime = document.getElementById('exitTime').value;
-            
-            if (entryTime && exitTime) {
-                try {
-                    const [entryHour, entryMin] = entryTime.split(':').map(Number);
-                    const [exitHour, exitMin] = exitTime.split(':').map(Number);
-                    
-                    let entryMinutes = entryHour * 60 + entryMin;
-                    let exitMinutes = exitHour * 60 + exitMin;
-                    
-                    if (exitMinutes < entryMinutes) {
-                        exitMinutes += 24 * 60;
-                    }
-                    
-                    const diffMinutes = exitMinutes - entryMinutes;
-                    document.getElementById('holdingTimeDisplay').value = `${diffMinutes}m`;
-                } catch (error) {
-                    document.getElementById('holdingTimeDisplay').value = '0m';
-                }
             }
         }
 
@@ -4570,38 +4301,6 @@
             closeEditTradeModal();
             
             showToast(`${updatedTrade.symbol} updated`);
-        }
-
-        // Data save/load functions
-        function saveTrades() {
-            try {
-                localStorage.setItem('tradingPlatformTrades', JSON.stringify(trades));
-            } catch (error) {
-                console.error('Error saving trades:', error);
-                alert('Failed to save data. Please check browser storage.');
-            }
-        }
-
-        function loadTrades() {
-            try {
-                const saved = localStorage.getItem('tradingPlatformTrades');
-                if (saved) {
-                    trades = JSON.parse(saved);
-                    // Ensure all trades have notes property and shares property
-                    trades = trades.map(trade => ({
-                        ...trade,
-                        notes: trade.notes || '',
-                        shares: trade.shares || (trade.amount && trade.buyPrice ? Math.round(trade.amount / trade.buyPrice) : 0),
-                        amount: trade.amount || (trade.shares && trade.buyPrice ? trade.shares * trade.buyPrice : 0)
-                    }));
-                } else {
-                    trades = [];
-                }
-            } catch (error) {
-                console.error('Error loading trades:', error);
-                trades = [];
-                alert('Failed to load saved data.');
-            }
         }
 
         // Statistics update function
@@ -5618,94 +5317,6 @@
                 document.getElementById('calendarWorstDay').textContent = '-';
             }
         }
-        
-        // Settings functions
-        function exportData() {
-            const exportData = {
-                trades: trades,
-                notes: notes,
-                dailyFees: dailyFees
-            };
-            const dataStr = JSON.stringify(exportData, null, 2);
-            const dataBlob = new Blob([dataStr], {type: 'application/json'});
-            
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(dataBlob);
-            link.download = 'trading_data.json';
-            link.click();
-            
-            showToast(currentLanguage === 'ko' ? '데이터가 내보내졌습니다' : 'Data exported');
-        }
-
-        function importData() {
-            document.getElementById('importFileInput').click();
-        }
-
-        function handleFileImport() {
-            const file = document.getElementById('importFileInput').files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    try {
-                        const importedData = JSON.parse(e.target.result);
-                        if (importedData.trades && Array.isArray(importedData.trades)) {
-                            trades = importedData.trades.map(trade => ({
-                                ...trade,
-                                notes: trade.notes || ''
-                            }));
-                            if (importedData.notes && Array.isArray(importedData.notes)) {
-                                notes = importedData.notes.map(note => ({
-                                    ...note,
-                                    category: note.category || 'general',
-                                    font: note.font || "'Source Code Pro', monospace"
-                                }));
-                            }
-                            if (importedData.dailyFees) {
-                                dailyFees = importedData.dailyFees;
-                            }
-                            saveTrades();
-                            saveNotes();
-                            localStorage.setItem('tradingPlatformDailyFees', JSON.stringify(dailyFees));
-                            updateStats();
-                            renderCalendar();
-                            renderAllNotesSections();
-                            updateAllTradesList();
-                            updateDetailedAnalytics();
-                            loadDailyFees();
-                            showToast(currentLanguage === 'ko' ? '데이터가 가져와졌습니다' : 'Data imported');
-                        } else {
-                            throw new Error('Invalid data format');
-                        }
-                    } catch (error) {
-                        alert(currentLanguage === 'ko' ? '잘못된 파일 형식' : 'Invalid file format');
-                    }
-                };
-                reader.readAsText(file);
-            }
-        }
-
-        function clearAllData() {
-            const confirmMessage = currentLanguage === 'ko' ? 
-                '모든 데이터를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.' : 
-                'Are you sure you want to clear all data? This action cannot be undone.';
-            
-            if (confirm(confirmMessage)) {
-                trades = [];
-                notes = [];
-                dailyFees = {};
-                saveTrades();
-                saveNotes();
-                localStorage.setItem('tradingPlatformDailyFees', JSON.stringify(dailyFees));
-                updateStats();
-                renderCalendar();
-                renderAllNotesSections();
-                updateAllTradesList();
-                updateDetailedAnalytics();
-                clearCalendarRange();
-                loadDailyFees();
-                showToast(currentLanguage === 'ko' ? '모든 데이터가 삭제됨' : 'All data cleared');
-            }
-        }
 
         function showDashboardSection(section) {
             currentDashboardSection = section;
@@ -6185,18 +5796,6 @@ function applyCustomRisk() {
             }
         }
 
-        function safeUpdateElement(id, value, className = null) {
-            const element = document.getElementById(id);
-            if (element) {
-                if (typeof value === 'string' || typeof value === 'number') {
-                    element.textContent = value;
-                }
-                if (className) {
-                    element.className = className;
-                }
-            }
-        }
-
         function calculateStressFactor(sleepHours, stressLevel, focusLevel) {
             let baseScore = 25;
             
@@ -6471,13 +6070,6 @@ function applyCustomRisk() {
             }
             
             return Math.max(0, Math.min(25, consistencyScore));
-        }
-
-        function calculateStandardDeviation(values) {
-            const avg = values.reduce((sum, val) => sum + val, 0) / values.length;
-            const squaredDiffs = values.map(val => Math.pow(val - avg, 2));
-            const variance = squaredDiffs.reduce((sum, diff) => sum + diff, 0) / values.length;
-            return Math.sqrt(variance);
         }
 
         function updateScoreCard(cardId, scoreId, statusId, score, maxScore) {
