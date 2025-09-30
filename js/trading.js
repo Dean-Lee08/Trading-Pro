@@ -652,25 +652,36 @@ function deleteSelectedTradesList() {
 function showDashboardSection(section) {
     currentDashboardSection = section;
     
+    // 탭 상태 업데이트
     document.querySelectorAll('.dashboard-tab').forEach(tab => {
         tab.classList.remove('active');
     });
-    if (event && event.target) {
-        event.target.classList.add('active');
-    }
+    event.target.classList.add('active');
     
-    const tradingSection = document.getElementById('tradingSection');
+    // 섹션 표시/숨기기
     const positionSection = document.getElementById('positionCalculatorSection');
+    const dashboardGrid = document.querySelector('.dashboard-grid');
+    const tradesSection = document.querySelector('.trades-section');
+    const statsOverview = document.querySelector('.stats-overview');
     
     if (section === 'trading') {
-        tradingSection.style.display = 'block';
-        positionSection.style.display = 'none';
-    } else {
-        tradingSection.style.display = 'none';
-        positionSection.style.display = 'block';
+        if (positionSection) positionSection.style.display = 'none';
+        if (dashboardGrid) dashboardGrid.style.display = 'grid';
+        if (tradesSection) tradesSection.style.display = 'block';
+        if (statsOverview) statsOverview.style.display = 'grid';
+    } else if (section === 'position-calc' || section === 'risk-calc') {
+        if (positionSection) positionSection.style.display = 'block';
+        if (dashboardGrid) dashboardGrid.style.display = 'none';
+        if (tradesSection) tradesSection.style.display = 'none';
+        if (statsOverview) statsOverview.style.display = 'none';
         
+        // 적절한 탭 활성화
         setTimeout(() => {
-            if (section === 'position-calc') showCalculatorTab('kelly');
+            if (section === 'position-calc') {
+                showCalculatorTab('kelly');
+            } else if (section === 'risk-calc') {
+                showCalculatorTab('risk');
+            }
         }, 100);
     }
 }
