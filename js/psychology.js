@@ -704,7 +704,11 @@ function resetPsychologyMetrics() {
  * 일일 점수 계산
  */
 function calculateDailyScore() {
-    const currentDate = formatTradingDate(currentTradingDate);
+    // currentTradingDate를 안전하게 문자열로 변환
+    const currentDate = typeof currentTradingDate === 'string' 
+        ? currentTradingDate 
+        : formatTradingDate(currentTradingDate);
+    
     const todayData = psychologyData[currentDate];
     
     if (!todayData) {
