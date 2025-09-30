@@ -2064,16 +2064,8 @@
             display: none;
         }
 
-        body.position-calculator-active .stats-overview {
+        .position-calculator-section .stats-overview {
             display: none !important;
-        }
-
-        body.position-calculator-active .date-navigation {
-            display: none !important;
-        }
-
-        body.position-calculator-active .date-range-selector {
-           display: none !important;
         }
         
         .calculator-main-grid {
