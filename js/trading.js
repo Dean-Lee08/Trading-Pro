@@ -658,37 +658,50 @@ function showDashboardSection(section) {
     });
     event.target.classList.add('active');
     
-    // 섹션 표시/숨기기
+    // 모든 주요 섹션 요소 가져오기
     const positionSection = document.getElementById('positionCalculatorSection');
     const dashboardGrid = document.querySelector('.dashboard-grid');
     const tradesSection = document.querySelector('.trades-section');
     const statsOverview = document.querySelector('.stats-overview');
     
-    // 날짜 관련 요소들을 개별적으로 선택
-    const dateRangeSelector = document.querySelector('.page-header-info .date-range-selector');
-    const dateNavigation = document.querySelector('.page-header-info .date-navigation');
-    const dashboardTabs = document.querySelector('.dashboard-tabs');
+    // 거래 기록 섹션 전용 요소들
+    const tradingSectionElements = document.querySelectorAll('.trading-section-only');
     
     if (section === 'trading') {
-        if (positionSection) positionSection.style.display = 'none';
+        // 포지션 계산기 숨기기
+        if (positionSection) {
+            positionSection.style.display = 'none';
+            positionSection.classList.remove('active');
+        }
+        
+        // 거래 기록 관련 요소들 표시
         if (dashboardGrid) dashboardGrid.style.display = 'grid';
         if (tradesSection) tradesSection.style.display = 'block';
         if (statsOverview) statsOverview.style.display = 'grid';
-        if (dateRangeSelector) dateRangeSelector.style.display = 'flex';
-        if (dateNavigation) dateNavigation.style.display = 'flex';
-        if (dashboardTabs) dashboardTabs.style.display = 'flex';
+        
+        // 거래 섹션 전용 요소들 표시
+        tradingSectionElements.forEach(el => {
+            el.style.display = 'flex';
+        });
         
     } else if (section === 'position-calc' || section === 'risk-calc') {
-        if (positionSection) positionSection.style.display = 'block';
+        // 포지션 계산기 표시
+        if (positionSection) {
+            positionSection.style.display = 'block';
+            positionSection.classList.add('active');
+        }
+        
+        // 거래 기록 관련 요소들 숨기기
         if (dashboardGrid) dashboardGrid.style.display = 'none';
         if (tradesSection) tradesSection.style.display = 'none';
         if (statsOverview) statsOverview.style.display = 'none';
-        if (dateRangeSelector) dateRangeSelector.style.display = 'none';
-        if (dateNavigation) dateNavigation.style.display = 'none';
-        // 대시보드 탭은 포지션 계산기에서도 표시되어야 함
-        if (dashboardTabs) dashboardTabs.style.display = 'flex';
         
-        // 적절한 탭 활성화
+        // 거래 섹션 전용 요소들 숨기기 (날짜 선택 등)
+        tradingSectionElements.forEach(el => {
+            el.style.display = 'none';
+        });
+        
+        // 적절한 계산기 탭 활성화
         setTimeout(() => {
             if (section === 'position-calc') {
                 showCalculatorTab('kelly');
