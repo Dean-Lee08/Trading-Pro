@@ -67,7 +67,15 @@ function showPsychologySection(section) {
  * 심리 데이터 저장
  */
 function savePsychologyData() {
-    const currentDate = formatTradingDate(currentTradingDate);
+    // currentTradingDate를 안전하게 문자열로 변환
+    let currentDate;
+    if (typeof currentTradingDate === 'string') {
+        currentDate = currentTradingDate;
+    } else if (currentTradingDate instanceof Date) {
+        currentDate = formatTradingDate(currentTradingDate);
+    } else {
+        currentDate = formatTradingDate(new Date());
+    }
     
     const data = {
         date: currentDate,
@@ -141,7 +149,16 @@ function loadPsychologyData() {
         psychologyData = {};
     }
 
-    const currentDate = formatTradingDate(currentTradingDate);
+    // currentTradingDate가 Date 객체인지 확인하고 문자열로 변환
+    let currentDate;
+    if (typeof currentTradingDate === 'string') {
+        currentDate = currentTradingDate;
+    } else if (currentTradingDate instanceof Date) {
+        currentDate = formatTradingDate(currentTradingDate);
+    } else {
+        currentDate = formatTradingDate(new Date());
+    }
+    
     const todayData = psychologyData[currentDate];
 
     if (todayData) {
@@ -618,7 +635,16 @@ function preparePsychologyChartData() {
  * 심리 지표 업데이트
  */
 function updatePsychologyMetrics() {
-    const currentDate = formatTradingDate(currentTradingDate);
+    // currentTradingDate를 안전하게 문자열로 변환
+    let currentDate;
+    if (typeof currentTradingDate === 'string') {
+        currentDate = currentTradingDate;
+    } else if (currentTradingDate instanceof Date) {
+        currentDate = formatTradingDate(currentTradingDate);
+    } else {
+        currentDate = formatTradingDate(new Date());
+    }
+    
     const todayData = psychologyData[currentDate];
     
     if (!todayData) {
