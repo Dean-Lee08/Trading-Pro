@@ -13,9 +13,21 @@ function getESTTradingDate(date = new Date()) {
  * 저장용 날짜 포맷 (YYYY-MM-DD)
  */
 function formatTradingDate(date) {
-    return date.getFullYear() + '-' + 
-        String(date.getMonth() + 1).padStart(2, '0') + '-' + 
-        String(date.getDate()).padStart(2, '0');
+    // 문자열인 경우 그대로 반환
+    if (typeof date === 'string') {
+        return date;
+    }
+    // Date 객체인 경우 포맷팅
+    if (date instanceof Date) {
+        return date.getFullYear() + '-' + 
+            String(date.getMonth() + 1).padStart(2, '0') + '-' + 
+            String(date.getDate()).padStart(2, '0');
+    }
+    // 그 외의 경우 현재 날짜 반환
+    const now = new Date();
+    return now.getFullYear() + '-' + 
+        String(now.getMonth() + 1).padStart(2, '0') + '-' + 
+        String(now.getDate()).padStart(2, '0');
 }
 
 /**
