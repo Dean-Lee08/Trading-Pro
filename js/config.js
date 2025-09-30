@@ -8,12 +8,11 @@ let notes = [];
 let dailyFees = {};
 
 // Date Management
-let currentTradingDate = new Date();
+let currentTradingDate = null; 
 let calendarDate = new Date();
 let calendarStartDate = null;
 let calendarEndDate = null;
 let selectedCalendarDay = null;
-
 // UI State
 let isSelecting = false;
 let timeEditMode = false;
