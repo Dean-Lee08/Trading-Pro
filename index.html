@@ -2854,64 +2854,65 @@
     </div>
    </main>
   </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js">
+  <!-- Chart.js 라이브러리 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  
+  <!-- Config 파일 먼저 로드 -->
   <script src="js/config.js"></script>
   
-
-        // Chart.js loading helper
-        function waitForChart() {
-            return new Promise((resolve) => {
-                if (typeof Chart !== 'undefined') {
-                    resolve();
-                } else {
-                    const checkChart = setInterval(() => {
-                        if (typeof Chart !== 'undefined') {
-                            clearInterval(checkChart);
-                            resolve();
-                        }
-                    }, 100);
-                }
-            });
-        }
-
-       
-        
-        // Function to get EST trading date
-        function getESTTradingDate(date = new Date()) {
-            return new Date(date);
-        }
-
-        // Function to format date for storage (EST trading date)
-        function formatTradingDate(date) {
-            return date.getFullYear() + '-' + 
-                String(date.getMonth() + 1).padStart(2, '0') + '-' + 
-                String(date.getDate()).padStart(2, '0');
-        }
-
-        // Language functions
-        function updateLanguage() {
-            document.querySelectorAll('[data-lang]').forEach(element => {
-                const key = element.getAttribute('data-lang');
-                if (translations[currentLanguage][key]) {
-                    if (element.tagName === 'INPUT' && element.hasAttribute('placeholder')) {
-                        element.placeholder = translations[currentLanguage][key];
-                    } else if (element.tagName === 'TEXTAREA' && element.hasAttribute('placeholder')) {
-                        element.placeholder = translations[currentLanguage][key];
-                    } else {
-                        element.textContent = translations[currentLanguage][key];
+  <script>
+    // Chart.js loading helper
+    function waitForChart() {
+        return new Promise((resolve) => {
+            if (typeof Chart !== 'undefined') {
+                resolve();
+            } else {
+                const checkChart = setInterval(() => {
+                    if (typeof Chart !== 'undefined') {
+                        clearInterval(checkChart);
+                        resolve();
                     }
-                }
-            });
-        }
+                }, 100);
+            }
+        });
+    }
 
-        function changeLanguageFromSettings() {
-            const select = document.getElementById('settingsLanguageSelect');
-            currentLanguage = select.value;
-            updateLanguage();
-            updateStats();
-            updateDetailedAnalytics();
-            localStorage.setItem('tradingPlatformLanguage', currentLanguage);
-        }
+    // Function to get EST trading date
+    function getESTTradingDate(date = new Date()) {
+        return new Date(date);
+    }
+
+    // Function to format date for storage (EST trading date)
+    function formatTradingDate(date) {
+        return date.getFullYear() + '-' + 
+            String(date.getMonth() + 1).padStart(2, '0') + '-' + 
+            String(date.getDate()).padStart(2, '0');
+    }
+
+    // Language functions
+    function updateLanguage() {
+        document.querySelectorAll('[data-lang]').forEach(element => {
+            const key = element.getAttribute('data-lang');
+            if (translations[currentLanguage][key]) {
+                if (element.tagName === 'INPUT' && element.hasAttribute('placeholder')) {
+                    element.placeholder = translations[currentLanguage][key];
+                } else if (element.tagName === 'TEXTAREA' && element.hasAttribute('placeholder')) {
+                    element.placeholder = translations[currentLanguage][key];
+                } else {
+                    element.textContent = translations[currentLanguage][key];
+                }
+            }
+        });
+    }
+
+    function changeLanguageFromSettings() {
+        const select = document.getElementById('settingsLanguageSelect');
+        currentLanguage = select.value;
+        updateLanguage();
+        updateStats();
+        updateDetailedAnalytics();
+        localStorage.setItem('tradingPlatformLanguage', currentLanguage);
+    }
 
         // Date management functions
         function updateCurrentDateDisplay() {
