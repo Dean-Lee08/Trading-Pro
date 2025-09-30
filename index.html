@@ -176,25 +176,24 @@
             <p class="page-subtitle" data-lang="dashboard-subtitle">Track your trades and performance</p>
         </div>
         <div class="page-header-info">
-            <!-- 거래 기록 섹션에서만 보이는 날짜 요소들 -->
-            <div class="trading-section-only">
-                <div class="date-range-selector">
-                    <input class="date-range-input" id="dashboardStartDate" type="date"/>
-                    <span style="color: #64748b;">to</span>
-                    <input class="date-range-input" id="dashboardEndDate" type="date"/>
-                    <button class="btn btn-secondary" onclick="clearDashboardRange()" style="padding: 4px 8px; font-size: 12px;">Clear</button>
-                </div>
-                <div class="date-navigation">
-                    <button class="date-nav-btn" onclick="changeTradingDate(-1)" title="Previous day">&larr;</button>
-                    <div class="current-date-display" id="currentDateDisplay" onclick="openDatePicker()"></div>
-                    <button class="date-nav-btn" onclick="changeTradingDate(1)" title="Next day">&rarr;</button>
-                </div>
-            </div>
-            <div class="dashboard-tabs">
-                <button class="dashboard-tab active" data-lang="trading-record" onclick="showDashboardSection('trading')">거래 기록</button>
-                <button class="dashboard-tab" data-lang="position-calculator" onclick="showDashboardSection('position-calc')">Position Calculator</button>
-            </div>
+    <div class="trading-section-only">
+        <div class="date-range-selector">
+            <input class="date-range-input" id="dashboardStartDate" type="date"/>
+            <span style="color: #64748b;">to</span>
+            <input class="date-range-input" id="dashboardEndDate" type="date"/>
+            <button class="btn btn-secondary" onclick="clearDashboardRange()" style="padding: 4px 8px; font-size: 12px;">Clear</button>
         </div>
+        <div class="date-navigation">
+            <button class="date-nav-btn" onclick="changeTradingDate(-1)" title="Previous day">&larr;</button>
+            <div class="current-date-display" id="currentDateDisplay" onclick="openDatePicker()"></div>
+            <button class="date-nav-btn" onclick="changeTradingDate(1)" title="Next day">&rarr;</button>
+        </div>
+    </div>
+    <div class="dashboard-tabs">
+        <button class="dashboard-tab active" data-lang="trading-record" onclick="showDashboardSection('trading')">거래 기록</button>
+        <button class="dashboard-tab" data-lang="position-calculator" onclick="showDashboardSection('position-calc')">Position Calculator</button>
+    </div>
+</div>
     </div>
     
     <!-- 거래 기록 섹션에서만 보이는 성과 카드 -->
