@@ -703,7 +703,16 @@ function clearDashboardRange() {
  */
 function getFilteredDashboardTrades() {
     let filteredTrades = trades;
-    const currentDate = formatTradingDate(currentTradingDate);
+    
+    // currentTradingDate를 안전하게 문자열로 변환
+    let currentDate;
+    if (typeof currentTradingDate === 'string') {
+        currentDate = currentTradingDate;
+    } else if (currentTradingDate instanceof Date) {
+        currentDate = formatTradingDate(currentTradingDate);
+    } else {
+        currentDate = formatTradingDate(new Date());
+    }
     
     if (dashboardStartDate || dashboardEndDate) {
         filteredTrades = trades.filter(trade => {
