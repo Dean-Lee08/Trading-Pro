@@ -169,343 +169,284 @@
         <!-- Main Content -->
         <main class="main-content" id="mainContent">
             <!-- Dashboard Page -->
-<div class="page active" id="dashboard">
-    <div class="page-header">
-        <div>
-            <h1 class="page-title" data-lang="dashboard-title">Trading Dashboard</h1>
-            <p class="page-subtitle" data-lang="dashboard-subtitle">Track your trades and performance</p>
-        </div>
-        <div class="page-header-info">
-            <div class="dashboard-tabs">
-                <button class="dashboard-tab active" data-lang="trading-record" onclick="showDashboardSection('trading')">거래 기록</button>
-                <button class="dashboard-tab" data-lang="position-calculator" onclick="showDashboardSection('position-calc')">Position Calculator</button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Trading Section Container -->
-    <div id="tradingSection" style="display: block;">
-        <!-- Date and Range Controls -->
-        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;">
-            <div class="date-range-selector">
-                <input class="date-range-input" id="dashboardStartDate" type="date"/>
-                <span style="color: #64748b;">to</span>
-                <input class="date-range-input" id="dashboardEndDate" type="date"/>
-                <button class="btn btn-secondary" onclick="clearDashboardRange()" style="padding: 4px 8px; font-size: 12px;">Clear</button>
-            </div>
-            <div class="date-navigation">
-                <button class="date-nav-btn" onclick="changeTradingDate(-1)" title="Previous day">&larr;</button>
-                <div class="current-date-display" id="currentDateDisplay" onclick="openDatePicker()"></div>
-                <button class="date-nav-btn" onclick="changeTradingDate(1)" title="Next day">&rarr;</button>
-            </div>
-        </div>
-        
-        <!-- Stats Overview -->
-        <div class="stats-overview">
-            <div class="stat-item">
-                <h3 data-lang="total-pl">Total P/L</h3>
-                <div class="stat-value" id="totalPL">$0.00</div>
-                <div class="stat-subtitle" data-lang="net-result">Net Result</div>
-            </div>
-            <div class="stat-item">
-                <h3 data-lang="trades">Trades</h3>
-                <div class="stat-value neutral" id="totalTrades">0</div>
-                <div class="stat-subtitle" data-lang="total-count">Total Count</div>
-            </div>
-            <div class="stat-item">
-                <h3 data-lang="win-rate">Win Rate</h3>
-                <div class="stat-value" id="winRate">0%</div>
-                <div class="stat-subtitle" id="winLossCount">0W / 0L</div>
-            </div>
-        </div>
-        
-        <!-- Dashboard Grid -->
-        <div class="dashboard-grid">
-            <div class="trade-entry">
-                <h2 data-lang="record-trade">Record Trade</h2>
-                <form id="tradeForm">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label data-lang="symbol">Symbol</label>
-                            <input id="symbol" placeholder="AAPL" required="" type="text"/>
+            <div class="page active" id="dashboard">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title" data-lang="dashboard-title">Trading Dashboard</h1>
+                        <p class="page-subtitle" data-lang="dashboard-subtitle">Track your trades and performance</p>
+                    </div>
+                    <div class="page-header-info">
+                        <div class="date-range-selector">
+                            <input class="date-range-input" id="dashboardStartDate" type="date"/>
+                            <span style="color: #64748b;">to</span>
+                            <input class="date-range-input" id="dashboardEndDate" type="date"/>
+                            <button class="btn btn-secondary" onclick="clearDashboardRange()" style="padding: 4px 8px; font-size: 12px;">Clear</button>
                         </div>
-                        <div class="form-group">
-                            <label data-lang="shares">Shares</label>
-                            <input id="shares" oninput="calculatePnL()" placeholder="100" required="" type="number"/>
+                        <div class="date-navigation">
+                            <button class="date-nav-btn" onclick="changeTradingDate(-1)" title="Previous day">&larr;</button>
+                            <div class="current-date-display" id="currentDateDisplay" onclick="openDatePicker()"></div>
+                            <button class="date-nav-btn" onclick="changeTradingDate(1)" title="Next day">&rarr;</button>
                         </div>
-                        <div class="form-group">
-                            <label data-lang="buy-price">Buy Price</label>
-                            <input id="buyPrice" oninput="calculatePnL()" placeholder="150.25" required="" step="0.0001" type="number"/>
+                        <div class="dashboard-tabs">
+                            <button class="dashboard-tab active" data-lang="trading-record" onclick="showDashboardSection('trading')">거래 기록</button>
+                            <button class="dashboard-tab" data-lang="position-calculator" onclick="showDashboardSection('position-calc')">Position Calculator</button>
                         </div>
-                        <div class="form-group">
-                            <label data-lang="sell-price">Sell Price</label>
-                            <input id="sellPrice" oninput="calculatePnL()" placeholder="155.50" required="" step="0.0001" type="number"/>
-                        </div>
-                        <div class="form-group">
-                            <label data-lang="return-pct">Return %</label>
-                            <input id="returnPct" readonly="" style="background: #0f172a; color: #10b981;" type="text"/>
-                        </div>
-                        <div class="form-group">
-                            <label data-lang="pnl">P&L</label>
-                            <input id="pnlDisplay" readonly="" style="background: #0f172a; color: #10b981;" type="text"/>
-                        </div>
-                        <div class="form-group">
-                            <label data-lang="entry-time">Entry Time</label>
-                            <div class="time-input-container">
-                                <input id="entryTime" type="time" value=""/>
-                                <button class="time-edit-btn" data-lang="edit" onclick="toggleTimeEdit()" type="button">Edit</button>
+                    </div>
+                </div>
+                
+                <div class="stats-overview">
+                    <div class="stat-item">
+                        <h3 data-lang="total-pl">Total P/L</h3>
+                        <div class="stat-value" id="totalPL">$0.00</div>
+                        <div class="stat-subtitle" data-lang="net-result">Net Result</div>
+                    </div>
+                    <div class="stat-item">
+                        <h3 data-lang="trades">Trades</h3>
+                        <div class="stat-value neutral" id="totalTrades">0</div>
+                        <div class="stat-subtitle" data-lang="total-count">Total Count</div>
+                    </div>
+                    <div class="stat-item">
+                        <h3 data-lang="win-rate">Win Rate</h3>
+                        <div class="stat-value" id="winRate">0%</div>
+                        <div class="stat-subtitle" id="winLossCount">0W / 0L</div>
+                    </div>
+                </div>
+                
+                <!-- Position Calculator Section -->
+                <div class="position-calculator-section" id="positionCalculatorSection">
+                    <div class="calculator-main-grid">
+                        <div class="stats-sidebar">
+                            <div class="sidebar-title-stats" data-lang="position-analysis">Position Analysis</div>
+                            <div class="sidebar-stat">
+                                <span class="sidebar-stat-label" data-lang="recommended-size">Recommended Size</span>
+                                <span class="sidebar-stat-value positive" id="recommendedSize">$0</span>
+                            </div>
+                            <div class="sidebar-stat">
+                                <span class="sidebar-stat-label" data-lang="account-utilization">Account Utilization</span>
+                                <span class="sidebar-stat-value neutral" id="accountUtil">0%</span>
+                            </div>
+                            <div class="sidebar-stat">
+                                <span class="sidebar-stat-label" data-lang="expected-value">Expected Value</span>
+                                <span class="sidebar-stat-value" id="expectedVal">$0</span>
+                            </div>
+                            <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #334155;">
+                                <div class="sidebar-title-stats" data-lang="auto-analysis" style="font-size: 14px;">자동 분석</div>
+                                <div class="sidebar-stat">
+                                    <span class="sidebar-stat-label" data-lang="position-size">포지션 크기</span>
+                                    <span class="sidebar-stat-value positive" id="riskPositionSizeSidebar">$0</span>
+                                </div>
+                                <div class="sidebar-stat">
+                                    <span class="sidebar-stat-label" data-lang="shares-quantity">주식 수량</span>
+                                    <span class="sidebar-stat-value neutral" id="riskSharesQuantitySidebar">0</span>
+                                </div>
+                                <div class="sidebar-stat">
+                                    <span class="sidebar-stat-label" data-lang="risk-per-share">주당 리스크</span>
+                                    <span class="sidebar-stat-value neutral" id="riskPerShareSidebar">$0.00</span>
+                                </div>
+                                <div class="sidebar-stat">
+                                    <span class="sidebar-stat-label" data-lang="max-loss">최대 손실</span>
+                                    <span class="sidebar-stat-value negative" id="riskMaxLossSidebar">$0.00</span>
+                                </div>
+                                <div class="sidebar-stat">
+                                    <span class="sidebar-stat-label" data-lang="position-cost">포지션 비용</span>
+                                    <span class="sidebar-stat-value neutral" id="riskPositionCostSidebar">$0.00</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label data-lang="exit-time">Exit Time</label>
-                            <input id="exitTime" onchange="calculateHoldingTime()" type="time" value=""/>
-                        </div>
-                        <div class="form-group">
-                            <label data-lang="holding-time">Holding Time</label>
-                            <input id="holdingTimeDisplay" readonly="" style="background: #0f172a; color: #64748b;" type="text"/>
-                        </div>
-                        <div class="form-group">
-                            <label data-lang="amount">Amount ($)</label>
-                            <input id="amountDisplay" readonly="" style="background: #0f172a; color: #94a3b8;" type="text"/>
-                        </div>
-                    </div>
-                    <div class="form-actions">
-                        <button class="btn btn-secondary" data-lang="reset" onclick="resetForm()" type="button">Reset</button>
-                        <button class="btn btn-primary" data-lang="add-trade" type="submit">Add Trade</button>
-                    </div>
-                </form>
-            </div>
-            
-            <div>
-                <div class="stats-sidebar">
-                    <div class="sidebar-title-stats" data-lang="performance">Performance</div>
-                    <div class="sidebar-stat">
-                        <span class="sidebar-stat-label" data-lang="best-trade">Best Trade</span>
-                        <span class="sidebar-stat-value positive" id="bestTrade">$0.00</span>
-                    </div>
-                    <div class="sidebar-stat">
-                        <span class="sidebar-stat-label" data-lang="worst-trade">Worst Trade</span>
-                        <span class="sidebar-stat-value negative" id="worstTrade">$0.00</span>
-                    </div>
-                    <div class="sidebar-stat">
-                        <span class="sidebar-stat-label" data-lang="avg-win">Avg Win</span>
-                        <span class="sidebar-stat-value positive" id="avgWin">$0.00</span>
-                    </div>
-                    <div class="sidebar-stat">
-                        <span class="sidebar-stat-label" data-lang="avg-loss">Avg Loss</span>
-                        <span class="sidebar-stat-value negative" id="avgLoss">$0.00</span>
-                    </div>
-                    <div class="sidebar-stat">
-                        <span class="sidebar-stat-label" data-lang="total-invested">Total Invested</span>
-                        <span class="sidebar-stat-value neutral" id="totalVolume">$0.00</span>
-                    </div>
-                    <div class="sidebar-stat">
-                        <span class="sidebar-stat-label" data-lang="profit-factor">Profit Factor</span>
-                        <span class="sidebar-stat-value" id="profitFactorSidebar">0.00</span>
-                    </div>
-                </div>
-                
-                <div class="daily-fees-section">
-                    <div class="daily-fees-title" data-lang="daily-fees">Daily Fees</div>
-                    <input class="daily-fees-input" id="dailyFees" onchange="saveDailyFees()" placeholder="0.00" step="0.01" type="number"/>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Trades Table -->
-        <div class="trades-section">
-            <div class="trades-header">
-                <h2 data-lang="trade-history">Trade History</h2>
-                <div style="display: flex; gap: 12px; align-items: center;">
-                    <button class="btn btn-secondary" data-lang="delete-selected" id="deleteSelectedBtn" onclick="deleteSelectedTrades()" style="display: none; background: #dc2626; border-color: #dc2626;">Delete Selected</button>
-                    <div class="period-summary" id="periodSummary"></div>
-                </div>
-            </div>
-            <table class="trades-table">
-                <thead>
-                    <tr>
-                        <th style="width: 40px;">
-                            <input id="selectAllTrades" onchange="toggleAllTrades()" style="accent-color: #3b82f6;" type="checkbox"/>
-                        </th>
-                        <th data-lang="date">Date</th>
-                        <th data-lang="symbol">Symbol</th>
-                        <th data-lang="buy-price">Buy Price</th>
-                        <th data-lang="sell-price">Sell Price</th>
-                        <th data-lang="shares">Shares</th>
-                        <th data-lang="amount">Amount</th>
-                        <th data-lang="time">Time</th>
-                        <th data-lang="pnl">P&L</th>
-                        <th data-lang="return-pct">Return %</th>
-                        <th data-lang="actions">Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="tradesTableBody">
-                    <tr>
-                        <td colspan="11">
-                            <div class="empty-state">
-                                <div class="empty-state-icon">📊</div>
-                                <div data-lang="no-trades">No trades recorded yet</div>
+                        
+                        <div class="calculator-container">
+                            <!-- Calculator Tabs -->
+                            <div style="display: flex; background: #0f172a; border: 1px solid #334155; border-radius: 8px; overflow: hidden; margin-bottom: 20px;">
+                                <button class="position-calc-tab active" data-lang="kelly-calculator" onclick="showCalculatorTab('kelly')" style="background: #3b82f6; border: none; color: white; padding: 12px 20px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s ease; border-right: 1px solid #334155; flex: 1;">Kelly Calculator</button>
+                                <button class="position-calc-tab" data-lang="risk-calculator" onclick="showCalculatorTab('risk')" style="background: transparent; border: none; color: #94a3b8; padding: 12px 20px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s ease; flex: 1;">Risk Calculator</button>
                             </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    
-    <!-- Position Calculator Section -->
-    <div class="position-calculator-section" id="positionCalculatorSection" style="display: none;">
-        <!-- 기존 포지션 계산기 코드 그대로 유지 -->
-        <div class="calculator-main-grid">
-            <div class="stats-sidebar">
-                <div class="sidebar-title-stats" data-lang="position-analysis">Position Analysis</div>
-                <div class="sidebar-stat">
-                    <span class="sidebar-stat-label" data-lang="recommended-size">Recommended Size</span>
-                    <span class="sidebar-stat-value positive" id="recommendedSize">$0</span>
-                </div>
-                <div class="sidebar-stat">
-                    <span class="sidebar-stat-label" data-lang="account-utilization">Account Utilization</span>
-                    <span class="sidebar-stat-value neutral" id="accountUtil">0%</span>
-                </div>
-                <div class="sidebar-stat">
-                    <span class="sidebar-stat-label" data-lang="expected-value">Expected Value</span>
-                    <span class="sidebar-stat-value" id="expectedVal">$0</span>
-                </div>
-                <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #334155;">
-                    <div class="sidebar-title-stats" data-lang="auto-analysis" style="font-size: 14px;">자동 분석</div>
-                    <div class="sidebar-stat">
-                        <span class="sidebar-stat-label" data-lang="position-size">포지션 크기</span>
-                        <span class="sidebar-stat-value positive" id="riskPositionSizeSidebar">$0</span>
+                            
+                            <!-- Kelly Calculator Content -->
+                            <div class="calculator-content" id="kellyCalculator">
+                                <h2 class="calculator-title" data-lang="kelly-criterion-calculator">Kelly Criterion Calculator</h2>
+                                <div class="calc-grid">
+                                    <div class="calc-input-group">
+                                        <label class="calc-label" data-lang="account-balance">계좌 잔고 ($)</label>
+                                        <input class="calc-input" id="calcAccountBalance" oninput="calculatePosition()" type="number" value=""/>
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label class="calc-label" data-lang="win-rate-input">승률 (%)</label>
+                                        <input class="calc-input" id="calcWinRate" max="100" min="0" oninput="calculatePosition()" type="number" value=""/>
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label class="calc-label" data-lang="average-win">평균 수익 ($)</label>
+                                        <input class="calc-input" id="calcAvgWin" oninput="calculatePosition()" type="number" value=""/>
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label class="calc-label" data-lang="average-loss">평균 손실 ($)</label>
+                                        <input class="calc-input" id="calcAvgLoss" oninput="calculatePosition()" type="number" value=""/>
+                                    </div>
+                                </div>
+                                <div class="calc-input-group">
+                                    <button class="btn btn-secondary" data-lang="auto-load-trade-data" onclick="autoLoadTradeData()" style="width: 100%;">Auto Load from Trade History</button>
+                                </div>
+                                <div class="kelly-options">
+                                    <div class="kelly-options-title" data-lang="kelly-strategies">Position Sizing Strategy</div>
+                                    <div class="kelly-option selected" data-multiplier="0.1" onclick="selectKellyMultiplier(this)">
+                                        <div class="kelly-option-label" data-lang="ultra-safe">Ultra Safe</div>
+                                        <div class="kelly-option-value">10% Kelly</div>
+                                    </div>
+                                    <div class="kelly-option" data-multiplier="0.25" onclick="selectKellyMultiplier(this)">
+                                        <div class="kelly-option-label" data-lang="conservative">Conservative</div>
+                                        <div class="kelly-option-value">25% Kelly</div>
+                                    </div>
+                                    <div class="kelly-option" data-multiplier="0.5" onclick="selectKellyMultiplier(this)">
+                                        <div class="kelly-option-label" data-lang="moderate">Moderate</div>
+                                        <div class="kelly-option-value">50% Kelly</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Risk Calculator Content -->
+                            <div class="calculator-content" id="riskCalculator" style="display: none;">
+                                <h2 class="calculator-title" data-lang="risk-management-calculator">Risk Management Calculator</h2>
+                                <div class="calc-grid">
+                                    <div class="calc-input-group">
+                                        <label class="calc-label" data-lang="account-balance">계좌 잔고 ($)</label>
+                                        <input class="calc-input" id="riskAccountBalance" oninput="calculateRiskPosition()" type="number" value=""/>
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label class="calc-label" data-lang="risk-percentage">리스크 비율 (%)</label>
+                                        <input class="calc-input" id="riskPercentage" max="10" min="0.1" oninput="calculateRiskPosition()" step="1" type="number" value=""/>
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label class="calc-label" data-lang="entry-price">진입 가격 ($)</label>
+                                        <input class="calc-input" id="riskEntryPrice" oninput="calculateRiskPosition()" step="0.01" type="number" value=""/>
+                                    </div>
+                                    <div class="calc-input-group">
+                                        <label class="calc-label" data-lang="stop-loss-price">손절 가격 ($)</label>
+                                        <input class="calc-input" id="riskStopPrice" oninput="calculateRiskPosition()" step="0.01" type="number" value=""/>
+                                    </div>
+                                </div>
+                                <div class="risk-preset-section">
+                                    <div class="risk-preset-title">리스크 비율</div>
+                                    <div class="risk-preset-buttons" style="gap: 4px;">
+                                        <button class="risk-preset-btn" onclick="setRiskPreset(1)" style="background: #374151 !important; border: 1px solid #4b5563 !important; color: #e4e4e7 !important; padding: 8px 16px !important; border-radius: 6px !important; cursor: pointer !important; font-size: 13px !important; font-weight: 500 !important; transition: all 0.2s ease !important; min-width: 60px !important;">1%</button>
+                                        <button class="risk-preset-btn active" onclick="setRiskPreset(2)" style="background: #3b82f6 !important; border: 1px solid #3b82f6 !important; color: white !important; padding: 8px 16px !important; border-radius: 6px !important; cursor: pointer !important; font-size: 13px !important; font-weight: 500 !important; transition: all 0.2s ease !important; min-width: 60px !important;">2%</button>
+                                        <button class="risk-preset-btn" onclick="setRiskPreset(3)" style="background: #374151 !important; border: 1px solid #4b5563 !important; color: #e4e4e7 !important; padding: 8px 16px !important; border-radius: 6px !important; cursor: pointer !important; font-size: 13px !important; font-weight: 500 !important; transition: all 0.2s ease !important; min-width: 60px !important;">3%</button>
+                                        <button class="risk-preset-btn" onclick="setRiskPreset(5)" style="background: #374151 !important; border: 1px solid #4b5563 !important; color: #e4e4e7 !important; padding: 8px 16px !important; border-radius: 6px !important; cursor: pointer !important; font-size: 13px !important; font-weight: 500 !important; transition: all 0.2s ease !important; min-width: 60px !important;">5%</button>
+                                    </div>
+                                </div>
+                                <div class="calc-results">
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label" data-lang="position-size">Position Size</span>
+                                        <span class="calc-result-value positive" id="riskPositionSize">$0</span>
+                                    </div>
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label" data-lang="shares-quantity">Shares Quantity</span>
+                                        <span class="calc-result-value neutral" id="riskSharesQuantity">0</span>
+                                    </div>
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label" data-lang="risk-per-share">Risk per Share</span>
+                                        <span class="calc-result-value neutral" id="riskPerShare">$0.00</span>
+                                    </div>
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label" data-lang="max-loss">Max Loss</span>
+                                        <span class="calc-result-value negative" id="riskMaxLoss">$0.00</span>
+                                    </div>
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label" data-lang="position-cost">Position Cost</span>
+                                        <span class="calc-result-value neutral" id="riskPositionCost">$0.00</span>
+                                    </div>
+                                    <div class="calc-result-item">
+                                        <span class="calc-result-label" data-lang="account-utilization">Account Utilization</span>
+                                        <span class="calc-result-value neutral" id="riskAccountUtil">0.00%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="sidebar-stat">
-                        <span class="sidebar-stat-label" data-lang="shares-quantity">주식 수량</span>
-                        <span class="sidebar-stat-value neutral" id="riskSharesQuantitySidebar">0</span>
-                    </div>
-                    <div class="sidebar-stat">
-                        <span class="sidebar-stat-label" data-lang="risk-per-share">주당 리스크</span>
-                        <span class="sidebar-stat-value neutral" id="riskPerShareSidebar">$0.00</span>
-                    </div>
-                    <div class="sidebar-stat">
-                        <span class="sidebar-stat-label" data-lang="max-loss">최대 손실</span>
-                        <span class="sidebar-stat-value negative" id="riskMaxLossSidebar">$0.00</span>
-                    </div>
-                    <div class="sidebar-stat">
-                        <span class="sidebar-stat-label" data-lang="position-cost">포지션 비용</span>
-                        <span class="sidebar-stat-value neutral" id="riskPositionCostSidebar">$0.00</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="calculator-container">
-                <!-- 나머지 포지션 계산기 코드 그대로 유지 -->
-                <!-- Calculator Tabs -->
-                <div style="display: flex; background: #0f172a; border: 1px solid #334155; border-radius: 8px; overflow: hidden; margin-bottom: 20px;">
-                    <button class="position-calc-tab active" data-lang="kelly-calculator" onclick="showCalculatorTab('kelly')" style="background: #3b82f6; border: none; color: white; padding: 12px 20px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s ease; border-right: 1px solid #334155; flex: 1;">Kelly Calculator</button>
-                    <button class="position-calc-tab" data-lang="risk-calculator" onclick="showCalculatorTab('risk')" style="background: transparent; border: none; color: #94a3b8; padding: 12px 20px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s ease; flex: 1;">Risk Calculator</button>
                 </div>
                 
-                <!-- Kelly Calculator Content -->
-                <div class="calculator-content" id="kellyCalculator">
-                    <h2 class="calculator-title" data-lang="kelly-criterion-calculator">Kelly Criterion Calculator</h2>
-                    <div class="calc-grid">
-                        <div class="calc-input-group">
-                            <label class="calc-label" data-lang="account-balance">계좌 잔고 ($)</label>
-                            <input class="calc-input" id="calcAccountBalance" oninput="calculatePosition()" type="number" value=""/>
-                        </div>
-                        <div class="calc-input-group">
-                            <label class="calc-label" data-lang="win-rate-input">승률 (%)</label>
-                            <input class="calc-input" id="calcWinRate" max="100" min="0" oninput="calculatePosition()" type="number" value=""/>
-                        </div>
-                        <div class="calc-input-group">
-                            <label class="calc-label" data-lang="average-win">평균 수익 ($)</label>
-                            <input class="calc-input" id="calcAvgWin" oninput="calculatePosition()" type="number" value=""/>
-                        </div>
-                        <div class="calc-input-group">
-                            <label class="calc-label" data-lang="average-loss">평균 손실 ($)</label>
-                            <input class="calc-input" id="calcAvgLoss" oninput="calculatePosition()" type="number" value=""/>
-                        </div>
+                <div class="dashboard-grid">
+                    <div class="trade-entry">
+                        <h2 data-lang="record-trade">Record Trade</h2>
+                        <form id="tradeForm">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label data-lang="symbol">Symbol</label>
+                                    <input id="symbol" placeholder="AAPL" required="" type="text"/>
+                                </div>
+                                <div class="form-group">
+                                    <label data-lang="shares">Shares</label>
+                                    <input id="shares" oninput="calculatePnL()" placeholder="100" required="" type="number"/>
+                                </div>
+                                <div class="form-group">
+                                    <label data-lang="buy-price">Buy Price</label>
+                                    <input id="buyPrice" oninput="calculatePnL()" placeholder="150.25" required="" step="0.0001" type="number"/>
+                                </div>
+                                <div class="form-group">
+                                    <label data-lang="sell-price">Sell Price</label>
+                                    <input id="sellPrice" oninput="calculatePnL()" placeholder="155.50" required="" step="0.0001" type="number"/>
+                                </div>
+                                <div class="form-group">
+                                    <label data-lang="return-pct">Return %</label>
+                                    <input id="returnPct" readonly="" style="background: #0f172a; color: #10b981;" type="text"/>
+                                </div>
+                                <div class="form-group">
+                                    <label data-lang="pnl">P&L</label>
+                                    <input id="pnlDisplay" readonly="" style="background: #0f172a; color: #10b981;" type="text"/>
+                                </div>
+                                <div class="form-group">
+                                    <label data-lang="entry-time">Entry Time</label>
+                                    <div class="time-input-container">
+                                        <input id="entryTime" type="time" value=""/>
+                                        <button class="time-edit-btn" data-lang="edit" onclick="toggleTimeEdit()" type="button">Edit</button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label data-lang="exit-time">Exit Time</label>
+                                    <input id="exitTime" onchange="calculateHoldingTime()" type="time" value=""/>
+                                </div>
+                                <div class="form-group">
+                                    <label data-lang="holding-time">Holding Time</label>
+                                    <input id="holdingTimeDisplay" readonly="" style="background: #0f172a; color: #64748b;" type="text"/>
+                                </div>
+                                <div class="form-group">
+                                    <label data-lang="amount">Amount ($)</label>
+                                    <input id="amountDisplay" readonly="" style="background: #0f172a; color: #94a3b8;" type="text"/>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button class="btn btn-secondary" data-lang="reset" onclick="resetForm()" type="button">Reset</button>
+                                <button class="btn btn-primary" data-lang="add-trade" type="submit">Add Trade</button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="calc-input-group">
-                        <button class="btn btn-secondary" data-lang="auto-load-trade-data" onclick="autoLoadTradeData()" style="width: 100%;">Auto Load from Trade History</button>
-                    </div>
-                    <div class="kelly-options">
-                        <div class="kelly-options-title" data-lang="kelly-strategies">Position Sizing Strategy</div>
-                        <div class="kelly-option selected" data-multiplier="0.1" onclick="selectKellyMultiplier(this)">
-                            <div class="kelly-option-label" data-lang="ultra-safe">Ultra Safe</div>
-                            <div class="kelly-option-value">10% Kelly</div>
+                    
+                    <div>
+                        <div class="stats-sidebar">
+                            <div class="sidebar-title-stats" data-lang="performance">Performance</div>
+                            <div class="sidebar-stat">
+                                <span class="sidebar-stat-label" data-lang="best-trade">Best Trade</span>
+                                <span class="sidebar-stat-value positive" id="bestTrade">$0.00</span>
+                            </div>
+                            <div class="sidebar-stat">
+                                <span class="sidebar-stat-label" data-lang="worst-trade">Worst Trade</span>
+                                <span class="sidebar-stat-value negative" id="worstTrade">$0.00</span>
+                            </div>
+                            <div class="sidebar-stat">
+                                <span class="sidebar-stat-label" data-lang="avg-win">Avg Win</span>
+                                <span class="sidebar-stat-value positive" id="avgWin">$0.00</span>
+                            </div>
+                            <div class="sidebar-stat">
+                                <span class="sidebar-stat-label" data-lang="avg-loss">Avg Loss</span>
+                                <span class="sidebar-stat-value negative" id="avgLoss">$0.00</span>
+                            </div>
+                            <div class="sidebar-stat">
+                                <span class="sidebar-stat-label" data-lang="total-invested">Total Invested</span>
+                                <span class="sidebar-stat-value neutral" id="totalVolume">$0.00</span>
+                            </div>
+                            <div class="sidebar-stat">
+                                <span class="sidebar-stat-label" data-lang="profit-factor">Profit Factor</span>
+                                <span class="sidebar-stat-value" id="profitFactorSidebar">0.00</span>
+                            </div>
                         </div>
-                        <div class="kelly-option" data-multiplier="0.25" onclick="selectKellyMultiplier(this)">
-                            <div class="kelly-option-label" data-lang="conservative">Conservative</div>
-                            <div class="kelly-option-value">25% Kelly</div>
-                        </div>
-                        <div class="kelly-option" data-multiplier="0.5" onclick="selectKellyMultiplier(this)">
-                            <div class="kelly-option-label" data-lang="moderate">Moderate</div>
-                            <div class="kelly-option-value">50% Kelly</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Risk Calculator Content -->
-                <div class="calculator-content" id="riskCalculator" style="display: none;">
-                    <h2 class="calculator-title" data-lang="risk-management-calculator">Risk Management Calculator</h2>
-                    <div class="calc-grid">
-                        <div class="calc-input-group">
-                            <label class="calc-label" data-lang="account-balance">계좌 잔고 ($)</label>
-                            <input class="calc-input" id="riskAccountBalance" oninput="calculateRiskPosition()" type="number" value=""/>
-                        </div>
-                        <div class="calc-input-group">
-                            <label class="calc-label" data-lang="risk-percentage">리스크 비율 (%)</label>
-                            <input class="calc-input" id="riskPercentage" max="10" min="0.1" oninput="calculateRiskPosition()" step="1" type="number" value=""/>
-                        </div>
-                        <div class="calc-input-group">
-                            <label class="calc-label" data-lang="entry-price">진입 가격 ($)</label>
-                            <input class="calc-input" id="riskEntryPrice" oninput="calculateRiskPosition()" step="0.01" type="number" value=""/>
-                        </div>
-                        <div class="calc-input-group">
-                            <label class="calc-label" data-lang="stop-loss-price">손절 가격 ($)</label>
-                            <input class="calc-input" id="riskStopPrice" oninput="calculateRiskPosition()" step="0.01" type="number" value=""/>
-                        </div>
-                    </div>
-                    <div class="risk-preset-section">
-                        <div class="risk-preset-title">리스크 비율</div>
-                        <div class="risk-preset-buttons" style="gap: 4px;">
-                            <button class="risk-preset-btn" onclick="setRiskPreset(1)">1%</button>
-                            <button class="risk-preset-btn active" onclick="setRiskPreset(2)">2%</button>
-                            <button class="risk-preset-btn" onclick="setRiskPreset(3)">3%</button>
-                            <button class="risk-preset-btn" onclick="setRiskPreset(5)">5%</button>
-                        </div>
-                    </div>
-                    <div class="calc-results">
-                        <div class="calc-result-item">
-                            <span class="calc-result-label" data-lang="position-size">Position Size</span>
-                            <span class="calc-result-value positive" id="riskPositionSize">$0</span>
-                        </div>
-                        <div class="calc-result-item">
-                            <span class="calc-result-label" data-lang="shares-quantity">Shares Quantity</span>
-                            <span class="calc-result-value neutral" id="riskSharesQuantity">0</span>
-                        </div>
-                        <div class="calc-result-item">
-                            <span class="calc-result-label" data-lang="risk-per-share">Risk per Share</span>
-                            <span class="calc-result-value neutral" id="riskPerShare">$0.00</span>
-                        </div>
-                        <div class="calc-result-item">
-                            <span class="calc-result-label" data-lang="max-loss">Max Loss</span>
-                            <span class="calc-result-value negative" id="riskMaxLoss">$0.00</span>
-                        </div>
-                        <div class="calc-result-item">
-                            <span class="calc-result-label" data-lang="position-cost">Position Cost</span>
-                            <span class="calc-result-value neutral" id="riskPositionCost">$0.00</span>
-                        </div>
-                        <div class="calc-result-item">
-                            <span class="calc-result-label" data-lang="account-utilization">Account Utilization</span>
-                            <span class="calc-result-value neutral" id="riskAccountUtil">0.00%</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
                         
                         <div class="daily-fees-section">
                             <div class="daily-fees-title" data-lang="daily-fees">Daily Fees</div>
