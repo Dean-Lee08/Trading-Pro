@@ -10,8 +10,6 @@ function calculatePnL() {
     const buyPrice = parseFloat(document.getElementById('buyPrice').value) || 0;
     const sellPrice = parseFloat(document.getElementById('sellPrice').value) || 0;
     
-    console.log('calculatePnL called:', { shares, buyPrice, sellPrice, timeEditMode });
-    
     // Always calculate and display amount if shares and buyPrice are available
     if (shares && buyPrice) {
         const amount = shares * buyPrice;
@@ -42,49 +40,18 @@ function calculatePnL() {
         }
     }
     
-    // 자동 시간 입력 처리
-    autoFillTradingTimes();
-}
-
-/**
- * 거래 시간 자동 입력 (별도 함수로 분리)
- */
-function autoFillTradingTimes() {
-    if (timeEditMode) {
-        console.log('Time edit mode is ON, skipping auto-fill');
-        return;
-    }
-    
-    const buyPrice = parseFloat(document.getElementById('buyPrice').value) || 0;
-    const sellPrice = parseFloat(document.getElementById('sellPrice').value) || 0;
-    const entryTimeInput = document.getElementById('entryTime');
-    const exitTimeInput = document.getElementById('exitTime');
-    
-    const now = new Date();
-    const hours = now.getHours().toString().padStart(2, '0');
-    const minutes = now.getMinutes().toString().padStart(2, '0');
-    const currentTime = `${hours}:${minutes}`;
-    
-    console.log('Auto-fill check:', {
-        buyPrice,
-        sellPrice,
-        entryTime: entryTimeInput.value,
-        exitTime: exitTimeInput.value,
-        currentTime
-    });
-    
-    // Entry Time 자동 입력: buyPrice가 있고 entryTime이 비어있을 때
-    if (buyPrice > 0 && !entryTimeInput.value) {
-        entryTimeInput.value = currentTime;
-        console.log('Entry time set to:', currentTime);
-        calculateHoldingTime();
-    }
-    
-    // Exit Time 자동 입력: sellPrice가 있고, entryTime은 있지만 exitTime이 비어있을 때
-    if (sellPrice > 0 && entryTimeInput.value && !exitTimeInput.value) {
-        exitTimeInput.value = currentTime;
-        console.log('Exit time set to:', currentTime);
-        calculateHoldingTime();
+    if (!timeEditMode) {
+        const now = new Date();
+        const currentTime = now.toTimeString().substr(0, 5);
+        
+        if (buyPrice && !document.getElementById('entryTime').value) {
+            document.getElementById('entryTime').value = currentTime;
+            calculateHoldingTime();
+        }
+        if (sellPrice && document.getElementById('entryTime').value) {
+            document.getElementById('exitTime').value = currentTime;
+            calculateHoldingTime();
+        }
     }
 }
 
