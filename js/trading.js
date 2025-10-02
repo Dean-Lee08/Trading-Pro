@@ -10,7 +10,7 @@ function calculatePnL() {
     const buyPrice = parseFloat(document.getElementById('buyPrice').value) || 0;
     const sellPrice = parseFloat(document.getElementById('sellPrice').value) || 0;
     
-    // Always calculate and display amount if shares and buyPrice are available
+    // Amount 계산 및 표시
     if (shares && buyPrice) {
         const amount = shares * buyPrice;
         document.getElementById('amountDisplay').value = `$${amount.toFixed(2)}`;
@@ -18,6 +18,7 @@ function calculatePnL() {
         document.getElementById('amountDisplay').value = '';
     }
     
+    // P&L 및 Return % 계산
     if (shares && buyPrice && sellPrice) {
         const pnl = shares * (sellPrice - buyPrice);
         const returnPct = ((sellPrice - buyPrice) / buyPrice) * 100;
@@ -38,20 +39,44 @@ function calculatePnL() {
             pnlInput.style.color = '#e4e4e7';
             returnInput.style.color = '#e4e4e7';
         }
+    } else {
+        document.getElementById('pnlDisplay').value = '';
+        document.getElementById('returnPct').value = '';
     }
     
+    // 자동 시간 입력 (Edit 모드가 아닐 때만)
     if (!timeEditMode) {
-        const now = new Date();
-        const currentTime = now.toTimeString().substr(0, 5);
-        
-        if (buyPrice && !document.getElementById('entryTime').value) {
-            document.getElementById('entryTime').value = currentTime;
-            calculateHoldingTime();
-        }
-        if (sellPrice && document.getElementById('entryTime').value) {
-            document.getElementById('exitTime').value = currentTime;
-            calculateHoldingTime();
-        }
+        autoFillTradingTimes();
+    }
+}
+
+/**
+ * 거래 시간 자동 입력
+ */
+function autoFillTradingTimes() {
+    const buyPrice = parseFloat(document.getElementById('buyPrice').value) || 0;
+    const sellPrice = parseFloat(document.getElementById('sellPrice').value) || 0;
+    const entryTimeInput = document.getElementById('entryTime');
+    const exitTimeInput = document.getElementById('exitTime');
+    
+    if (!entryTimeInput || !exitTimeInput) return;
+    
+    // 현재 시간 가져오기
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const currentTime = `${hours}:${minutes}`;
+    
+    // Entry Time 자동 입력: buyPrice가 입력되고 entryTime이 비어있을 때
+    if (buyPrice > 0 && !entryTimeInput.value) {
+        entryTimeInput.value = currentTime;
+        calculateHoldingTime();
+    }
+    
+    // Exit Time 자동 입력: sellPrice가 입력되고, entryTime은 있지만 exitTime이 비어있을 때
+    if (sellPrice > 0 && entryTimeInput.value && !exitTimeInput.value) {
+        exitTimeInput.value = currentTime;
+        calculateHoldingTime();
     }
 }
 
@@ -60,30 +85,60 @@ function calculatePnL() {
  */
 function toggleTimeEdit() {
     timeEditMode = !timeEditMode;
-    const entryTime = document.getElementById('entryTime');
-    const exitTime = document.getElementById('exitTime');
     const editBtn = document.querySelector('.time-edit-btn');
     
     if (timeEditMode) {
-        entryTime.removeAttribute('readonly');
-        exitTime.removeAttribute('readonly');
         editBtn.textContent = translations[currentLanguage]['auto'] || 'Auto';
         editBtn.classList.add('active');
     } else {
-        entryTime.setAttribute('readonly', true);
-        exitTime.setAttribute('readonly', true);
         editBtn.textContent = translations[currentLanguage]['edit'] || 'Edit';
         editBtn.classList.remove('active');
         
-        const now = new Date();
-        const currentTime = now.toTimeString().substr(0, 5);
-        if (document.getElementById('buyPrice').value) {
-            entryTime.value = currentTime;
+        // Auto 모드로 돌아갈 때 현재 상태에 맞춰 시간 자동 설정
+        autoFillTradingTimes();
+    }
+}
+
+/**
+ * 보유 시간 계산
+ */
+function calculateHoldingTime() {
+    const entryTime = document.getElementById('entryTime').value;
+    const exitTime = document.getElementById('exitTime').value;
+    const holdingTimeDisplay = document.getElementById('holdingTimeDisplay');
+    
+    if (!holdingTimeDisplay) return;
+    
+    if (entryTime && exitTime) {
+        try {
+            const [entryHour, entryMin] = entryTime.split(':').map(Number);
+            const [exitHour, exitMin] = exitTime.split(':').map(Number);
+            
+            let entryMinutes = entryHour * 60 + entryMin;
+            let exitMinutes = exitHour * 60 + exitMin;
+            
+            // 다음날로 넘어간 경우 처리
+            if (exitMinutes < entryMinutes) {
+                exitMinutes += 24 * 60;
+            }
+            
+            const diffMinutes = exitMinutes - entryMinutes;
+            
+            // 시간과 분으로 표시
+            const hours = Math.floor(diffMinutes / 60);
+            const minutes = diffMinutes % 60;
+            
+            if (hours > 0) {
+                holdingTimeDisplay.value = `${hours}h ${minutes}m`;
+            } else {
+                holdingTimeDisplay.value = `${minutes}m`;
+            }
+        } catch (error) {
+            console.error('Error calculating holding time:', error);
+            holdingTimeDisplay.value = '';
         }
-        if (document.getElementById('sellPrice').value) {
-            exitTime.value = currentTime;
-        }
-        calculateHoldingTime();
+    } else {
+        holdingTimeDisplay.value = '';
     }
 }
 
@@ -93,36 +148,77 @@ function toggleTimeEdit() {
 function handleTradeSubmit(event) {
     event.preventDefault();
     
-    const tradingDateString = formatTradingDate(currentTradingDate);
+    const symbol = document.getElementById('symbol').value.trim().toUpperCase();
     const shares = parseFloat(document.getElementById('shares').value);
     const buyPrice = parseFloat(document.getElementById('buyPrice').value);
+    const sellPrice = parseFloat(document.getElementById('sellPrice').value);
+    const entryTime = document.getElementById('entryTime').value;
+    const exitTime = document.getElementById('exitTime').value;
+    
+    if (!symbol || !shares || !buyPrice || !sellPrice) {
+        alert(currentLanguage === 'ko' ? '모든 필수 항목을 입력해주세요.' : 'Please fill in all required fields.');
+        return;
+    }
+    
+    const tradingDateString = formatTradingDate(currentTradingDate);
+    
+    const pnl = shares * (sellPrice - buyPrice);
+    const returnPct = ((sellPrice - buyPrice) / buyPrice) * 100;
+    const amount = shares * buyPrice;
+    
+    // 보유 시간 계산
+    let holdingMinutes = 0;
+    let holdingTime = '';
+    if (entryTime && exitTime) {
+        const [entryHour, entryMin] = entryTime.split(':').map(Number);
+        const [exitHour, exitMin] = exitTime.split(':').map(Number);
+        
+        let entryMinutes = entryHour * 60 + entryMin;
+        let exitMinutes = exitHour * 60 + exitMin;
+        
+        if (exitMinutes < entryMinutes) {
+            exitMinutes += 24 * 60;
+        }
+        
+        holdingMinutes = exitMinutes - entryMinutes;
+        
+        const hours = Math.floor(holdingMinutes / 60);
+        const minutes = holdingMinutes % 60;
+        
+        if (hours > 0) {
+            holdingTime = `${hours}h ${minutes}m`;
+        } else {
+            holdingTime = `${minutes}m`;
+        }
+    }
     
     const formData = {
         id: Date.now(),
-        symbol: document.getElementById('symbol').value.toUpperCase(),
+        symbol: symbol,
         shares: shares,
-        amount: shares * buyPrice,
+        amount: amount,
         buyPrice: buyPrice,
-        sellPrice: parseFloat(document.getElementById('sellPrice').value),
+        sellPrice: sellPrice,
+        pnl: pnl,
+        returnPct: returnPct,
         date: tradingDateString,
-        entryTime: document.getElementById('entryTime').value,
-        exitTime: document.getElementById('exitTime').value,
-        holdingTime: document.getElementById('holdingTimeDisplay').value,
+        entryTime: entryTime,
+        exitTime: exitTime,
+        holdingTime: holdingTime,
+        holdingMinutes: holdingMinutes,
         notes: ''
     };
-    
-    formData.pnl = formData.shares * (formData.sellPrice - formData.buyPrice);
-    formData.returnPct = ((formData.sellPrice - formData.buyPrice) / formData.buyPrice) * 100;
     
     trades.push(formData);
     saveTrades();
     updateStats();
+    updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
     renderCalendar();
     updateAllTradesList();
     updateDetailedAnalytics();
     resetForm();
     
-    showToast(`${formData.symbol} saved`);
+    showToast(`${formData.symbol} ${currentLanguage === 'ko' ? '저장됨' : 'saved'}`);
 }
 
 /**
@@ -138,6 +234,7 @@ function resetForm() {
     document.getElementById('holdingTimeDisplay').value = '';
     document.getElementById('amountDisplay').value = '';
     
+    // Edit 모드였다면 Auto 모드로 복귀
     if (timeEditMode) {
         toggleTimeEdit();
     }
