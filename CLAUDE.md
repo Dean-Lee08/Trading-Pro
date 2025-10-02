@@ -10,8 +10,21 @@ This is a **client-side trading journal web application** called "Trading Platfo
 
 - **No build process**: Open `index.html` directly in a web browser
 - **No dependencies**: All code is vanilla JavaScript (ES6+), no npm packages or bundlers
+- **No test framework**: Manual testing only via browser
 - **Local storage**: All data persists in browser localStorage
 - **External dependencies**: Chart.js (loaded via CDN in HTML)
+
+### Script Load Order (Critical)
+
+JavaScript files must load in this exact order (defined in index.html):
+1. `config.js` - Global state and translations (must load first)
+2. `utils.js` - Utility functions used by other modules
+3. `trading.js` - Trade calculations and management
+4. `analytics.js` - Charts and statistics
+5. `calendar.js` - Calendar view rendering
+6. `notes.js` - Notes management
+7. `psychology.js` - Psychology tracking
+8. `main.js` - Initialization and page navigation (must load last)
 
 ## Architecture
 
