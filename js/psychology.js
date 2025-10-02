@@ -1,5 +1,10 @@
 // psychology.js - 심리 분석 관련 기능
 
+// 전역 변수 초기화
+if (typeof window.psychologyChart === 'undefined') {
+    window.psychologyChart = null;
+}
+
 // ==================== Psychology Section Management ====================
 
 /**
@@ -54,6 +59,7 @@ function showPsychologySection(section) {
         if (section === 'input') {
             setTimeout(() => {
                 updateVisualCards();
+                createPsychologyChart();
             }, 100);
         }
     } catch (error) {
@@ -105,6 +111,12 @@ function savePsychologyData() {
     
     updatePsychologyMetrics();
     generatePsychologyInsights();
+    
+    // 차트 업데이트
+    setTimeout(() => {
+        createPsychologyChart();
+    }, 100);
+    
     showToast(currentLanguage === 'ko' ? '심리 데이터가 저장되었습니다' : 'Psychology data saved');
 }
 
@@ -182,6 +194,7 @@ function loadPsychologyData() {
         // 차트 업데이트는 약간의 딜레이 후 실행
         setTimeout(() => {
             updateVisualCards();
+            createPsychologyChart();
         }, 200);
     } else {
         // 기본값으로 차트 생성
@@ -565,15 +578,25 @@ async function createPsychologyChart() {
         }
         
         // 차트 생성
-        window.psychologyChart = new Chart(ctx, chartConfig);
+        try {
+            window.psychologyChart = new Chart(ctx, chartConfig);
+            console.log('Psychology chart created successfully');
+        } catch (chartError) {
+            console.error('Chart creation error:', chartError);
+            throw chartError;
+        }
         
     } catch (error) {
         console.error('Error creating psychology chart:', error);
         const ctx = document.getElementById('psychologyPerformanceChart');
         if (ctx && ctx.parentElement) {
             ctx.parentElement.innerHTML = `
-                <div style="display: flex; align-items: center; justify-content: center; height: 300px; color: #ef4444; font-size: 14px;">
-                    ${currentLanguage === 'ko' ? '차트 생성 중 오류가 발생했습니다' : 'Error creating chart'}
+                <div style="display: flex; align-items: center; justify-content: center; height: 300px; color: #ef4444; font-size: 14px; text-align: center;">
+                    <div>
+                        <div style="margin-bottom: 12px; font-size: 16px;">⚠️</div>
+                        <div>${currentLanguage === 'ko' ? '차트 생성 중 오류가 발생했습니다' : 'Error creating chart'}</div>
+                        <div style="margin-top: 8px; font-size: 12px; color: #94a3b8;">${error.message || 'Unknown error'}</div>
+                    </div>
                 </div>
             `;
         }
@@ -589,19 +612,38 @@ function preparePsychologyChartData() {
         const stressData = [];
         const focusData = [];
         
+        console.log('Psychology data:', psychologyData);
+        console.log('Trades data:', trades);
+        
         if (!psychologyData || typeof psychologyData !== 'object') {
+            console.warn('No psychology data available');
+            return { sleepData, stressData, focusData };
+        }
+        
+        if (!trades || !Array.isArray(trades)) {
+            console.warn('No trades data available');
             return { sleepData, stressData, focusData };
         }
         
         Object.entries(psychologyData).forEach(([date, psyData]) => {
-            if (!psyData || typeof psyData !== 'object') return;
+            if (!psyData || typeof psyData !== 'object') {
+                console.warn(`Invalid psychology data for date ${date}:`, psyData);
+                return;
+            }
             
             const dayTrades = trades.filter(trade => trade && trade.date === date);
-            if (dayTrades.length === 0) return;
+            console.log(`Trades for ${date}:`, dayTrades);
+            
+            if (dayTrades.length === 0) {
+                console.log(`No trades found for date ${date}`);
+                return;
+            }
             
             // 일일 승률 계산
             const winningTrades = dayTrades.filter(trade => trade.pnl > 0);
             const winRate = dayTrades.length > 0 ? (winningTrades.length / dayTrades.length * 100) : 0;
+            
+            console.log(`Win rate for ${date}: ${winRate}% (${winningTrades.length}/${dayTrades.length})`);
             
             // 수면 데이터
             if (psyData.sleepHours && typeof psyData.sleepHours === 'number' && psyData.sleepHours > 0) {
@@ -612,8 +654,8 @@ function preparePsychologyChartData() {
                 });
             }
             
-            // 스트레스 데이터
-            if (psyData.stressLevel && typeof psyData.stressLevel === 'number') {
+            // 스트레스 데이터 (1-5 스케일)
+            if (psyData.stressLevel && typeof psyData.stressLevel === 'number' && psyData.stressLevel >= 1 && psyData.stressLevel <= 5) {
                 stressData.push({ 
                     x: psyData.stressLevel, 
                     y: winRate,
@@ -621,8 +663,8 @@ function preparePsychologyChartData() {
                 });
             }
             
-            // 집중력 데이터
-            if (psyData.focusLevel && typeof psyData.focusLevel === 'number') {
+            // 집중력 데이터 (1-5 스케일)
+            if (psyData.focusLevel && typeof psyData.focusLevel === 'number' && psyData.focusLevel >= 1 && psyData.focusLevel <= 5) {
                 focusData.push({ 
                     x: psyData.focusLevel, 
                     y: winRate,
@@ -631,6 +673,7 @@ function preparePsychologyChartData() {
             }
         });
         
+        console.log('Prepared chart data:', { sleepData, stressData, focusData });
         return { sleepData, stressData, focusData };
         
     } catch (error) {
