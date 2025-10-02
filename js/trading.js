@@ -40,16 +40,25 @@ function calculatePnL() {
         }
     }
     
+    // 자동 시간 입력 (timeEditMode가 아닐 때만)
     if (!timeEditMode) {
         const now = new Date();
-        const currentTime = now.toTimeString().substr(0, 5);
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const currentTime = `${hours}:${minutes}`;
         
-        if (buyPrice && !document.getElementById('entryTime').value) {
-            document.getElementById('entryTime').value = currentTime;
+        const entryTimeInput = document.getElementById('entryTime');
+        const exitTimeInput = document.getElementById('exitTime');
+        
+        // Entry Time: buyPrice가 입력되고 entryTime이 비어있을 때
+        if (buyPrice > 0 && !entryTimeInput.value) {
+            entryTimeInput.value = currentTime;
             calculateHoldingTime();
         }
-        if (sellPrice && document.getElementById('entryTime').value) {
-            document.getElementById('exitTime').value = currentTime;
+        
+        // Exit Time: sellPrice가 입력되고 entryTime은 있지만 exitTime이 비어있을 때
+        if (sellPrice > 0 && entryTimeInput.value && !exitTimeInput.value) {
+            exitTimeInput.value = currentTime;
             calculateHoldingTime();
         }
     }
