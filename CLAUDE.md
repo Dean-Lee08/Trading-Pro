@@ -252,6 +252,7 @@ Call `updateTradesTable(filteredTrades, tableBodyId)` with:
 
 - Function names are camelCase
 - Global variables declared at top of config.js
+- All functions are globally scoped - no modules or namespacing
 - Event listeners attached in DOMContentLoaded in main.js
 - Korean comments in code (original developer)
 - Inline onclick handlers in HTML (not addEventListener pattern)
@@ -259,3 +260,13 @@ Call `updateTradesTable(filteredTrades, tableBodyId)` with:
 - Colors: green (#10b981) for profit, red (#ef4444) for loss, neutral (#64748b) for info
 - Date inputs use HTML5 `<input type="date">` which returns "YYYY-MM-DD" format
 - Time inputs use HTML5 `<input type="time">` which returns "HH:MM" format
+
+## Initialization Flow
+
+On page load (DOMContentLoaded in main.js):
+1. Load all data from localStorage
+2. Set `currentTradingDate` to today (formatted as "YYYY-MM-DD")
+3. Initialize date range filters to last 7 days
+4. Render initial dashboard view
+5. Update statistics and tables
+6. Attach global event listeners
