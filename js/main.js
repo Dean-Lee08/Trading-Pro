@@ -28,18 +28,38 @@ function showPage(pageId) {
 }
 
 function showDashboardSection(section) {
+    // 탭 상태 업데이트
     if (section === 'trading') {
         document.querySelector('[data-lang="trading-record"]').classList.add('active');
         document.querySelector('[data-lang="position-calculator"]').classList.remove('active');
         document.getElementById('positionCalculatorSection').style.display = 'none';
         document.querySelector('.dashboard-grid').style.display = 'grid';
         document.querySelector('.trades-section').style.display = 'block';
+        
+        // 거래 기록에서는 성과 카드와 날짜 요소들 표시
+        const statsOverview = document.querySelector('.stats-overview');
+        const dateRangeSelector = document.querySelector('.date-range-selector');
+        const dateNavigation = document.querySelector('.date-navigation');
+        
+        if (statsOverview) statsOverview.style.display = 'grid';
+        if (dateRangeSelector) dateRangeSelector.style.display = 'flex';
+        if (dateNavigation) dateNavigation.style.display = 'flex';
+        
     } else if (section === 'position-calc') {
         document.querySelector('[data-lang="trading-record"]').classList.remove('active');
         document.querySelector('[data-lang="position-calculator"]').classList.add('active');
         document.getElementById('positionCalculatorSection').style.display = 'block';
         document.querySelector('.dashboard-grid').style.display = 'none';
         document.querySelector('.trades-section').style.display = 'none';
+        
+        // 포지션 계산기에서는 성과 카드와 날짜 요소들 숨기기
+        const statsOverview = document.querySelector('.stats-overview');
+        const dateRangeSelector = document.querySelector('.date-range-selector');
+        const dateNavigation = document.querySelector('.date-navigation');
+        
+        if (statsOverview) statsOverview.style.display = 'none';
+        if (dateRangeSelector) dateRangeSelector.style.display = 'none';
+        if (dateNavigation) dateNavigation.style.display = 'none';
     }
 }
 

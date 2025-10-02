@@ -1,0 +1,6 @@
+{
+    "gitdoc.enabled": true,
+    "gitdoc.autoCommitDelay": 10000,
+    "gitdoc.autoPushDelay": 10000,
+    "gitdoc.commitMessageFormat": "Auto-save: 'ccc, MMM dd yyyy, HH:mm:ss'"
+}
