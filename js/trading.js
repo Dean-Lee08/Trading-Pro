@@ -518,7 +518,7 @@ function updateTradesTable(tradesToShow, tableBodyId) {
             const isSelected = currentSelectedTrades.has(trade.id);
             return `
                 <tr>
-                    <td><input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleTradeSelection(${trade.id})" style="accent-color: #3b82f6;"></td>
+                    <td><input type="checkbox" data-trade-id="${trade.id}" ${isSelected ? 'checked' : ''} onchange="toggleTradeSelection(${trade.id})" style="accent-color: #3b82f6;"></td>
                     <td>${new Date(trade.date).toLocaleDateString()}</td>
                     <td><strong>${trade.symbol}</strong></td>
                     <td>${trade.buyPrice.toFixed(4)}</td>
@@ -546,7 +546,7 @@ function updateTradesTable(tradesToShow, tableBodyId) {
             const isSelected = currentSelectedTradesList.has(trade.id);
             return `
                 <tr>
-                    <td><input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleTradeListSelection(${trade.id})" style="accent-color: #3b82f6;"></td>
+                    <td><input type="checkbox" data-trade-id="${trade.id}" ${isSelected ? 'checked' : ''} onchange="toggleTradeListSelection(${trade.id})" style="accent-color: #3b82f6;"></td>
                     <td>${new Date(trade.date).toLocaleDateString()}</td>
                     <td><strong>${trade.symbol}</strong></td>
                     <td>${trade.buyPrice.toFixed(4)}</td>

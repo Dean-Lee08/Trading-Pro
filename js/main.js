@@ -266,82 +266,8 @@ function handleEditTradeSubmit(e) {
 // Bulk Trade Selection & Deletion
 // ============================================
 
-function toggleAllTrades() {
-    const selectAll = document.getElementById('selectAllTrades').checked;
-    document.querySelectorAll('#tradesTableBody input[type="checkbox"]').forEach(checkbox => {
-        checkbox.checked = selectAll;
-    });
-    updateDeleteButton('tradesTableBody', 'deleteSelectedBtn');
-}
-
-function toggleAllTradesList() {
-    const selectAll = document.getElementById('selectAllTradesList').checked;
-    document.querySelectorAll('#allTradesTableBody input[type="checkbox"]').forEach(checkbox => {
-        checkbox.checked = selectAll;
-    });
-    updateDeleteButton('allTradesTableBody', 'deleteSelectedListBtn');
-}
-
-function updateDeleteButton(tableBodyId, buttonId) {
-    const selectedCount = document.querySelectorAll(`#${tableBodyId} input[type="checkbox"]:checked`).length;
-    const deleteBtn = document.getElementById(buttonId);
-    
-    if (selectedCount > 0) {
-        deleteBtn.style.display = 'block';
-        const text = currentLanguage === 'ko' ? `선택 삭제 (${selectedCount})` : `Delete Selected (${selectedCount})`;
-        deleteBtn.textContent = text;
-    } else {
-        deleteBtn.style.display = 'none';
-    }
-}
-
-function deleteSelectedTrades() {
-    const selectedIds = [];
-    document.querySelectorAll('#tradesTableBody input[type="checkbox"]:checked').forEach(checkbox => {
-        selectedIds.push(parseInt(checkbox.dataset.tradeId));
-    });
-    
-    if (selectedIds.length === 0) return;
-    
-    const confirmMessage = currentLanguage === 'ko' ? 
-        `${selectedIds.length}개의 거래를 삭제하시겠습니까?` : 
-        `Are you sure you want to delete ${selectedIds.length} trade(s)?`;
-    
-    if (confirm(confirmMessage)) {
-        trades = trades.filter(trade => !selectedIds.includes(trade.id));
-        saveTrades();
-        updateStats();
-        updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
-        document.getElementById('selectAllTrades').checked = false;
-        document.getElementById('deleteSelectedBtn').style.display = 'none';
-        
-        showToast(currentLanguage === 'ko' ? '선택된 거래가 삭제되었습니다' : 'Selected trades deleted');
-    }
-}
-
-function deleteSelectedTradesList() {
-    const selectedIds = [];
-    document.querySelectorAll('#allTradesTableBody input[type="checkbox"]:checked').forEach(checkbox => {
-        selectedIds.push(parseInt(checkbox.dataset.tradeId));
-    });
-    
-    if (selectedIds.length === 0) return;
-    
-    const confirmMessage = currentLanguage === 'ko' ? 
-        `${selectedIds.length}개의 거래를 삭제하시겠습니까?` : 
-        `Are you sure you want to delete ${selectedIds.length} trade(s)?`;
-    
-    if (confirm(confirmMessage)) {
-        trades = trades.filter(trade => !selectedIds.includes(trade.id));
-        saveTrades();
-        updateStats();
-        updateAllTradesList();
-        document.getElementById('selectAllTradesList').checked = false;
-        document.getElementById('deleteSelectedListBtn').style.display = 'none';
-        
-        showToast(currentLanguage === 'ko' ? '선택된 거래가 삭제되었습니다' : 'Selected trades deleted');
-    }
-}
+// Trade selection functions are defined in trading.js
+// toggleAllTrades, toggleAllTradesList, deleteSelectedTrades, deleteSelectedTradesList
 
 // ============================================
 // Daily Fees Management
