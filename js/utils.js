@@ -71,6 +71,9 @@ function updateCurrentDateDisplay() {
 function calculateHoldingTime() {
     const entryTime = document.getElementById('entryTime').value;
     const exitTime = document.getElementById('exitTime').value;
+    const holdingTimeDisplay = document.getElementById('holdingTimeDisplay');
+    
+    if (!holdingTimeDisplay) return;
     
     if (entryTime && exitTime) {
         try {
@@ -85,10 +88,21 @@ function calculateHoldingTime() {
             }
             
             const diffMinutes = exitMinutes - entryMinutes;
-            document.getElementById('holdingTimeDisplay').value = `${diffMinutes}m`;
+            
+            const hours = Math.floor(diffMinutes / 60);
+            const minutes = diffMinutes % 60;
+            
+            if (hours > 0) {
+                holdingTimeDisplay.value = `${hours}h ${minutes}m`;
+            } else {
+                holdingTimeDisplay.value = `${minutes}m`;
+            }
         } catch (error) {
-            document.getElementById('holdingTimeDisplay').value = '0m';
+            console.error('Error calculating holding time:', error);
+            holdingTimeDisplay.value = '';
         }
+    } else {
+        holdingTimeDisplay.value = '';
     }
 }
 
