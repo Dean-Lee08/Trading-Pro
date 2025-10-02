@@ -743,16 +743,18 @@ function toggleAllTradesList() {
  */
 function updateSelectAllListCheckbox() {
     const selectAllCheckbox = document.getElementById('selectAllTradesList');
+    if (!selectAllCheckbox) return;
+
     const filteredTrades = getFilteredTradesList();
-    
+
     if (filteredTrades.length === 0) {
         selectAllCheckbox.indeterminate = false;
         selectAllCheckbox.checked = false;
         return;
     }
-    
+
     const selectedCount = filteredTrades.filter(trade => selectedTradesList.has(trade.id)).length;
-    
+
     if (selectedCount === 0) {
         selectAllCheckbox.indeterminate = false;
         selectAllCheckbox.checked = false;
@@ -867,6 +869,12 @@ function clearDashboardRange() {
     dashboardEndDate = null;
     document.getElementById('dashboardStartDate').value = '';
     document.getElementById('dashboardEndDate').value = '';
+
+    // 선택 상태 초기화
+    selectedTrades.clear();
+    const selectAllCheckbox = document.getElementById('selectAllTrades');
+    if (selectAllCheckbox) selectAllCheckbox.checked = false;
+
     updateStats();
     updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
 }
@@ -924,6 +932,12 @@ function clearTradesRange() {
     tradesEndDate = null;
     document.getElementById('tradesStartDate').value = '';
     document.getElementById('tradesEndDate').value = '';
+
+    // 선택 상태 초기화
+    selectedTradesList.clear();
+    const selectAllCheckbox = document.getElementById('selectAllTradesList');
+    if (selectAllCheckbox) selectAllCheckbox.checked = false;
+
     updateAllTradesList();
 }
 
