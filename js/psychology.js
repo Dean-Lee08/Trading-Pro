@@ -29,9 +29,6 @@ function showPsychologySection(section) {
             case 'input':
                 targetSectionId = 'psychologyInputSection';
                 break;
-            case 'metrics':
-                targetSectionId = 'psychologyMetricsSection';
-                break;
             case 'bias-analysis':
                 targetSectionId = 'psychologyBiasSection';
                 break;
@@ -48,9 +45,7 @@ function showPsychologySection(section) {
         }
         
         // 해당 섹션의 데이터 업데이트
-        if (section === 'metrics') {
-            updatePsychologyMetrics();
-        } else if (section === 'bias-analysis') {
+        if (section === 'bias-analysis') {
             updateBiasAnalysis();
         } else if (section === 'patterns') {
             updatePatternInsights();
@@ -109,7 +104,6 @@ function savePsychologyData() {
     psychologyData[currentDate] = data;
     localStorage.setItem('tradingPlatformPsychologyData', JSON.stringify(psychologyData));
     
-    updatePsychologyMetrics();
     generatePsychologyInsights();
     
     // 차트 업데이트
