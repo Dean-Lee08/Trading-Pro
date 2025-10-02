@@ -99,15 +99,21 @@ function autoFillTradingTimes() {
         console.log('❌ Entry Time 설정 안함 - buyPrice:', buyPrice, ', entryTime 있음:', !!entryTimeInput.value);
     }
     
-    // Exit Time 자동 입력
-    if (sellPrice > 0 && entryTimeInput.value && !exitTimeInput.value) {
+    // Exit Time 자동 입력 - sellPrice만 있으면 설정 (entryTime이 없어도 설정)
+    if (sellPrice > 0 && !exitTimeInput.value) {
         console.log('✅ Exit Time 설정:', currentTime);
         exitTimeInput.value = currentTime;
+
+        // entryTime이 아직 없으면 지금 설정
+        if (buyPrice > 0 && !entryTimeInput.value) {
+            console.log('✅ Entry Time도 함께 설정:', currentTime);
+            entryTimeInput.value = currentTime;
+        }
+
         calculateHoldingTime();
     } else {
         console.log('❌ Exit Time 설정 안함');
         console.log('  - sellPrice > 0:', sellPrice > 0);
-        console.log('  - entryTime 있음:', !!entryTimeInput.value);
         console.log('  - exitTime 비어있음:', !exitTimeInput.value);
     }
     
@@ -484,16 +490,24 @@ function updateTradesTable(tradesToShow, tableBodyId) {
         return;
     }
     
-    const sortedTrades = [...tradesToShow].sort((a, b) => {
-        const dateTimeA = new Date(a.date + 'T' + (a.exitTime || a.entryTime || '00:00') + ':00');
-        const dateTimeB = new Date(b.date + 'T' + (b.exitTime || b.entryTime || '00:00') + ':00');
-        
-        if (a.date !== b.date) {
-            return new Date(b.date) - new Date(a.date);
-        }
-        
-        return dateTimeB - dateTimeA;
-    });
+    // 대시보드 테이블은 입력 순서(ID 역순), 거래 목록은 날짜+시간순
+    let sortedTrades;
+    if (tableBodyId === 'tradesTableBody') {
+        // 대시보드: 최신 입력 순서대로 (ID 역순)
+        sortedTrades = [...tradesToShow].sort((a, b) => b.id - a.id);
+    } else {
+        // 거래 목록: 날짜+시간순
+        sortedTrades = [...tradesToShow].sort((a, b) => {
+            const dateTimeA = new Date(a.date + 'T' + (a.exitTime || a.entryTime || '00:00') + ':00');
+            const dateTimeB = new Date(b.date + 'T' + (b.exitTime || b.entryTime || '00:00') + ':00');
+
+            if (a.date !== b.date) {
+                return new Date(b.date) - new Date(a.date);
+            }
+
+            return dateTimeB - dateTimeA;
+        });
+    }
     
     if (tableBodyId === 'tradesTableBody') {
         // 대시보드 테이블
