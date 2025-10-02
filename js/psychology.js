@@ -404,7 +404,12 @@ function updateRiskCard() {
  */
 async function createPsychologyChart() {
     try {
-        await waitForChart();
+        // Chart.js 라이브러리 로딩 확인
+        if (typeof Chart === 'undefined') {
+            console.warn('Chart.js library not loaded');
+            setTimeout(() => createPsychologyChart(), 500);
+            return;
+        }
         
         const ctx = document.getElementById('psychologyPerformanceChart');
         if (!ctx) {
@@ -423,14 +428,19 @@ async function createPsychologyChart() {
         }
         
         const chartData = preparePsychologyChartData();
+        console.log('Psychology chart data prepared:', chartData);
         
         // 데이터가 없으면 기본 메시지 표시
         if (!chartData || (chartData.sleepData.length === 0 && chartData.stressData.length === 0 && chartData.focusData.length === 0)) {
             const parent = ctx.parentElement;
             if (parent) {
                 parent.innerHTML = `
-                    <div style="display: flex; align-items: center; justify-content: center; height: 300px; color: #64748b; font-size: 14px;">
-                        ${currentLanguage === 'ko' ? '심리 데이터와 거래 기록을 수집하여 차트를 생성하세요' : 'Collect psychology data and trading records to generate chart'}
+                    <div style="display: flex; align-items: center; justify-content: center; height: 300px; color: #64748b; font-size: 14px; text-align: center;">
+                        <div>
+                            <div style="margin-bottom: 12px; font-size: 16px;">📊</div>
+                            <div>${currentLanguage === 'ko' ? '심리 데이터와 거래 기록을 수집하여 차트를 생성하세요' : 'Collect psychology data and trading records to generate chart'}</div>
+                            <div style="margin-top: 8px; font-size: 12px; color: #94a3b8;">${currentLanguage === 'ko' ? '최소 3일의 데이터가 필요합니다' : 'Minimum 3 days of data required'}</div>
+                        </div>
                     </div>
                 `;
             }
