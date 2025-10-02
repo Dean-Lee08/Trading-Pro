@@ -6,9 +6,13 @@
  * P&L 계산 및 자동 시간 입력
  */
 function calculatePnL() {
+    console.log('=== calculatePnL 호출됨 ===');
+    
     const shares = parseFloat(document.getElementById('shares').value) || 0;
     const buyPrice = parseFloat(document.getElementById('buyPrice').value) || 0;
     const sellPrice = parseFloat(document.getElementById('sellPrice').value) || 0;
+    
+    console.log('현재 값:', { shares, buyPrice, sellPrice });
     
     // Amount 계산 및 표시
     if (shares && buyPrice) {
@@ -44,9 +48,13 @@ function calculatePnL() {
         document.getElementById('returnPct').value = '';
     }
     
-    // 자동 시간 입력 (Edit 모드가 아닐 때만)
+    // 자동 시간 입력
+    console.log('timeEditMode:', timeEditMode);
     if (!timeEditMode) {
+        console.log('자동 시간 입력 모드 - autoFillTradingTimes 호출');
         autoFillTradingTimes();
+    } else {
+        console.log('수동 편집 모드 - 자동 입력 스킵');
     }
 }
 
@@ -54,12 +62,25 @@ function calculatePnL() {
  * 거래 시간 자동 입력
  */
 function autoFillTradingTimes() {
-    const buyPrice = parseFloat(document.getElementById('buyPrice').value) || 0;
-    const sellPrice = parseFloat(document.getElementById('sellPrice').value) || 0;
+    console.log('=== autoFillTradingTimes 호출됨 ===');
+    
+    const buyPriceInput = document.getElementById('buyPrice');
+    const sellPriceInput = document.getElementById('sellPrice');
     const entryTimeInput = document.getElementById('entryTime');
     const exitTimeInput = document.getElementById('exitTime');
     
-    if (!entryTimeInput || !exitTimeInput) return;
+    if (!buyPriceInput || !sellPriceInput || !entryTimeInput || !exitTimeInput) {
+        console.error('필수 입력 필드를 찾을 수 없음');
+        return;
+    }
+    
+    const buyPrice = parseFloat(buyPriceInput.value) || 0;
+    const sellPrice = parseFloat(sellPriceInput.value) || 0;
+    
+    console.log('buyPrice:', buyPrice);
+    console.log('sellPrice:', sellPrice);
+    console.log('entryTime 현재값:', entryTimeInput.value);
+    console.log('exitTime 현재값:', exitTimeInput.value);
     
     // 현재 시간 가져오기
     const now = new Date();
@@ -67,47 +88,49 @@ function autoFillTradingTimes() {
     const minutes = now.getMinutes().toString().padStart(2, '0');
     const currentTime = `${hours}:${minutes}`;
     
-    // Entry Time 자동 입력: buyPrice가 입력되고 entryTime이 비어있을 때
+    console.log('현재 시간:', currentTime);
+    
+    // Entry Time 자동 입력
     if (buyPrice > 0 && !entryTimeInput.value) {
+        console.log('✅ Entry Time 설정:', currentTime);
         entryTimeInput.value = currentTime;
         calculateHoldingTime();
+    } else {
+        console.log('❌ Entry Time 설정 안함 - buyPrice:', buyPrice, ', entryTime 있음:', !!entryTimeInput.value);
     }
     
-    // Exit Time 자동 입력: sellPrice가 입력되고, entryTime은 있지만 exitTime이 비어있을 때
+    // Exit Time 자동 입력
     if (sellPrice > 0 && entryTimeInput.value && !exitTimeInput.value) {
+        console.log('✅ Exit Time 설정:', currentTime);
         exitTimeInput.value = currentTime;
         calculateHoldingTime();
-    }
-}
-
-/**
- * 시간 편집 모드 토글
- */
-function toggleTimeEdit() {
-    timeEditMode = !timeEditMode;
-    const editBtn = document.querySelector('.time-edit-btn');
-    
-    if (timeEditMode) {
-        editBtn.textContent = translations[currentLanguage]['auto'] || 'Auto';
-        editBtn.classList.add('active');
     } else {
-        editBtn.textContent = translations[currentLanguage]['edit'] || 'Edit';
-        editBtn.classList.remove('active');
-        
-        // Auto 모드로 돌아갈 때 현재 상태에 맞춰 시간 자동 설정
-        autoFillTradingTimes();
+        console.log('❌ Exit Time 설정 안함');
+        console.log('  - sellPrice > 0:', sellPrice > 0);
+        console.log('  - entryTime 있음:', !!entryTimeInput.value);
+        console.log('  - exitTime 비어있음:', !exitTimeInput.value);
     }
+    
+    console.log('=== autoFillTradingTimes 완료 ===');
 }
 
 /**
  * 보유 시간 계산
  */
 function calculateHoldingTime() {
+    console.log('=== calculateHoldingTime 호출됨 ===');
+    
     const entryTime = document.getElementById('entryTime').value;
     const exitTime = document.getElementById('exitTime').value;
     const holdingTimeDisplay = document.getElementById('holdingTimeDisplay');
     
-    if (!holdingTimeDisplay) return;
+    console.log('entryTime:', entryTime);
+    console.log('exitTime:', exitTime);
+    
+    if (!holdingTimeDisplay) {
+        console.error('holdingTimeDisplay 요소를 찾을 수 없음');
+        return;
+    }
     
     if (entryTime && exitTime) {
         try {
@@ -117,28 +140,58 @@ function calculateHoldingTime() {
             let entryMinutes = entryHour * 60 + entryMin;
             let exitMinutes = exitHour * 60 + exitMin;
             
-            // 다음날로 넘어간 경우 처리
             if (exitMinutes < entryMinutes) {
                 exitMinutes += 24 * 60;
             }
             
             const diffMinutes = exitMinutes - entryMinutes;
             
-            // 시간과 분으로 표시
             const hours = Math.floor(diffMinutes / 60);
             const minutes = diffMinutes % 60;
             
+            let holdingTimeText = '';
             if (hours > 0) {
-                holdingTimeDisplay.value = `${hours}h ${minutes}m`;
+                holdingTimeText = `${hours}h ${minutes}m`;
             } else {
-                holdingTimeDisplay.value = `${minutes}m`;
+                holdingTimeText = `${minutes}m`;
             }
+            
+            console.log('보유 시간 계산됨:', holdingTimeText);
+            holdingTimeDisplay.value = holdingTimeText;
         } catch (error) {
-            console.error('Error calculating holding time:', error);
+            console.error('보유 시간 계산 오류:', error);
             holdingTimeDisplay.value = '';
         }
     } else {
+        console.log('entryTime 또는 exitTime이 없어서 보유 시간 계산 스킵');
         holdingTimeDisplay.value = '';
+    }
+}
+
+/**
+ * 시간 편집 모드 토글
+ */
+function toggleTimeEdit() {
+    console.log('=== toggleTimeEdit 호출됨 ===');
+    console.log('현재 timeEditMode:', timeEditMode);
+    
+    timeEditMode = !timeEditMode;
+    
+    console.log('변경된 timeEditMode:', timeEditMode);
+    
+    const editBtn = document.querySelector('.time-edit-btn');
+    
+    if (timeEditMode) {
+        editBtn.textContent = translations[currentLanguage]['auto'] || 'Auto';
+        editBtn.classList.add('active');
+        console.log('수동 편집 모드 활성화');
+    } else {
+        editBtn.textContent = translations[currentLanguage]['edit'] || 'Edit';
+        editBtn.classList.remove('active');
+        console.log('자동 입력 모드 활성화');
+        
+        // Auto 모드로 돌아갈 때 자동 설정
+        autoFillTradingTimes();
     }
 }
 
@@ -166,7 +219,6 @@ function handleTradeSubmit(event) {
     const returnPct = ((sellPrice - buyPrice) / buyPrice) * 100;
     const amount = shares * buyPrice;
     
-    // 보유 시간 계산
     let holdingMinutes = 0;
     let holdingTime = '';
     if (entryTime && exitTime) {
@@ -225,6 +277,8 @@ function handleTradeSubmit(event) {
  * 거래 폼 초기화
  */
 function resetForm() {
+    console.log('=== resetForm 호출됨 ===');
+    
     document.getElementById('tradeForm').reset();
     
     document.getElementById('entryTime').value = '';
@@ -234,10 +288,12 @@ function resetForm() {
     document.getElementById('holdingTimeDisplay').value = '';
     document.getElementById('amountDisplay').value = '';
     
-    // Edit 모드였다면 Auto 모드로 복귀
     if (timeEditMode) {
+        console.log('Edit 모드였음 - Auto 모드로 전환');
         toggleTimeEdit();
     }
+    
+    console.log('폼 초기화 완료');
 }
 
 // ==================== Trade Edit & Delete ====================
@@ -313,11 +369,9 @@ function handleEditTradeSubmit(event) {
         notes: trades[tradeIndex].notes || ''
     };
     
-    // Recalculate P&L and return percentage
     updatedTrade.pnl = updatedTrade.shares * (updatedTrade.sellPrice - updatedTrade.buyPrice);
     updatedTrade.returnPct = ((updatedTrade.sellPrice - updatedTrade.buyPrice) / updatedTrade.buyPrice) * 100;
     
-    // Calculate holding time
     if (updatedTrade.entryTime && updatedTrade.exitTime) {
         const [entryHour, entryMin] = updatedTrade.entryTime.split(':').map(Number);
         const [exitHour, exitMin] = updatedTrade.exitTime.split(':').map(Number);
