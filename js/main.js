@@ -157,60 +157,7 @@ function clearTradesRange() {
 // Trade Form Handling
 // ============================================
 
-function calculatePnL() {
-    const shares = parseFloat(document.getElementById('shares').value) || 0;
-    const buyPrice = parseFloat(document.getElementById('buyPrice').value) || 0;
-    const sellPrice = parseFloat(document.getElementById('sellPrice').value) || 0;
-    
-    if (shares > 0 && buyPrice > 0 && sellPrice > 0) {
-        const pnl = (sellPrice - buyPrice) * shares;
-        const returnPct = ((sellPrice - buyPrice) / buyPrice) * 100;
-        const amount = buyPrice * shares;
-        
-        document.getElementById('pnlDisplay').value = `$${pnl.toFixed(2)}`;
-        document.getElementById('pnlDisplay').style.color = pnl >= 0 ? '#10b981' : '#ef4444';
-        
-        document.getElementById('returnPct').value = `${returnPct.toFixed(2)}%`;
-        document.getElementById('returnPct').style.color = returnPct >= 0 ? '#10b981' : '#ef4444';
-        
-        document.getElementById('amountDisplay').value = `$${amount.toFixed(2)}`;
-    } else {
-        document.getElementById('pnlDisplay').value = '';
-        document.getElementById('returnPct').value = '';
-        document.getElementById('amountDisplay').value = '';
-    }
-    
-    calculateHoldingTime();
-}
-
-function calculateHoldingTime() {
-    const entryTime = document.getElementById('entryTime').value;
-    const exitTime = document.getElementById('exitTime').value;
-    
-    if (entryTime && exitTime) {
-        const [entryHours, entryMinutes] = entryTime.split(':').map(Number);
-        const [exitHours, exitMinutes] = exitTime.split(':').map(Number);
-        
-        let totalMinutes = (exitHours * 60 + exitMinutes) - (entryHours * 60 + entryMinutes);
-        
-        if (totalMinutes < 0) {
-            totalMinutes += 24 * 60;
-        }
-        
-        const hours = Math.floor(totalMinutes / 60);
-        const minutes = totalMinutes % 60;
-        
-        let displayText = '';
-        if (hours > 0) {
-            displayText += `${hours}h `;
-        }
-        displayText += `${minutes}m`;
-        
-        document.getElementById('holdingTimeDisplay').value = displayText;
-    } else {
-        document.getElementById('holdingTimeDisplay').value = '';
-    }
-}
+// calculatePnL and calculateHoldingTime are defined in trading.js
 
 function toggleTimeEdit() {
     const entryTimeInput = document.getElementById('entryTime');
@@ -235,57 +182,7 @@ function resetForm() {
     document.getElementById('entryTime').value = `${hours}:${minutes}`;
 }
 
-function handleTradeSubmit(e) {
-    e.preventDefault();
-    
-    const symbol = document.getElementById('symbol').value.trim().toUpperCase();
-    const shares = parseFloat(document.getElementById('shares').value);
-    const buyPrice = parseFloat(document.getElementById('buyPrice').value);
-    const sellPrice = parseFloat(document.getElementById('sellPrice').value);
-    const entryTime = document.getElementById('entryTime').value;
-    const exitTime = document.getElementById('exitTime').value;
-    
-    if (!symbol || !shares || !buyPrice || !sellPrice) {
-        alert(currentLanguage === 'ko' ? '모든 필수 항목을 입력해주세요.' : 'Please fill in all required fields.');
-        return;
-    }
-    
-    const pnl = (sellPrice - buyPrice) * shares;
-    const returnPct = ((sellPrice - buyPrice) / buyPrice) * 100;
-    const amount = buyPrice * shares;
-    
-    let holdingMinutes = 0;
-    if (entryTime && exitTime) {
-        const [entryHours, entryMinutes] = entryTime.split(':').map(Number);
-        const [exitHours, exitMinutes] = exitTime.split(':').map(Number);
-        holdingMinutes = (exitHours * 60 + exitMinutes) - (entryHours * 60 + entryMinutes);
-        if (holdingMinutes < 0) holdingMinutes += 24 * 60;
-    }
-    
-    const trade = {
-        id: Date.now(),
-        date: currentTradingDate,
-        symbol: symbol,
-        shares: shares,
-        buyPrice: buyPrice,
-        sellPrice: sellPrice,
-        pnl: pnl,
-        returnPct: returnPct,
-        amount: amount,
-        entryTime: entryTime,
-        exitTime: exitTime,
-        holdingMinutes: holdingMinutes
-    };
-    
-    trades.push(trade);
-    saveTrades();
-    updateStats();
-    updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
-    updateAllTradesList();
-    resetForm();
-    
-    showToast(currentLanguage === 'ko' ? '거래가 추가되었습니다' : 'Trade added successfully');
-}
+// handleTradeSubmit is defined in trading.js
 
 // ============================================
 // Trade Edit Modal
@@ -363,17 +260,7 @@ function handleEditTradeSubmit(e) {
 // Trade Deletion
 // ============================================
 
-function deleteTrade(tradeId) {
-    if (confirm(currentLanguage === 'ko' ? '이 거래를 삭제하시겠습니까?' : 'Are you sure you want to delete this trade?')) {
-        trades = trades.filter(trade => trade.id !== tradeId);
-        saveTrades();
-        updateStats();
-        updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
-        updateAllTradesList();
-        
-        showToast(currentLanguage === 'ko' ? '거래가 삭제되었습니다' : 'Trade deleted');
-    }
-}
+// deleteTrade is defined in trading.js
 
 // ============================================
 // Bulk Trade Selection & Deletion
@@ -570,8 +457,8 @@ function clearAllData() {
             trades = [];
             dailyFees = {};
             notes = [];
-            psychologyData = [];
-            
+            psychologyData = {};
+
             localStorage.removeItem('tradingPlatformTrades');
             localStorage.removeItem('tradingPlatformDailyFees');
             localStorage.removeItem('tradingPlatformNotes');
@@ -724,12 +611,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     });
 });
-
-// updatePsychologyDisplay 함수는 유지
-function updatePsychologyDisplay() {
-    loadPsychologyData();
-    updateVisualCards();
-}
 
 /**
  * 심리 화면 표시 업데이트
