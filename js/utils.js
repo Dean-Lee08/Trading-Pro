@@ -65,46 +65,7 @@ function updateCurrentDateDisplay() {
     }
 }
 
-/**
- * 보유 시간 계산
- */
-function calculateHoldingTime() {
-    const entryTime = document.getElementById('entryTime').value;
-    const exitTime = document.getElementById('exitTime').value;
-    const holdingTimeDisplay = document.getElementById('holdingTimeDisplay');
-    
-    if (!holdingTimeDisplay) return;
-    
-    if (entryTime && exitTime) {
-        try {
-            const [entryHour, entryMin] = entryTime.split(':').map(Number);
-            const [exitHour, exitMin] = exitTime.split(':').map(Number);
-            
-            let entryMinutes = entryHour * 60 + entryMin;
-            let exitMinutes = exitHour * 60 + exitMin;
-            
-            if (exitMinutes < entryMinutes) {
-                exitMinutes += 24 * 60;
-            }
-            
-            const diffMinutes = exitMinutes - entryMinutes;
-            
-            const hours = Math.floor(diffMinutes / 60);
-            const minutes = diffMinutes % 60;
-            
-            if (hours > 0) {
-                holdingTimeDisplay.value = `${hours}h ${minutes}m`;
-            } else {
-                holdingTimeDisplay.value = `${minutes}m`;
-            }
-        } catch (error) {
-            console.error('Error calculating holding time:', error);
-            holdingTimeDisplay.value = '';
-        }
-    } else {
-        holdingTimeDisplay.value = '';
-    }
-}
+// calculateHoldingTime is defined in trading.js
 
 /**
  * 표준 편차 계산
@@ -138,44 +99,7 @@ function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('open');
 }
 
-/**
- * 페이지 전환
- */
-function showPage(pageId) {
-    document.querySelectorAll('.page').forEach(page => {
-        page.classList.remove('active');
-    });
-    
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.remove('active');
-    });
-    
-    document.getElementById(pageId).classList.add('active');
-    event.target.closest('.nav-item').classList.add('active');
-    
-    if (pageId === 'analysis') {
-        updateDetailedAnalytics();
-        if (currentAnalyticsSection === 'detail') {
-            setTimeout(updateBasicCharts, 100);
-        } else {
-            setTimeout(updateAdvancedCharts, 100);
-        }
-    }
-    
-    if (pageId === 'notes') {
-        renderAllNotesSections();
-    }
-
-    if (pageId === 'psychology') {
-        setTimeout(() => {
-            loadPsychologyData();
-        }, 100);
-    }
-    
-    if (window.innerWidth <= 768) {
-        document.getElementById('sidebar').classList.remove('open');
-    }
-}
+// showPage is defined in main.js
 
 /**
  * 상세 카드 접기/펼치기
