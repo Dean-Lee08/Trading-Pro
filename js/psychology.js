@@ -447,7 +447,9 @@ async function createPsychologyChart() {
         if (!chartData || (chartData.sleepData.length === 0 && chartData.stressData.length === 0 && chartData.focusData.length === 0)) {
             const parent = ctx.parentElement;
             if (parent) {
+                // 캔버스를 복원하고 메시지 표시
                 parent.innerHTML = `
+                    <canvas id="psychologyPerformanceChart" style="max-width: 100%; max-height: 100%; display: none;"></canvas>
                     <div style="display: flex; align-items: center; justify-content: center; height: 300px; color: #64748b; font-size: 14px; text-align: center;">
                         <div>
                             <div style="margin-bottom: 12px; font-size: 16px;">📊</div>
@@ -458,6 +460,16 @@ async function createPsychologyChart() {
                 `;
             }
             return;
+        }
+        
+        // 캔버스가 숨겨져 있다면 다시 표시
+        if (ctx.style.display === 'none') {
+            ctx.style.display = 'block';
+            // 메시지 div가 있다면 제거
+            const messageDiv = ctx.parentElement.querySelector('div[style*="justify-content: center"]');
+            if (messageDiv) {
+                messageDiv.remove();
+            }
         }
         
         // 차트 설정
