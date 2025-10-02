@@ -631,7 +631,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         dailyFees = JSON.parse(savedFees);
     }
     
-    // Initialize current date - 문자열 형식으로 저장
+    // Initialize current date
     const now = new Date();
     currentTradingDate = formatTradingDate(now);
     updateCurrentDateDisplay();
@@ -646,14 +646,23 @@ document.addEventListener('DOMContentLoaded', async function() {
     renderAllNotesSections();
     updateAllTradesList();
     updateDetailedAnalytics();
-    calculateHoldingTime();
     loadDailyFees();
     
     // Set up form handlers
     document.getElementById('tradeForm').addEventListener('submit', handleTradeSubmit);
     document.getElementById('editTradeForm').addEventListener('submit', handleEditTradeSubmit);
-    document.getElementById('entryTime').addEventListener('change', calculateHoldingTime);
-    document.getElementById('exitTime').addEventListener('change', calculateHoldingTime);
+    
+    // 시간 변경 이벤트 리스너
+    const entryTimeInput = document.getElementById('entryTime');
+    const exitTimeInput = document.getElementById('exitTime');
+    
+    if (entryTimeInput) {
+        entryTimeInput.addEventListener('change', calculateHoldingTime);
+    }
+    
+    if (exitTimeInput) {
+        exitTimeInput.addEventListener('change', calculateHoldingTime);
+    }
     
     // Dashboard date range listeners
     document.getElementById('dashboardStartDate').addEventListener('change', function() {
@@ -715,6 +724,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     });
 });
+
+// updatePsychologyDisplay 함수는 유지
+function updatePsychologyDisplay() {
+    loadPsychologyData();
+    updateVisualCards();
+}
 
 /**
  * 심리 화면 표시 업데이트
