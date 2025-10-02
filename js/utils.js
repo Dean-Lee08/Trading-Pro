@@ -155,7 +155,6 @@ function showPage(pageId) {
     if (pageId === 'psychology') {
         setTimeout(() => {
             loadPsychologyData();
-            updatePsychologyMetrics();
         }, 100);
     }
     

@@ -722,5 +722,4 @@ document.addEventListener('DOMContentLoaded', async function() {
 function updatePsychologyDisplay() {
     loadPsychologyData();
     updateVisualCards();
-    updatePsychologyMetrics();
 }
