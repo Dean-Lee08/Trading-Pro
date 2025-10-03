@@ -866,6 +866,120 @@
             letter-spacing: 0.5px;
         }
 
+        /* Daily Limit Warning Modal */
+        .limit-warning-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1100;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            10%, 30%, 50%, 70%, 90% {
+                transform: translateX(-5px);
+            }
+            20%, 40%, 60%, 80% {
+                transform: translateX(5px);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .limit-warning-content {
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: scaleIn 0.3s ease-out;
+        }
+
+        .limit-warning-content.warning {
+            border-color: #ef4444;
+            animation: scaleIn 0.3s ease-out, shake 0.5s ease-in-out 0.3s;
+        }
+
+        .limit-warning-content.success {
+            border-color: #10b981;
+        }
+
+        .limit-warning-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            animation: scaleIn 0.4s ease-out 0.2s backwards;
+        }
+
+        .limit-warning-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #f8fafc;
+            margin-bottom: 12px;
+            animation: scaleIn 0.4s ease-out 0.3s backwards;
+        }
+
+        .limit-warning-content.warning .limit-warning-title {
+            color: #ef4444;
+        }
+
+        .limit-warning-content.success .limit-warning-title {
+            color: #10b981;
+        }
+
+        .limit-warning-message {
+            font-size: 16px;
+            color: #cbd5e1;
+            margin-bottom: 8px;
+            line-height: 1.5;
+            animation: scaleIn 0.4s ease-out 0.4s backwards;
+        }
+
+        .limit-warning-stats {
+            animation: scaleIn 0.4s ease-out 0.5s backwards;
+        }
+
+        .limit-warning-actions {
+            margin-top: 24px;
+            animation: scaleIn 0.4s ease-out 0.6s backwards;
+        }
+
+        .limit-warning-actions .btn {
+            min-width: 150px;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 12px 24px;
+        }
+
         .calendar-day-header {
             background: #334155;
             color: #94a3b8;
