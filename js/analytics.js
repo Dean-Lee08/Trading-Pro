@@ -1356,80 +1356,199 @@ function analyzeConsecutiveTradesPattern() {
 }
 
 /**
- * AI 인사이트 생성
+ * AI 인사이트 생성 (통합 및 확장 버전)
  */
 function generateAIInsights() {
-    const insights = [];
-    let currentPsychologyDate = formatTradingDate(new Date());
-    const todayData = psychologyData[currentPsychologyDate];
+    const allInsights = [];
 
-    // 수면과 성과 상관관계 분석
-    const sleepPerformance = analyzeSleepPerformance();
-    if (sleepPerformance.correlation !== null) {
-        if (sleepPerformance.correlation > 0.3) {
-            insights.push({
+    // 1. 감정적 거래 패턴 분석 (Critical)
+    const emotionalPatterns = detectEmotionalTradingPatterns();
+
+    if (emotionalPatterns.revengeTrading) {
+        allInsights.push({
+            priority: 1,
+            type: 'danger',
+            category: 'critical',
+            text: currentLanguage === 'ko' ?
+                '⚠️ 복수 거래 패턴 감지: 연속 손실 후 포지션 크기가 급증하는 패턴이 발견되었습니다. 감정적 거래를 피하고 규칙을 준수하세요.' :
+                '⚠️ Revenge Trading Detected: Position sizes increase significantly after consecutive losses. Avoid emotional trading and stick to your rules.'
+        });
+    }
+
+    if (emotionalPatterns.overconfidenceRisk) {
+        allInsights.push({
+            priority: 1,
+            type: 'danger',
+            category: 'critical',
+            text: currentLanguage === 'ko' ?
+                '⚠️ 과신 위험: 높은 자신감 시 포지션 크기 증가 → 승률 감소 패턴. 자신감이 높을 때 포지션 관리에 더욱 주의하세요.' :
+                '⚠️ Overconfidence Risk: Higher confidence leads to larger positions but lower win rate. Be extra cautious when feeling confident.'
+        });
+    }
+
+    if (emotionalPatterns.stressOvertrading) {
+        allInsights.push({
+            priority: 1,
+            type: 'danger',
+            category: 'critical',
+            text: currentLanguage === 'ko' ?
+                '⚠️ 스트레스 과도거래: 스트레스가 높은 날 평균보다 30% 이상 많이 거래합니다. 스트레스 관리와 거래 빈도 조절이 필요합니다.' :
+                '⚠️ Stress-Induced Overtrading: You trade 30%+ more on high-stress days. Manage stress and reduce trading frequency.'
+        });
+    }
+
+    if (emotionalPatterns.lowFocusRisk) {
+        allInsights.push({
+            priority: 1,
+            type: 'warning',
+            category: 'critical',
+            text: currentLanguage === 'ko' ?
+                '⚠️ 낮은 집중력 위험: 집중력 낮을 때 승률 45% 미만. 집중력이 낮다면 거래를 피하거나 최소 포지션만 사용하세요.' :
+                '⚠️ Low Focus Risk: Win rate drops below 45% when focus is low. Avoid trading or use minimum positions when unfocused.'
+        });
+    }
+
+    // 2. 최적 거래 조건 분석 (Optimization)
+    const optimalConditions = identifyOptimalConditions();
+    if (optimalConditions.optimal) {
+        const opt = optimalConditions.optimal;
+
+        allInsights.push({
+            priority: 2,
+            type: 'good',
+            category: 'optimization',
+            text: currentLanguage === 'ko' ?
+                `💡 최적 조건 발견: 수면 ${opt.sleepRange.min.toFixed(1)}-${opt.sleepRange.max.toFixed(1)}시간 + 스트레스 레벨 ${opt.stressRange.mode} + 집중력 레벨 ${opt.focusRange.mode}에서 최고 성과 달성 (샘플: ${optimalConditions.sampleSize}일)` :
+                `💡 Optimal Conditions Found: Sleep ${opt.sleepRange.min.toFixed(1)}-${opt.sleepRange.max.toFixed(1)}hrs + Stress Level ${opt.stressRange.mode} + Focus Level ${opt.focusRange.mode} yields best performance (${optimalConditions.sampleSize} days)`
+        });
+
+        // 환경 최적화
+        if (opt.environments && Object.keys(opt.environments).length > 0) {
+            const bestEnvEntry = Object.entries(opt.environments).sort((a, b) => b[1] - a[1])[0];
+            allInsights.push({
+                priority: 2,
                 type: 'good',
+                category: 'optimization',
                 text: currentLanguage === 'ko' ?
-                    `수면 시간과 거래 성과 간 강한 양의 상관관계 발견 (${(sleepPerformance.correlation * 100).toFixed(0)}%). 충분한 수면이 성과 향상에 도움됩니다.` :
-                    `Strong positive correlation found between sleep and trading performance (${(sleepPerformance.correlation * 100).toFixed(0)}%). Adequate sleep helps improve performance.`
-            });
-        } else if (sleepPerformance.correlation < -0.3) {
-            insights.push({
-                type: 'warning',
-                text: currentLanguage === 'ko' ?
-                    `수면 시간과 거래 성과 간 음의 상관관계 발견. 과도한 수면이나 수면 패턴을 재검토해보세요.` :
-                    `Negative correlation found between sleep and trading performance. Consider reviewing your sleep patterns.`
+                    `💡 최적 환경: "${bestEnvEntry[0]}" 환경에서 최고 성과 빈도 (${bestEnvEntry[1]}/${optimalConditions.sampleSize}일)` :
+                    `💡 Optimal Environment: "${bestEnvEntry[0]}" shows best performance frequency (${bestEnvEntry[1]}/${optimalConditions.sampleSize} days)`
             });
         }
     }
 
-    // 과도거래 패턴 감지
-    const recentOvertrading = detectOvertrading();
-    if (recentOvertrading > 30) {
-        insights.push({
-            type: 'warning',
+    // 3. 스트레스-성과 상관관계 (Pattern)
+    const stressAnalysis = analyzeStressPerformance();
+    if (stressAnalysis.correlation !== null) {
+        if (Math.abs(stressAnalysis.correlation) > 0.3) {
+            allInsights.push({
+                priority: 2,
+                type: stressAnalysis.correlation < 0 ? 'good' : 'warning',
+                category: 'pattern',
+                text: currentLanguage === 'ko' ?
+                    `📊 스트레스-성과 상관관계: ${(stressAnalysis.correlation * 100).toFixed(0)}% 상관관계 발견. ${stressAnalysis.optimalRange === 'low' ? '낮은 스트레스에서 최적 성과' : stressAnalysis.optimalRange === 'medium' ? '중간 스트레스에서 최적 성과' : '주의: 높은 스트레스 회피 필요'}` :
+                    `📊 Stress-Performance Correlation: ${(stressAnalysis.correlation * 100).toFixed(0)}% correlation. ${stressAnalysis.optimalRange === 'low' ? 'Best performance at low stress' : stressAnalysis.optimalRange === 'medium' ? 'Best performance at medium stress' : 'Warning: Avoid high stress'}`
+            });
+        }
+    }
+
+    // 4. 집중력-정확도 상관관계 (Pattern)
+    const focusAnalysis = analyzeFocusAccuracy();
+    if (focusAnalysis.correlation !== null && Math.abs(focusAnalysis.correlation) > 0.3) {
+        allInsights.push({
+            priority: 2,
+            type: 'good',
+            category: 'pattern',
             text: currentLanguage === 'ko' ?
-                `최근 계획 대비 ${recentOvertrading.toFixed(0)}% 과도거래 감지. 거래 빈도를 줄이고 품질에 집중하세요.` :
-                `Recent overtrading detected: ${recentOvertrading.toFixed(0)}% above planned trades. Focus on quality over quantity.`
+                `📊 집중력-정확도 상관관계: ${(focusAnalysis.correlation * 100).toFixed(0)}% 상관관계. ${focusAnalysis.threshold ? `최소 집중력 레벨 ${focusAnalysis.threshold} 이상 권장` : '높은 집중력이 성과 향상에 기여'}` :
+                `📊 Focus-Accuracy Correlation: ${(focusAnalysis.correlation * 100).toFixed(0)}% correlation. ${focusAnalysis.threshold ? `Minimum focus level ${focusAnalysis.threshold}+ recommended` : 'Higher focus improves performance'}`
         });
     }
 
-    // 시간대별 최적화 제안
+    // 5. 환경-성과 분석 (Pattern)
+    const envAnalysis = analyzeEnvironmentImpact();
+    if (envAnalysis.bestEnv) {
+        const bestEnvStats = envAnalysis.envPerformance[envAnalysis.bestEnv];
+        allInsights.push({
+            priority: 2,
+            type: 'good',
+            category: 'pattern',
+            text: currentLanguage === 'ko' ?
+                `📊 최적 거래 환경: "${envAnalysis.bestEnv}"에서 승률 ${bestEnvStats.winRate.toFixed(0)}%, 평균 P&L $${bestEnvStats.avgPnL.toFixed(2)} (${bestEnvStats.sampleSize}일)` :
+                `📊 Optimal Trading Environment: "${envAnalysis.bestEnv}" with ${bestEnvStats.winRate.toFixed(0)}% win rate, avg P&L $${bestEnvStats.avgPnL.toFixed(2)} (${bestEnvStats.sampleSize} days)`
+        });
+    }
+
+    // 6. 기존 수면-성과 분석 (Pattern)
+    const sleepPerformance = analyzeSleepPerformance();
+    if (sleepPerformance.correlation !== null && Math.abs(sleepPerformance.correlation) > 0.3) {
+        allInsights.push({
+            priority: 2,
+            type: sleepPerformance.correlation > 0 ? 'good' : 'warning',
+            category: 'pattern',
+            text: currentLanguage === 'ko' ?
+                `📊 수면-성과 상관관계: ${(sleepPerformance.correlation * 100).toFixed(0)}% 상관관계. ${sleepPerformance.correlation > 0 ? '충분한 수면이 성과 향상에 도움' : '수면 패턴 재검토 필요'}` :
+                `📊 Sleep-Performance Correlation: ${(sleepPerformance.correlation * 100).toFixed(0)}% correlation. ${sleepPerformance.correlation > 0 ? 'Adequate sleep improves performance' : 'Review sleep patterns'}`
+        });
+    }
+
+    // 7. 시간대별 최적화 (Optimization)
     const timeOptimization = getTimeOptimization();
     if (timeOptimization) {
-        insights.push({
+        allInsights.push({
+            priority: 2,
             type: 'good',
+            category: 'optimization',
             text: currentLanguage === 'ko' ?
-                `최적 거래 시간대: ${timeOptimization.bestHour}:00-${timeOptimization.bestHour + 1}:00 (승률 ${timeOptimization.winRate.toFixed(0)}%)` :
-                `Optimal trading time: ${timeOptimization.bestHour}:00-${timeOptimization.bestHour + 1}:00 (${timeOptimization.winRate.toFixed(0)}% win rate)`
+                `💡 최적 거래 시간대: ${timeOptimization.bestHour}:00-${timeOptimization.bestHour + 1}:00 (승률 ${timeOptimization.winRate.toFixed(0)}%)` :
+                `💡 Optimal Trading Time: ${timeOptimization.bestHour}:00-${timeOptimization.bestHour + 1}:00 (${timeOptimization.winRate.toFixed(0)}% win rate)`
         });
     }
 
-    // 연속 손실 후 주의사항
+    // 8. 연속 손실 패턴 (Warning)
     const consecutiveLossPattern = getConsecutiveLossPattern();
-    if (consecutiveLossPattern && consecutiveLossPattern.after3Losses < 40) {
-        insights.push({
-            type: 'danger',
+    if (consecutiveLossPattern && consecutiveLossPattern.after3Losses < 45) {
+        allInsights.push({
+            priority: 1,
+            type: 'warning',
+            category: 'critical',
             text: currentLanguage === 'ko' ?
-                `3연속 손실 후 승률이 ${consecutiveLossPattern.after3Losses.toFixed(0)}%로 급감. 연속 손실 시 거래 중단을 고려하세요.` :
-                `Win rate drops to ${consecutiveLossPattern.after3Losses.toFixed(0)}% after 3 consecutive losses. Consider taking a break.`
+                `⚠️ 연속 손실 패턴: 3연속 손실 후 승률 ${consecutiveLossPattern.after3Losses.toFixed(0)}%로 급감. 연속 손실 시 즉시 휴식하세요.` :
+                `⚠️ Consecutive Loss Pattern: Win rate drops to ${consecutiveLossPattern.after3Losses.toFixed(0)}% after 3 losses. Take an immediate break.`
         });
     }
+
+    // 9. 과도거래 감지 (Warning)
+    const recentOvertrading = detectOvertrading();
+    if (recentOvertrading > 30) {
+        allInsights.push({
+            priority: 1,
+            type: 'warning',
+            category: 'critical',
+            text: currentLanguage === 'ko' ?
+                `⚠️ 과도거래 경고: 계획 대비 ${recentOvertrading.toFixed(0)}% 초과 거래. 거래 빈도를 줄이고 품질에 집중하세요.` :
+                `⚠️ Overtrading Warning: ${recentOvertrading.toFixed(0)}% above planned trades. Reduce frequency and focus on quality.`
+        });
+    }
+
+    // 우선순위 정렬 (priority 1이 가장 높음)
+    allInsights.sort((a, b) => a.priority - b.priority);
 
     // 기본 메시지
-    if (insights.length === 0) {
-        insights.push({
+    if (allInsights.length === 0) {
+        allInsights.push({
+            priority: 3,
             type: 'info',
+            category: 'info',
             text: currentLanguage === 'ko' ?
-                '더 많은 심리 데이터와 거래 기록을 수집하여 개인화된 인사이트를 생성하세요.' :
-                'Collect more psychology data and trading records to generate personalized insights.'
+                '💬 더 많은 심리 데이터와 거래 기록을 수집하여 개인화된 AI 인사이트를 생성하세요. 최소 5일 이상의 데이터가 필요합니다.' :
+                '💬 Collect more psychology data and trading records to generate personalized AI insights. Minimum 5 days of data required.'
         });
     }
 
     // 인사이트 렌더링
     const insightsList = document.getElementById('aiInsightsList');
     if (insightsList) {
-        insightsList.innerHTML = insights.map(insight => `
+        insightsList.innerHTML = allInsights.map(insight => `
             <div style="background: #0f172a; border-left: 4px solid ${getInsightColor(insight.type)}; padding: 12px 16px; border-radius: 0 6px 6px 0;">
                 <div style="color: #e4e4e7; font-size: 14px; line-height: 1.5;">${insight.text}</div>
             </div>
@@ -1737,4 +1856,195 @@ function analyzeEnvironmentImpact() {
     });
 
     return { envPerformance: results, bestEnv };
+}
+
+// ==================== Emotional Trading Pattern Detection ====================
+
+/**
+ * 감정적 거래 패턴 감지
+ */
+function detectEmotionalTradingPatterns() {
+    const patterns = {
+        revengeTrading: false,
+        overconfidenceRisk: false,
+        stressOvertrading: false,
+        lowFocusRisk: false
+    };
+
+    // 복수 거래 패턴 감지 (연속 손실 후 포지션 크기 증가)
+    const sortedTrades = [...trades].sort((a, b) => new Date(a.date + ' ' + (a.entryTime || '00:00')) - new Date(b.date + ' ' + (b.entryTime || '00:00')));
+
+    for (let i = 2; i < sortedTrades.length; i++) {
+        const prev1 = sortedTrades[i-1];
+        const prev2 = sortedTrades[i-2];
+        const current = sortedTrades[i];
+
+        // 2연속 손실 후 포지션 크기가 평균의 150% 이상
+        if (prev1.pnl < 0 && prev2.pnl < 0) {
+            const avgPosition = trades.reduce((sum, t) => sum + t.amount, 0) / trades.length;
+            if (current.amount > avgPosition * 1.5) {
+                patterns.revengeTrading = true;
+                break;
+            }
+        }
+    }
+
+    // 과신 위험 패턴 (높은 자신감 + 큰 포지션 + 낮은 승률)
+    const confidenceAnalysis = analyzeConfidenceImpact();
+    if (confidenceAnalysis.riskLevel === 'high') {
+        patterns.overconfidenceRisk = true;
+    }
+
+    // 스트레스 과도거래 (높은 스트레스 날짜에 평균보다 많은 거래)
+    const highStressDays = Object.entries(psychologyData).filter(([_, data]) => data.stressLevel >= 4);
+    if (highStressDays.length > 0) {
+        const avgTradesPerDay = trades.length / Object.keys(psychologyData).length;
+        const stressDayTrades = highStressDays.map(([date]) =>
+            trades.filter(t => t.date === date).length
+        );
+        const avgStressTrades = stressDayTrades.reduce((sum, count) => sum + count, 0) / stressDayTrades.length;
+
+        if (avgStressTrades > avgTradesPerDay * 1.3) {
+            patterns.stressOvertrading = true;
+        }
+    }
+
+    // 낮은 집중력 거래 위험
+    const focusAnalysis = analyzeFocusAccuracy();
+    if (focusAnalysis.threshold && focusAnalysis.threshold >= 3) {
+        const lowFocusDays = Object.entries(psychologyData).filter(([_, data]) =>
+            data.focusLevel && data.focusLevel < focusAnalysis.threshold
+        );
+
+        if (lowFocusDays.length > 0) {
+            const lowFocusWinRates = lowFocusDays.map(([date]) => {
+                const dayTrades = trades.filter(t => t.date === date);
+                return dayTrades.length > 0 ?
+                    (dayTrades.filter(t => t.pnl > 0).length / dayTrades.length) * 100 : 0;
+            }).filter(wr => wr > 0);
+
+            if (lowFocusWinRates.length > 0) {
+                const avgWinRate = lowFocusWinRates.reduce((sum, wr) => sum + wr, 0) / lowFocusWinRates.length;
+                if (avgWinRate < 45) {
+                    patterns.lowFocusRisk = true;
+                }
+            }
+        }
+    }
+
+    return patterns;
+}
+
+/**
+ * 최적 거래 조건 식별
+ */
+function identifyOptimalConditions() {
+    const conditions = [];
+
+    // 모든 심리 데이터가 있는 날짜 필터링
+    const completeDays = Object.entries(psychologyData).filter(([date, data]) =>
+        data.sleepHours && data.stressLevel && data.focusLevel && data.confidenceLevel &&
+        trades.some(t => t.date === date)
+    );
+
+    if (completeDays.length < 5) {
+        return { optimal: null, conditions: [] };
+    }
+
+    // 각 날짜의 성과 계산
+    const dayPerformance = completeDays.map(([date, psyData]) => {
+        const dayTrades = trades.filter(t => t.date === date);
+        const winRate = (dayTrades.filter(t => t.pnl > 0).length / dayTrades.length) * 100;
+        const avgPnL = dayTrades.reduce((sum, t) => sum + t.pnl, 0) / dayTrades.length;
+        const totalPnL = dayTrades.reduce((sum, t) => sum + t.pnl, 0);
+
+        return {
+            date,
+            winRate,
+            avgPnL,
+            totalPnL,
+            sleepHours: psyData.sleepHours,
+            stressLevel: psyData.stressLevel,
+            focusLevel: psyData.focusLevel,
+            confidenceLevel: psyData.confidenceLevel,
+            environmentType: psyData.environmentType
+        };
+    });
+
+    // 성과 상위 30% 날짜 추출
+    const sortedByPerformance = [...dayPerformance].sort((a, b) => b.totalPnL - a.totalPnL);
+    const topPerformers = sortedByPerformance.slice(0, Math.max(3, Math.floor(sortedByPerformance.length * 0.3)));
+
+    // 최적 조건 패턴 찾기
+    const optimalPattern = {
+        sleepRange: { min: 0, max: 12 },
+        stressRange: { min: 1, max: 5 },
+        focusRange: { min: 1, max: 5 },
+        confidenceRange: { min: 1, max: 5 },
+        environments: {}
+    };
+
+    // 수면 시간 범위
+    const sleepHours = topPerformers.map(d => d.sleepHours).sort((a, b) => a - b);
+    optimalPattern.sleepRange = {
+        min: sleepHours[0],
+        max: sleepHours[sleepHours.length - 1],
+        avg: sleepHours.reduce((sum, h) => sum + h, 0) / sleepHours.length
+    };
+
+    // 스트레스 레벨 범위
+    const stressLevels = topPerformers.map(d => d.stressLevel);
+    optimalPattern.stressRange = {
+        avg: stressLevels.reduce((sum, s) => sum + s, 0) / stressLevels.length,
+        mode: getMostCommon(stressLevels)
+    };
+
+    // 집중력 범위
+    const focusLevels = topPerformers.map(d => d.focusLevel);
+    optimalPattern.focusRange = {
+        avg: focusLevels.reduce((sum, f) => sum + f, 0) / focusLevels.length,
+        mode: getMostCommon(focusLevels)
+    };
+
+    // 자신감 범위
+    const confidenceLevels = topPerformers.map(d => d.confidenceLevel);
+    optimalPattern.confidenceRange = {
+        avg: confidenceLevels.reduce((sum, c) => sum + c, 0) / confidenceLevels.length,
+        mode: getMostCommon(confidenceLevels)
+    };
+
+    // 최적 환경
+    topPerformers.forEach(d => {
+        if (d.environmentType) {
+            optimalPattern.environments[d.environmentType] =
+                (optimalPattern.environments[d.environmentType] || 0) + 1;
+        }
+    });
+
+    return {
+        optimal: optimalPattern,
+        topDays: topPerformers.slice(0, 3),
+        sampleSize: topPerformers.length
+    };
+}
+
+/**
+ * 최빈값 찾기 헬퍼 함수
+ */
+function getMostCommon(arr) {
+    const frequency = {};
+    arr.forEach(val => {
+        frequency[val] = (frequency[val] || 0) + 1;
+    });
+
+    let maxCount = 0;
+    let mode = null;
+    Object.entries(frequency).forEach(([val, count]) => {
+        if (count > maxCount) {
+            maxCount = count;
+            mode = parseFloat(val);
+        }
+    });
+
+    return mode;
 }
