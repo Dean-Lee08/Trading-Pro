@@ -1246,3 +1246,154 @@ function resetRiskCalculatorDisplay() {
     updateElement('riskMaxLossSidebar', '$0.00');
     updateElement('riskPositionCostSidebar', '$0.00');
 }
+
+// ==================== Daily Limit Warnings ====================
+
+/**
+ * 일일 손익 한도 체크
+ */
+function checkDailyLimits(tradeDate) {
+    // 심리 데이터에서 해당 날짜의 한도 정보 가져오기
+    if (!psychologyData || !psychologyData[tradeDate]) {
+        return; // 심리 데이터가 없으면 체크하지 않음
+    }
+
+    const psyData = psychologyData[tradeDate];
+    const dailyTarget = parseFloat(psyData.dailyTarget) || 0;
+    const maxDailyLoss = parseFloat(psyData.maxDailyLoss) || 0;
+
+    // 한도가 설정되지 않았으면 체크하지 않음
+    if (dailyTarget === 0 && maxDailyLoss === 0) {
+        return;
+    }
+
+    // 해당 날짜의 모든 거래 필터링
+    const dayTrades = trades.filter(trade => trade.date === tradeDate);
+
+    if (dayTrades.length === 0) {
+        return;
+    }
+
+    // 총 손익 계산
+    const totalPnl = dayTrades.reduce((sum, trade) => sum + (trade.pnl || 0), 0);
+
+    // 목표 수익 달성 체크 (수익이 목표 이상일 때)
+    if (dailyTarget > 0 && totalPnl >= dailyTarget) {
+        showLimitWarning('profit', {
+            currentPnl: totalPnl,
+            target: dailyTarget
+        });
+        return;
+    }
+
+    // 손실 한도 초과 체크 (손실이 한도 이하일 때)
+    if (maxDailyLoss > 0 && totalPnl <= -maxDailyLoss) {
+        showLimitWarning('loss', {
+            currentPnl: totalPnl,
+            limit: maxDailyLoss
+        });
+        return;
+    }
+}
+
+/**
+ * 한도 경고 모달 표시
+ */
+function showLimitWarning(type, data) {
+    const modal = document.getElementById('limitWarningModal');
+    const icon = document.getElementById('limitWarningIcon');
+    const title = document.getElementById('limitWarningTitle');
+    const message = document.getElementById('limitWarningMessage');
+    const stats = document.getElementById('limitWarningStats');
+    const btn = document.getElementById('limitWarningBtn');
+    const content = modal.querySelector('.limit-warning-content');
+
+    if (!modal || !icon || !title || !message || !stats || !btn || !content) {
+        console.error('Warning modal elements not found');
+        return;
+    }
+
+    // 경고음 재생 (브라우저 beep)
+    try {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+
+        if (type === 'profit') {
+            // 목표 달성: 높은 톤 (성공음)
+            oscillator.frequency.value = 800;
+        } else {
+            // 손실 한도: 낮은 톤 (경고음)
+            oscillator.frequency.value = 400;
+        }
+
+        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.3);
+    } catch (error) {
+        console.log('Audio playback not supported:', error);
+    }
+
+    // 모달 스타일 및 내용 설정
+    if (type === 'profit') {
+        // 목표 달성 (녹색 테마)
+        icon.textContent = '🎉';
+        title.textContent = translations[currentLanguage]['limit-warning-profit-title'] || 'Daily Target Achieved!';
+        message.textContent = translations[currentLanguage]['limit-warning-profit-message'] || 'Congratulations! You have reached your daily profit target.';
+        content.classList.remove('warning');
+        content.classList.add('success');
+
+        stats.innerHTML = `
+            <div style="display: flex; justify-content: space-between; padding: 12px; background: rgba(16, 185, 129, 0.1); border-radius: 8px; margin-top: 16px;">
+                <div>
+                    <div style="font-size: 12px; color: #94a3b8; margin-bottom: 4px;">${translations[currentLanguage]['limit-warning-current'] || 'Current P/L'}</div>
+                    <div style="font-size: 20px; font-weight: 600; color: #10b981;">$${data.currentPnl.toFixed(2)}</div>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-size: 12px; color: #94a3b8; margin-bottom: 4px;">${translations[currentLanguage]['limit-warning-target'] || 'Daily Target'}</div>
+                    <div style="font-size: 20px; font-weight: 600; color: #10b981;">$${data.target.toFixed(2)}</div>
+                </div>
+            </div>
+        `;
+    } else {
+        // 손실 한도 초과 (빨간색 테마)
+        icon.textContent = '⚠️';
+        title.textContent = translations[currentLanguage]['limit-warning-loss-title'] || 'Daily Loss Limit Exceeded!';
+        message.textContent = translations[currentLanguage]['limit-warning-loss-message'] || 'Warning! You have exceeded your maximum daily loss limit.';
+        content.classList.remove('success');
+        content.classList.add('warning');
+
+        stats.innerHTML = `
+            <div style="display: flex; justify-content: space-between; padding: 12px; background: rgba(239, 68, 68, 0.1); border-radius: 8px; margin-top: 16px;">
+                <div>
+                    <div style="font-size: 12px; color: #94a3b8; margin-bottom: 4px;">${translations[currentLanguage]['limit-warning-current'] || 'Current P/L'}</div>
+                    <div style="font-size: 20px; font-weight: 600; color: #ef4444;">$${data.currentPnl.toFixed(2)}</div>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-size: 12px; color: #94a3b8; margin-bottom: 4px;">${translations[currentLanguage]['limit-warning-limit'] || 'Loss Limit'}</div>
+                    <div style="font-size: 20px; font-weight: 600; color: #ef4444;">$${data.limit.toFixed(2)}</div>
+                </div>
+            </div>
+        `;
+    }
+
+    btn.textContent = translations[currentLanguage]['limit-warning-ok'] || 'OK, I Understand';
+
+    // 모달 표시
+    modal.style.display = 'flex';
+}
+
+/**
+ * 한도 경고 모달 닫기
+ */
+function closeLimitWarning() {
+    const modal = document.getElementById('limitWarningModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
