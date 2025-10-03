@@ -991,28 +991,7 @@ function closeDatePicker() {
 }
 
 // applySelectedDate is defined in main.js
-
-/**
- * 거래 날짜 변경
- */
-function changeTradingDate(direction) {
-    // currentTradingDate를 Date 객체로 변환
-    let dateObj;
-    if (typeof currentTradingDate === 'string') {
-        dateObj = new Date(currentTradingDate + 'T12:00:00');
-    } else {
-        dateObj = new Date(currentTradingDate);
-    }
-
-    const newDate = new Date(dateObj);
-    newDate.setDate(newDate.getDate() + direction);
-    currentTradingDate = formatTradingDate(newDate);
-    updateCurrentDateDisplay();
-    updateStats();
-    updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
-    loadDailyFees();
-    showToast(direction > 0 ? 'Next day' : 'Previous day');
-}
+// changeTradingDate is defined in main.js
 
 // ==================== Position Calculator ====================
 
