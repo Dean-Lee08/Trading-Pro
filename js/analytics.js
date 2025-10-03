@@ -1548,3 +1548,193 @@ function getConsecutiveLossPattern() {
     const winRate = (after3Losses.reduce((sum, val) => sum + val, 0) / after3Losses.length) * 100;
     return { after3Losses: winRate };
 }
+
+// ==================== Advanced Correlation Analysis ====================
+
+/**
+ * 범용 피어슨 상관계수 계산
+ */
+function calculatePearsonCorrelation(dataPoints) {
+    if (!dataPoints || dataPoints.length < 3) return null;
+
+    const n = dataPoints.length;
+    const sumX = dataPoints.reduce((sum, point) => sum + point.x, 0);
+    const sumY = dataPoints.reduce((sum, point) => sum + point.y, 0);
+    const sumXY = dataPoints.reduce((sum, point) => sum + point.x * point.y, 0);
+    const sumX2 = dataPoints.reduce((sum, point) => sum + point.x * point.x, 0);
+    const sumY2 = dataPoints.reduce((sum, point) => sum + point.y * point.y, 0);
+
+    const numerator = n * sumXY - sumX * sumY;
+    const denominator = Math.sqrt((n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY));
+
+    return denominator === 0 ? 0 : numerator / denominator;
+}
+
+/**
+ * 스트레스-성과 상관관계 분석
+ */
+function analyzeStressPerformance() {
+    const dataPoints = [];
+
+    Object.entries(psychologyData).forEach(([date, dayData]) => {
+        if (dayData.stressLevel) {
+            const dayTrades = trades.filter(trade => trade.date === date);
+            if (dayTrades.length > 0) {
+                const winRate = (dayTrades.filter(t => t.pnl > 0).length / dayTrades.length) * 100;
+                const avgPnL = dayTrades.reduce((sum, t) => sum + t.pnl, 0) / dayTrades.length;
+                dataPoints.push({ x: dayData.stressLevel, y: winRate, pnl: avgPnL, date });
+            }
+        }
+    });
+
+    if (dataPoints.length < 3) return { correlation: null, optimalRange: null };
+
+    const correlation = calculatePearsonCorrelation(dataPoints);
+
+    // 최적 스트레스 레벨 찾기 (승률이 가장 높은 구간)
+    const stressGroups = { low: [], medium: [], high: [] };
+    dataPoints.forEach(point => {
+        if (point.x <= 2) stressGroups.low.push(point.y);
+        else if (point.x <= 3) stressGroups.medium.push(point.y);
+        else stressGroups.high.push(point.y);
+    });
+
+    let optimalRange = 'medium';
+    let bestWinRate = 0;
+    Object.entries(stressGroups).forEach(([level, winRates]) => {
+        if (winRates.length > 0) {
+            const avgWinRate = winRates.reduce((sum, wr) => sum + wr, 0) / winRates.length;
+            if (avgWinRate > bestWinRate) {
+                bestWinRate = avgWinRate;
+                optimalRange = level;
+            }
+        }
+    });
+
+    return { correlation, optimalRange, bestWinRate, dataPoints };
+}
+
+/**
+ * 자신감-포지션 크기 상관관계 분석
+ */
+function analyzeConfidenceImpact() {
+    const dataPoints = [];
+
+    Object.entries(psychologyData).forEach(([date, dayData]) => {
+        if (dayData.confidenceLevel) {
+            const dayTrades = trades.filter(trade => trade.date === date);
+            if (dayTrades.length > 0) {
+                const avgPosition = dayTrades.reduce((sum, t) => sum + t.amount, 0) / dayTrades.length;
+                const winRate = (dayTrades.filter(t => t.pnl > 0).length / dayTrades.length) * 100;
+                dataPoints.push({ x: dayData.confidenceLevel, y: avgPosition, winRate, date });
+            }
+        }
+    });
+
+    if (dataPoints.length < 3) return { correlation: null, riskLevel: null };
+
+    const correlation = calculatePearsonCorrelation(dataPoints);
+
+    // 과신 위험도 평가
+    let riskLevel = 'normal';
+    if (correlation > 0.5) {
+        // 자신감이 높을수록 포지션이 커지고 승률이 낮아지는 패턴
+        const highConfidenceData = dataPoints.filter(p => p.x >= 4);
+        if (highConfidenceData.length > 0) {
+            const avgWinRate = highConfidenceData.reduce((sum, p) => sum + p.winRate, 0) / highConfidenceData.length;
+            if (avgWinRate < 50) riskLevel = 'high';
+        }
+    }
+
+    return { correlation, riskLevel, dataPoints };
+}
+
+/**
+ * 집중력-거래 정확도 상관관계 분석
+ */
+function analyzeFocusAccuracy() {
+    const dataPoints = [];
+
+    Object.entries(psychologyData).forEach(([date, dayData]) => {
+        if (dayData.focusLevel) {
+            const dayTrades = trades.filter(trade => trade.date === date);
+            if (dayTrades.length > 0) {
+                const winRate = (dayTrades.filter(t => t.pnl > 0).length / dayTrades.length) * 100;
+                const avgReturn = dayTrades.reduce((sum, t) => sum + (t.returnPct || 0), 0) / dayTrades.length;
+                dataPoints.push({ x: dayData.focusLevel, y: winRate, avgReturn, date });
+            }
+        }
+    });
+
+    if (dataPoints.length < 3) return { correlation: null, threshold: null };
+
+    const correlation = calculatePearsonCorrelation(dataPoints);
+
+    // 최소 집중력 임계값 찾기
+    let threshold = null;
+    const lowFocusData = dataPoints.filter(p => p.x <= 2);
+    const highFocusData = dataPoints.filter(p => p.x >= 4);
+
+    if (lowFocusData.length > 0 && highFocusData.length > 0) {
+        const lowAvg = lowFocusData.reduce((sum, p) => sum + p.y, 0) / lowFocusData.length;
+        const highAvg = highFocusData.reduce((sum, p) => sum + p.y, 0) / highFocusData.length;
+
+        if (highAvg - lowAvg > 15) { // 15% 이상 차이
+            threshold = 3;
+        }
+    }
+
+    return { correlation, threshold, dataPoints };
+}
+
+/**
+ * 환경-성과 상관관계 분석
+ */
+function analyzeEnvironmentImpact() {
+    const envPerformance = {};
+
+    Object.entries(psychologyData).forEach(([date, dayData]) => {
+        if (dayData.environmentType) {
+            const dayTrades = trades.filter(trade => trade.date === date);
+            if (dayTrades.length > 0) {
+                const env = dayData.environmentType;
+                if (!envPerformance[env]) {
+                    envPerformance[env] = { wins: 0, total: 0, totalPnL: 0 };
+                }
+
+                dayTrades.forEach(trade => {
+                    envPerformance[env].total++;
+                    envPerformance[env].totalPnL += trade.pnl;
+                    if (trade.pnl > 0) envPerformance[env].wins++;
+                });
+            }
+        }
+    });
+
+    // 각 환경별 승률 계산
+    const results = {};
+    Object.entries(envPerformance).forEach(([env, stats]) => {
+        if (stats.total > 0) {
+            results[env] = {
+                winRate: (stats.wins / stats.total) * 100,
+                avgPnL: stats.totalPnL / stats.total,
+                sampleSize: stats.total
+            };
+        }
+    });
+
+    // 최적 환경 찾기
+    let bestEnv = null;
+    let bestScore = 0;
+    Object.entries(results).forEach(([env, stats]) => {
+        if (stats.sampleSize >= 3) { // 최소 샘플 크기
+            const score = stats.winRate * (stats.avgPnL > 0 ? 1.2 : 0.8);
+            if (score > bestScore) {
+                bestScore = score;
+                bestEnv = env;
+            }
+        }
+    });
+
+    return { envPerformance: results, bestEnv };
+}
