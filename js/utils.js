@@ -416,17 +416,19 @@ function handleFileImport() {
  * 모든 데이터 삭제
  */
 function clearAllData() {
-    const confirmMessage = currentLanguage === 'ko' ? 
-        '모든 데이터를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.' : 
+    const confirmMessage = currentLanguage === 'ko' ?
+        '모든 데이터를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.' :
         'Are you sure you want to clear all data? This action cannot be undone.';
-    
+
     if (confirm(confirmMessage)) {
         trades = [];
         notes = [];
         dailyFees = {};
+        psychologyData = {};
         saveTrades();
         saveNotes();
         localStorage.setItem('tradingPlatformDailyFees', JSON.stringify(dailyFees));
+        localStorage.setItem('tradingPlatformPsychologyData', JSON.stringify(psychologyData));
         updateStats();
         renderCalendar();
         renderAllNotesSections();

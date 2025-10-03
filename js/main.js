@@ -348,7 +348,7 @@ function handleFileImport() {
             
             if (data.psychologyData) {
                 psychologyData = data.psychologyData;
-                savePsychologyDataToStorage();
+                localStorage.setItem('tradingPlatformPsychologyData', JSON.stringify(psychologyData));
             }
             
             updateStats();
