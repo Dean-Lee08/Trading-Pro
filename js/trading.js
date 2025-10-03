@@ -1006,7 +1006,7 @@ function changeTradingDate(direction) {
 
     const newDate = new Date(dateObj);
     newDate.setDate(newDate.getDate() + direction);
-    currentTradingDate = newDate;
+    currentTradingDate = formatTradingDate(newDate);
     updateCurrentDateDisplay();
     updateStats();
     updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
