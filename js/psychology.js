@@ -181,7 +181,7 @@ function savePsychologyData() {
         focusLevel: parseInt(document.getElementById('focusLevel').value) || 3
     };
     
-    psychologyData[currentDate] = data;
+    psychologyData[currentPsychologyDate] = data;
     localStorage.setItem('tradingPlatformPsychologyData', JSON.stringify(psychologyData));
     
     generatePsychologyInsights();
