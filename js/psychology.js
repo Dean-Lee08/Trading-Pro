@@ -18,16 +18,9 @@ function updatePsychologyDateDisplay() {
         currentPsychologyDate = formatTradingDate(new Date());
     }
 
-    const today = formatTradingDate(new Date());
-    const yesterday = formatTradingDate(new Date(Date.now() - 86400000));
-
-    if (currentPsychologyDate === today) {
-        dateText.textContent = currentLanguage === 'ko' ? '오늘' : 'Today';
-    } else if (currentPsychologyDate === yesterday) {
-        dateText.textContent = currentLanguage === 'ko' ? '어제' : 'Yesterday';
-    } else {
-        dateText.textContent = currentPsychologyDate;
-    }
+    // MM-DD 형식으로 표시
+    const [year, month, day] = currentPsychologyDate.split('-');
+    dateText.textContent = `${month}-${day}`;
 }
 
 /**
