@@ -94,46 +94,23 @@ function showPsychologySection(section) {
             tab.classList.remove('active');
         });
         event.target.classList.add('active');
-        
+
         // 섹션 표시/숨기기
         document.querySelectorAll('.psychology-section').forEach(sec => {
             sec.classList.remove('active');
         });
-        
-        // 섹션 ID 매핑
-        let targetSectionId;
-        switch(section) {
-            case 'input':
-                targetSectionId = 'psychologyInputSection';
-                break;
-            case 'bias-analysis':
-                targetSectionId = 'psychologyBiasSection';
-                break;
-            case 'patterns':
-                targetSectionId = 'psychologyPatternsSection';
-                break;
-            default:
-                targetSectionId = 'psychologyInputSection';
-        }
-        
-        const targetSection = document.getElementById(targetSectionId);
+
+        // 현재는 input 섹션만 존재
+        const targetSection = document.getElementById('psychologyInputSection');
         if (targetSection) {
             targetSection.classList.add('active');
         }
-        
-        // 해당 섹션의 데이터 업데이트
-        if (section === 'bias-analysis') {
-            updateBiasAnalysis();
-        } else if (section === 'patterns') {
-            updatePatternInsights();
-        }
 
-        if (section === 'input') {
-            setTimeout(() => {
-                updateVisualCards();
-                createPsychologyChart();
-            }, 100);
-        }
+        // 데이터 업데이트
+        setTimeout(() => {
+            updateVisualCards();
+            createPsychologyChart();
+        }, 100);
     } catch (error) {
         console.error('Error showing psychology section:', error);
     }
