@@ -396,7 +396,15 @@ const translations = {
         'after-1-win': 'After 1 win',
         'after-2-wins': 'After 2 wins',
         'after-3-wins': 'After 3+ wins',
-        'win-rate-label': 'Win Rate'
+        'win-rate-label': 'Win Rate',
+        'limit-warning-profit-title': 'Daily Target Achieved!',
+        'limit-warning-profit-message': 'Congratulations! You have reached your daily profit target.',
+        'limit-warning-loss-title': 'Daily Loss Limit Exceeded!',
+        'limit-warning-loss-message': 'Warning! You have exceeded your maximum daily loss limit.',
+        'limit-warning-current': 'Current P/L',
+        'limit-warning-target': 'Daily Target',
+        'limit-warning-limit': 'Loss Limit',
+        'limit-warning-ok': 'OK, I Understand'
     },
     ko: {
         'dashboard': '대시보드',
