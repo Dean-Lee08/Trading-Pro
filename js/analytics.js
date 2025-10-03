@@ -26,10 +26,17 @@ function showAnalyticsSection(sectionName) {
         document.getElementById('chartSection').classList.add('active');
         setTimeout(async () => await updateAdvancedCharts(), 100);
     } else if (sectionName === 'bias-analysis') {
+<<<<<<< HEAD
         document.getElementById('psychologyBiasSection').classList.add('active');
         setTimeout(() => updateBiasAnalysis(), 100);
     } else if (sectionName === 'patterns') {
         document.getElementById('psychologyPatternsSection').classList.add('active');
+=======
+        document.getElementById('biasAnalysisSection').classList.add('active');
+        setTimeout(() => updateBiasAnalysis(), 100);
+    } else if (sectionName === 'patterns') {
+        document.getElementById('patternsSection').classList.add('active');
+>>>>>>> a3f92f6fe4a0b7886f0ee60242509de1bce84746
         setTimeout(() => updatePatternInsights(), 100);
     }
 }
@@ -62,44 +69,18 @@ function clearAnalyticsRange() {
  * 분석용 필터링된 거래 가져오기
  */
 function getFilteredTradesForAnalytics() {
-    let filteredTrades = trades;
-    
     // Apply custom date range if set
     if (analyticsStartDate || analyticsEndDate) {
-        filteredTrades = trades.filter(trade => {
+        return trades.filter(trade => {
             const tradeDate = trade.date;
             if (analyticsStartDate && tradeDate < analyticsStartDate) return false;
             if (analyticsEndDate && tradeDate > analyticsEndDate) return false;
             return true;
         });
-    } else {
-        // Apply period filter
-        const now = new Date();
-        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        
-        switch (analyticsPeriod) {
-            case 'day':
-                const todayStr = formatTradingDate(today);
-                filteredTrades = trades.filter(trade => trade.date === todayStr);
-                break;
-            case 'week':
-                const weekAgo = new Date(today);
-                weekAgo.setDate(weekAgo.getDate() - 7);
-                const weekAgoStr = formatTradingDate(weekAgo);
-                filteredTrades = trades.filter(trade => trade.date >= weekAgoStr);
-                break;
-            case 'month':
-                const monthAgo = new Date(today);
-                monthAgo.setMonth(monthAgo.getMonth() - 1);
-                const monthAgoStr = formatTradingDate(monthAgo);
-                filteredTrades = trades.filter(trade => trade.date >= monthAgoStr);
-                break;
-            default:
-                filteredTrades = trades;
-        }
     }
-    
-    return filteredTrades;
+
+    // Return all trades if no filter is set (default "All Time")
+    return trades;
 }
 
 // ==================== Detailed Analytics Update ====================
@@ -1086,4 +1067,579 @@ async function updateAdvancedCharts() {
             }
         }
     });
+}
+
+// ==================== Bias Analysis ====================
+
+/**
+ * 편향 분석 업데이트
+ */
+function updateBiasAnalysis() {
+    try {
+        const filteredTrades = getFilteredTradesForAnalytics();
+
+        // 데이터가 없을 경우 메시지 표시
+        if (filteredTrades.length === 0) {
+            showEmptyBiasMessage();
+            return;
+        }
+
+        // 과신 편향 분석
+        calculateOverconfidenceBias();
+
+        // 손실 회피 분석
+        calculateLossAversionBias();
+
+        // 앵커링 편향 분석
+        calculateAnchoringBias();
+
+        // 전체 편향 위험도 계산
+        calculateOverallBiasRisk();
+    } catch (error) {
+        console.error('Error updating bias analysis:', error);
+    }
+}
+
+/**
+ * 빈 편향 분석 메시지 표시
+ */
+function showEmptyBiasMessage() {
+    const message = currentLanguage === 'ko' ?
+        '선택한 기간에 거래 데이터가 없습니다.' :
+        'No trading data available for the selected period.';
+
+    // 각 요소를 안전하게 업데이트
+    const elements = [
+        'calibrationError', 'overtradingIndex', 'positionDeviation',
+        'dispositionRatio', 'roundNumberBias',
+        'overallBiasRisk', 'overallBiasScore', 'actionNeeded', 'actionDetails'
+    ];
+
+    elements.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = '--';
+    });
+}
+
+/**
+ * 과신 편향 계산
+ */
+function calculateOverconfidenceBias() {
+    const filteredTrades = getFilteredTradesForAnalytics();
+    const recentTrades = filteredTrades.slice(-50);
+    if (recentTrades.length === 0) return;
+
+    // 캘리브레이션 에러 계산 (예측 대비 실제)
+    let currentPsychologyDate = formatTradingDate(new Date());
+    const todayData = psychologyData[currentPsychologyDate];
+
+    if (todayData && todayData.predictedWinRate) {
+        const actualWinRate = (recentTrades.filter(t => t.pnl > 0).length / recentTrades.length) * 100;
+        const calibrationError = Math.abs(todayData.predictedWinRate - actualWinRate);
+
+        const errorEl = document.getElementById('calibrationError');
+        const errorBarEl = document.getElementById('calibrationErrorBar');
+        if (errorEl) errorEl.textContent = `${calibrationError.toFixed(1)}%`;
+        if (errorBarEl) {
+            errorBarEl.style.width = `${Math.min(calibrationError * 5, 100)}%`;
+            errorBarEl.style.backgroundColor = calibrationError > 20 ? '#ef4444' : calibrationError > 10 ? '#f59e0b' : '#10b981';
+        }
+    }
+
+    // 과도거래 지수
+    if (todayData && todayData.plannedTrades) {
+        const actualTrades = recentTrades.filter(t => t.date === currentPsychologyDate).length;
+        const overtradingIndex = ((actualTrades - todayData.plannedTrades) / todayData.plannedTrades) * 100;
+
+        const indexEl = document.getElementById('overtradingIndex');
+        const indexBarEl = document.getElementById('overtradingBar');
+        if (indexEl) indexEl.textContent = `${overtradingIndex.toFixed(0)}%`;
+        if (indexBarEl) {
+            indexBarEl.style.width = `${Math.min(Math.abs(overtradingIndex), 100)}%`;
+            indexBarEl.style.backgroundColor = Math.abs(overtradingIndex) > 50 ? '#ef4444' : '#f59e0b';
+        }
+    }
+
+    // 포지션 크기 편차
+    const positionSizes = recentTrades.map(trade => trade.amount);
+    if (positionSizes.length > 0) {
+        const avgPosition = positionSizes.reduce((sum, size) => sum + size, 0) / positionSizes.length;
+        const deviation = calculateStandardDeviation(positionSizes) / avgPosition;
+
+        const deviationEl = document.getElementById('positionDeviation');
+        const deviationBarEl = document.getElementById('positionDeviationBar');
+        if (deviationEl) deviationEl.textContent = deviation.toFixed(2);
+        if (deviationBarEl) {
+            deviationBarEl.style.width = `${Math.min(deviation * 200, 100)}%`;
+            deviationBarEl.style.backgroundColor = deviation > 0.3 ? '#ef4444' : '#3b82f6';
+        }
+    }
+}
+
+/**
+ * 손실 회피 편향 계산
+ */
+function calculateLossAversionBias() {
+    const filteredTrades = getFilteredTradesForAnalytics();
+    const recentTrades = filteredTrades.slice(-50);
+    if (recentTrades.length === 0) return;
+
+    const winningTrades = recentTrades.filter(t => t.pnl > 0);
+    const losingTrades = recentTrades.filter(t => t.pnl < 0);
+
+    // 처분 효과 비율 (손실 거래 보유 시간 / 수익 거래 보유 시간)
+    const winningHoldTimes = winningTrades.filter(t => t.holdingTime).map(t => parseInt(t.holdingTime.replace('m', '')));
+    const losingHoldTimes = losingTrades.filter(t => t.holdingTime).map(t => parseInt(t.holdingTime.replace('m', '')));
+
+    if (winningHoldTimes.length > 0 && losingHoldTimes.length > 0) {
+        const avgWinHold = winningHoldTimes.reduce((sum, time) => sum + time, 0) / winningHoldTimes.length;
+        const avgLossHold = losingHoldTimes.reduce((sum, time) => sum + time, 0) / losingHoldTimes.length;
+        const dispositionRatio = avgLossHold / avgWinHold;
+
+        document.getElementById('dispositionRatio').textContent = dispositionRatio.toFixed(2);
+        document.getElementById('dispositionBar').style.width = `${Math.min(dispositionRatio * 25, 100)}%`;
+        document.getElementById('dispositionBar').style.backgroundColor = dispositionRatio > 2.0 ? '#ef4444' : '#10b981';
+    }
+}
+
+/**
+ * 앵커링 편향 계산
+ */
+function calculateAnchoringBias() {
+    // 앵커링 편향 분석 (간단한 버전)
+    const filteredTrades = getFilteredTradesForAnalytics();
+    const recentTrades = filteredTrades.slice(-30);
+    if (recentTrades.length === 0) return;
+
+    // 라운드 넘버 의존도 (단순화된 계산)
+    const roundNumberTrades = recentTrades.filter(trade => {
+        const buyPrice = trade.buyPrice;
+        const sellPrice = trade.sellPrice;
+        return (buyPrice % 1 === 0) || (sellPrice % 1 === 0);
+    });
+
+    const roundNumberBias = (roundNumberTrades.length / recentTrades.length) * 100;
+
+    document.getElementById('roundNumberBias').textContent = `${roundNumberBias.toFixed(0)}%`;
+    document.getElementById('roundNumberBar').style.width = `${roundNumberBias}%`;
+    document.getElementById('roundNumberBar').style.backgroundColor = roundNumberBias > 40 ? '#ef4444' : '#f59e0b';
+}
+
+/**
+ * 전체 편향 위험도 계산
+ */
+function calculateOverallBiasRisk() {
+    // 각 편향의 위험도를 0-100 점수로 변환
+    let overconfidenceScore = 0;
+    let lossAversionScore = 0;
+    let anchoringScore = 0;
+
+    // 과신 편향 점수 계산
+    const calibrationError = parseFloat(document.getElementById('calibrationError').textContent) || 0;
+    const overtradingIndex = Math.abs(parseFloat(document.getElementById('overtradingIndex').textContent)) || 0;
+    const positionDeviation = parseFloat(document.getElementById('positionDeviation').textContent) || 0;
+
+    overconfidenceScore = Math.min(100, (calibrationError * 2) + (overtradingIndex * 0.5) + (positionDeviation * 100));
+
+    // 손실 회피 점수 계산
+    const dispositionRatio = parseFloat(document.getElementById('dispositionRatio').textContent) || 1;
+    lossAversionScore = Math.min(100, Math.max(0, (dispositionRatio - 1) * 50));
+
+    // 앵커링 점수 계산
+    const roundNumberBias = parseFloat(document.getElementById('roundNumberBias').textContent) || 0;
+    anchoringScore = Math.min(100, roundNumberBias * 1.5);
+
+    // 전체 점수 계산
+    const overallScore = (overconfidenceScore + lossAversionScore + anchoringScore) / 3;
+
+    // 위험도 레벨 결정
+    let riskLevel, riskColor;
+    if (overallScore < 20) {
+        riskLevel = currentLanguage === 'ko' ? '낮음' : 'Low';
+        riskColor = '#10b981';
+    } else if (overallScore < 50) {
+        riskLevel = currentLanguage === 'ko' ? '보통' : 'Medium';
+        riskColor = '#f59e0b';
+    } else {
+        riskLevel = currentLanguage === 'ko' ? '높음' : 'High';
+        riskColor = '#ef4444';
+    }
+
+    // UI 업데이트
+    document.getElementById('overallBiasRisk').textContent = riskLevel;
+    document.getElementById('overallBiasRisk').style.color = riskColor;
+    document.getElementById('overallBiasScore').textContent = `Score: ${overallScore.toFixed(0)}/100`;
+
+    // 조치 필요 여부
+    let actionNeeded, actionDetails;
+    if (overallScore > 70) {
+        actionNeeded = currentLanguage === 'ko' ? '즉시 조치' : 'Immediate Action';
+        actionDetails = currentLanguage === 'ko' ? '편향 위험 높음' : 'High bias risk';
+    } else if (overallScore > 40) {
+        actionNeeded = currentLanguage === 'ko' ? '주의 필요' : 'Caution Needed';
+        actionDetails = currentLanguage === 'ko' ? '일부 편향 감지' : 'Some bias detected';
+    } else {
+        actionNeeded = currentLanguage === 'ko' ? '없음' : 'None';
+        actionDetails = currentLanguage === 'ko' ? '모든 지표 정상' : 'All metrics normal';
+    }
+
+    document.getElementById('actionNeeded').textContent = actionNeeded;
+    document.getElementById('actionNeeded').style.color = overallScore > 70 ? '#ef4444' : overallScore > 40 ? '#f59e0b' : '#10b981';
+    document.getElementById('actionDetails').textContent = actionDetails;
+}
+
+// ==================== Pattern Insights ====================
+
+/**
+ * 패턴 인사이트 업데이트
+ */
+function updatePatternInsights() {
+    try {
+        const filteredTrades = getFilteredTradesForAnalytics();
+
+        // 데이터가 없을 경우 메시지 표시
+        if (filteredTrades.length === 0) {
+            showEmptyPatternMessage();
+            return;
+        }
+
+        analyzeTimeBasedPerformance();
+        analyzeConsecutiveTradesPattern();
+        generateAIInsights();
+    } catch (error) {
+        console.error('Error updating pattern insights:', error);
+    }
+}
+
+/**
+ * 빈 패턴 인사이트 메시지 표시
+ */
+function showEmptyPatternMessage() {
+    const message = currentLanguage === 'ko' ?
+        '선택한 기간에 거래 데이터가 없습니다.' :
+        'No trading data available for the selected period.';
+
+    // 시간 기반 요소 업데이트
+    const timeElements = ['bestTradingHour', 'worstTradingHour', 'optimalSleepRange', 'delayImpact'];
+    timeElements.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = '--';
+    });
+
+    // 연속 거래 패턴 요소 업데이트
+    const patternElements = ['after1Loss', 'after2Losses', 'after3Losses', 'after1Win', 'after2Wins', 'after3Wins'];
+    patternElements.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = '--%';
+    });
+
+    // AI 인사이트 메시지 업데이트
+    const insightsList = document.getElementById('aiInsightsList');
+    if (insightsList) {
+        insightsList.innerHTML = `
+            <div style="background: #0f172a; border-left: 4px solid #64748b; padding: 12px 16px; border-radius: 0 6px 6px 0;">
+                <div style="color: #e4e4e7; font-size: 14px; line-height: 1.5;">${message}</div>
+            </div>
+        `;
+    }
+}
+
+/**
+ * 시간 기반 성과 분석
+ */
+function analyzeTimeBasedPerformance() {
+    const filteredTrades = getFilteredTradesForAnalytics();
+    const hourlyPerformance = {};
+
+    filteredTrades.forEach(trade => {
+        if (trade.entryTime) {
+            const hour = parseInt(trade.entryTime.split(':')[0]);
+            if (!hourlyPerformance[hour]) {
+                hourlyPerformance[hour] = { wins: 0, total: 0, totalPnL: 0 };
+            }
+            hourlyPerformance[hour].total++;
+            hourlyPerformance[hour].totalPnL += trade.pnl;
+            if (trade.pnl > 0) hourlyPerformance[hour].wins++;
+        }
+    });
+
+    // 최고/최악 시간대 찾기
+    let bestHour = null, worstHour = null;
+    let bestWinRate = 0, worstWinRate = 100;
+
+    Object.entries(hourlyPerformance).forEach(([hour, data]) => {
+        if (data.total >= 3) { // 최소 3거래 이상
+            const winRate = (data.wins / data.total) * 100;
+            if (winRate > bestWinRate) {
+                bestWinRate = winRate;
+                bestHour = hour;
+            }
+            if (winRate < worstWinRate) {
+                worstWinRate = winRate;
+                worstHour = hour;
+            }
+        }
+    });
+
+    if (bestHour) {
+        document.getElementById('bestTradingHour').textContent = `${bestHour}:00`;
+        document.getElementById('bestHourPerformance').textContent = `Win Rate: ${bestWinRate.toFixed(0)}%`;
+    }
+
+    if (worstHour) {
+        document.getElementById('worstTradingHour').textContent = `${worstHour}:00`;
+        document.getElementById('worstHourPerformance').textContent = `Win Rate: ${worstWinRate.toFixed(0)}%`;
+    }
+}
+
+/**
+ * 연속 거래 패턴 분석
+ */
+function analyzeConsecutiveTradesPattern() {
+    // 연속 거래 패턴 분석
+    const filteredTrades = getFilteredTradesForAnalytics();
+    const sortedTrades = [...filteredTrades].sort((a, b) => new Date(a.date + ' ' + (a.entryTime || '00:00')) - new Date(b.date + ' ' + (b.entryTime || '00:00')));
+
+    const patterns = {
+        after1Loss: [], after2Losses: [], after3Losses: [],
+        after1Win: [], after2Wins: [], after3Wins: []
+    };
+
+    for (let i = 1; i < sortedTrades.length; i++) {
+        const current = sortedTrades[i];
+        const prev1 = sortedTrades[i-1];
+
+        if (prev1.pnl < 0) {
+            patterns.after1Loss.push(current.pnl > 0 ? 1 : 0);
+
+            if (i >= 2 && sortedTrades[i-2].pnl < 0) {
+                patterns.after2Losses.push(current.pnl > 0 ? 1 : 0);
+
+                if (i >= 3 && sortedTrades[i-3].pnl < 0) {
+                    patterns.after3Losses.push(current.pnl > 0 ? 1 : 0);
+                }
+            }
+        } else if (prev1.pnl > 0) {
+            patterns.after1Win.push(current.pnl > 0 ? 1 : 0);
+
+            if (i >= 2 && sortedTrades[i-2].pnl > 0) {
+                patterns.after2Wins.push(current.pnl > 0 ? 1 : 0);
+
+                if (i >= 3 && sortedTrades[i-3].pnl > 0) {
+                    patterns.after3Wins.push(current.pnl > 0 ? 1 : 0);
+                }
+            }
+        }
+    }
+
+    // 패턴 결과 업데이트
+    Object.entries(patterns).forEach(([key, values]) => {
+        if (values.length > 0) {
+            const winRate = (values.reduce((sum, val) => sum + val, 0) / values.length) * 100;
+            const elementId = key.charAt(0).toLowerCase() + key.slice(1);
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.textContent = `${winRate.toFixed(0)}%`;
+                element.style.color = winRate >= 50 ? '#10b981' : '#ef4444';
+            }
+        }
+    });
+}
+
+/**
+ * AI 인사이트 생성
+ */
+function generateAIInsights() {
+    const insights = [];
+    let currentPsychologyDate = formatTradingDate(new Date());
+    const todayData = psychologyData[currentPsychologyDate];
+
+    // 수면과 성과 상관관계 분석
+    const sleepPerformance = analyzeSleepPerformance();
+    if (sleepPerformance.correlation !== null) {
+        if (sleepPerformance.correlation > 0.3) {
+            insights.push({
+                type: 'good',
+                text: currentLanguage === 'ko' ?
+                    `수면 시간과 거래 성과 간 강한 양의 상관관계 발견 (${(sleepPerformance.correlation * 100).toFixed(0)}%). 충분한 수면이 성과 향상에 도움됩니다.` :
+                    `Strong positive correlation found between sleep and trading performance (${(sleepPerformance.correlation * 100).toFixed(0)}%). Adequate sleep helps improve performance.`
+            });
+        } else if (sleepPerformance.correlation < -0.3) {
+            insights.push({
+                type: 'warning',
+                text: currentLanguage === 'ko' ?
+                    `수면 시간과 거래 성과 간 음의 상관관계 발견. 과도한 수면이나 수면 패턴을 재검토해보세요.` :
+                    `Negative correlation found between sleep and trading performance. Consider reviewing your sleep patterns.`
+            });
+        }
+    }
+
+    // 과도거래 패턴 감지
+    const recentOvertrading = detectOvertrading();
+    if (recentOvertrading > 30) {
+        insights.push({
+            type: 'warning',
+            text: currentLanguage === 'ko' ?
+                `최근 계획 대비 ${recentOvertrading.toFixed(0)}% 과도거래 감지. 거래 빈도를 줄이고 품질에 집중하세요.` :
+                `Recent overtrading detected: ${recentOvertrading.toFixed(0)}% above planned trades. Focus on quality over quantity.`
+        });
+    }
+
+    // 시간대별 최적화 제안
+    const timeOptimization = getTimeOptimization();
+    if (timeOptimization) {
+        insights.push({
+            type: 'good',
+            text: currentLanguage === 'ko' ?
+                `최적 거래 시간대: ${timeOptimization.bestHour}:00-${timeOptimization.bestHour + 1}:00 (승률 ${timeOptimization.winRate.toFixed(0)}%)` :
+                `Optimal trading time: ${timeOptimization.bestHour}:00-${timeOptimization.bestHour + 1}:00 (${timeOptimization.winRate.toFixed(0)}% win rate)`
+        });
+    }
+
+    // 연속 손실 후 주의사항
+    const consecutiveLossPattern = getConsecutiveLossPattern();
+    if (consecutiveLossPattern && consecutiveLossPattern.after3Losses < 40) {
+        insights.push({
+            type: 'danger',
+            text: currentLanguage === 'ko' ?
+                `3연속 손실 후 승률이 ${consecutiveLossPattern.after3Losses.toFixed(0)}%로 급감. 연속 손실 시 거래 중단을 고려하세요.` :
+                `Win rate drops to ${consecutiveLossPattern.after3Losses.toFixed(0)}% after 3 consecutive losses. Consider taking a break.`
+        });
+    }
+
+    // 기본 메시지
+    if (insights.length === 0) {
+        insights.push({
+            type: 'info',
+            text: currentLanguage === 'ko' ?
+                '더 많은 심리 데이터와 거래 기록을 수집하여 개인화된 인사이트를 생성하세요.' :
+                'Collect more psychology data and trading records to generate personalized insights.'
+        });
+    }
+
+    // 인사이트 렌더링
+    const insightsList = document.getElementById('aiInsightsList');
+    if (insightsList) {
+        insightsList.innerHTML = insights.map(insight => `
+            <div style="background: #0f172a; border-left: 4px solid ${getInsightColor(insight.type)}; padding: 12px 16px; border-radius: 0 6px 6px 0;">
+                <div style="color: #e4e4e7; font-size: 14px; line-height: 1.5;">${insight.text}</div>
+            </div>
+        `).join('');
+    }
+}
+
+/**
+ * 인사이트 색상 가져오기
+ */
+function getInsightColor(type) {
+    switch(type) {
+        case 'good': return '#10b981';
+        case 'warning': return '#f59e0b';
+        case 'danger': return '#ef4444';
+        default: return '#3b82f6';
+    }
+}
+
+/**
+ * 수면 성과 분석
+ */
+function analyzeSleepPerformance() {
+    const filteredTrades = getFilteredTradesForAnalytics();
+    const dataPoints = [];
+
+    Object.values(psychologyData).forEach(dayData => {
+        if (dayData.sleepHours) {
+            const dayTrades = filteredTrades.filter(trade => trade.date === dayData.date);
+            if (dayTrades.length > 0) {
+                const dayPnL = dayTrades.reduce((sum, trade) => sum + trade.pnl, 0);
+                dataPoints.push({ sleep: dayData.sleepHours, performance: dayPnL });
+            }
+        }
+    });
+
+    if (dataPoints.length < 5) return { correlation: null };
+
+    // 피어슨 상관계수 계산
+    const n = dataPoints.length;
+    const sumSleep = dataPoints.reduce((sum, point) => sum + point.sleep, 0);
+    const sumPerf = dataPoints.reduce((sum, point) => sum + point.performance, 0);
+    const sumSleepSq = dataPoints.reduce((sum, point) => sum + point.sleep * point.sleep, 0);
+    const sumPerfSq = dataPoints.reduce((sum, point) => sum + point.performance * point.performance, 0);
+    const sumSleepPerf = dataPoints.reduce((sum, point) => sum + point.sleep * point.performance, 0);
+
+    const numerator = n * sumSleepPerf - sumSleep * sumPerf;
+    const denominator = Math.sqrt((n * sumSleepSq - sumSleep * sumSleep) * (n * sumPerfSq - sumPerf * sumPerf));
+
+    const correlation = denominator === 0 ? 0 : numerator / denominator;
+
+    return { correlation };
+}
+
+/**
+ * 과도거래 감지
+ */
+function detectOvertrading() {
+    const filteredTrades = getFilteredTradesForAnalytics();
+    let currentPsychologyDate = formatTradingDate(new Date());
+    const todayData = psychologyData[currentPsychologyDate];
+
+    if (!todayData || !todayData.plannedTrades) return 0;
+
+    const actualTrades = filteredTrades.filter(trade => trade.date === currentPsychologyDate).length;
+    return ((actualTrades - todayData.plannedTrades) / todayData.plannedTrades) * 100;
+}
+
+/**
+ * 시간 최적화 정보 가져오기
+ */
+function getTimeOptimization() {
+    const filteredTrades = getFilteredTradesForAnalytics();
+    const hourlyStats = {};
+
+    filteredTrades.forEach(trade => {
+        if (trade.entryTime) {
+            const hour = parseInt(trade.entryTime.split(':')[0]);
+            if (!hourlyStats[hour]) {
+                hourlyStats[hour] = { wins: 0, total: 0 };
+            }
+            hourlyStats[hour].total++;
+            if (trade.pnl > 0) hourlyStats[hour].wins++;
+        }
+    });
+
+    let bestHour = null;
+    let bestWinRate = 0;
+
+    Object.entries(hourlyStats).forEach(([hour, stats]) => {
+        if (stats.total >= 5) { // 최소 5거래
+            const winRate = (stats.wins / stats.total) * 100;
+            if (winRate > bestWinRate) {
+                bestWinRate = winRate;
+                bestHour = parseInt(hour);
+            }
+        }
+    });
+
+    return bestHour ? { bestHour, winRate: bestWinRate } : null;
+}
+
+/**
+ * 연속 손실 패턴 가져오기
+ */
+function getConsecutiveLossPattern() {
+    const filteredTrades = getFilteredTradesForAnalytics();
+    const sortedTrades = [...filteredTrades].sort((a, b) => new Date(a.date + ' ' + (a.entryTime || '00:00')) - new Date(b.date + ' ' + (b.entryTime || '00:00')));
+
+    const after3Losses = [];
+
+    for (let i = 3; i < sortedTrades.length; i++) {
+        if (sortedTrades[i-1].pnl < 0 && sortedTrades[i-2].pnl < 0 && sortedTrades[i-3].pnl < 0) {
+            after3Losses.push(sortedTrades[i].pnl > 0 ? 1 : 0);
+        }
+    }
+
+    if (after3Losses.length === 0) return null;
+
+    const winRate = (after3Losses.reduce((sum, val) => sum + val, 0) / after3Losses.length) * 100;
+    return { after3Losses: winRate };
 }
