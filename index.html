@@ -1270,6 +1270,33 @@
                                     <label data-lang="sleep-hours" style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;">Sleep Hours</label>
                                     <input id="sleepHours" max="12" min="0" placeholder="7.5" step="0.5" style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;" type="number"/>
                                 </div>
+                                <div style="margin-bottom: 16px;">
+                                    <label data-lang="stress-level" style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;">Stress Level (1-5)</label>
+                                    <input id="stressLevel" max="5" min="1" oninput="updateSliderDisplay('stressLevel', 'stressValue')" style="width: 100%; accent-color: #3b82f6;" type="range" value="3"/>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+                                        <span style="color: #64748b; font-size: 11px;">Low</span>
+                                        <span id="stressValue" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">3</span>
+                                        <span style="color: #64748b; font-size: 11px;">High</span>
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: 16px;">
+                                    <label data-lang="confidence-level" style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;">Confidence Level (1-5)</label>
+                                    <input id="confidenceLevel" max="5" min="1" oninput="updateSliderDisplay('confidenceLevel', 'confidenceValue')" style="width: 100%; accent-color: #3b82f6;" type="range" value="3"/>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+                                        <span style="color: #64748b; font-size: 11px;">Low</span>
+                                        <span id="confidenceValue" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">3</span>
+                                        <span style="color: #64748b; font-size: 11px;">High</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label data-lang="focus-level" style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;">Focus Level (1-5)</label>
+                                    <input id="focusLevel" max="5" min="1" oninput="updateSliderDisplay('focusLevel', 'focusValue')" style="width: 100%; accent-color: #3b82f6;" type="range" value="3"/>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+                                        <span style="color: #64748b; font-size: 11px;">Low</span>
+                                        <span id="focusValue" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">3</span>
+                                        <span style="color: #64748b; font-size: 11px;">High</span>
+                                    </div>
+                                </div>
                             </div>
                             
                             <!-- Trading Environment -->
