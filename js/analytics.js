@@ -62,44 +62,18 @@ function clearAnalyticsRange() {
  * 분석용 필터링된 거래 가져오기
  */
 function getFilteredTradesForAnalytics() {
-    let filteredTrades = trades;
-    
     // Apply custom date range if set
     if (analyticsStartDate || analyticsEndDate) {
-        filteredTrades = trades.filter(trade => {
+        return trades.filter(trade => {
             const tradeDate = trade.date;
             if (analyticsStartDate && tradeDate < analyticsStartDate) return false;
             if (analyticsEndDate && tradeDate > analyticsEndDate) return false;
             return true;
         });
-    } else {
-        // Apply period filter
-        const now = new Date();
-        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        
-        switch (analyticsPeriod) {
-            case 'day':
-                const todayStr = formatTradingDate(today);
-                filteredTrades = trades.filter(trade => trade.date === todayStr);
-                break;
-            case 'week':
-                const weekAgo = new Date(today);
-                weekAgo.setDate(weekAgo.getDate() - 7);
-                const weekAgoStr = formatTradingDate(weekAgo);
-                filteredTrades = trades.filter(trade => trade.date >= weekAgoStr);
-                break;
-            case 'month':
-                const monthAgo = new Date(today);
-                monthAgo.setMonth(monthAgo.getMonth() - 1);
-                const monthAgoStr = formatTradingDate(monthAgo);
-                filteredTrades = trades.filter(trade => trade.date >= monthAgoStr);
-                break;
-            default:
-                filteredTrades = trades;
-        }
     }
-    
-    return filteredTrades;
+
+    // Return all trades if no filter is set (default "All Time")
+    return trades;
 }
 
 // ==================== Detailed Analytics Update ====================
