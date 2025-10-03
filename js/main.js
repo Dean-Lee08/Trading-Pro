@@ -160,19 +160,7 @@ function toggleTimeEdit() {
     }
 }
 
-function resetForm() {
-    document.getElementById('tradeForm').reset();
-    document.getElementById('pnlDisplay').value = '';
-    document.getElementById('returnPct').value = '';
-    document.getElementById('holdingTimeDisplay').value = '';
-    document.getElementById('amountDisplay').value = '';
-    
-    const now = new Date();
-    const estNow = getESTTradingDate(now);
-    const hours = estNow.getHours().toString().padStart(2, '0');
-    const minutes = estNow.getMinutes().toString().padStart(2, '0');
-    document.getElementById('entryTime').value = `${hours}:${minutes}`;
-}
+// resetForm is defined in trading.js
 
 // handleTradeSubmit is defined in trading.js
 
