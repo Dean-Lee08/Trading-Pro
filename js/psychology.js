@@ -1349,8 +1349,10 @@ function getConsecutiveLossPattern() {
  * 심리 인사이트 생성 (단순 버전)
  */
 function generatePsychologyInsights() {
-    const currentDate = formatTradingDate(currentTradingDate);
-    const todayData = psychologyData[currentDate];
+    if (!currentPsychologyDate) {
+        currentPsychologyDate = formatTradingDate(new Date());
+    }
+    const todayData = psychologyData[currentPsychologyDate];
    const insightsList = document.getElementById('psychologyInsightsList');
     
     // 요소가 존재하지 않는 경우 처리
