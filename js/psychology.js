@@ -888,10 +888,12 @@ function updateBiasAnalysis() {
 function calculateOverconfidenceBias() {
     const recentTrades = trades.slice(-50);
     if (recentTrades.length === 0) return;
-    
+
     // 캘리브레이션 에러 계산 (예측 대비 실제)
-    const currentDate = formatTradingDate(currentTradingDate);
-    const todayData = psychologyData[currentDate];
+    if (!currentPsychologyDate) {
+        currentPsychologyDate = formatTradingDate(new Date());
+    }
+    const todayData = psychologyData[currentPsychologyDate];
     
     if (todayData && todayData.predictedWinRate) {
         const actualWinRate = (recentTrades.filter(t => t.pnl > 0).length / recentTrades.length) * 100;
@@ -904,7 +906,7 @@ function calculateOverconfidenceBias() {
     
     // 과도거래 지수
     if (todayData && todayData.plannedTrades) {
-        const actualTrades = recentTrades.filter(t => t.date === currentDate).length;
+        const actualTrades = recentTrades.filter(t => t.date === currentPsychologyDate).length;
         const overtradingIndex = ((actualTrades - todayData.plannedTrades) / todayData.plannedTrades) * 100;
         
         document.getElementById('overtradingIndex').textContent = `${overtradingIndex.toFixed(0)}%`;
