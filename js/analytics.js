@@ -1251,9 +1251,10 @@ function updatePatternInsights() {
  * 시간 기반 성과 분석
  */
 function analyzeTimeBasedPerformance() {
+    const filteredTrades = getFilteredTradesForAnalytics();
     const hourlyPerformance = {};
 
-    trades.forEach(trade => {
+    filteredTrades.forEach(trade => {
         if (trade.entryTime) {
             const hour = parseInt(trade.entryTime.split(':')[0]);
             if (!hourlyPerformance[hour]) {
@@ -1299,7 +1300,8 @@ function analyzeTimeBasedPerformance() {
  */
 function analyzeConsecutiveTradesPattern() {
     // 연속 거래 패턴 분석
-    const sortedTrades = [...trades].sort((a, b) => new Date(a.date + ' ' + (a.entryTime || '00:00')) - new Date(b.date + ' ' + (b.entryTime || '00:00')));
+    const filteredTrades = getFilteredTradesForAnalytics();
+    const sortedTrades = [...filteredTrades].sort((a, b) => new Date(a.date + ' ' + (a.entryTime || '00:00')) - new Date(b.date + ' ' + (b.entryTime || '00:00')));
 
     const patterns = {
         after1Loss: [], after2Losses: [], after3Losses: [],
@@ -1445,11 +1447,12 @@ function getInsightColor(type) {
  * 수면 성과 분석
  */
 function analyzeSleepPerformance() {
+    const filteredTrades = getFilteredTradesForAnalytics();
     const dataPoints = [];
 
     Object.values(psychologyData).forEach(dayData => {
         if (dayData.sleepHours) {
-            const dayTrades = trades.filter(trade => trade.date === dayData.date);
+            const dayTrades = filteredTrades.filter(trade => trade.date === dayData.date);
             if (dayTrades.length > 0) {
                 const dayPnL = dayTrades.reduce((sum, trade) => sum + trade.pnl, 0);
                 dataPoints.push({ sleep: dayData.sleepHours, performance: dayPnL });
@@ -1479,12 +1482,13 @@ function analyzeSleepPerformance() {
  * 과도거래 감지
  */
 function detectOvertrading() {
+    const filteredTrades = getFilteredTradesForAnalytics();
     let currentPsychologyDate = formatTradingDate(new Date());
     const todayData = psychologyData[currentPsychologyDate];
 
     if (!todayData || !todayData.plannedTrades) return 0;
 
-    const actualTrades = trades.filter(trade => trade.date === currentPsychologyDate).length;
+    const actualTrades = filteredTrades.filter(trade => trade.date === currentPsychologyDate).length;
     return ((actualTrades - todayData.plannedTrades) / todayData.plannedTrades) * 100;
 }
 
@@ -1492,9 +1496,10 @@ function detectOvertrading() {
  * 시간 최적화 정보 가져오기
  */
 function getTimeOptimization() {
+    const filteredTrades = getFilteredTradesForAnalytics();
     const hourlyStats = {};
 
-    trades.forEach(trade => {
+    filteredTrades.forEach(trade => {
         if (trade.entryTime) {
             const hour = parseInt(trade.entryTime.split(':')[0]);
             if (!hourlyStats[hour]) {
@@ -1525,7 +1530,8 @@ function getTimeOptimization() {
  * 연속 손실 패턴 가져오기
  */
 function getConsecutiveLossPattern() {
-    const sortedTrades = [...trades].sort((a, b) => new Date(a.date + ' ' + (a.entryTime || '00:00')) - new Date(b.date + ' ' + (b.entryTime || '00:00')));
+    const filteredTrades = getFilteredTradesForAnalytics();
+    const sortedTrades = [...filteredTrades].sort((a, b) => new Date(a.date + ' ' + (a.entryTime || '00:00')) - new Date(b.date + ' ' + (b.entryTime || '00:00')));
 
     const after3Losses = [];
 
