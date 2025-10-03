@@ -76,12 +76,7 @@ function toggleSidebar() {
 // Date Navigation & Picker
 // ============================================
 
-function updateCurrentDateDisplay() {
-    const displayElement = document.getElementById('currentDateDisplay');
-    if (displayElement) {
-        displayElement.textContent = currentTradingDate;
-    }
-}
+// updateCurrentDateDisplay is defined in utils.js
 
 function changeTradingDate(days) {
     // currentTradingDate가 Date 객체인지 확인
