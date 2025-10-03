@@ -7,24 +7,30 @@
  */
 function showAnalyticsSection(sectionName) {
     currentAnalyticsSection = sectionName;
-    
+
     // Update tab states
     document.querySelectorAll('.analytics-tab').forEach(tab => {
         tab.classList.remove('active');
     });
     document.querySelector(`[onclick="showAnalyticsSection('${sectionName}')"]`).classList.add('active');
-    
+
     // Show/hide sections
     document.querySelectorAll('.detail-section, .chart-section').forEach(section => {
         section.classList.remove('active');
     });
-    
+
     if (sectionName === 'detail') {
         document.getElementById('detailSection').classList.add('active');
         setTimeout(async () => await updateBasicCharts(), 100);
     } else if (sectionName === 'charts') {
         document.getElementById('chartSection').classList.add('active');
         setTimeout(async () => await updateAdvancedCharts(), 100);
+    } else if (sectionName === 'bias-analysis') {
+        document.getElementById('biasAnalysisSection').classList.add('active');
+        setTimeout(() => updateBiasAnalysis(), 100);
+    } else if (sectionName === 'patterns') {
+        document.getElementById('patternsSection').classList.add('active');
+        setTimeout(() => updatePatternInsights(), 100);
     }
 }
 
