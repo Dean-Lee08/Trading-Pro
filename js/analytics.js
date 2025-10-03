@@ -19,6 +19,14 @@ function showAnalyticsSection(sectionName) {
         section.classList.remove('active');
     });
 
+    // Show/hide performance summary cards
+    const performanceSummary = document.querySelector('.performance-summary');
+    if (sectionName === 'detail' || sectionName === 'charts') {
+        performanceSummary.style.display = 'block';
+    } else {
+        performanceSummary.style.display = 'none';
+    }
+
     if (sectionName === 'detail') {
         document.getElementById('detailSection').classList.add('active');
         setTimeout(async () => await updateBasicCharts(), 100);
