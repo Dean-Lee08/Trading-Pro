@@ -18,9 +18,8 @@ function updatePsychologyDateDisplay() {
         currentPsychologyDate = formatTradingDate(new Date());
     }
 
-    // MM-DD 형식으로 표시
-    const [year, month, day] = currentPsychologyDate.split('-');
-    dateText.textContent = `${month}-${day}`;
+    // YYYY-MM-DD 형식 그대로 표시
+    dateText.textContent = currentPsychologyDate;
 }
 
 /**

@@ -1057,17 +1057,17 @@
                         <p class="page-subtitle" data-lang="psychology-subtitle">Quantified psychological performance analysis</p>
                     </div>
                     <div class="page-header-info">
+                        <div class="psychology-tabs">
+                            <button class="psychology-tab active" data-lang="daily-input" onclick="showPsychologySection('input')">Daily Input</button>
+                            <button class="psychology-tab" data-lang="bias-analysis" onclick="showPsychologySection('bias-analysis')">Bias Analysis</button>
+                            <button class="psychology-tab" data-lang="pattern-insights" onclick="showPsychologySection('patterns')">Pattern Insights</button>
+                        </div>
                         <div class="date-navigation">
                             <button class="date-nav-btn" onclick="previousPsychologyDay()" title="Previous day">&larr;</button>
                             <div class="current-date-display" id="psychologyDateDisplay" onclick="showPsychologyDatePicker()">
                                 <span id="psychologyDateText">Today</span>
                             </div>
                             <button class="date-nav-btn" onclick="nextPsychologyDay()" title="Next day">&rarr;</button>
-                        </div>
-                        <div class="psychology-tabs">
-                            <button class="psychology-tab active" data-lang="daily-input" onclick="showPsychologySection('input')">Daily Input</button>
-                            <button class="psychology-tab" data-lang="bias-analysis" onclick="showPsychologySection('bias-analysis')">Bias Analysis</button>
-                            <button class="psychology-tab" data-lang="pattern-insights" onclick="showPsychologySection('patterns')">Pattern Insights</button>
                         </div>
                     </div>
                 </div>
