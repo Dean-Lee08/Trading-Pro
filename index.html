@@ -1343,44 +1343,11 @@
                                     </div>
                                 </div>
                             </div>
-                            
-                            <!-- Emotional State -->
-                            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
-                                <h3 data-lang="emotional-state" style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;">Emotional State</h3>
-                                <div style="margin-bottom: 16px;">
-                                    <label data-lang="stress-level" style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;">Stress Level (1-5)</label>
-                                    <input id="stressLevel" max="5" min="1" oninput="updateSliderDisplay('stressLevel', 'stressValue')" style="width: 100%; accent-color: #3b82f6;" type="range" value="3"/>
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
-                                        <span style="color: #64748b; font-size: 11px;">Low</span>
-                                        <span id="stressValue" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">3</span>
-                                        <span style="color: #64748b; font-size: 11px;">High</span>
-                                    </div>
-                                </div>
-                                <div style="margin-bottom: 16px;">
-                                    <label data-lang="confidence-level" style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;">Confidence Level (1-5)</label>
-                                    <input id="confidenceLevel" max="5" min="1" oninput="updateSliderDisplay('confidenceLevel', 'confidenceValue')" style="width: 100%; accent-color: #3b82f6;" type="range" value="3"/>
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
-                                        <span style="color: #64748b; font-size: 11px;">Low</span>
-                                        <span id="confidenceValue" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">3</span>
-                                        <span style="color: #64748b; font-size: 11px;">High</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label data-lang="focus-level" style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;">Focus Level (1-5)</label>
-                                    <input id="focusLevel" max="5" min="1" oninput="updateSliderDisplay('focusLevel', 'focusValue')" style="width: 100%; accent-color: #3b82f6;" type="range" value="3"/>
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
-                                        <span style="color: #64748b; font-size: 11px;">Low</span>
-                                        <span id="focusValue" style="color: #e4e4e7; font-size: 12px; font-weight: 600;">3</span>
-                                        <span style="color: #64748b; font-size: 11px;">High</span>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                         
                         <!-- Action Buttons -->
                         <div style="display: flex; gap: 12px; justify-content: center; margin-bottom: 24px;">
                             <button class="psychology-save-btn" data-lang="save-psychology-data" onclick="savePsychologyData()">Save Psychology Data</button>
-                            <button class="psychology-save-btn" data-lang="calculate-score" onclick="calculateDailyScore()" style="background: #3b82f6;">Calculate Daily Score</button>
                             <button class="psychology-save-btn" data-lang="reset-psychology-data" onclick="resetPsychologyData()" style="background: #ef4444;">Reset Data</button>
                         </div>
                         
