@@ -1085,7 +1085,8 @@ function updateBiasAnalysis() {
  * 과신 편향 계산
  */
 function calculateOverconfidenceBias() {
-    const recentTrades = trades.slice(-50);
+    const filteredTrades = getFilteredTradesForAnalytics();
+    const recentTrades = filteredTrades.slice(-50);
     if (recentTrades.length === 0) return;
 
     // 캘리브레이션 에러 계산 (예측 대비 실제)
@@ -1127,7 +1128,8 @@ function calculateOverconfidenceBias() {
  * 손실 회피 편향 계산
  */
 function calculateLossAversionBias() {
-    const recentTrades = trades.slice(-50);
+    const filteredTrades = getFilteredTradesForAnalytics();
+    const recentTrades = filteredTrades.slice(-50);
     if (recentTrades.length === 0) return;
 
     const winningTrades = recentTrades.filter(t => t.pnl > 0);
@@ -1153,7 +1155,8 @@ function calculateLossAversionBias() {
  */
 function calculateAnchoringBias() {
     // 앵커링 편향 분석 (간단한 버전)
-    const recentTrades = trades.slice(-30);
+    const filteredTrades = getFilteredTradesForAnalytics();
+    const recentTrades = filteredTrades.slice(-30);
     if (recentTrades.length === 0) return;
 
     // 라운드 넘버 의존도 (단순화된 계산)
