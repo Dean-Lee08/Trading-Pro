@@ -240,7 +240,7 @@ Call `updateTradesTable(filteredTrades, tableBodyId)` with:
 ### Saving Data
 - Trades: `saveTrades()` writes to localStorage
 - Notes: `saveNotes()` writes to localStorage
-- Psychology: `savePsychologyDataToStorage()` writes to localStorage
+- Psychology: `localStorage.setItem('tradingPlatformPsychologyData', JSON.stringify(psychologyData))` saves to localStorage
 - Daily fees: stored in `dailyFees` object, saved inline when changed
 
 ### Language Updates
