@@ -1152,8 +1152,10 @@ function analyzeConsecutiveTradesPattern() {
  */
 function generateAIInsights() {
     const insights = [];
-    const currentDate = formatTradingDate(currentTradingDate);
-    const todayData = psychologyData[currentDate];
+    if (!currentPsychologyDate) {
+        currentPsychologyDate = formatTradingDate(new Date());
+    }
+    const todayData = psychologyData[currentPsychologyDate];
     
     // 수면과 성과 상관관계 분석
     const sleepPerformance = analyzeSleepPerformance();
@@ -1279,12 +1281,14 @@ function analyzeSleepPerformance() {
  * 과도거래 감지
  */
 function detectOvertrading() {
-    const today = formatTradingDate(currentTradingDate);
-    const todayData = psychologyData[today];
-    
+    if (!currentPsychologyDate) {
+        currentPsychologyDate = formatTradingDate(new Date());
+    }
+    const todayData = psychologyData[currentPsychologyDate];
+
     if (!todayData || !todayData.plannedTrades) return 0;
-    
-    const actualTrades = trades.filter(trade => trade.date === today).length;
+
+    const actualTrades = trades.filter(trade => trade.date === currentPsychologyDate).length;
     return ((actualTrades - todayData.plannedTrades) / todayData.plannedTrades) * 100;
 }
 
