@@ -1082,7 +1082,6 @@ async function updateAdvancedCharts() {
                 beginAtZero: true,
                 max: 100,
                 ticks: { color: '#94a3b8' },
-                grid: { color: '#94a3b8' },
                 grid: { color: '#334155' }
             }
         }
