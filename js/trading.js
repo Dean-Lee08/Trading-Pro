@@ -275,8 +275,11 @@ function handleTradeSubmit(event) {
     updateAllTradesList();
     updateDetailedAnalytics();
     resetForm();
-    
+
     showToast(`${formData.symbol} ${currentLanguage === 'ko' ? '저장됨' : 'saved'}`);
+
+    // 일일 손익 한도 체크
+    checkDailyLimits(tradingDateString);
 }
 
 /**
