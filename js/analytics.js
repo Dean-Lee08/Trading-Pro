@@ -1068,17 +1068,50 @@ async function updateAdvancedCharts() {
  * 편향 분석 업데이트
  */
 function updateBiasAnalysis() {
-    // 과신 편향 분석
-    calculateOverconfidenceBias();
+    try {
+        const filteredTrades = getFilteredTradesForAnalytics();
 
-    // 손실 회피 분석
-    calculateLossAversionBias();
+        // 데이터가 없을 경우 메시지 표시
+        if (filteredTrades.length === 0) {
+            showEmptyBiasMessage();
+            return;
+        }
 
-    // 앵커링 편향 분석
-    calculateAnchoringBias();
+        // 과신 편향 분석
+        calculateOverconfidenceBias();
 
-    // 전체 편향 위험도 계산
-    calculateOverallBiasRisk();
+        // 손실 회피 분석
+        calculateLossAversionBias();
+
+        // 앵커링 편향 분석
+        calculateAnchoringBias();
+
+        // 전체 편향 위험도 계산
+        calculateOverallBiasRisk();
+    } catch (error) {
+        console.error('Error updating bias analysis:', error);
+    }
+}
+
+/**
+ * 빈 편향 분석 메시지 표시
+ */
+function showEmptyBiasMessage() {
+    const message = currentLanguage === 'ko' ?
+        '선택한 기간에 거래 데이터가 없습니다.' :
+        'No trading data available for the selected period.';
+
+    // 각 요소를 안전하게 업데이트
+    const elements = [
+        'calibrationError', 'overtradingIndex', 'positionDeviation',
+        'dispositionRatio', 'roundNumberBias',
+        'overallBiasRisk', 'overallBiasScore', 'actionNeeded', 'actionDetails'
+    ];
+
+    elements.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = '--';
+    });
 }
 
 /**
@@ -1097,9 +1130,13 @@ function calculateOverconfidenceBias() {
         const actualWinRate = (recentTrades.filter(t => t.pnl > 0).length / recentTrades.length) * 100;
         const calibrationError = Math.abs(todayData.predictedWinRate - actualWinRate);
 
-        document.getElementById('calibrationError').textContent = `${calibrationError.toFixed(1)}%`;
-        document.getElementById('calibrationErrorBar').style.width = `${Math.min(calibrationError * 5, 100)}%`;
-        document.getElementById('calibrationErrorBar').style.backgroundColor = calibrationError > 20 ? '#ef4444' : calibrationError > 10 ? '#f59e0b' : '#10b981';
+        const errorEl = document.getElementById('calibrationError');
+        const errorBarEl = document.getElementById('calibrationErrorBar');
+        if (errorEl) errorEl.textContent = `${calibrationError.toFixed(1)}%`;
+        if (errorBarEl) {
+            errorBarEl.style.width = `${Math.min(calibrationError * 5, 100)}%`;
+            errorBarEl.style.backgroundColor = calibrationError > 20 ? '#ef4444' : calibrationError > 10 ? '#f59e0b' : '#10b981';
+        }
     }
 
     // 과도거래 지수
@@ -1107,9 +1144,13 @@ function calculateOverconfidenceBias() {
         const actualTrades = recentTrades.filter(t => t.date === currentPsychologyDate).length;
         const overtradingIndex = ((actualTrades - todayData.plannedTrades) / todayData.plannedTrades) * 100;
 
-        document.getElementById('overtradingIndex').textContent = `${overtradingIndex.toFixed(0)}%`;
-        document.getElementById('overtradingBar').style.width = `${Math.min(Math.abs(overtradingIndex), 100)}%`;
-        document.getElementById('overtradingBar').style.backgroundColor = Math.abs(overtradingIndex) > 50 ? '#ef4444' : '#f59e0b';
+        const indexEl = document.getElementById('overtradingIndex');
+        const indexBarEl = document.getElementById('overtradingBar');
+        if (indexEl) indexEl.textContent = `${overtradingIndex.toFixed(0)}%`;
+        if (indexBarEl) {
+            indexBarEl.style.width = `${Math.min(Math.abs(overtradingIndex), 100)}%`;
+            indexBarEl.style.backgroundColor = Math.abs(overtradingIndex) > 50 ? '#ef4444' : '#f59e0b';
+        }
     }
 
     // 포지션 크기 편차
@@ -1118,9 +1159,13 @@ function calculateOverconfidenceBias() {
         const avgPosition = positionSizes.reduce((sum, size) => sum + size, 0) / positionSizes.length;
         const deviation = calculateStandardDeviation(positionSizes) / avgPosition;
 
-        document.getElementById('positionDeviation').textContent = deviation.toFixed(2);
-        document.getElementById('positionDeviationBar').style.width = `${Math.min(deviation * 200, 100)}%`;
-        document.getElementById('positionDeviationBar').style.backgroundColor = deviation > 0.3 ? '#ef4444' : '#3b82f6';
+        const deviationEl = document.getElementById('positionDeviation');
+        const deviationBarEl = document.getElementById('positionDeviationBar');
+        if (deviationEl) deviationEl.textContent = deviation.toFixed(2);
+        if (deviationBarEl) {
+            deviationBarEl.style.width = `${Math.min(deviation * 200, 100)}%`;
+            deviationBarEl.style.backgroundColor = deviation > 0.3 ? '#ef4444' : '#3b82f6';
+        }
     }
 }
 
@@ -1242,9 +1287,54 @@ function calculateOverallBiasRisk() {
  * 패턴 인사이트 업데이트
  */
 function updatePatternInsights() {
-    analyzeTimeBasedPerformance();
-    analyzeConsecutiveTradesPattern();
-    generateAIInsights();
+    try {
+        const filteredTrades = getFilteredTradesForAnalytics();
+
+        // 데이터가 없을 경우 메시지 표시
+        if (filteredTrades.length === 0) {
+            showEmptyPatternMessage();
+            return;
+        }
+
+        analyzeTimeBasedPerformance();
+        analyzeConsecutiveTradesPattern();
+        generateAIInsights();
+    } catch (error) {
+        console.error('Error updating pattern insights:', error);
+    }
+}
+
+/**
+ * 빈 패턴 인사이트 메시지 표시
+ */
+function showEmptyPatternMessage() {
+    const message = currentLanguage === 'ko' ?
+        '선택한 기간에 거래 데이터가 없습니다.' :
+        'No trading data available for the selected period.';
+
+    // 시간 기반 요소 업데이트
+    const timeElements = ['bestTradingHour', 'worstTradingHour', 'optimalSleepRange', 'delayImpact'];
+    timeElements.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = '--';
+    });
+
+    // 연속 거래 패턴 요소 업데이트
+    const patternElements = ['after1Loss', 'after2Losses', 'after3Losses', 'after1Win', 'after2Wins', 'after3Wins'];
+    patternElements.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = '--%';
+    });
+
+    // AI 인사이트 메시지 업데이트
+    const insightsList = document.getElementById('aiInsightsList');
+    if (insightsList) {
+        insightsList.innerHTML = `
+            <div style="background: #0f172a; border-left: 4px solid #64748b; padding: 12px 16px; border-radius: 0 6px 6px 0;">
+                <div style="color: #e4e4e7; font-size: 14px; line-height: 1.5;">${message}</div>
+            </div>
+        `;
+    }
 }
 
 /**
