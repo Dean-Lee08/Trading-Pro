@@ -990,25 +990,21 @@ function closeDatePicker() {
     document.getElementById('datePickerModal').style.display = 'none';
 }
 
-/**
- * 선택된 날짜 적용
- */
-function applySelectedDate() {
-    const input = document.getElementById('datePickerInput');
-    if (input.value) {
-        currentTradingDate = new Date(input.value + 'T12:00:00');
-        updateCurrentDateDisplay();
-        updateStats();
-        loadDailyFees();
-        closeDatePicker();
-    }
-}
+// applySelectedDate is defined in main.js
 
 /**
  * 거래 날짜 변경
  */
 function changeTradingDate(direction) {
-    const newDate = new Date(currentTradingDate);
+    // currentTradingDate를 Date 객체로 변환
+    let dateObj;
+    if (typeof currentTradingDate === 'string') {
+        dateObj = new Date(currentTradingDate + 'T12:00:00');
+    } else {
+        dateObj = new Date(currentTradingDate);
+    }
+
+    const newDate = new Date(dateObj);
     newDate.setDate(newDate.getDate() + direction);
     currentTradingDate = newDate;
     updateCurrentDateDisplay();
