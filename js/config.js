@@ -38,6 +38,7 @@ let currentFont = "'Inter', sans-serif";
 // Psychology State
 let psychologyData = {};
 let currentPsychologySection = 'input';
+let currentPsychologyDate = null;
 
 // Calendar State
 let selectedWeekPnl = null;
@@ -386,7 +387,16 @@ const translations = {
         'after-wins': 'Performance After Wins',
         'ai-insights': 'AI-Generated Insights',
         'no-insights': 'Collect more psychology data to generate personalized insights.',
-        'psychology-performance-chart': 'Psychology vs Performance Analysis'
+        'psychology-performance-chart': 'Psychology vs Performance Analysis',
+        'pattern-insights-title': 'Pattern Insights & Recommendations',
+        'worst-trading-hour': 'Worst Trading Hour',
+        'after-1-loss': 'After 1 loss',
+        'after-2-losses': 'After 2 losses',
+        'after-3-losses': 'After 3+ losses',
+        'after-1-win': 'After 1 win',
+        'after-2-wins': 'After 2 wins',
+        'after-3-wins': 'After 3+ wins',
+        'win-rate-label': 'Win Rate'
     },
     ko: {
         'dashboard': '대시보드',
@@ -708,7 +718,16 @@ const translations = {
         'after-wins': '수익 후 성과',
         'ai-insights': 'AI 인사이트',
         'no-insights': '더 많은 심리 데이터와 거래 기록을 수집하여 개인화된 인사이트를 생성하세요.',
-        'psychology-performance-chart': '심리 vs 성과 분석'
+        'psychology-performance-chart': '심리 vs 성과 분석',
+        'pattern-insights-title': '패턴 인사이트 및 권장사항',
+        'worst-trading-hour': '최악 거래시간',
+        'after-1-loss': '1회 손실 후',
+        'after-2-losses': '2회 손실 후',
+        'after-3-losses': '3회 이상 손실 후',
+        'after-1-win': '1회 수익 후',
+        'after-2-wins': '2회 수익 후',
+        'after-3-wins': '3회 이상 수익 후',
+        'win-rate-label': '승률'
     }
 };
 

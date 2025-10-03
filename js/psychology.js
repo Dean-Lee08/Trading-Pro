@@ -5,6 +5,91 @@ if (typeof window.psychologyChart === 'undefined') {
     window.psychologyChart = null;
 }
 
+// ==================== Psychology Date Navigation ====================
+
+/**
+ * 심리 날짜 업데이트
+ */
+function updatePsychologyDateDisplay() {
+    const dateText = document.getElementById('psychologyDateText');
+    if (!dateText) return;
+
+    if (!currentPsychologyDate) {
+        currentPsychologyDate = formatTradingDate(new Date());
+    }
+
+    const today = formatTradingDate(new Date());
+    const yesterday = formatTradingDate(new Date(Date.now() - 86400000));
+
+    if (currentPsychologyDate === today) {
+        dateText.textContent = currentLanguage === 'ko' ? '오늘' : 'Today';
+    } else if (currentPsychologyDate === yesterday) {
+        dateText.textContent = currentLanguage === 'ko' ? '어제' : 'Yesterday';
+    } else {
+        dateText.textContent = currentPsychologyDate;
+    }
+}
+
+/**
+ * 이전 날짜로 이동
+ */
+function previousPsychologyDay() {
+    if (!currentPsychologyDate) {
+        currentPsychologyDate = formatTradingDate(new Date());
+    }
+
+    const date = new Date(currentPsychologyDate + 'T12:00:00');
+    date.setDate(date.getDate() - 1);
+    currentPsychologyDate = formatTradingDate(date);
+
+    updatePsychologyDateDisplay();
+    loadPsychologyData();
+}
+
+/**
+ * 다음 날짜로 이동
+ */
+function nextPsychologyDay() {
+    if (!currentPsychologyDate) {
+        currentPsychologyDate = formatTradingDate(new Date());
+    }
+
+    const date = new Date(currentPsychologyDate + 'T12:00:00');
+    date.setDate(date.getDate() + 1);
+    currentPsychologyDate = formatTradingDate(date);
+
+    updatePsychologyDateDisplay();
+    loadPsychologyData();
+}
+
+/**
+ * 심리 날짜 선택 모달 표시
+ */
+function showPsychologyDatePicker() {
+    const modal = document.getElementById('datePickerModal');
+    const dateInput = document.getElementById('selectedDate');
+
+    if (!modal || !dateInput) return;
+
+    if (!currentPsychologyDate) {
+        currentPsychologyDate = formatTradingDate(new Date());
+    }
+
+    dateInput.value = currentPsychologyDate;
+    modal.style.display = 'flex';
+
+    // 모달 확인 버튼에 이벤트 추가
+    const confirmButton = modal.querySelector('.date-picker-button');
+    if (confirmButton) {
+        confirmButton.onclick = function() {
+            currentPsychologyDate = dateInput.value;
+            modal.style.display = 'none';
+            updatePsychologyDateDisplay();
+            loadPsychologyData();
+        };
+    }
+}
+
 // ==================== Psychology Section Management ====================
 
 /**
@@ -68,18 +153,13 @@ function showPsychologySection(section) {
  * 심리 데이터 저장
  */
 function savePsychologyData() {
-    // currentTradingDate를 안전하게 문자열로 변환
-    let currentDate;
-    if (typeof currentTradingDate === 'string') {
-        currentDate = currentTradingDate;
-    } else if (currentTradingDate instanceof Date) {
-        currentDate = formatTradingDate(currentTradingDate);
-    } else {
-        currentDate = formatTradingDate(new Date());
+    // currentPsychologyDate 초기화
+    if (!currentPsychologyDate) {
+        currentPsychologyDate = formatTradingDate(new Date());
     }
-    
+
     const data = {
-        date: currentDate,
+        date: currentPsychologyDate,
         timestamp: new Date().toISOString(),
         
         // Biological data
@@ -155,17 +235,15 @@ function loadPsychologyData() {
         psychologyData = {};
     }
 
-    // currentTradingDate가 Date 객체인지 확인하고 문자열로 변환
-    let currentDate;
-    if (typeof currentTradingDate === 'string') {
-        currentDate = currentTradingDate;
-    } else if (currentTradingDate instanceof Date) {
-        currentDate = formatTradingDate(currentTradingDate);
-    } else {
-        currentDate = formatTradingDate(new Date());
+    // currentPsychologyDate 초기화
+    if (!currentPsychologyDate) {
+        currentPsychologyDate = formatTradingDate(new Date());
     }
-    
-    const todayData = psychologyData[currentDate];
+
+    // 날짜 표시 업데이트
+    updatePsychologyDateDisplay();
+
+    const todayData = psychologyData[currentPsychologyDate];
 
     if (todayData) {
         // 안전한 요소 업데이트
