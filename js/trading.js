@@ -403,8 +403,11 @@ function handleEditTradeSubmit(event) {
     updateAllTradesList();
     updateDetailedAnalytics();
     closeEditTradeModal();
-    
+
     showToast(`${updatedTrade.symbol} updated`);
+
+    // 일일 손익 한도 체크
+    checkDailyLimits(updatedTrade.date);
 }
 
 // ==================== Trade Statistics ====================
