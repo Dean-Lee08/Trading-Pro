@@ -735,7 +735,15 @@ const translations = {
         'after-1-win': '1회 수익 후',
         'after-2-wins': '2회 수익 후',
         'after-3-wins': '3회 이상 수익 후',
-        'win-rate-label': '승률'
+        'win-rate-label': '승률',
+        'limit-warning-profit-title': '일일 목표 달성!',
+        'limit-warning-profit-message': '축하합니다! 일일 목표 수익에 도달했습니다.',
+        'limit-warning-loss-title': '일일 손실 한도 초과!',
+        'limit-warning-loss-message': '경고! 최대 일일 손실 한도를 초과했습니다.',
+        'limit-warning-current': '현재 손익',
+        'limit-warning-target': '일일 목표',
+        'limit-warning-limit': '손실 한도',
+        'limit-warning-ok': '확인했습니다'
     }
 };
 
