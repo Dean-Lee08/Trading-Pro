@@ -214,13 +214,14 @@ function loadPsychologyData() {
 
     const todayData = psychologyData[currentPsychologyDate];
 
-    if (todayData) {
-        // 안전한 요소 업데이트
-        const updateElement = (id, value) => {
-            const element = document.getElementById(id);
-            if (element) element.value = value;
-        };
+    // 안전한 요소 업데이트 함수
+    const updateElement = (id, value) => {
+        const element = document.getElementById(id);
+        if (element) element.value = value;
+    };
 
+    if (todayData) {
+        // 저장된 데이터가 있는 경우 불러오기
         updateElement('sleepHours', todayData.sleepHours || '');
         updateElement('startTime', todayData.startTime || '09:30');
         updateElement('endTime', todayData.endTime || '');
@@ -232,14 +233,49 @@ function loadPsychologyData() {
         updateElement('confidenceLevel', todayData.confidenceLevel || 3);
         updateElement('focusLevel', todayData.focusLevel || 3);
 
+        // 슬라이더 디스플레이 업데이트
+        const stressValue = document.getElementById('stressValue');
+        const confidenceValue = document.getElementById('confidenceValue');
+        const focusValue = document.getElementById('focusValue');
+        if (stressValue) stressValue.textContent = todayData.stressLevel || 3;
+        if (confidenceValue) confidenceValue.textContent = todayData.confidenceLevel || 3;
+        if (focusValue) focusValue.textContent = todayData.focusLevel || 3;
+
         // 차트 업데이트는 약간의 딜레이 후 실행
         setTimeout(() => {
             updateVisualCards();
             createPsychologyChart();
         }, 200);
     } else {
+        // 저장된 데이터가 없는 경우 모든 필드 초기화
+        updateElement('sleepHours', '');
+        updateElement('startTime', '09:30');
+        updateElement('endTime', '');
+        updateElement('environmentType', 'home');
+        updateElement('accountBalance', '');
+        updateElement('dailyTarget', '');
+        updateElement('maxDailyLoss', '');
+        updateElement('stressLevel', 3);
+        updateElement('confidenceLevel', 3);
+        updateElement('focusLevel', 3);
+
+        // 슬라이더 디스플레이 초기화
+        const stressValue = document.getElementById('stressValue');
+        const confidenceValue = document.getElementById('confidenceValue');
+        const focusValue = document.getElementById('focusValue');
+        if (stressValue) stressValue.textContent = '3';
+        if (confidenceValue) confidenceValue.textContent = '3';
+        if (focusValue) focusValue.textContent = '3';
+
+        // 퍼센트 표시 초기화
+        const dailyTargetPercent = document.getElementById('dailyTargetPercent');
+        const maxLossPercent = document.getElementById('maxLossPercent');
+        if (dailyTargetPercent) dailyTargetPercent.textContent = '0%';
+        if (maxLossPercent) maxLossPercent.textContent = '0%';
+
         // 기본값으로 차트 생성
         setTimeout(() => {
+            updateVisualCards();
             createPsychologyChart();
         }, 200);
     }
