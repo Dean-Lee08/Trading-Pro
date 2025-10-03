@@ -1056,20 +1056,14 @@
                         <h1 class="page-title" data-lang="psychology-title">Trading Psychology Analytics</h1>
                         <p class="page-subtitle" data-lang="psychology-subtitle">Quantified psychological performance analysis</p>
                     </div>
-                    <div class="psychology-controls">
-                        <!-- Psychology Date Navigation -->
-                        <div style="display: flex; align-items: center; gap: 12px; margin-right: 24px;">
-                            <button class="icon-button" onclick="previousPsychologyDay()" title="Previous Day">
-                                <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                            </button>
-                            <button class="date-display-button" onclick="showPsychologyDatePicker()" id="psychologyDateDisplay">
+                    <div class="page-header-info">
+                        <div class="date-navigation">
+                            <button class="date-nav-btn" onclick="previousPsychologyDay()" title="Previous day">&larr;</button>
+                            <div class="current-date-display" id="psychologyDateDisplay" onclick="showPsychologyDatePicker()">
                                 <span id="psychologyDateText">Today</span>
-                            </button>
-                            <button class="icon-button" onclick="nextPsychologyDay()" title="Next Day">
-                                <svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                            </button>
+                            </div>
+                            <button class="date-nav-btn" onclick="nextPsychologyDay()" title="Next day">&rarr;</button>
                         </div>
-
                         <div class="psychology-tabs">
                             <button class="psychology-tab active" data-lang="daily-input" onclick="showPsychologySection('input')">Daily Input</button>
                             <button class="psychology-tab" data-lang="bias-analysis" onclick="showPsychologySection('bias-analysis')">Bias Analysis</button>
