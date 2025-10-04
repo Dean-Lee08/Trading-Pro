@@ -402,7 +402,7 @@ function changeLanguageFromSettings() {
     currentLanguage = newLanguage;
     localStorage.setItem('tradingPlatformLanguage', currentLanguage);
     updateLanguage();
-    
+
     // 모든 페이지 다시 렌더링
     updateStats();
     updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
@@ -410,8 +410,51 @@ function changeLanguageFromSettings() {
     renderAllNotesSections();
     renderCalendar();
     updateDetailedAnalytics();
-    
+
     showToast(currentLanguage === 'ko' ? '언어가 변경되었습니다' : 'Language changed');
+}
+
+/**
+ * Alpha Vantage API 키 저장
+ */
+function saveAlphaVantageApiKey() {
+    const apiKeyInput = document.getElementById('alphaVantageApiKeyInput');
+    const apiKey = apiKeyInput.value.trim();
+
+    if (!apiKey) {
+        alert(currentLanguage === 'ko' ? 'API 키를 입력해주세요.' : 'Please enter an API key.');
+        return;
+    }
+
+    setAlphaVantageApiKey(apiKey);
+    showToast(currentLanguage === 'ko' ? 'API 키가 저장되었습니다' : 'API key saved');
+}
+
+/**
+ * Alpha Vantage API 키 설정 페이지에 로드
+ */
+function loadAlphaVantageApiKeyToSettings() {
+    const apiKeyInput = document.getElementById('alphaVantageApiKeyInput');
+    if (apiKeyInput) {
+        const currentKey = getAlphaVantageApiKey();
+        if (currentKey) {
+            apiKeyInput.value = currentKey;
+        }
+    }
+}
+
+/**
+ * 시장 데이터 캐시 클리어
+ */
+function clearMarketCache() {
+    const confirmMessage = currentLanguage === 'ko' ?
+        '시장 데이터 캐시를 삭제하시겠습니까?' :
+        'Are you sure you want to clear market data cache?';
+
+    if (confirm(confirmMessage)) {
+        clearMarketDataCache();
+        showToast(currentLanguage === 'ko' ? '캐시가 삭제되었습니다' : 'Cache cleared');
+    }
 }
 
 // ============================================
@@ -433,13 +476,17 @@ document.addEventListener('DOMContentLoaded', async function() {
     if (savedFees) {
         dailyFees = JSON.parse(savedFees);
     }
-    
+
+    // Initialize market data module
+    initializeMarketDataModule();
+    loadAlphaVantageApiKeyToSettings();
+
     // Initialize current date
     const now = new Date();
     currentTradingDate = formatTradingDate(now);
     updateCurrentDateDisplay();
     updateLanguage();
-    
+
     // Load all data
     loadTrades();
     loadNotes();

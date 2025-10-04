@@ -1875,3 +1875,273 @@ function getMostCommon(arr) {
 
     return mode;
 }
+// analytics-market-data-addon.js - Market Data Integration for Analytics
+
+// This file contains market data functions that extend analytics.js
+// To be merged into analytics.js manually or loaded as separate script
+
+// ==================== Market Data Integration ====================
+
+/**
+ * 시장 데이터 섹션 로드
+ */
+async function loadMarketDataSection() {
+    if (!marketDataEnabled) {
+        console.log('Market data is disabled');
+        return;
+    }
+
+    const filteredTrades = getFilteredTradesForAnalytics();
+
+    if (filteredTrades.length === 0) {
+        displayNoMarketData();
+        return;
+    }
+
+    showMarketDataLoading();
+    await Promise.all([
+        loadSymbolQuotes(filteredTrades),
+        loadPriceContextAnalysis(filteredTrades)
+    ]);
+}
+
+/**
+ * 로딩 상태 표시
+ */
+function showMarketDataLoading() {
+    const quotesContainer = document.getElementById('symbolQuotesContainer');
+    const contextContainer = document.getElementById('priceContextContainer');
+
+    if (quotesContainer) {
+        quotesContainer.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: #94a3b8;">
+                <div style="font-size: 18px; margin-bottom: 8px;">⏳</div>
+                <div data-lang="loading-market-data">Loading market data...</div>
+            </div>
+        `;
+    }
+
+    if (contextContainer) {
+        contextContainer.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: #94a3b8;">
+                <div style="font-size: 18px; margin-bottom: 8px;">⏳</div>
+                <div data-lang="loading-market-data">Loading market data...</div>
+            </div>
+        `;
+    }
+
+    updateLanguage();
+}
+
+/**
+ * 데이터 없음 상태 표시
+ */
+function displayNoMarketData() {
+    const quotesContainer = document.getElementById('symbolQuotesContainer');
+    const contextContainer = document.getElementById('priceContextContainer');
+
+    if (quotesContainer) {
+        quotesContainer.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: #94a3b8;">
+                <div style="font-size: 18px; margin-bottom: 8px;">📊</div>
+                <div data-lang="no-market-data">No market data available</div>
+            </div>
+        `;
+    }
+
+    if (contextContainer) {
+        contextContainer.innerHTML = '';
+    }
+
+    updateLanguage();
+}
+
+/**
+ * 종목 시세 정보 로드
+ */
+async function loadSymbolQuotes(filteredTrades) {
+    const symbols = getTradedSymbols();
+    const quotesContainer = document.getElementById('symbolQuotesContainer');
+
+    if (!quotesContainer || symbols.length === 0) {
+        return;
+    }
+
+    try {
+        loadingMarketData = true;
+        const maxSymbols = 5;
+        const limitedSymbols = symbols.slice(0, maxSymbols);
+        let quotesHTML = '';
+
+        for (const symbol of limitedSymbols) {
+            try {
+                const quote = await getSymbolQuoteInfo(symbol);
+                const stats = getSymbolTradeStats(symbol);
+
+                if (quote && stats) {
+                    const changeClass = quote.change >= 0 ? 'positive' : 'negative';
+                    const changeSymbol = quote.change >= 0 ? '▲' : '▼';
+
+                    quotesHTML += `
+                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px;">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px;">
+                                <div>
+                                    <div style="font-size: 24px; font-weight: 700; color: #f8fafc; margin-bottom: 4px;">${quote.symbol}</div>
+                                    <div style="font-size: 12px; color: #64748b;" data-lang="last-updated">Last Updated</div>
+                                    <div style="font-size: 11px; color: #475569;">${quote.latestTradingDay}</div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-size: 20px; font-weight: 600; color: #f8fafc;">$${quote.price.toFixed(2)}</div>
+                                    <div style="font-size: 14px; color: ${changeClass === 'positive' ? '#10b981' : '#ef4444'};">
+                                        ${changeSymbol} ${quote.changePercent}
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px;">
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 12px;">
+                                    <div style="font-size: 11px; color: #94a3b8; margin-bottom: 4px;" data-lang="open">Open</div>
+                                    <div style="font-size: 14px; font-weight: 600; color: #f8fafc;">$${quote.open.toFixed(2)}</div>
+                                </div>
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 12px;">
+                                    <div style="font-size: 11px; color: #94a3b8; margin-bottom: 4px;" data-lang="high">High</div>
+                                    <div style="font-size: 14px; font-weight: 600; color: #10b981;">$${quote.high.toFixed(2)}</div>
+                                </div>
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 12px;">
+                                    <div style="font-size: 11px; color: #94a3b8; margin-bottom: 4px;" data-lang="low">Low</div>
+                                    <div style="font-size: 14px; font-weight: 600; color: #ef4444;">$${quote.low.toFixed(2)}</div>
+                                </div>
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 12px;">
+                                    <div style="font-size: 11px; color: #94a3b8; margin-bottom: 4px;" data-lang="volume">Volume</div>
+                                    <div style="font-size: 14px; font-weight: 600; color: #f8fafc;">${(quote.volume / 1000000).toFixed(2)}M</div>
+                                </div>
+                            </div>
+                            <div style="border-top: 1px solid #334155; padding-top: 12px;">
+                                <div style="font-size: 12px; color: #94a3b8; margin-bottom: 8px;">Your Trading Stats</div>
+                                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                                    <div style="text-align: center;">
+                                        <div style="font-size: 11px; color: #64748b;">Trades</div>
+                                        <div style="font-size: 14px; font-weight: 600; color: #f8fafc;">${stats.tradeCount}</div>
+                                    </div>
+                                    <div style="text-align: center;">
+                                        <div style="font-size: 11px; color: #64748b;">Win Rate</div>
+                                        <div style="font-size: 14px; font-weight: 600; color: ${stats.winRate >= 50 ? '#10b981' : '#ef4444'};">${stats.winRate.toFixed(0)}%</div>
+                                    </div>
+                                    <div style="text-align: center;">
+                                        <div style="font-size: 11px; color: #64748b;">Total P/L</div>
+                                        <div style="font-size: 14px; font-weight: 600; color: ${stats.totalPnL >= 0 ? '#10b981' : '#ef4444'};">$${stats.totalPnL.toFixed(0)}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                if (limitedSymbols.indexOf(symbol) < limitedSymbols.length - 1) {
+                    await new Promise(resolve => setTimeout(resolve, 12000));
+                }
+            } catch (error) {
+                console.error(`Failed to load quote for ${symbol}:`, error);
+                quotesHTML += `
+                    <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px;">
+                        <div style="font-size: 18px; font-weight: 600; color: #f8fafc; margin-bottom: 8px;">${symbol}</div>
+                        <div style="color: #ef4444; font-size: 14px;">Failed to load market data</div>
+                    </div>
+                `;
+            }
+        }
+
+        if (symbols.length > maxSymbols) {
+            quotesHTML += `
+                <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; text-align: center;">
+                    <div style="color: #94a3b8; font-size: 14px;">
+                        Showing ${maxSymbols} of ${symbols.length} symbols
+                    </div>
+                </div>
+            `;
+        }
+
+        quotesContainer.innerHTML = quotesHTML;
+        updateLanguage();
+    } catch (error) {
+        console.error('Failed to load symbol quotes:', error);
+        quotesContainer.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: #ef4444;">
+                <div>Failed to load market data</div>
+            </div>
+        `;
+    } finally {
+        loadingMarketData = false;
+    }
+}
+
+/**
+ * 가격 컨텍스트 분석 로드
+ */
+async function loadPriceContextAnalysis(filteredTrades) {
+    const contextContainer = document.getElementById('priceContextContainer');
+    if (!contextContainer) return;
+
+    try {
+        const recentTrades = filteredTrades.slice(-10).reverse();
+        let contextHTML = '';
+
+        for (const trade of recentTrades.slice(0, 3)) {
+            try {
+                const context = await analyzeTradePriceContext(trade);
+                if (context) {
+                    contextHTML += `
+                        <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 16px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+                                <div>
+                                    <div style="font-size: 18px; font-weight: 600; color: #f8fafc;">${context.symbol}</div>
+                                    <div style="font-size: 12px; color: #64748b;">${context.date}</div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-size: 14px; color: ${trade.pnl >= 0 ? '#10b981' : '#ef4444'}; font-weight: 600;">
+                                        ${trade.pnl >= 0 ? '+' : ''}$${trade.pnl.toFixed(2)}
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 12px;">
+                                    <div style="font-size: 11px; color: #94a3b8;" data-lang="entry-position">Entry</div>
+                                    <div style="font-size: 14px; font-weight: 600; color: #f8fafc;">
+                                        ${context.entryPositionPct.toFixed(0)}% of range
+                                    </div>
+                                </div>
+                                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 12px;">
+                                    <div style="font-size: 11px; color: #94a3b8;" data-lang="exit-position">Exit</div>
+                                    <div style="font-size: 14px; font-weight: 600; color: #f8fafc;">
+                                        ${context.exitPositionPct.toFixed(0)}% of range
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                if (recentTrades.indexOf(trade) < Math.min(recentTrades.length - 1, 2)) {
+                    await new Promise(resolve => setTimeout(resolve, 12000));
+                }
+            } catch (error) {
+                console.error(`Failed to analyze ${trade.symbol}:`, error);
+            }
+        }
+
+        contextContainer.innerHTML = contextHTML || `
+            <div style="text-align: center; padding: 40px; color: #94a3b8;">
+                <div data-lang="no-market-data">No market data available</div>
+            </div>
+        `;
+        updateLanguage();
+    } catch (error) {
+        console.error('Failed to load price context:', error);
+    }
+}
+
+/**
+ * 시장 시세 새로고침
+ */
+async function refreshMarketQuotes() {
+    const filteredTrades = getFilteredTradesForAnalytics();
+    showMarketDataLoading();
+    await loadSymbolQuotes(filteredTrades);
+}
