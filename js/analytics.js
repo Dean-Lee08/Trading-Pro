@@ -2436,3 +2436,165 @@ async function updateMarketCapPreference(filteredTrades) {
         document.getElementById('detailLargeCapWinRate').textContent = 'Error';
     }
 }
+
+/**
+ * Intraday Performance 카드 업데이트
+ */
+async function updateIntradayPerformance(filteredTrades) {
+    try {
+        const analysis = await analyzeIntradayPerformance(filteredTrades);
+
+        if (!analysis) {
+            document.getElementById('detailIntraday20').textContent = 'N/A';
+            document.getElementById('detailIntraday30').textContent = 'N/A';
+            document.getElementById('detailIntraday50').textContent = 'N/A';
+            document.getElementById('detailIntraday100').textContent = 'N/A';
+            return;
+        }
+
+        // 20%+ gainers
+        const data20 = analysis['20%+'];
+        document.getElementById('detailIntraday20').textContent =
+            `${data20.winRate.toFixed(1)}% | $${data20.avgPnl.toFixed(0)} (${data20.count})`;
+        const el20 = document.getElementById('detailIntraday20');
+        el20.className = data20.winRate >= 50 ? 'detail-value positive' : 'detail-value negative';
+
+        // 30%+ gainers
+        const data30 = analysis['30%+'];
+        document.getElementById('detailIntraday30').textContent =
+            `${data30.winRate.toFixed(1)}% | $${data30.avgPnl.toFixed(0)} (${data30.count})`;
+        const el30 = document.getElementById('detailIntraday30');
+        el30.className = data30.winRate >= 50 ? 'detail-value positive' : 'detail-value negative';
+
+        // 50%+ gainers
+        const data50 = analysis['50%+'];
+        document.getElementById('detailIntraday50').textContent =
+            `${data50.winRate.toFixed(1)}% | $${data50.avgPnl.toFixed(0)} (${data50.count})`;
+        const el50 = document.getElementById('detailIntraday50');
+        el50.className = data50.winRate >= 50 ? 'detail-value positive' : 'detail-value negative';
+
+        // 100%+ gainers
+        const data100 = analysis['100%+'];
+        document.getElementById('detailIntraday100').textContent =
+            `${data100.winRate.toFixed(1)}% | $${data100.avgPnl.toFixed(0)} (${data100.count})`;
+        const el100 = document.getElementById('detailIntraday100');
+        el100.className = data100.winRate >= 50 ? 'detail-value positive' : 'detail-value negative';
+
+    } catch (error) {
+        console.error('Intraday performance analysis failed:', error);
+        document.getElementById('detailIntraday20').textContent = 'Error';
+        document.getElementById('detailIntraday30').textContent = 'Error';
+        document.getElementById('detailIntraday50').textContent = 'Error';
+        document.getElementById('detailIntraday100').textContent = 'Error';
+    }
+}
+
+/**
+ * Sector Performance 카드 업데이트
+ */
+async function updateSectorPerformance(filteredTrades) {
+    try {
+        const analysis = await analyzeSectorPerformance(filteredTrades);
+
+        if (!analysis) {
+            document.getElementById('sectorPerformanceContent').innerHTML =
+                '<div class="detail-item"><span class="detail-label">No data</span><span class="detail-value">-</span></div>';
+            return;
+        }
+
+        // Build sector performance HTML
+        let html = '';
+        for (const [sector, stats] of Object.entries(analysis)) {
+            const colorClass = stats.winRate >= 50 ? 'positive' : 'negative';
+            html += `
+                <div class="detail-item">
+                    <span class="detail-label">${sector}</span>
+                    <span class="detail-value ${colorClass}">${stats.winRate.toFixed(1)}% | $${stats.avgPnl.toFixed(0)} (${stats.count})</span>
+                </div>
+            `;
+        }
+
+        if (html === '') {
+            html = '<div class="detail-item"><span class="detail-label">No sectors found</span><span class="detail-value">-</span></div>';
+        }
+
+        document.getElementById('sectorPerformanceContent').innerHTML = html;
+
+    } catch (error) {
+        console.error('Sector performance analysis failed:', error);
+        document.getElementById('sectorPerformanceContent').innerHTML =
+            '<div class="detail-item"><span class="detail-label">Error loading sectors</span><span class="detail-value">-</span></div>';
+    }
+}
+
+/**
+ * SPY Correlation 카드 업데이트
+ */
+async function updateSPYCorrelation(filteredTrades) {
+    try {
+        const analysis = await analyzeSPYCorrelation(filteredTrades);
+
+        if (!analysis) {
+            document.getElementById('detailSPYUpDays').textContent = 'N/A';
+            document.getElementById('detailSPYDownDays').textContent = 'N/A';
+            return;
+        }
+
+        // SPY Up Days
+        document.getElementById('detailSPYUpDays').textContent =
+            `${analysis.upDays.winRate.toFixed(1)}% | $${analysis.upDays.avgPnl.toFixed(0)} (${analysis.upDays.count})`;
+        const upEl = document.getElementById('detailSPYUpDays');
+        upEl.className = analysis.upDays.winRate >= 50 ? 'detail-value positive' : 'detail-value negative';
+
+        // SPY Down Days
+        document.getElementById('detailSPYDownDays').textContent =
+            `${analysis.downDays.winRate.toFixed(1)}% | $${analysis.downDays.avgPnl.toFixed(0)} (${analysis.downDays.count})`;
+        const downEl = document.getElementById('detailSPYDownDays');
+        downEl.className = analysis.downDays.winRate >= 50 ? 'detail-value positive' : 'detail-value negative';
+
+    } catch (error) {
+        console.error('SPY correlation analysis failed:', error);
+        document.getElementById('detailSPYUpDays').textContent = 'Error';
+        document.getElementById('detailSPYDownDays').textContent = 'Error';
+    }
+}
+
+/**
+ * Relative Volume Correlation 카드 업데이트
+ */
+async function updateRelativeVolumeCorrelation(filteredTrades) {
+    try {
+        const analysis = await analyzeRelativeVolumeCorrelation(filteredTrades);
+
+        if (!analysis) {
+            document.getElementById('detailHighRelVol').textContent = 'N/A';
+            document.getElementById('detailMediumRelVol').textContent = 'N/A';
+            document.getElementById('detailNormalRelVol').textContent = 'N/A';
+            return;
+        }
+
+        // High Relative Volume (2.0x+)
+        document.getElementById('detailHighRelVol').textContent =
+            `${analysis.highRelVol.winRate.toFixed(1)}% | $${analysis.highRelVol.avgPnl.toFixed(0)} (${analysis.highRelVol.count})`;
+        const highEl = document.getElementById('detailHighRelVol');
+        highEl.className = analysis.highRelVol.winRate >= 50 ? 'detail-value positive' : 'detail-value negative';
+
+        // Medium Relative Volume (1.5-2.0x)
+        document.getElementById('detailMediumRelVol').textContent =
+            `${analysis.mediumRelVol.winRate.toFixed(1)}% | $${analysis.mediumRelVol.avgPnl.toFixed(0)} (${analysis.mediumRelVol.count})`;
+        const mediumEl = document.getElementById('detailMediumRelVol');
+        mediumEl.className = analysis.mediumRelVol.winRate >= 50 ? 'detail-value positive' : 'detail-value negative';
+
+        // Normal Relative Volume (<1.5x)
+        document.getElementById('detailNormalRelVol').textContent =
+            `${analysis.normalRelVol.winRate.toFixed(1)}% | $${analysis.normalRelVol.avgPnl.toFixed(0)} (${analysis.normalRelVol.count})`;
+        const normalEl = document.getElementById('detailNormalRelVol');
+        normalEl.className = analysis.normalRelVol.winRate >= 50 ? 'detail-value positive' : 'detail-value negative';
+
+    } catch (error) {
+        console.error('Relative volume correlation analysis failed:', error);
+        document.getElementById('detailHighRelVol').textContent = 'Error';
+        document.getElementById('detailMediumRelVol').textContent = 'Error';
+        document.getElementById('detailNormalRelVol').textContent = 'Error';
+    }
+}
