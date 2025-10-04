@@ -33,6 +33,9 @@ function showAnalyticsSection(sectionName) {
     } else if (sectionName === 'charts') {
         document.getElementById('chartSection').classList.add('active');
         setTimeout(async () => await updateAdvancedCharts(), 100);
+    } else if (sectionName === 'market-data') {
+        document.getElementById('marketDataSection').classList.add('active');
+        setTimeout(() => loadMarketDataSection(), 100);
     } else if (sectionName === 'patterns') {
         document.getElementById('patternsSection').classList.add('active');
         setTimeout(() => updatePatternInsights(), 100);

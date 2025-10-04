@@ -627,6 +627,7 @@
                             <div class="analytics-tabs">
                                 <button class="analytics-tab active" onclick="showAnalyticsSection('detail')"><span data-lang="detail">Detail</span></button>
                                 <button class="analytics-tab" onclick="showAnalyticsSection('charts')"><span data-lang="charts">Charts</span></button>
+                                <button class="analytics-tab" onclick="showAnalyticsSection('market-data')"><span data-lang="market-data">Market Data</span></button>
                                 <button class="analytics-tab" onclick="showAnalyticsSection('patterns')"><span data-lang="pattern-insights">Pattern Insights</span></button>
                             </div>
                         </div>
@@ -1058,6 +1059,25 @@
                         </div>
                     </div>
 
+                    <!-- Market Data Section -->
+                    <div class="detail-section" id="marketDataSection">
+                        <div style="margin-bottom: 24px;">
+                            <h2 class="section-title" data-lang="symbol-quotes" style="margin-bottom: 16px;">Symbol Quotes</h2>
+                            <button class="btn btn-primary" onclick="refreshMarketQuotes()" style="margin-bottom: 16px;">
+                                <span data-lang="refresh-quotes">Refresh Quotes</span>
+                            </button>
+                            <div id="symbolQuotesContainer" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px;">
+                                <!-- Symbol quote cards will be inserted here -->
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 32px;">
+                            <h2 class="section-title" data-lang="price-context" style="margin-bottom: 16px;">Price Context Analysis</h2>
+                            <div id="priceContextContainer">
+                                <!-- Price context analysis will be inserted here -->
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Pattern Insights Section -->
                     <div class="detail-section" id="patternsSection">
@@ -1535,12 +1555,22 @@
                 </div>
                 
                 <div class="settings-section">
+                    <h3 data-lang="api-key-settings">API Key Settings</h3>
+                    <div class="settings-option">
+                        <label data-lang="alpha-vantage-api-key">Alpha Vantage API Key</label>
+                        <input id="alphaVantageApiKeyInput" type="text" placeholder="Enter your Alpha Vantage API key" style="width: 100%; padding: 8px; border: 1px solid #334155; background: #0f172a; color: #f8fafc; border-radius: 6px; margin-top: 8px;"/>
+                        <button class="settings-btn" data-lang="save-api-key" onclick="saveAlphaVantageApiKey()" style="margin-top: 8px;">Save API Key</button>
+                    </div>
+                </div>
+
+                <div class="settings-section">
                     <h3 data-lang="data-management">Data Management</h3>
                     <button class="settings-btn" data-lang="export-data" onclick="exportData()">Export Data</button>
                     <button class="settings-btn" data-lang="import-data" onclick="importData()">Import Data</button>
                     <input accept=".json" id="importFileInput" onchange="handleFileImport()" style="display: none;" type="file"/>
+                    <button class="settings-btn" data-lang="clear-market-cache" onclick="clearMarketCache()" style="margin-top: 8px;">Clear Market Data Cache</button>
                 </div>
-                
+
                 <div class="settings-section">
                     <h3 data-lang="danger-zone">Danger Zone</h3>
                     <button class="settings-btn danger" data-lang="clear-all-data" onclick="clearAllData()">Clear All Data</button>
@@ -1555,6 +1585,7 @@
     <!-- JavaScript 파일들 (순서 중요!) -->
     <script src="js/config.js"></script>
     <script src="js/utils.js"></script>
+    <script src="js/market-data.js"></script>
     <script src="js/trading.js"></script>
     <script src="js/analytics.js"></script>
     <script src="js/psychology.js"></script>

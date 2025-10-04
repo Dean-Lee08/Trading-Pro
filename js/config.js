@@ -62,6 +62,11 @@ if (typeof window !== 'undefined') {
     window.psychologyChart = null;
 }
 
+// Market Data State
+let marketDataEnabled = true;
+let loadingMarketData = false;
+let marketDataQuotes = {};
+
 // ============================================
 // Language Translations
 // ============================================
@@ -404,7 +409,32 @@ const translations = {
         'limit-warning-current': 'Current P/L',
         'limit-warning-target': 'Daily Target',
         'limit-warning-limit': 'Loss Limit',
-        'limit-warning-ok': 'OK, I Understand'
+        'limit-warning-ok': 'OK, I Understand',
+        'market-data': 'Market Data',
+        'market-context': 'Market Context',
+        'symbol-quotes': 'Symbol Quotes',
+        'price-context': 'Price Context Analysis',
+        'current-price': 'Current Price',
+        'day-change': 'Day Change',
+        'volume': 'Volume',
+        'open': 'Open',
+        'high': 'High',
+        'low': 'Low',
+        'previous-close': 'Prev Close',
+        'last-updated': 'Last Updated',
+        'refresh-quotes': 'Refresh Quotes',
+        'loading-market-data': 'Loading market data...',
+        'api-key-settings': 'API Key Settings',
+        'alpha-vantage-api-key': 'Alpha Vantage API Key',
+        'save-api-key': 'Save API Key',
+        'clear-market-cache': 'Clear Market Data Cache',
+        'entry-position': 'Entry Position',
+        'exit-position': 'Exit Position',
+        'vs-market-high': 'vs Market High',
+        'vs-market-low': 'vs Market Low',
+        'market-range': 'Market Range',
+        'no-market-data': 'No market data available',
+        'api-rate-limit': 'API rate limit reached. Please wait.'
     },
     ko: {
         'dashboard': '대시보드',
@@ -743,7 +773,32 @@ const translations = {
         'limit-warning-current': '현재 손익',
         'limit-warning-target': '일일 목표',
         'limit-warning-limit': '손실 한도',
-        'limit-warning-ok': '확인했습니다'
+        'limit-warning-ok': '확인했습니다',
+        'market-data': '시장 데이터',
+        'market-context': '시장 컨텍스트',
+        'symbol-quotes': '종목 시세',
+        'price-context': '가격 컨텍스트 분석',
+        'current-price': '현재가',
+        'day-change': '등락',
+        'volume': '거래량',
+        'open': '시가',
+        'high': '고가',
+        'low': '저가',
+        'previous-close': '전일종가',
+        'last-updated': '업데이트',
+        'refresh-quotes': '시세 새로고침',
+        'loading-market-data': '시장 데이터 로딩 중...',
+        'api-key-settings': 'API 키 설정',
+        'alpha-vantage-api-key': 'Alpha Vantage API 키',
+        'save-api-key': 'API 키 저장',
+        'clear-market-cache': '시장 데이터 캐시 삭제',
+        'entry-position': '진입 위치',
+        'exit-position': '청산 위치',
+        'vs-market-high': 'vs 시장 고가',
+        'vs-market-low': 'vs 시장 저가',
+        'market-range': '시장 범위',
+        'no-market-data': '시장 데이터 없음',
+        'api-rate-limit': 'API 호출 한도에 도달했습니다. 잠시 후 다시 시도하세요.'
     }
 };
 
