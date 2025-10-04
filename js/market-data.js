@@ -150,11 +150,15 @@ function clearMarketDataCache() {
  */
 async function callAlphaVantageAPI(params) {
     if (!alphaVantageApiKey) {
-        throw new Error('Alpha Vantage API key not set');
+        const error = new Error('Alpha Vantage API key not set');
+        error.code = 'NO_API_KEY';
+        throw error;
     }
 
     if (!canMakeApiCall()) {
-        throw new Error('API rate limit exceeded. Please wait before making more requests.');
+        const error = new Error('API rate limit exceeded. Please wait before making more requests.');
+        error.code = 'RATE_LIMIT';
+        throw error;
     }
 
     const url = new URL(ALPHA_VANTAGE_BASE_URL);
@@ -170,19 +174,25 @@ async function callAlphaVantageAPI(params) {
         const response = await fetch(url.toString());
 
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            const error = new Error(`HTTP error! status: ${response.status}`);
+            error.code = 'HTTP_ERROR';
+            throw error;
         }
 
         const data = await response.json();
 
         // Check for API error messages
         if (data['Error Message']) {
-            throw new Error(data['Error Message']);
+            const error = new Error(data['Error Message']);
+            error.code = 'API_ERROR';
+            throw error;
         }
 
         if (data['Note']) {
-            // Rate limit message
-            throw new Error('API call frequency limit reached. Please wait a minute.');
+            // Rate limit message from Alpha Vantage
+            const error = new Error('API call frequency limit reached. Please wait a minute.');
+            error.code = 'RATE_LIMIT';
+            throw error;
         }
 
         logApiCall();
