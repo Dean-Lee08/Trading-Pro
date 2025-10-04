@@ -6,18 +6,20 @@
 // Page Navigation
 // ============================================
 
-function showPage(pageId) {
+function showPage(pageId, clickedElement) {
     document.querySelectorAll('.page').forEach(page => {
         page.classList.remove('active');
     });
-    
+
     document.querySelectorAll('.nav-item').forEach(item => {
         item.classList.remove('active');
     });
-    
+
     document.getElementById(pageId).classList.add('active');
-    event.target.classList.add('active');
-    
+    if (clickedElement) {
+        clickedElement.classList.add('active');
+    }
+
     if (pageId === 'calendar') {
         renderCalendar();
     } else if (pageId === 'analysis') {

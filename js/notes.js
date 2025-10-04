@@ -3,57 +3,92 @@
 // ============================================
 
 // ============================================
+// HTML Sanitization Helper
+// ============================================
+
+/**
+ * 기본적인 HTML 태그만 허용하고 위험한 속성 제거
+ */
+function sanitizeHTML(html) {
+    if (!html) return '';
+
+    // 허용되는 안전한 태그 목록
+    const allowedTags = ['b', 'i', 'u', 'strong', 'em', 'br', 'p', 'div', 'span'];
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+
+    // 모든 요소를 순회하며 허용되지 않은 태그와 속성 제거
+    const allElements = tempDiv.querySelectorAll('*');
+    allElements.forEach(element => {
+        // 허용되지 않은 태그 제거
+        if (!allowedTags.includes(element.tagName.toLowerCase())) {
+            element.replaceWith(element.textContent);
+            return;
+        }
+
+        // 모든 속성 제거 (스타일은 별도로 적용됨)
+        while (element.attributes.length > 0) {
+            element.removeAttribute(element.attributes[0].name);
+        }
+    });
+
+    return tempDiv.innerHTML;
+}
+
+// ============================================
 // Notes Section Navigation
 // ============================================
 
-function showNotesSection(section) {
+function showNotesSection(section, clickedElement) {
     // 노트 작성/편집 중인지 확인
     const noteEditor = document.getElementById('noteEditor');
     const isEditing = noteEditor.style.display === 'block';
-    
+
     if (isEditing) {
         const title = document.getElementById('noteTitle').value.trim();
         const content = document.getElementById('noteContentEditor').innerHTML.trim();
-        
+
         if (title || content) {
-            const confirmMessage = currentLanguage === 'ko' ? 
-                '작성 중인 노트가 있습니다. 저장하지 않고 이동하시겠습니까?' : 
+            const confirmMessage = currentLanguage === 'ko' ?
+                '작성 중인 노트가 있습니다. 저장하지 않고 이동하시겠습니까?' :
                 'You have unsaved note content. Do you want to leave without saving?';
-            
+
             if (!confirm(confirmMessage)) {
                 return;
             }
         }
     }
-    
+
     // 모든 상태 초기화
     currentNotesSection = section;
     currentViewingNoteId = null;
     editingNoteId = null;
-    
+
     // 에디터와 뷰모드 숨기기
     document.getElementById('noteEditor').style.display = 'none';
     document.getElementById('noteViewMode').style.display = 'none';
-    
+
     // 탭 상태 업데이트
     document.querySelectorAll('.notes-tab').forEach(tab => {
         tab.classList.remove('active');
     });
-    event.target.classList.add('active');
-    
+    if (clickedElement) {
+        clickedElement.classList.add('active');
+    }
+
     // 모든 섹션 숨기기
     document.querySelectorAll('.note-section').forEach(noteSection => {
         noteSection.classList.remove('active');
         noteSection.style.display = 'none';
     });
-    
+
     // 선택된 섹션만 표시
     const targetSection = document.getElementById(`${section}NotesSection`);
     if (targetSection) {
         targetSection.classList.add('active');
         targetSection.style.display = 'block';
     }
-    
+
     // 노트 목록 새로고침
     setTimeout(() => {
         renderNotesList(section);
@@ -403,14 +438,14 @@ function toggleNotePreview(buttonElement) {
     if (previewElement.classList.contains('expanded')) {
         // Collapse
         const preview = note.content.replace(/<[^>]*>/g, '');
-        previewElement.innerHTML = preview.substring(0, 150) + '...';
+        previewElement.textContent = preview.substring(0, 150) + '...';
         previewElement.style.fontFamily = note.font || "'Inter', sans-serif";
         previewElement.style.color = note.textColor || '#94a3b8';
         previewElement.classList.remove('expanded');
         buttonElement.textContent = currentLanguage === 'ko' ? '더보기' : 'Show more';
     } else {
-        // Expand
-        previewElement.innerHTML = note.content;
+        // Expand - sanitize HTML before rendering
+        previewElement.innerHTML = sanitizeHTML(note.content);
         previewElement.style.fontFamily = note.font || "'Inter', sans-serif";
         previewElement.style.color = note.textColor || '#94a3b8';
         previewElement.classList.add('expanded');
@@ -425,17 +460,18 @@ function toggleNotePreview(buttonElement) {
 function viewNote(noteId) {
     const note = notes.find(n => n.id === noteId);
     if (!note) return;
-    
+
     currentViewingNoteId = noteId;
-    
+
     document.getElementById('noteViewTitle').textContent = note.title;
-    document.getElementById('noteViewContent').innerHTML = note.content;
-    
+    // Sanitize HTML before rendering
+    document.getElementById('noteViewContent').innerHTML = sanitizeHTML(note.content);
+
     // 폰트와 색상 적용
     const viewContent = document.getElementById('noteViewContent');
     viewContent.style.fontFamily = note.font || "'Inter', sans-serif";
     viewContent.style.color = note.textColor || '#e4e4e7';
-    
+
     // Show view mode, hide other sections
     document.getElementById('noteViewMode').style.display = 'block';
     document.getElementById('noteEditor').style.display = 'none';

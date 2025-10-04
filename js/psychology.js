@@ -87,13 +87,15 @@ function showPsychologyDatePicker() {
 /**
  * 심리 섹션 전환
  */
-function showPsychologySection(section) {
+function showPsychologySection(section, clickedElement) {
     try {
         // 탭 상태 업데이트
         document.querySelectorAll('.psychology-tab').forEach(tab => {
             tab.classList.remove('active');
         });
-        event.target.classList.add('active');
+        if (clickedElement) {
+            clickedElement.classList.add('active');
+        }
 
         // 섹션 표시/숨기기
         document.querySelectorAll('.psychology-section').forEach(sec => {
