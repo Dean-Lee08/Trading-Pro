@@ -425,6 +425,241 @@ function getSymbolTradeStats(symbol) {
     };
 }
 
+/**
+ * 종목의 상세 Overview 데이터 가져오기 (파싱된 형태)
+ */
+async function getSymbolOverviewData(symbol) {
+    try {
+        const overview = await getStockOverview(symbol);
+
+        return {
+            symbol: overview.Symbol,
+            name: overview.Name,
+            marketCap: parseFloat(overview.MarketCapitalization) || 0,
+            sharesFloat: parseFloat(overview.SharesFloat) || 0,
+            sharesOutstanding: parseFloat(overview.SharesOutstanding) || 0,
+            beta: parseFloat(overview.Beta) || 0,
+            peRatio: parseFloat(overview.PERatio) || 0,
+            eps: parseFloat(overview.EPS) || 0,
+            week52High: parseFloat(overview['52WeekHigh']) || 0,
+            week52Low: parseFloat(overview['52WeekLow']) || 0,
+            sector: overview.Sector || 'Unknown',
+            industry: overview.Industry || 'Unknown',
+            description: overview.Description || ''
+        };
+    } catch (error) {
+        console.error(`Failed to get overview data for ${symbol}:`, error);
+        return null;
+    }
+}
+
+/**
+ * 여러 종목의 Overview 데이터 배치 조회
+ */
+async function getMultipleOverviews(symbols, maxSymbols = 5) {
+    const results = {};
+    const limitedSymbols = symbols.slice(0, maxSymbols);
+
+    for (const symbol of limitedSymbols) {
+        try {
+            if (Object.keys(results).length > 0) {
+                await new Promise(resolve => setTimeout(resolve, 12000)); // 12초 delay
+            }
+
+            const overview = await getSymbolOverviewData(symbol);
+            results[symbol] = overview;
+        } catch (error) {
+            console.error(`Failed to fetch overview for ${symbol}:`, error);
+            results[symbol] = null;
+        }
+    }
+
+    return results;
+}
+
+/**
+ * 승리 거래의 평균 시장 특성 계산
+ */
+async function analyzeWinningTradesMarketChar(filteredTrades) {
+    const winningTrades = filteredTrades.filter(trade => trade.pnl > 0);
+
+    if (winningTrades.length === 0) {
+        return null;
+    }
+
+    // 승리 거래 종목 목록
+    const winningSymbols = [...new Set(winningTrades.map(trade => trade.symbol))];
+
+    // Overview 데이터 가져오기
+    const overviews = await getMultipleOverviews(winningSymbols, 5);
+
+    // 데이터가 있는 것만 필터링
+    const validOverviews = Object.values(overviews).filter(o => o !== null);
+
+    if (validOverviews.length === 0) {
+        return null;
+    }
+
+    // 평균 계산
+    const avgFloat = validOverviews.reduce((sum, o) => sum + o.sharesFloat, 0) / validOverviews.length;
+    const avgMarketCap = validOverviews.reduce((sum, o) => sum + o.marketCap, 0) / validOverviews.length;
+    const avgBeta = validOverviews.reduce((sum, o) => sum + o.beta, 0) / validOverviews.length;
+
+    return {
+        avgFloat,
+        avgMarketCap,
+        avgBeta,
+        symbolsAnalyzed: validOverviews.length,
+        totalWinningSymbols: winningSymbols.length
+    };
+}
+
+/**
+ * 거래량 기반 성과 분석
+ */
+async function analyzeVolumePerformance(filteredTrades) {
+    const tradesWithVolume = [];
+
+    // 각 거래의 당일 거래량 가져오기
+    const symbols = [...new Set(filteredTrades.map(t => t.symbol))].slice(0, 5);
+
+    for (const trade of filteredTrades) {
+        if (!symbols.includes(trade.symbol)) continue;
+
+        try {
+            const dailyData = await getDailyStockData(trade.symbol, 'compact');
+            const timeSeries = dailyData['Time Series (Daily)'];
+
+            if (timeSeries && timeSeries[trade.date]) {
+                const volume = parseInt(timeSeries[trade.date]['5. volume']);
+                tradesWithVolume.push({
+                    ...trade,
+                    volume
+                });
+            }
+
+            // Delay between API calls
+            if (filteredTrades.indexOf(trade) < Math.min(filteredTrades.length - 1, 4)) {
+                await new Promise(resolve => setTimeout(resolve, 12000));
+            }
+        } catch (error) {
+            console.error(`Failed to get volume for ${trade.symbol}:`, error);
+        }
+    }
+
+    if (tradesWithVolume.length === 0) {
+        return null;
+    }
+
+    // 거래량으로 정렬
+    const sorted = [...tradesWithVolume].sort((a, b) => b.volume - a.volume);
+    const median = sorted[Math.floor(sorted.length / 2)].volume;
+
+    const highVolumeTrades = tradesWithVolume.filter(t => t.volume > median);
+    const lowVolumeTrades = tradesWithVolume.filter(t => t.volume <= median);
+
+    const highVolumeWins = highVolumeTrades.filter(t => t.pnl > 0).length;
+    const highVolumeWinRate = highVolumeTrades.length > 0 ? (highVolumeWins / highVolumeTrades.length) * 100 : 0;
+
+    const lowVolumeWins = lowVolumeTrades.filter(t => t.pnl > 0).length;
+    const lowVolumeWinRate = lowVolumeTrades.length > 0 ? (lowVolumeWins / lowVolumeTrades.length) * 100 : 0;
+
+    return {
+        highVolumeWinRate,
+        lowVolumeWinRate,
+        medianVolume: median,
+        highVolumeTrades: highVolumeTrades.length,
+        lowVolumeTrades: lowVolumeTrades.length
+    };
+}
+
+/**
+ * 변동성(Beta) 기반 성과 분석
+ */
+async function analyzeVolatilityPerformance(filteredTrades) {
+    const symbols = [...new Set(filteredTrades.map(t => t.symbol))];
+    const overviews = await getMultipleOverviews(symbols, 5);
+
+    // 각 거래에 Beta 정보 추가
+    const tradesWithBeta = filteredTrades
+        .filter(trade => overviews[trade.symbol] && overviews[trade.symbol].beta > 0)
+        .map(trade => ({
+            ...trade,
+            beta: overviews[trade.symbol].beta
+        }));
+
+    if (tradesWithBeta.length === 0) {
+        return null;
+    }
+
+    // 변동성 분류
+    const highVolatility = tradesWithBeta.filter(t => t.beta > 1.5);
+    const mediumVolatility = tradesWithBeta.filter(t => t.beta >= 1.0 && t.beta <= 1.5);
+    const lowVolatility = tradesWithBeta.filter(t => t.beta < 1.0);
+
+    const calculateWinRate = (trades) => {
+        if (trades.length === 0) return 0;
+        const wins = trades.filter(t => t.pnl > 0).length;
+        return (wins / trades.length) * 100;
+    };
+
+    const calculateAvgReturn = (trades) => {
+        if (trades.length === 0) return 0;
+        return trades.reduce((sum, t) => sum + t.returnPct, 0) / trades.length;
+    };
+
+    return {
+        highVolatilityWinRate: calculateWinRate(highVolatility),
+        mediumVolatilityWinRate: calculateWinRate(mediumVolatility),
+        lowVolatilityWinRate: calculateWinRate(lowVolatility),
+        highVolatilityAvgReturn: calculateAvgReturn(highVolatility),
+        mediumVolatilityAvgReturn: calculateAvgReturn(mediumVolatility),
+        lowVolatilityAvgReturn: calculateAvgReturn(lowVolatility),
+        highVolatilityCount: highVolatility.length,
+        mediumVolatilityCount: mediumVolatility.length,
+        lowVolatilityCount: lowVolatility.length
+    };
+}
+
+/**
+ * 시가총액 기반 성과 분석
+ */
+async function analyzeMarketCapPerformance(filteredTrades) {
+    const symbols = [...new Set(filteredTrades.map(t => t.symbol))];
+    const overviews = await getMultipleOverviews(symbols, 5);
+
+    // 각 거래에 시가총액 정보 추가
+    const tradesWithMarketCap = filteredTrades
+        .filter(trade => overviews[trade.symbol] && overviews[trade.symbol].marketCap > 0)
+        .map(trade => ({
+            ...trade,
+            marketCap: overviews[trade.symbol].marketCap
+        }));
+
+    if (tradesWithMarketCap.length === 0) {
+        return null;
+    }
+
+    // 시가총액 분류 (단위: billion)
+    const smallCap = tradesWithMarketCap.filter(t => t.marketCap < 2000000000); // < $2B
+    const midCap = tradesWithMarketCap.filter(t => t.marketCap >= 2000000000 && t.marketCap < 10000000000); // $2B - $10B
+    const largeCap = tradesWithMarketCap.filter(t => t.marketCap >= 10000000000); // > $10B
+
+    const calculateStats = (trades) => {
+        if (trades.length === 0) return { winRate: 0, avgPnL: 0, count: 0 };
+        const wins = trades.filter(t => t.pnl > 0).length;
+        const winRate = (wins / trades.length) * 100;
+        const avgPnL = trades.reduce((sum, t) => sum + t.pnl, 0) / trades.length;
+        return { winRate, avgPnL, count: trades.length };
+    };
+
+    return {
+        smallCap: calculateStats(smallCap),
+        midCap: calculateStats(midCap),
+        largeCap: calculateStats(largeCap)
+    };
+}
+
 // ==================== API Settings Management ====================
 
 /**
