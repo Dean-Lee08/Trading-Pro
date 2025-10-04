@@ -75,16 +75,27 @@ function loadApiCallLog() {
 /**
  * 캐시에서 데이터 가져오기
  */
-function getCachedData(cacheKey) {
+function getCachedData(cacheKey, cacheType = 'quote') {
     if (marketDataCache[cacheKey]) {
         const cached = marketDataCache[cacheKey];
         const now = Date.now();
         const cacheAge = now - cached.timestamp;
-        const maxAge = 5 * 60 * 1000; // 5 minutes cache
+
+        // Cache duration based on data type
+        let maxAge;
+        if (cacheType === 'overview') {
+            maxAge = 24 * 60 * 60 * 1000; // 24 hours for overview data
+        } else if (cacheType === 'intraday') {
+            maxAge = 60 * 60 * 1000; // 1 hour for intraday data
+        } else {
+            maxAge = 5 * 60 * 1000; // 5 minutes for quote/daily data
+        }
 
         if (cacheAge < maxAge) {
-            console.log('Using cached data for:', cacheKey);
+            console.log(`Using cached data for: ${cacheKey} (${cacheType}, age: ${Math.floor(cacheAge/1000)}s)`);
             return cached.data;
+        } else {
+            console.log(`Cache expired for: ${cacheKey} (age: ${Math.floor(cacheAge/1000)}s, max: ${Math.floor(maxAge/1000)}s)`);
         }
     }
     return null;
@@ -187,7 +198,7 @@ async function callAlphaVantageAPI(params) {
  */
 async function getDailyStockData(symbol, outputsize = 'compact') {
     const cacheKey = `daily_${symbol}_${outputsize}`;
-    const cached = getCachedData(cacheKey);
+    const cached = getCachedData(cacheKey, 'quote');
 
     if (cached) {
         return cached;
@@ -214,7 +225,7 @@ async function getDailyStockData(symbol, outputsize = 'compact') {
  */
 async function getIntradayStockData(symbol, interval = '5min', outputsize = 'compact') {
     const cacheKey = `intraday_${symbol}_${interval}_${outputsize}`;
-    const cached = getCachedData(cacheKey);
+    const cached = getCachedData(cacheKey, 'intraday');
 
     if (cached) {
         return cached;
@@ -242,7 +253,7 @@ async function getIntradayStockData(symbol, interval = '5min', outputsize = 'com
  */
 async function getStockOverview(symbol) {
     const cacheKey = `overview_${symbol}`;
-    const cached = getCachedData(cacheKey);
+    const cached = getCachedData(cacheKey, 'overview');
 
     if (cached) {
         return cached;
@@ -268,7 +279,7 @@ async function getStockOverview(symbol) {
  */
 async function getGlobalQuote(symbol) {
     const cacheKey = `quote_${symbol}`;
-    const cached = getCachedData(cacheKey);
+    const cached = getCachedData(cacheKey, 'quote');
 
     if (cached) {
         return cached;
@@ -694,7 +705,7 @@ function getAlphaVantageApiKey() {
 
 /**
  * Intraday Performance 분석 (진입 시점 기준 상승률)
- * 진입 시간 기준으로 해당 종목이 얼마나 올랐는지 분석
+ * Daily 데이터의 open price 대비 진입가 비교
  */
 async function analyzeIntradayPerformance(filteredTrades) {
     try {
@@ -711,59 +722,48 @@ async function analyzeIntradayPerformance(filteredTrades) {
         }
 
         const symbols = [...new Set(filteredTrades.map(t => t.symbol))].slice(0, 5);
-        const analyzedTrades = [];
 
-        for (const trade of filteredTrades) {
-            if (!symbols.includes(trade.symbol) || !trade.entryTime) continue;
-
+        // Fetch all daily data first
+        const dailyDataCache = {};
+        for (const symbol of symbols) {
             try {
-                const intradayData = await getIntradayStockData(trade.symbol, '5min', 'full');
-                const timeSeries = intradayData['Time Series (5min)'];
-
-                if (!timeSeries) {
+                const dailyData = await getDailyStockData(symbol, 'compact');
+                dailyDataCache[symbol] = dailyData['Time Series (Daily)'];
+                if (Object.keys(dailyDataCache).length > 0) {
                     await new Promise(resolve => setTimeout(resolve, 12000));
-                    continue;
                 }
-
-                // Find market open price (9:30 AM)
-                const openTime = `${trade.date} 09:30:00`;
-                let openPrice = null;
-
-                for (const [timestamp, data] of Object.entries(timeSeries)) {
-                    if (timestamp.startsWith(trade.date)) {
-                        if (timestamp >= openTime) {
-                            openPrice = parseFloat(data['1. open']);
-                            break;
-                        }
-                    }
-                }
-
-                if (!openPrice) {
-                    await new Promise(resolve => setTimeout(resolve, 12000));
-                    continue;
-                }
-
-                // Calculate gain from open to entry price
-                const gainPct = ((trade.buyPrice - openPrice) / openPrice) * 100;
-
-                // Categorize by gain percentage
-                for (const range of ranges) {
-                    if (gainPct >= range.min) {
-                        results[range.label].count++;
-                        results[range.label].totalPnl += trade.pnl;
-                        if (trade.pnl > 0) {
-                            results[range.label].wins++;
-                        } else {
-                            results[range.label].losses++;
-                        }
-                    }
-                }
-
-                analyzedTrades.push({ ...trade, gainPct });
-                await new Promise(resolve => setTimeout(resolve, 12000));
             } catch (error) {
-                console.error(`Failed to analyze intraday for ${trade.symbol}:`, error);
+                console.error(`Failed to fetch daily data for ${symbol}:`, error);
                 await new Promise(resolve => setTimeout(resolve, 12000));
+            }
+        }
+
+        // Analyze trades
+        for (const trade of filteredTrades) {
+            if (!symbols.includes(trade.symbol)) continue;
+
+            const timeSeries = dailyDataCache[trade.symbol];
+            if (!timeSeries || !timeSeries[trade.date]) continue;
+
+            const dayData = timeSeries[trade.date];
+            const openPrice = parseFloat(dayData['1. open']);
+
+            if (!openPrice || openPrice === 0) continue;
+
+            // Calculate gain from open to entry price
+            const gainPct = ((trade.buyPrice - openPrice) / openPrice) * 100;
+
+            // Categorize by gain percentage
+            for (const range of ranges) {
+                if (gainPct >= range.min) {
+                    results[range.label].count++;
+                    results[range.label].totalPnl += trade.pnl;
+                    if (trade.pnl > 0) {
+                        results[range.label].wins++;
+                    } else {
+                        results[range.label].losses++;
+                    }
+                }
             }
         }
 
