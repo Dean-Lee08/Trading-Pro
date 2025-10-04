@@ -429,16 +429,27 @@ function toggleNotePreview(buttonElement) {
     const noteId = parseInt(buttonElement.getAttribute('data-note-id'));
     const category = buttonElement.getAttribute('data-category');
     const uniqueId = `${noteId}_${category}`;
-    
+
     const previewElement = document.getElementById(`preview-${uniqueId}`);
     const note = notes.find(n => n.id === noteId);
-    
+
     if (!previewElement || !note) return;
-    
+
     if (previewElement.classList.contains('expanded')) {
-        // Collapse
-        const preview = note.content.replace(/<[^>]*>/g, '');
-        previewElement.textContent = preview.substring(0, 150) + '...';
+        // Collapse - show truncated HTML preview
+        const sanitizedContent = sanitizeHTML(note.content);
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = sanitizedContent;
+        const textContent = tempDiv.textContent || tempDiv.innerText || '';
+
+        // 150자까지만 표시하되, HTML 구조 유지
+        if (textContent.length > 150) {
+            const truncated = textContent.substring(0, 150) + '...';
+            previewElement.textContent = truncated;
+        } else {
+            previewElement.innerHTML = sanitizedContent;
+        }
+
         previewElement.style.fontFamily = note.font || "'Inter', sans-serif";
         previewElement.style.color = note.textColor || '#94a3b8';
         previewElement.classList.remove('expanded');
