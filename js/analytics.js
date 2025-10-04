@@ -33,9 +33,6 @@ function showAnalyticsSection(sectionName) {
     } else if (sectionName === 'charts') {
         document.getElementById('chartSection').classList.add('active');
         setTimeout(async () => await updateAdvancedCharts(), 100);
-    } else if (sectionName === 'bias-analysis') {
-        document.getElementById('biasAnalysisSection').classList.add('active');
-        setTimeout(() => updateBiasAnalysis(), 100);
     } else if (sectionName === 'patterns') {
         document.getElementById('patternsSection').classList.add('active');
         setTimeout(() => updatePatternInsights(), 100);
