@@ -388,9 +388,17 @@ function renderNotesList(category) {
             month: 'short',
             day: 'numeric'
         });
-        
-        const preview = note.content.replace(/<[^>]*>/g, '');
-        const previewText = preview.length > 150 ? preview.substring(0, 150) + '...' : preview;
+
+        // Sanitize and create preview
+        const sanitizedContent = sanitizeHTML(note.content);
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = sanitizedContent;
+        const textContent = tempDiv.textContent || tempDiv.innerText || '';
+
+        // 150자 넘으면 텍스트만, 안 넘으면 HTML 유지
+        const previewHTML = textContent.length > 150 ?
+            (textContent.substring(0, 150) + '...') :
+            sanitizedContent;
 
         const categoryLabels = {
             daily: currentLanguage === 'ko' ? '일일 리뷰' : 'Daily Review',
@@ -414,7 +422,7 @@ function renderNotesList(category) {
                         <button class="pin-btn" onclick="event.stopPropagation(); togglePinNote(${note.id})" title="${note.pinned ? (currentLanguage === 'ko' ? '고정 해제' : 'Unpin') : (currentLanguage === 'ko' ? '상단 고정' : 'Pin to top')}">${note.pinned ? '📌' : '📌'}</button>
                     </div>
                 </div>
-                <div class="note-item-preview" id="preview-${uniqueId}" style="color: ${note.textColor || '#94a3b8'}; font-family: ${note.font || "'Inter', sans-serif"};">${previewText}</div>
+                <div class="note-item-preview" id="preview-${uniqueId}" style="color: ${note.textColor || '#94a3b8'}; font-family: ${note.font || "'Inter', sans-serif"};">${previewHTML}</div>
                 <button class="expand-btn" data-note-id="${note.id}" data-category="${category}" onclick="event.stopPropagation(); toggleNotePreview(this)">${currentLanguage === 'ko' ? '더보기' : 'Show more'}</button>
                 <div class="note-item-actions">
                     <button class="action-btn" onclick="event.stopPropagation(); editNote(${note.id})" title="Edit note">✏️</button>
