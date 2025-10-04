@@ -460,7 +460,23 @@ const translations = {
         'loading-market-analysis': 'Loading market analysis...',
         'no-market-analysis': 'Not enough market data for analysis',
         'million-shares': 'M shares',
-        'billion-dollars': 'B'
+        'billion-dollars': 'B',
+
+        // New market analysis translations
+        'intraday-performance': 'Intraday Performance',
+        'intraday-20': 'Up 20%+ at Entry',
+        'intraday-30': 'Up 30%+ at Entry',
+        'intraday-50': 'Up 50%+ at Entry',
+        'intraday-100': 'Up 100%+ at Entry',
+        'sector-performance': 'Sector Performance',
+        'sector': 'Sector',
+        'spy-correlation': 'SPY Direction Correlation',
+        'spy-up-days': 'SPY Up Days',
+        'spy-down-days': 'SPY Down Days',
+        'relative-volume': 'Relative Volume Correlation',
+        'high-rel-vol': 'High Rel Vol (2.0x+)',
+        'medium-rel-vol': 'Medium Rel Vol (1.5-2.0x)',
+        'normal-rel-vol': 'Normal Rel Vol (<1.5x)'
     },
     ko: {
         'dashboard': '대시보드',
@@ -850,7 +866,23 @@ const translations = {
         'loading-market-analysis': '시장 분석 로딩 중...',
         'no-market-analysis': '분석을 위한 시장 데이터가 부족합니다',
         'million-shares': '백만 주',
-        'billion-dollars': '십억'
+        'billion-dollars': '십억',
+
+        // New market analysis translations
+        'intraday-performance': '장중 성과 분석',
+        'intraday-20': '진입시 20%+ 상승',
+        'intraday-30': '진입시 30%+ 상승',
+        'intraday-50': '진입시 50%+ 상승',
+        'intraday-100': '진입시 100%+ 상승',
+        'sector-performance': '섹터별 성과',
+        'sector': '섹터',
+        'spy-correlation': 'SPY 방향성 상관관계',
+        'spy-up-days': 'SPY 상승일',
+        'spy-down-days': 'SPY 하락일',
+        'relative-volume': '상대 거래량 상관관계',
+        'high-rel-vol': '높은 상대거래량 (2.0배+)',
+        'medium-rel-vol': '중간 상대거래량 (1.5-2.0배)',
+        'normal-rel-vol': '일반 상대거래량 (<1.5배)'
     }
 };
 

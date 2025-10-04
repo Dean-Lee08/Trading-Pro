@@ -2171,7 +2171,11 @@ async function updateMarketDataAnalysisCards(filteredTrades) {
             updateMarketCharacteristics(filteredTrades),
             updateVolumeLiquidity(filteredTrades),
             updateVolatilityPerformance(filteredTrades),
-            updateMarketCapPreference(filteredTrades)
+            updateMarketCapPreference(filteredTrades),
+            updateIntradayPerformance(filteredTrades),
+            updateSectorPerformance(filteredTrades),
+            updateSPYCorrelation(filteredTrades),
+            updateRelativeVolumeCorrelation(filteredTrades)
         ];
 
         // 모든 분석이 완료될 때까지 대기 (에러 발생 시에도 계속 진행)
@@ -2208,6 +2212,24 @@ function showMarketDataCardsLoading() {
     document.getElementById('detailSmallCapWinRate').innerHTML = loadingValue;
     document.getElementById('detailMidCapWinRate').innerHTML = loadingValue;
     document.getElementById('detailLargeCapWinRate').innerHTML = loadingValue;
+
+    // Intraday Performance
+    document.getElementById('detailIntraday20').innerHTML = loadingValue;
+    document.getElementById('detailIntraday30').innerHTML = loadingValue;
+    document.getElementById('detailIntraday50').innerHTML = loadingValue;
+    document.getElementById('detailIntraday100').innerHTML = loadingValue;
+
+    // Sector Performance
+    document.getElementById('sectorPerformanceContent').innerHTML = '<div class="detail-item"><span class="detail-label">Loading...</span><span class="detail-value">-</span></div>';
+
+    // SPY Correlation
+    document.getElementById('detailSPYUpDays').innerHTML = loadingValue;
+    document.getElementById('detailSPYDownDays').innerHTML = loadingValue;
+
+    // Relative Volume
+    document.getElementById('detailHighRelVol').innerHTML = loadingValue;
+    document.getElementById('detailMediumRelVol').innerHTML = loadingValue;
+    document.getElementById('detailNormalRelVol').innerHTML = loadingValue;
 }
 
 /**
@@ -2236,6 +2258,24 @@ function resetMarketDataCards() {
     document.getElementById('detailSmallCapWinRate').textContent = noDataValue;
     document.getElementById('detailMidCapWinRate').textContent = noDataValue;
     document.getElementById('detailLargeCapWinRate').textContent = noDataValue;
+
+    // Intraday Performance
+    document.getElementById('detailIntraday20').textContent = noDataValue;
+    document.getElementById('detailIntraday30').textContent = noDataValue;
+    document.getElementById('detailIntraday50').textContent = noDataValue;
+    document.getElementById('detailIntraday100').textContent = noDataValue;
+
+    // Sector Performance
+    document.getElementById('sectorPerformanceContent').innerHTML = '<div class="detail-item"><span class="detail-label">No data</span><span class="detail-value">-</span></div>';
+
+    // SPY Correlation
+    document.getElementById('detailSPYUpDays').textContent = noDataValue;
+    document.getElementById('detailSPYDownDays').textContent = noDataValue;
+
+    // Relative Volume
+    document.getElementById('detailHighRelVol').textContent = noDataValue;
+    document.getElementById('detailMediumRelVol').textContent = noDataValue;
+    document.getElementById('detailNormalRelVol').textContent = noDataValue;
 }
 
 /**

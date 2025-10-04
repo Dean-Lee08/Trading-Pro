@@ -1039,6 +1039,86 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Intraday Performance -->
+                            <div class="detail-card">
+                                <div class="detail-card-header" data-lang="intraday-performance" onclick="toggleDetailCard(this)">
+                                    Intraday Performance
+                                    <span class="collapse-icon">▼</span>
+                                </div>
+                                <div class="detail-card-content">
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="intraday-20">Up 20%+ at Entry</span>
+                                        <span class="detail-value" id="detailIntraday20">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="intraday-30">Up 30%+ at Entry</span>
+                                        <span class="detail-value" id="detailIntraday30">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="intraday-50">Up 50%+ at Entry</span>
+                                        <span class="detail-value" id="detailIntraday50">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="intraday-100">Up 100%+ at Entry</span>
+                                        <span class="detail-value" id="detailIntraday100">-</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sector Performance -->
+                            <div class="detail-card">
+                                <div class="detail-card-header" data-lang="sector-performance" onclick="toggleDetailCard(this)">
+                                    Sector Performance
+                                    <span class="collapse-icon">▼</span>
+                                </div>
+                                <div class="detail-card-content" id="sectorPerformanceContent">
+                                    <div class="detail-item">
+                                        <span class="detail-label">Loading...</span>
+                                        <span class="detail-value">-</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SPY Correlation -->
+                            <div class="detail-card">
+                                <div class="detail-card-header" data-lang="spy-correlation" onclick="toggleDetailCard(this)">
+                                    SPY Direction Correlation
+                                    <span class="collapse-icon">▼</span>
+                                </div>
+                                <div class="detail-card-content">
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="spy-up-days">SPY Up Days</span>
+                                        <span class="detail-value" id="detailSPYUpDays">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="spy-down-days">SPY Down Days</span>
+                                        <span class="detail-value" id="detailSPYDownDays">-</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Relative Volume -->
+                            <div class="detail-card">
+                                <div class="detail-card-header" data-lang="relative-volume" onclick="toggleDetailCard(this)">
+                                    Relative Volume Correlation
+                                    <span class="collapse-icon">▼</span>
+                                </div>
+                                <div class="detail-card-content">
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="high-rel-vol">High Rel Vol (2.0x+)</span>
+                                        <span class="detail-value" id="detailHighRelVol">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="medium-rel-vol">Medium Rel Vol (1.5-2.0x)</span>
+                                        <span class="detail-value" id="detailMediumRelVol">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="normal-rel-vol">Normal Rel Vol (<1.5x)</span>
+                                        <span class="detail-value" id="detailNormalRelVol">-</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         
                         <!-- Basic Charts Section in Detail -->

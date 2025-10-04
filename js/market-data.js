@@ -692,6 +692,304 @@ function getAlphaVantageApiKey() {
     return alphaVantageApiKey;
 }
 
+/**
+ * Intraday Performance 분석 (진입 시점 기준 상승률)
+ * 진입 시간 기준으로 해당 종목이 얼마나 올랐는지 분석
+ */
+async function analyzeIntradayPerformance(filteredTrades) {
+    try {
+        const ranges = [
+            { min: 20, label: '20%+' },
+            { min: 30, label: '30%+' },
+            { min: 50, label: '50%+' },
+            { min: 100, label: '100%+' }
+        ];
+
+        const results = {};
+        for (const range of ranges) {
+            results[range.label] = { wins: 0, losses: 0, totalPnl: 0, count: 0 };
+        }
+
+        const symbols = [...new Set(filteredTrades.map(t => t.symbol))].slice(0, 5);
+        const analyzedTrades = [];
+
+        for (const trade of filteredTrades) {
+            if (!symbols.includes(trade.symbol) || !trade.entryTime) continue;
+
+            try {
+                const intradayData = await getIntradayStockData(trade.symbol, '5min', 'full');
+                const timeSeries = intradayData['Time Series (5min)'];
+
+                if (!timeSeries) {
+                    await new Promise(resolve => setTimeout(resolve, 12000));
+                    continue;
+                }
+
+                // Find market open price (9:30 AM)
+                const openTime = `${trade.date} 09:30:00`;
+                let openPrice = null;
+
+                for (const [timestamp, data] of Object.entries(timeSeries)) {
+                    if (timestamp.startsWith(trade.date)) {
+                        if (timestamp >= openTime) {
+                            openPrice = parseFloat(data['1. open']);
+                            break;
+                        }
+                    }
+                }
+
+                if (!openPrice) {
+                    await new Promise(resolve => setTimeout(resolve, 12000));
+                    continue;
+                }
+
+                // Calculate gain from open to entry price
+                const gainPct = ((trade.buyPrice - openPrice) / openPrice) * 100;
+
+                // Categorize by gain percentage
+                for (const range of ranges) {
+                    if (gainPct >= range.min) {
+                        results[range.label].count++;
+                        results[range.label].totalPnl += trade.pnl;
+                        if (trade.pnl > 0) {
+                            results[range.label].wins++;
+                        } else {
+                            results[range.label].losses++;
+                        }
+                    }
+                }
+
+                analyzedTrades.push({ ...trade, gainPct });
+                await new Promise(resolve => setTimeout(resolve, 12000));
+            } catch (error) {
+                console.error(`Failed to analyze intraday for ${trade.symbol}:`, error);
+                await new Promise(resolve => setTimeout(resolve, 12000));
+            }
+        }
+
+        // Calculate win rates
+        const analysis = {};
+        for (const range of ranges) {
+            const data = results[range.label];
+            const winRate = data.count > 0 ? (data.wins / data.count) * 100 : 0;
+            const avgPnl = data.count > 0 ? data.totalPnl / data.count : 0;
+
+            analysis[range.label] = {
+                winRate,
+                avgPnl,
+                count: data.count,
+                wins: data.wins,
+                losses: data.losses
+            };
+        }
+
+        return analysis;
+    } catch (error) {
+        console.error('Intraday performance analysis failed:', error);
+        return null;
+    }
+}
+
+/**
+ * 섹터별 퍼포먼스 분석
+ */
+async function analyzeSectorPerformance(filteredTrades) {
+    try {
+        const symbols = [...new Set(filteredTrades.map(t => t.symbol))];
+        const overviews = await getMultipleOverviews(symbols, 5);
+
+        const sectorStats = {};
+
+        for (const trade of filteredTrades) {
+            const overview = overviews[trade.symbol];
+            if (!overview || !overview.sector) continue;
+
+            const sector = overview.sector;
+
+            if (!sectorStats[sector]) {
+                sectorStats[sector] = {
+                    wins: 0,
+                    losses: 0,
+                    totalPnl: 0,
+                    count: 0
+                };
+            }
+
+            sectorStats[sector].count++;
+            sectorStats[sector].totalPnl += trade.pnl;
+
+            if (trade.pnl > 0) {
+                sectorStats[sector].wins++;
+            } else {
+                sectorStats[sector].losses++;
+            }
+        }
+
+        // Calculate win rates and average P&L
+        const sectorAnalysis = {};
+        for (const [sector, stats] of Object.entries(sectorStats)) {
+            sectorAnalysis[sector] = {
+                winRate: (stats.wins / stats.count) * 100,
+                avgPnl: stats.totalPnl / stats.count,
+                count: stats.count,
+                totalPnl: stats.totalPnl
+            };
+        }
+
+        // Sort by total P&L
+        const sortedSectors = Object.entries(sectorAnalysis)
+            .sort((a, b) => b[1].totalPnl - a[1].totalPnl);
+
+        return Object.fromEntries(sortedSectors);
+    } catch (error) {
+        console.error('Sector performance analysis failed:', error);
+        return null;
+    }
+}
+
+/**
+ * SPY 방향성 상관관계 분석
+ */
+async function analyzeSPYCorrelation(filteredTrades) {
+    try {
+        // Get SPY daily data
+        const spyData = await getDailyStockData('SPY', 'full');
+        const spyTimeSeries = spyData['Time Series (Daily)'];
+
+        if (!spyTimeSeries) {
+            throw new Error('Failed to fetch SPY data');
+        }
+
+        const upDays = { wins: 0, losses: 0, totalPnl: 0, count: 0 };
+        const downDays = { wins: 0, losses: 0, totalPnl: 0, count: 0 };
+
+        for (const trade of filteredTrades) {
+            const spyDayData = spyTimeSeries[trade.date];
+            if (!spyDayData) continue;
+
+            const spyOpen = parseFloat(spyDayData['1. open']);
+            const spyClose = parseFloat(spyDayData['4. close']);
+            const spyDirection = spyClose > spyOpen ? 'up' : 'down';
+
+            const targetStats = spyDirection === 'up' ? upDays : downDays;
+            targetStats.count++;
+            targetStats.totalPnl += trade.pnl;
+
+            if (trade.pnl > 0) {
+                targetStats.wins++;
+            } else {
+                targetStats.losses++;
+            }
+        }
+
+        return {
+            upDays: {
+                winRate: upDays.count > 0 ? (upDays.wins / upDays.count) * 100 : 0,
+                avgPnl: upDays.count > 0 ? upDays.totalPnl / upDays.count : 0,
+                count: upDays.count,
+                totalPnl: upDays.totalPnl
+            },
+            downDays: {
+                winRate: downDays.count > 0 ? (downDays.wins / downDays.count) * 100 : 0,
+                avgPnl: downDays.count > 0 ? downDays.totalPnl / downDays.count : 0,
+                count: downDays.count,
+                totalPnl: downDays.totalPnl
+            }
+        };
+    } catch (error) {
+        console.error('SPY correlation analysis failed:', error);
+        return null;
+    }
+}
+
+/**
+ * Relative Volume 상관관계 분석
+ */
+async function analyzeRelativeVolumeCorrelation(filteredTrades) {
+    try {
+        const symbols = [...new Set(filteredTrades.map(t => t.symbol))].slice(0, 5);
+        const tradesWithRelVol = [];
+
+        for (const trade of filteredTrades) {
+            if (!symbols.includes(trade.symbol)) continue;
+
+            try {
+                const dailyData = await getDailyStockData(trade.symbol, 'full');
+                const timeSeries = dailyData['Time Series (Daily)'];
+
+                if (!timeSeries || !timeSeries[trade.date]) {
+                    await new Promise(resolve => setTimeout(resolve, 12000));
+                    continue;
+                }
+
+                // Calculate average volume for last 20 days
+                const dates = Object.keys(timeSeries).sort().reverse();
+                const tradeDateIndex = dates.indexOf(trade.date);
+
+                if (tradeDateIndex === -1) {
+                    await new Promise(resolve => setTimeout(resolve, 12000));
+                    continue;
+                }
+
+                const last20Days = dates.slice(tradeDateIndex + 1, tradeDateIndex + 21);
+                let totalVolume = 0;
+                let validDays = 0;
+
+                for (const date of last20Days) {
+                    const volume = parseInt(timeSeries[date]['5. volume']);
+                    if (!isNaN(volume)) {
+                        totalVolume += volume;
+                        validDays++;
+                    }
+                }
+
+                if (validDays === 0) {
+                    await new Promise(resolve => setTimeout(resolve, 12000));
+                    continue;
+                }
+
+                const avgVolume = totalVolume / validDays;
+                const tradeVolume = parseInt(timeSeries[trade.date]['5. volume']);
+                const relativeVolume = tradeVolume / avgVolume;
+
+                tradesWithRelVol.push({ ...trade, relativeVolume });
+                await new Promise(resolve => setTimeout(resolve, 12000));
+            } catch (error) {
+                console.error(`Failed to analyze relative volume for ${trade.symbol}:`, error);
+                await new Promise(resolve => setTimeout(resolve, 12000));
+            }
+        }
+
+        if (tradesWithRelVol.length === 0) {
+            return null;
+        }
+
+        // Categorize by relative volume
+        const highRelVol = tradesWithRelVol.filter(t => t.relativeVolume >= 2.0); // 2x+ avg volume
+        const mediumRelVol = tradesWithRelVol.filter(t => t.relativeVolume >= 1.5 && t.relativeVolume < 2.0);
+        const normalRelVol = tradesWithRelVol.filter(t => t.relativeVolume < 1.5);
+
+        const calculateStats = (trades) => {
+            const wins = trades.filter(t => t.pnl > 0).length;
+            const totalPnl = trades.reduce((sum, t) => sum + t.pnl, 0);
+            return {
+                winRate: trades.length > 0 ? (wins / trades.length) * 100 : 0,
+                avgPnl: trades.length > 0 ? totalPnl / trades.length : 0,
+                count: trades.length
+            };
+        };
+
+        return {
+            highRelVol: calculateStats(highRelVol),
+            mediumRelVol: calculateStats(mediumRelVol),
+            normalRelVol: calculateStats(normalRelVol)
+        };
+    } catch (error) {
+        console.error('Relative volume correlation analysis failed:', error);
+        return null;
+    }
+}
+
 // ==================== Initialization ====================
 
 /**
