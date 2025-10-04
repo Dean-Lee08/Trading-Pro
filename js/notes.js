@@ -26,10 +26,13 @@ function sanitizeHTML(html) {
             return;
         }
 
-        // 모든 속성 제거 (스타일은 별도로 적용됨)
-        while (element.attributes.length > 0) {
-            element.removeAttribute(element.attributes[0].name);
-        }
+        // style 속성만 허용하고 나머지 속성 제거
+        const attributes = Array.from(element.attributes);
+        attributes.forEach(attr => {
+            if (attr.name !== 'style') {
+                element.removeAttribute(attr.name);
+            }
+        });
     });
 
     return tempDiv.innerHTML;
