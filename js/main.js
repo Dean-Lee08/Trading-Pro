@@ -16,8 +16,16 @@ function showPage(pageId, clickedElement) {
     });
 
     document.getElementById(pageId).classList.add('active');
+
+    // 클릭된 요소를 찾아서 active 클래스 추가
     if (clickedElement) {
         clickedElement.classList.add('active');
+    } else {
+        // onclick에서 호출된 경우 pageId로 해당 버튼 찾기
+        const navButton = document.querySelector(`.nav-item[onclick*="'${pageId}'"]`);
+        if (navButton) {
+            navButton.classList.add('active');
+        }
     }
 
     if (pageId === 'calendar') {
