@@ -947,6 +947,98 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Market Characteristics -->
+                            <div class="detail-card">
+                                <div class="detail-card-header" data-lang="market-characteristics" onclick="toggleDetailCard(this)">
+                                    Market Characteristics
+                                    <span class="collapse-icon">▼</span>
+                                </div>
+                                <div class="detail-card-content">
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="avg-float-winners">Avg Float (Winners)</span>
+                                        <span class="detail-value" id="detailAvgFloat">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="avg-marketcap-winners">Avg Market Cap (Winners)</span>
+                                        <span class="detail-value" id="detailAvgMarketCap">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="avg-beta-winners">Avg Beta (Winners)</span>
+                                        <span class="detail-value" id="detailAvgBeta">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="symbols-analyzed">Symbols Analyzed</span>
+                                        <span class="detail-value neutral" id="detailSymbolsAnalyzed">0</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Volume & Liquidity -->
+                            <div class="detail-card">
+                                <div class="detail-card-header" data-lang="volume-liquidity" onclick="toggleDetailCard(this)">
+                                    Volume & Liquidity
+                                    <span class="collapse-icon">▼</span>
+                                </div>
+                                <div class="detail-card-content">
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="high-volume-winrate">High Volume Win Rate</span>
+                                        <span class="detail-value" id="detailHighVolumeWinRate">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="low-volume-winrate">Low Volume Win Rate</span>
+                                        <span class="detail-value" id="detailLowVolumeWinRate">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="median-volume">Median Volume</span>
+                                        <span class="detail-value neutral" id="detailMedianVolume">-</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Volatility Performance -->
+                            <div class="detail-card">
+                                <div class="detail-card-header" data-lang="volatility-performance" onclick="toggleDetailCard(this)">
+                                    Volatility Performance
+                                    <span class="collapse-icon">▼</span>
+                                </div>
+                                <div class="detail-card-content">
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="high-volatility">High Volatility (Beta > 1.5)</span>
+                                        <span class="detail-value" id="detailHighVolatilityWinRate">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="medium-volatility">Medium Volatility (1.0-1.5)</span>
+                                        <span class="detail-value" id="detailMediumVolatilityWinRate">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="low-volatility">Low Volatility (Beta < 1.0)</span>
+                                        <span class="detail-value" id="detailLowVolatilityWinRate">-</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Market Cap Preference -->
+                            <div class="detail-card">
+                                <div class="detail-card-header" data-lang="marketcap-preference" onclick="toggleDetailCard(this)">
+                                    Market Cap Preference
+                                    <span class="collapse-icon">▼</span>
+                                </div>
+                                <div class="detail-card-content">
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="small-cap">Small Cap (< $2B)</span>
+                                        <span class="detail-value" id="detailSmallCapWinRate">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="mid-cap">Mid Cap ($2B - $10B)</span>
+                                        <span class="detail-value" id="detailMidCapWinRate">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="large-cap">Large Cap (> $10B)</span>
+                                        <span class="detail-value" id="detailLargeCapWinRate">-</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         
                         <!-- Basic Charts Section in Detail -->

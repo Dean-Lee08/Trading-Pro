@@ -137,6 +137,11 @@ function updateDetailedAnalytics() {
     updateSymbolPerformanceDetails(filteredTrades);
     updateRiskManagementDetails(filteredTrades);
 
+    // Update market data analysis cards (async)
+    if (marketDataEnabled) {
+        setTimeout(() => updateMarketDataAnalysisCards(filteredTrades), 100);
+    }
+
     // Update basic charts if in detail section
     if (currentAnalyticsSection === 'detail') {
         setTimeout(async () => await updateBasicCharts(), 100);
@@ -2144,4 +2149,250 @@ async function refreshMarketQuotes() {
     const filteredTrades = getFilteredTradesForAnalytics();
     showMarketDataLoading();
     await loadSymbolQuotes(filteredTrades);
+}
+
+// ==================== Market Data Analysis for Detail Cards ====================
+
+/**
+ * 시장 데이터 분석 카드 전체 업데이트
+ */
+async function updateMarketDataAnalysisCards(filteredTrades) {
+    if (filteredTrades.length === 0) {
+        resetMarketDataCards();
+        return;
+    }
+
+    // 로딩 상태 표시
+    showMarketDataCardsLoading();
+
+    try {
+        // 병렬로 분석 실행 (await 없이 Promise 수집)
+        const analysisPromises = [
+            updateMarketCharacteristics(filteredTrades),
+            updateVolumeLiquidity(filteredTrades),
+            updateVolatilityPerformance(filteredTrades),
+            updateMarketCapPreference(filteredTrades)
+        ];
+
+        // 모든 분석이 완료될 때까지 대기 (에러 발생 시에도 계속 진행)
+        await Promise.allSettled(analysisPromises);
+
+    } catch (error) {
+        console.error('Market data analysis error:', error);
+    }
+}
+
+/**
+ * 시장 데이터 카드 로딩 상태 표시
+ */
+function showMarketDataCardsLoading() {
+    const loadingValue = '<span style="color: #64748b;">Loading...</span>';
+
+    // Market Characteristics
+    document.getElementById('detailAvgFloat').innerHTML = loadingValue;
+    document.getElementById('detailAvgMarketCap').innerHTML = loadingValue;
+    document.getElementById('detailAvgBeta').innerHTML = loadingValue;
+    document.getElementById('detailSymbolsAnalyzed').textContent = '0';
+
+    // Volume & Liquidity
+    document.getElementById('detailHighVolumeWinRate').innerHTML = loadingValue;
+    document.getElementById('detailLowVolumeWinRate').innerHTML = loadingValue;
+    document.getElementById('detailMedianVolume').innerHTML = loadingValue;
+
+    // Volatility Performance
+    document.getElementById('detailHighVolatilityWinRate').innerHTML = loadingValue;
+    document.getElementById('detailMediumVolatilityWinRate').innerHTML = loadingValue;
+    document.getElementById('detailLowVolatilityWinRate').innerHTML = loadingValue;
+
+    // Market Cap Preference
+    document.getElementById('detailSmallCapWinRate').innerHTML = loadingValue;
+    document.getElementById('detailMidCapWinRate').innerHTML = loadingValue;
+    document.getElementById('detailLargeCapWinRate').innerHTML = loadingValue;
+}
+
+/**
+ * 시장 데이터 카드 초기화
+ */
+function resetMarketDataCards() {
+    const noDataValue = '-';
+
+    // Market Characteristics
+    document.getElementById('detailAvgFloat').textContent = noDataValue;
+    document.getElementById('detailAvgMarketCap').textContent = noDataValue;
+    document.getElementById('detailAvgBeta').textContent = noDataValue;
+    document.getElementById('detailSymbolsAnalyzed').textContent = '0';
+
+    // Volume & Liquidity
+    document.getElementById('detailHighVolumeWinRate').textContent = noDataValue;
+    document.getElementById('detailLowVolumeWinRate').textContent = noDataValue;
+    document.getElementById('detailMedianVolume').textContent = noDataValue;
+
+    // Volatility Performance
+    document.getElementById('detailHighVolatilityWinRate').textContent = noDataValue;
+    document.getElementById('detailMediumVolatilityWinRate').textContent = noDataValue;
+    document.getElementById('detailLowVolatilityWinRate').textContent = noDataValue;
+
+    // Market Cap Preference
+    document.getElementById('detailSmallCapWinRate').textContent = noDataValue;
+    document.getElementById('detailMidCapWinRate').textContent = noDataValue;
+    document.getElementById('detailLargeCapWinRate').textContent = noDataValue;
+}
+
+/**
+ * Market Characteristics 카드 업데이트
+ */
+async function updateMarketCharacteristics(filteredTrades) {
+    try {
+        const analysis = await analyzeWinningTradesMarketChar(filteredTrades);
+
+        if (!analysis) {
+            document.getElementById('detailAvgFloat').textContent = 'N/A';
+            document.getElementById('detailAvgMarketCap').textContent = 'N/A';
+            document.getElementById('detailAvgBeta').textContent = 'N/A';
+            document.getElementById('detailSymbolsAnalyzed').textContent = '0';
+            return;
+        }
+
+        // Float (millions)
+        const floatM = analysis.avgFloat / 1000000;
+        document.getElementById('detailAvgFloat').textContent = `${floatM.toFixed(1)}M`;
+
+        // Market Cap (billions)
+        const marketCapB = analysis.avgMarketCap / 1000000000;
+        document.getElementById('detailAvgMarketCap').textContent = `$${marketCapB.toFixed(2)}B`;
+
+        // Beta
+        document.getElementById('detailAvgBeta').textContent = analysis.avgBeta.toFixed(2);
+        const betaEl = document.getElementById('detailAvgBeta');
+        betaEl.className = analysis.avgBeta > 1.5 ? 'detail-value negative' :
+                          analysis.avgBeta < 1.0 ? 'detail-value positive' : 'detail-value neutral';
+
+        // Symbols analyzed
+        document.getElementById('detailSymbolsAnalyzed').textContent =
+            `${analysis.symbolsAnalyzed} / ${analysis.totalWinningSymbols}`;
+
+    } catch (error) {
+        console.error('Market characteristics analysis failed:', error);
+        document.getElementById('detailAvgFloat').textContent = 'Error';
+        document.getElementById('detailAvgMarketCap').textContent = 'Error';
+        document.getElementById('detailAvgBeta').textContent = 'Error';
+    }
+}
+
+/**
+ * Volume & Liquidity 카드 업데이트
+ */
+async function updateVolumeLiquidity(filteredTrades) {
+    try {
+        const analysis = await analyzeVolumePerformance(filteredTrades);
+
+        if (!analysis) {
+            document.getElementById('detailHighVolumeWinRate').textContent = 'N/A';
+            document.getElementById('detailLowVolumeWinRate').textContent = 'N/A';
+            document.getElementById('detailMedianVolume').textContent = 'N/A';
+            return;
+        }
+
+        // High Volume Win Rate
+        document.getElementById('detailHighVolumeWinRate').textContent =
+            `${analysis.highVolumeWinRate.toFixed(1)}%`;
+        const highEl = document.getElementById('detailHighVolumeWinRate');
+        highEl.className = analysis.highVolumeWinRate >= 50 ? 'detail-value positive' : 'detail-value negative';
+
+        // Low Volume Win Rate
+        document.getElementById('detailLowVolumeWinRate').textContent =
+            `${analysis.lowVolumeWinRate.toFixed(1)}%`;
+        const lowEl = document.getElementById('detailLowVolumeWinRate');
+        lowEl.className = analysis.lowVolumeWinRate >= 50 ? 'detail-value positive' : 'detail-value negative';
+
+        // Median Volume
+        const medianVolumeM = analysis.medianVolume / 1000000;
+        document.getElementById('detailMedianVolume').textContent = `${medianVolumeM.toFixed(1)}M`;
+
+    } catch (error) {
+        console.error('Volume liquidity analysis failed:', error);
+        document.getElementById('detailHighVolumeWinRate').textContent = 'Error';
+        document.getElementById('detailLowVolumeWinRate').textContent = 'Error';
+        document.getElementById('detailMedianVolume').textContent = 'Error';
+    }
+}
+
+/**
+ * Volatility Performance 카드 업데이트
+ */
+async function updateVolatilityPerformance(filteredTrades) {
+    try {
+        const analysis = await analyzeVolatilityPerformance(filteredTrades);
+
+        if (!analysis) {
+            document.getElementById('detailHighVolatilityWinRate').textContent = 'N/A';
+            document.getElementById('detailMediumVolatilityWinRate').textContent = 'N/A';
+            document.getElementById('detailLowVolatilityWinRate').textContent = 'N/A';
+            return;
+        }
+
+        // High Volatility
+        document.getElementById('detailHighVolatilityWinRate').textContent =
+            `${analysis.highVolatilityWinRate.toFixed(1)}% (${analysis.highVolatilityCount} trades)`;
+        const highEl = document.getElementById('detailHighVolatilityWinRate');
+        highEl.className = analysis.highVolatilityWinRate >= 50 ? 'detail-value positive' : 'detail-value negative';
+
+        // Medium Volatility
+        document.getElementById('detailMediumVolatilityWinRate').textContent =
+            `${analysis.mediumVolatilityWinRate.toFixed(1)}% (${analysis.mediumVolatilityCount} trades)`;
+        const mediumEl = document.getElementById('detailMediumVolatilityWinRate');
+        mediumEl.className = analysis.mediumVolatilityWinRate >= 50 ? 'detail-value positive' : 'detail-value negative';
+
+        // Low Volatility
+        document.getElementById('detailLowVolatilityWinRate').textContent =
+            `${analysis.lowVolatilityWinRate.toFixed(1)}% (${analysis.lowVolatilityCount} trades)`;
+        const lowEl = document.getElementById('detailLowVolatilityWinRate');
+        lowEl.className = analysis.lowVolatilityWinRate >= 50 ? 'detail-value positive' : 'detail-value negative';
+
+    } catch (error) {
+        console.error('Volatility performance analysis failed:', error);
+        document.getElementById('detailHighVolatilityWinRate').textContent = 'Error';
+        document.getElementById('detailMediumVolatilityWinRate').textContent = 'Error';
+        document.getElementById('detailLowVolatilityWinRate').textContent = 'Error';
+    }
+}
+
+/**
+ * Market Cap Preference 카드 업데이트
+ */
+async function updateMarketCapPreference(filteredTrades) {
+    try {
+        const analysis = await analyzeMarketCapPerformance(filteredTrades);
+
+        if (!analysis) {
+            document.getElementById('detailSmallCapWinRate').textContent = 'N/A';
+            document.getElementById('detailMidCapWinRate').textContent = 'N/A';
+            document.getElementById('detailLargeCapWinRate').textContent = 'N/A';
+            return;
+        }
+
+        // Small Cap
+        document.getElementById('detailSmallCapWinRate').textContent =
+            `${analysis.smallCap.winRate.toFixed(1)}% | $${analysis.smallCap.avgPnL.toFixed(0)} (${analysis.smallCap.count})`;
+        const smallEl = document.getElementById('detailSmallCapWinRate');
+        smallEl.className = analysis.smallCap.winRate >= 50 ? 'detail-value positive' : 'detail-value negative';
+
+        // Mid Cap
+        document.getElementById('detailMidCapWinRate').textContent =
+            `${analysis.midCap.winRate.toFixed(1)}% | $${analysis.midCap.avgPnL.toFixed(0)} (${analysis.midCap.count})`;
+        const midEl = document.getElementById('detailMidCapWinRate');
+        midEl.className = analysis.midCap.winRate >= 50 ? 'detail-value positive' : 'detail-value negative';
+
+        // Large Cap
+        document.getElementById('detailLargeCapWinRate').textContent =
+            `${analysis.largeCap.winRate.toFixed(1)}% | $${analysis.largeCap.avgPnL.toFixed(0)} (${analysis.largeCap.count})`;
+        const largeEl = document.getElementById('detailLargeCapWinRate');
+        largeEl.className = analysis.largeCap.winRate >= 50 ? 'detail-value positive' : 'detail-value negative';
+
+    } catch (error) {
+        console.error('Market cap preference analysis failed:', error);
+        document.getElementById('detailSmallCapWinRate').textContent = 'Error';
+        document.getElementById('detailMidCapWinRate').textContent = 'Error';
+        document.getElementById('detailLargeCapWinRate').textContent = 'Error';
+    }
 }
