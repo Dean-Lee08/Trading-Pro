@@ -476,7 +476,13 @@ const translations = {
         'relative-volume': 'Relative Volume Correlation',
         'high-rel-vol': 'High Rel Vol (2.0x+)',
         'medium-rel-vol': 'Medium Rel Vol (1.5-2.0x)',
-        'normal-rel-vol': 'Normal Rel Vol (<1.5x)'
+        'normal-rel-vol': 'Normal Rel Vol (<1.5x)',
+
+        // Error messages
+        'api-limit-reached': 'API Limit Reached',
+        'data-unavailable': 'Data Unavailable',
+        'no-api-key': 'API Key Not Set',
+        'rate-limit-wait': 'Rate limit reached. Please wait...'
     },
     ko: {
         'dashboard': '대시보드',
@@ -882,7 +888,13 @@ const translations = {
         'relative-volume': '상대 거래량 상관관계',
         'high-rel-vol': '높은 상대거래량 (2.0배+)',
         'medium-rel-vol': '중간 상대거래량 (1.5-2.0배)',
-        'normal-rel-vol': '일반 상대거래량 (<1.5배)'
+        'normal-rel-vol': '일반 상대거래량 (<1.5배)',
+
+        // Error messages
+        'api-limit-reached': 'API 한도 도달',
+        'data-unavailable': '데이터 없음',
+        'no-api-key': 'API 키 미설정',
+        'rate-limit-wait': 'API 한도 도달. 잠시만 기다려주세요...'
     }
 };
 

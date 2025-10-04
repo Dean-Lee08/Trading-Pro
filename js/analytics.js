@@ -2313,9 +2313,10 @@ async function updateMarketCharacteristics(filteredTrades) {
 
     } catch (error) {
         console.error('Market characteristics analysis failed:', error);
-        document.getElementById('detailAvgFloat').textContent = 'Error';
-        document.getElementById('detailAvgMarketCap').textContent = 'Error';
-        document.getElementById('detailAvgBeta').textContent = 'Error';
+        const errorMsg = error.code === 'RATE_LIMIT' ? 'API Limit' : 'Error';
+        document.getElementById('detailAvgFloat').textContent = errorMsg;
+        document.getElementById('detailAvgMarketCap').textContent = errorMsg;
+        document.getElementById('detailAvgBeta').textContent = errorMsg;
     }
 }
 
@@ -2351,9 +2352,10 @@ async function updateVolumeLiquidity(filteredTrades) {
 
     } catch (error) {
         console.error('Volume liquidity analysis failed:', error);
-        document.getElementById('detailHighVolumeWinRate').textContent = 'Error';
-        document.getElementById('detailLowVolumeWinRate').textContent = 'Error';
-        document.getElementById('detailMedianVolume').textContent = 'Error';
+        const errorMsg = error.code === 'RATE_LIMIT' ? 'API Limit' : 'Error';
+        document.getElementById('detailHighVolumeWinRate').textContent = errorMsg;
+        document.getElementById('detailLowVolumeWinRate').textContent = errorMsg;
+        document.getElementById('detailMedianVolume').textContent = errorMsg;
     }
 }
 
@@ -2391,9 +2393,10 @@ async function updateVolatilityPerformance(filteredTrades) {
 
     } catch (error) {
         console.error('Volatility performance analysis failed:', error);
-        document.getElementById('detailHighVolatilityWinRate').textContent = 'Error';
-        document.getElementById('detailMediumVolatilityWinRate').textContent = 'Error';
-        document.getElementById('detailLowVolatilityWinRate').textContent = 'Error';
+        const errorMsg = error.code === 'RATE_LIMIT' ? 'API Limit' : 'Error';
+        document.getElementById('detailHighVolatilityWinRate').textContent = errorMsg;
+        document.getElementById('detailMediumVolatilityWinRate').textContent = errorMsg;
+        document.getElementById('detailLowVolatilityWinRate').textContent = errorMsg;
     }
 }
 
@@ -2431,9 +2434,10 @@ async function updateMarketCapPreference(filteredTrades) {
 
     } catch (error) {
         console.error('Market cap preference analysis failed:', error);
-        document.getElementById('detailSmallCapWinRate').textContent = 'Error';
-        document.getElementById('detailMidCapWinRate').textContent = 'Error';
-        document.getElementById('detailLargeCapWinRate').textContent = 'Error';
+        const errorMsg = error.code === 'RATE_LIMIT' ? 'API Limit' : 'Error';
+        document.getElementById('detailSmallCapWinRate').textContent = errorMsg;
+        document.getElementById('detailMidCapWinRate').textContent = errorMsg;
+        document.getElementById('detailLargeCapWinRate').textContent = errorMsg;
     }
 }
 
@@ -2482,10 +2486,11 @@ async function updateIntradayPerformance(filteredTrades) {
 
     } catch (error) {
         console.error('Intraday performance analysis failed:', error);
-        document.getElementById('detailIntraday20').textContent = 'Error';
-        document.getElementById('detailIntraday30').textContent = 'Error';
-        document.getElementById('detailIntraday50').textContent = 'Error';
-        document.getElementById('detailIntraday100').textContent = 'Error';
+        const errorMsg = error.code === 'RATE_LIMIT' ? 'API Limit' : 'Error';
+        document.getElementById('detailIntraday20').textContent = errorMsg;
+        document.getElementById('detailIntraday30').textContent = errorMsg;
+        document.getElementById('detailIntraday50').textContent = errorMsg;
+        document.getElementById('detailIntraday100').textContent = errorMsg;
     }
 }
 
@@ -2522,8 +2527,9 @@ async function updateSectorPerformance(filteredTrades) {
 
     } catch (error) {
         console.error('Sector performance analysis failed:', error);
+        const errorMsg = error.code === 'RATE_LIMIT' ? 'API Limit Reached' : 'Error loading sectors';
         document.getElementById('sectorPerformanceContent').innerHTML =
-            '<div class="detail-item"><span class="detail-label">Error loading sectors</span><span class="detail-value">-</span></div>';
+            `<div class="detail-item"><span class="detail-label">${errorMsg}</span><span class="detail-value">-</span></div>`;
     }
 }
 
@@ -2554,8 +2560,9 @@ async function updateSPYCorrelation(filteredTrades) {
 
     } catch (error) {
         console.error('SPY correlation analysis failed:', error);
-        document.getElementById('detailSPYUpDays').textContent = 'Error';
-        document.getElementById('detailSPYDownDays').textContent = 'Error';
+        const errorMsg = error.code === 'RATE_LIMIT' ? 'API Limit' : 'Error';
+        document.getElementById('detailSPYUpDays').textContent = errorMsg;
+        document.getElementById('detailSPYDownDays').textContent = errorMsg;
     }
 }
 
@@ -2593,8 +2600,9 @@ async function updateRelativeVolumeCorrelation(filteredTrades) {
 
     } catch (error) {
         console.error('Relative volume correlation analysis failed:', error);
-        document.getElementById('detailHighRelVol').textContent = 'Error';
-        document.getElementById('detailMediumRelVol').textContent = 'Error';
-        document.getElementById('detailNormalRelVol').textContent = 'Error';
+        const errorMsg = error.code === 'RATE_LIMIT' ? 'API Limit' : 'Error';
+        document.getElementById('detailHighRelVol').textContent = errorMsg;
+        document.getElementById('detailMediumRelVol').textContent = errorMsg;
+        document.getElementById('detailNormalRelVol').textContent = errorMsg;
     }
 }
