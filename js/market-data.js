@@ -444,26 +444,39 @@ async function getGlobalQuote(symbol) {
         symbol: symbol
     };
 
-    const data = await callTwelveDataAPI('/quote', params);
+    try {
+        const data = await callTwelveDataAPI('/quote', params);
 
-    // Convert Twelve Data format to Alpha Vantage-like format for compatibility
-    const converted = {
-        'Global Quote': {
-            '01. symbol': data.symbol,
-            '02. open': data.open,
-            '03. high': data.high,
-            '04. low': data.low,
-            '05. price': data.close,
-            '06. volume': data.volume,
-            '07. latest trading day': data.datetime ? data.datetime.split(' ')[0] : '',
-            '08. previous close': data.previous_close,
-            '09. change': data.change,
-            '10. change percent': data.percent_change
+        // Validate response
+        if (!data || !data.symbol) {
+            console.warn(`⚠️ Invalid quote response for ${symbol}`, data);
+            throw new Error(`No valid quote data for ${symbol}`);
         }
-    };
 
-    setCachedData(cacheKey, converted);
-    return converted;
+        // Convert Twelve Data format to Alpha Vantage-like format for compatibility
+        const converted = {
+            'Global Quote': {
+                '01. symbol': data.symbol || symbol,
+                '02. open': data.open || '0',
+                '03. high': data.high || '0',
+                '04. low': data.low || '0',
+                '05. price': data.close || data.price || '0',
+                '06. volume': data.volume || '0',
+                '07. latest trading day': data.datetime ? data.datetime.split(' ')[0] : '',
+                '08. previous close': data.previous_close || data.close || '0',
+                '09. change': data.change || '0',
+                '10. change percent': data.percent_change || '0.00%'
+            }
+        };
+
+        console.log(`✓ Quote fetched for ${symbol}:`, converted['Global Quote']['05. price']);
+
+        setCachedData(cacheKey, converted);
+        return converted;
+    } catch (error) {
+        console.error(`❌ Failed to fetch quote for ${symbol}:`, error.message);
+        throw error;
+    }
 }
 
 // ==================== Market Data Analysis Functions ====================
