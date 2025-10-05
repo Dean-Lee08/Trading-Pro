@@ -2720,3 +2720,214 @@ async function updateRelativeVolumeCorrelation(filteredTrades) {
         document.getElementById('detailNormalRelVol').textContent = errorMsg;
     }
 }
+
+// ==================== Advanced Analysis Update Functions (NEW) ====================
+
+/**
+ * Entry/Exit Timing Quality 카드 업데이트
+ */
+async function updateEntryExitTiming(filteredTrades) {
+    try {
+        const analysis = await analyzeEntryExitQuality(filteredTrades);
+
+        if (!analysis) {
+            document.getElementById('detailAvgEntryPosition').textContent = 'N/A';
+            document.getElementById('detailAvgExitPosition').textContent = 'N/A';
+            document.getElementById('detailTimingScore').textContent = 'N/A';
+            document.getElementById('detailEarlyEntryRate').textContent = 'N/A';
+            document.getElementById('detailProfitTakingRate').textContent = 'N/A';
+            return;
+        }
+
+        // Avg Entry Position (lower is better - buying low)
+        document.getElementById('detailAvgEntryPosition').textContent = `${analysis.avgEntryPosition}%`;
+        const entryEl = document.getElementById('detailAvgEntryPosition');
+        entryEl.className = parseFloat(analysis.avgEntryPosition) < 40 ? 'detail-value positive' :
+                           parseFloat(analysis.avgEntryPosition) > 60 ? 'detail-value negative' : 'detail-value neutral';
+
+        // Avg Exit Position (higher is better - selling high)
+        document.getElementById('detailAvgExitPosition').textContent = `${analysis.avgExitPosition}%`;
+        const exitEl = document.getElementById('detailAvgExitPosition');
+        exitEl.className = parseFloat(analysis.avgExitPosition) > 60 ? 'detail-value positive' :
+                          parseFloat(analysis.avgExitPosition) < 40 ? 'detail-value negative' : 'detail-value neutral';
+
+        // Timing Score
+        document.getElementById('detailTimingScore').textContent = `${analysis.timingScore}/10`;
+        const scoreEl = document.getElementById('detailTimingScore');
+        scoreEl.className = parseFloat(analysis.timingScore) >= 7 ? 'detail-value positive' :
+                           parseFloat(analysis.timingScore) < 5 ? 'detail-value negative' : 'detail-value neutral';
+
+        // Early Entry Rate
+        document.getElementById('detailEarlyEntryRate').textContent = `${analysis.earlyEntryRate}%`;
+
+        // Profit Taking Rate
+        document.getElementById('detailProfitTakingRate').textContent = `${analysis.profitTakingRate}%`;
+
+    } catch (error) {
+        console.error('Entry/Exit timing analysis failed:', error);
+        const errorMsg = error.code === 'RATE_LIMIT' ? 'API Limit' : 'Error';
+        document.getElementById('detailAvgEntryPosition').textContent = errorMsg;
+        document.getElementById('detailAvgExitPosition').textContent = errorMsg;
+        document.getElementById('detailTimingScore').textContent = errorMsg;
+    }
+}
+
+/**
+ * Gap Trading Performance 카드 업데이트
+ */
+async function updateGapTradingPerformance(filteredTrades) {
+    try {
+        const analysis = await analyzeGapTradingPerformance(filteredTrades);
+
+        if (!analysis) {
+            document.getElementById('detailGapUpWinRate').textContent = 'N/A';
+            document.getElementById('detailGapDownWinRate').textContent = 'N/A';
+            document.getElementById('detailLargeGapWinRate').textContent = 'N/A';
+            document.getElementById('detailBestGapRange').textContent = 'N/A';
+            return;
+        }
+
+        // Gap Up Win Rate
+        document.getElementById('detailGapUpWinRate').textContent = `${analysis.gapUpWinRate}%`;
+        const gapUpEl = document.getElementById('detailGapUpWinRate');
+        gapUpEl.className = parseFloat(analysis.gapUpWinRate) >= 50 ? 'detail-value positive' : 'detail-value negative';
+
+        // Gap Down Win Rate
+        document.getElementById('detailGapDownWinRate').textContent = `${analysis.gapDownWinRate}%`;
+        const gapDownEl = document.getElementById('detailGapDownWinRate');
+        gapDownEl.className = parseFloat(analysis.gapDownWinRate) >= 50 ? 'detail-value positive' : 'detail-value negative';
+
+        // Large Gap Win Rate
+        document.getElementById('detailLargeGapWinRate').textContent = `${analysis.largeGapWinRate}%`;
+        const largeGapEl = document.getElementById('detailLargeGapWinRate');
+        largeGapEl.className = parseFloat(analysis.largeGapWinRate) >= 50 ? 'detail-value positive' : 'detail-value negative';
+
+        // Best Gap Range
+        document.getElementById('detailBestGapRange').textContent = analysis.bestGapRange;
+
+    } catch (error) {
+        console.error('Gap trading performance analysis failed:', error);
+        const errorMsg = error.code === 'RATE_LIMIT' ? 'API Limit' : 'Error';
+        document.getElementById('detailGapUpWinRate').textContent = errorMsg;
+        document.getElementById('detailGapDownWinRate').textContent = errorMsg;
+        document.getElementById('detailLargeGapWinRate').textContent = errorMsg;
+    }
+}
+
+/**
+ * Sector Rotation 카드 업데이트
+ */
+async function updateSectorRotationCard(filteredTrades) {
+    try {
+        const analysis = await analyzeSectorRotation(filteredTrades);
+
+        if (!analysis) {
+            document.getElementById('detailTopSector').textContent = 'N/A';
+            document.getElementById('detailSectorWinRate').textContent = 'N/A';
+            document.getElementById('detailSectorAvgReturn').textContent = 'N/A';
+            document.getElementById('detailSectorDiversity').textContent = 'N/A';
+            return;
+        }
+
+        // Top Sector
+        document.getElementById('detailTopSector').textContent = analysis.topSector;
+
+        // Sector Win Rate
+        document.getElementById('detailSectorWinRate').textContent = `${analysis.topSectorWinRate}%`;
+        const winRateEl = document.getElementById('detailSectorWinRate');
+        winRateEl.className = parseFloat(analysis.topSectorWinRate) >= 50 ? 'detail-value positive' : 'detail-value negative';
+
+        // Sector Avg Return
+        document.getElementById('detailSectorAvgReturn').textContent = `$${analysis.topSectorAvgReturn}`;
+        const avgReturnEl = document.getElementById('detailSectorAvgReturn');
+        avgReturnEl.className = parseFloat(analysis.topSectorAvgReturn) > 0 ? 'detail-value positive' : 'detail-value negative';
+
+        // Sector Diversity
+        document.getElementById('detailSectorDiversity').textContent = `${analysis.sectorDiversity} sectors`;
+
+    } catch (error) {
+        console.error('Sector rotation analysis failed:', error);
+        const errorMsg = error.code === 'RATE_LIMIT' ? 'API Limit' : 'Error';
+        document.getElementById('detailTopSector').textContent = errorMsg;
+        document.getElementById('detailSectorWinRate').textContent = errorMsg;
+        document.getElementById('detailSectorAvgReturn').textContent = errorMsg;
+    }
+}
+
+/**
+ * Price Level Psychology 카드 업데이트
+ */
+async function updatePriceLevelPsychology(filteredTrades) {
+    try {
+        const analysis = await analyzePriceLevelPsychology(filteredTrades);
+
+        if (!analysis) {
+            document.getElementById('detailUnder5WinRate').textContent = 'N/A';
+            document.getElementById('detailRange5to20WinRate').textContent = 'N/A';
+            document.getElementById('detailOver20WinRate').textContent = 'N/A';
+            document.getElementById('detailOptimalPriceRange').textContent = 'N/A';
+            return;
+        }
+
+        // Under $5 Win Rate
+        document.getElementById('detailUnder5WinRate').textContent = `${analysis.under5WinRate}%`;
+        const under5El = document.getElementById('detailUnder5WinRate');
+        under5El.className = parseFloat(analysis.under5WinRate) >= 50 ? 'detail-value positive' : 'detail-value negative';
+
+        // $5-$20 Win Rate
+        document.getElementById('detailRange5to20WinRate').textContent = `${analysis.range5to20WinRate}%`;
+        const range5to20El = document.getElementById('detailRange5to20WinRate');
+        range5to20El.className = parseFloat(analysis.range5to20WinRate) >= 50 ? 'detail-value positive' : 'detail-value negative';
+
+        // Over $20 Win Rate
+        document.getElementById('detailOver20WinRate').textContent = `${analysis.over20WinRate}%`;
+        const over20El = document.getElementById('detailOver20WinRate');
+        over20El.className = parseFloat(analysis.over20WinRate) >= 50 ? 'detail-value positive' : 'detail-value negative';
+
+        // Optimal Price Range
+        document.getElementById('detailOptimalPriceRange').textContent = analysis.optimalPriceRange;
+
+    } catch (error) {
+        console.error('Price level psychology analysis failed:', error);
+        const errorMsg = 'Error';
+        document.getElementById('detailUnder5WinRate').textContent = errorMsg;
+        document.getElementById('detailRange5to20WinRate').textContent = errorMsg;
+        document.getElementById('detailOver20WinRate').textContent = errorMsg;
+    }
+}
+
+/**
+ * ATR Correlation 카드 업데이트
+ */
+async function updateATRCorrelation(filteredTrades) {
+    try {
+        const analysis = await analyzeATRCorrelation(filteredTrades);
+
+        if (!analysis) {
+            document.getElementById('detailHighVolWinRate').textContent = 'N/A';
+            document.getElementById('detailLowVolWinRate').textContent = 'N/A';
+            document.getElementById('detailMedianVolatility').textContent = 'N/A';
+            return;
+        }
+
+        // High Volatility Win Rate
+        document.getElementById('detailHighVolWinRate').textContent = `${analysis.highVolWinRate}%`;
+        const highVolEl = document.getElementById('detailHighVolWinRate');
+        highVolEl.className = parseFloat(analysis.highVolWinRate) >= 50 ? 'detail-value positive' : 'detail-value negative';
+
+        // Low Volatility Win Rate
+        document.getElementById('detailLowVolWinRate').textContent = `${analysis.lowVolWinRate}%`;
+        const lowVolEl = document.getElementById('detailLowVolWinRate');
+        lowVolEl.className = parseFloat(analysis.lowVolWinRate) >= 50 ? 'detail-value positive' : 'detail-value negative';
+
+        // Median Volatility
+        document.getElementById('detailMedianVolatility').textContent = `${analysis.medianVolatility}%`;
+
+    } catch (error) {
+        console.error('ATR correlation analysis failed:', error);
+        const errorMsg = error.code === 'RATE_LIMIT' ? 'API Limit' : 'Error';
+        document.getElementById('detailHighVolWinRate').textContent = errorMsg;
+        document.getElementById('detailLowVolWinRate').textContent = errorMsg;
+        document.getElementById('detailMedianVolatility').textContent = errorMsg;
+    }
+}
