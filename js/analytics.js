@@ -1148,15 +1148,30 @@ async function updateAdvancedCharts() {
 }
 
 
-// ==================== Pattern Insights ====================
+// ==================== Algorithmic Analysis ====================
 
 /**
- * 패턴 인사이트 업데이트
+ * 알고리즘 분석 업데이트 (Palantir-style comprehensive analysis)
  */
-function updatePatternInsights() {
+function updateAlgorithmicAnalysis() {
+    // Legacy pattern analysis
     analyzeTimeBasedPerformance();
     analyzeConsecutiveTradesPattern();
-    generateAIInsights();
+
+    // New algorithmic analysis modules
+    renderMultiFactorAttribution();
+    renderPredictiveRiskScore();
+    renderBehavioralPatterns();
+    renderMarketIntelligence();
+    renderStatisticalEdge();
+    renderAdaptiveRecommendations();
+}
+
+/**
+ * Alias for backward compatibility
+ */
+function updatePatternInsights() {
+    updateAlgorithmicAnalysis();
 }
 
 /**
