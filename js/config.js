@@ -427,6 +427,7 @@ const translations = {
         'previous-close': 'Prev Close',
         'last-updated': 'Last Updated',
         'refresh-quotes': 'Refresh Quotes',
+        'refresh': 'Refresh',
         'loading-market-data': 'Loading market data...',
         'api-key-settings': 'API Key Settings',
         'twelve-data-api-key': 'Twelve Data API Key',
