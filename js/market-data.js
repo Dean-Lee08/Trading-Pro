@@ -1151,6 +1151,345 @@ if (typeof module !== 'undefined' && module.exports) {
         clearMarketDataCache,
 
         // Initialization
-        initializeMarketDataModule
+        initializeMarketDataModule,
+
+        // Advanced Analysis (NEW)
+        analyzeEntryExitQuality,
+        analyzeGapTradingPerformance,
+        analyzeSectorRotation,
+        analyzePriceLevelPsychology,
+        analyzeATRCorrelation
+    };
+}
+
+// ==================== Advanced Market Analysis Functions ====================
+
+/**
+ * 진입/청산 타이밍 품질 분석
+ * Analyzes entry/exit position within the day's price range
+ */
+async function analyzeEntryExitQuality(filteredTrades) {
+    if (filteredTrades.length === 0) return null;
+
+    const tradesWithContext = [];
+    let analyzed = 0;
+    const maxAnalyze = Math.min(filteredTrades.length, 20); // Limit for API efficiency
+
+    for (const trade of filteredTrades.slice(0, maxAnalyze)) {
+        try {
+            const dailyData = await getDailyStockData(trade.symbol, 'compact');
+            const timeSeries = dailyData['Time Series (Daily)'];
+
+            if (!timeSeries || !timeSeries[trade.date]) continue;
+
+            const dayData = timeSeries[trade.date];
+            const high = parseFloat(dayData['2. high']);
+            const low = parseFloat(dayData['3. low']);
+            const open = parseFloat(dayData['1. open']);
+            const close = parseFloat(dayData['4. close']);
+            const prevClose = parseFloat(dayData['4. close']); // Simplified
+
+            if (high === low) continue; // Avoid division by zero
+
+            // Calculate positions (0-100%)
+            const entryPosition = ((trade.buyPrice - low) / (high - low)) * 100;
+            const exitPosition = ((trade.sellPrice - low) / (high - low)) * 100;
+
+            // Entry vs previous close
+            const entryVsPrevClose = ((trade.buyPrice - prevClose) / prevClose) * 100;
+
+            tradesWithContext.push({
+                ...trade,
+                entryPosition,
+                exitPosition,
+                entryVsPrevClose,
+                range: high - low
+            });
+
+            analyzed++;
+
+            // Rate limiting
+            if (analyzed < maxAnalyze) {
+                await new Promise(resolve => setTimeout(resolve, 12000));
+            }
+        } catch (error) {
+            console.error(`Failed to analyze timing for ${trade.symbol}:`, error);
+        }
+    }
+
+    if (tradesWithContext.length === 0) return null;
+
+    // Calculate metrics
+    const avgEntryPosition = tradesWithContext.reduce((sum, t) => sum + t.entryPosition, 0) / tradesWithContext.length;
+    const avgExitPosition = tradesWithContext.reduce((sum, t) => sum + t.exitPosition, 0) / tradesWithContext.length;
+
+    // Early entry rate (bought below previous close)
+    const earlyEntries = tradesWithContext.filter(t => t.entryVsPrevClose < 0).length;
+    const earlyEntryRate = (earlyEntries / tradesWithContext.length) * 100;
+
+    // Profit taking rate (sold in top 30% of range)
+    const profitTakings = tradesWithContext.filter(t => t.exitPosition > 70).length;
+    const profitTakingRate = (profitTakings / tradesWithContext.length) * 100;
+
+    // Timing score (0-10)
+    // Lower entry position = better (buying low)
+    // Higher exit position = better (selling high)
+    const entryScore = Math.max(0, 10 - (avgEntryPosition / 10));
+    const exitScore = avgExitPosition / 10;
+    const timingScore = (entryScore + exitScore) / 2;
+
+    return {
+        avgEntryPosition: avgEntryPosition.toFixed(1),
+        avgExitPosition: avgExitPosition.toFixed(1),
+        timingScore: timingScore.toFixed(1),
+        earlyEntryRate: earlyEntryRate.toFixed(0),
+        profitTakingRate: profitTakingRate.toFixed(0),
+        tradesAnalyzed: tradesWithContext.length
+    };
+}
+
+/**
+ * Gap 트레이딩 성과 분석
+ * Analyzes performance on gap up/down stocks
+ */
+async function analyzeGapTradingPerformance(filteredTrades) {
+    if (filteredTrades.length === 0) return null;
+
+    const tradesWithGap = [];
+    let analyzed = 0;
+    const maxAnalyze = Math.min(filteredTrades.length, 20);
+
+    for (const trade of filteredTrades.slice(0, maxAnalyze)) {
+        try {
+            const dailyData = await getDailyStockData(trade.symbol, 'compact');
+            const timeSeries = dailyData['Time Series (Daily)'];
+
+            if (!timeSeries || !timeSeries[trade.date]) continue;
+
+            const dates = Object.keys(timeSeries).sort((a, b) => b.localeCompare(a));
+            const tradeDateIndex = dates.indexOf(trade.date);
+
+            if (tradeDateIndex === -1 || tradeDateIndex >= dates.length - 1) continue;
+
+            const dayData = timeSeries[trade.date];
+            const prevData = timeSeries[dates[tradeDateIndex + 1]];
+
+            const open = parseFloat(dayData['1. open']);
+            const prevClose = parseFloat(prevData['4. close']);
+
+            const gapPercent = ((open - prevClose) / prevClose) * 100;
+
+            tradesWithGap.push({
+                ...trade,
+                gapPercent,
+                isGapUp: gapPercent > 0.5,
+                isGapDown: gapPercent < -0.5,
+                isLargeGap: Math.abs(gapPercent) > 5
+            });
+
+            analyzed++;
+            if (analyzed < maxAnalyze) {
+                await new Promise(resolve => setTimeout(resolve, 12000));
+            }
+        } catch (error) {
+            console.error(`Failed to analyze gap for ${trade.symbol}:`, error);
+        }
+    }
+
+    if (tradesWithGap.length === 0) return null;
+
+    // Calculate stats
+    const gapUpTrades = tradesWithGap.filter(t => t.isGapUp);
+    const gapDownTrades = tradesWithGap.filter(t => t.isGapDown);
+    const largeGapTrades = tradesWithGap.filter(t => t.isLargeGap);
+
+    const calculateWinRate = (trades) => {
+        if (trades.length === 0) return 0;
+        const wins = trades.filter(t => t.pnl > 0).length;
+        return (wins / trades.length) * 100;
+    };
+
+    const gapUpWinRate = calculateWinRate(gapUpTrades);
+    const gapDownWinRate = calculateWinRate(gapDownTrades);
+    const largeGapWinRate = calculateWinRate(largeGapTrades);
+
+    // Determine best gap range
+    const ranges = [
+        { label: '0-2%', trades: tradesWithGap.filter(t => Math.abs(t.gapPercent) < 2) },
+        { label: '2-5%', trades: tradesWithGap.filter(t => Math.abs(t.gapPercent) >= 2 && Math.abs(t.gapPercent) < 5) },
+        { label: '5%+', trades: tradesWithGap.filter(t => Math.abs(t.gapPercent) >= 5) }
+    ];
+
+    const bestRange = ranges.reduce((best, range) => {
+        const winRate = calculateWinRate(range.trades);
+        return winRate > best.winRate ? { ...range, winRate } : best;
+    }, { label: '-', winRate: 0 });
+
+    return {
+        gapUpWinRate: gapUpWinRate.toFixed(1),
+        gapDownWinRate: gapDownWinRate.toFixed(1),
+        largeGapWinRate: largeGapWinRate.toFixed(1),
+        bestGapRange: bestRange.label,
+        tradesAnalyzed: tradesWithGap.length
+    };
+}
+
+/**
+ * 섹터 회전 분석
+ * Analyzes sector performance and rotation
+ */
+async function analyzeSectorRotation(filteredTrades) {
+    const winningTrades = filteredTrades.filter(trade => trade.pnl > 0);
+    if (winningTrades.length === 0) return null;
+
+    const symbols = [...new Set(winningTrades.map(t => t.symbol))];
+    const overviews = await getMultipleOverviews(symbols.slice(0, 15)); // Limit for efficiency
+
+    const sectorPerformance = {};
+    let totalAnalyzed = 0;
+
+    for (const [symbol, overview] of Object.entries(overviews)) {
+        if (!overview) continue;
+
+        const sector = overview.sector || 'Unknown';
+        const symbolTrades = winningTrades.filter(t => t.symbol === symbol);
+
+        if (!sectorPerformance[sector]) {
+            sectorPerformance[sector] = {
+                trades: 0,
+                wins: 0,
+                totalPnl: 0
+            };
+        }
+
+        sectorPerformance[sector].trades += symbolTrades.length;
+        sectorPerformance[sector].wins += symbolTrades.filter(t => t.pnl > 0).length;
+        sectorPerformance[sector].totalPnl += symbolTrades.reduce((sum, t) => sum + t.pnl, 0);
+        totalAnalyzed++;
+    }
+
+    if (Object.keys(sectorPerformance).length === 0) return null;
+
+    // Find top sector
+    const sectors = Object.entries(sectorPerformance).map(([sector, stats]) => ({
+        sector,
+        ...stats,
+        winRate: (stats.wins / stats.trades) * 100,
+        avgReturn: stats.totalPnl / stats.trades
+    }));
+
+    const topSector = sectors.sort((a, b) => b.totalPnl - a.totalPnl)[0];
+
+    return {
+        topSector: topSector.sector,
+        topSectorWinRate: topSector.winRate.toFixed(1),
+        topSectorAvgReturn: topSector.avgReturn.toFixed(2),
+        sectorDiversity: Object.keys(sectorPerformance).length,
+        totalAnalyzed
+    };
+}
+
+/**
+ * 가격대 심리 분석
+ * Analyzes performance by price level
+ */
+async function analyzePriceLevelPsychology(filteredTrades) {
+    if (filteredTrades.length === 0) return null;
+
+    // Categorize by price level
+    const under5 = filteredTrades.filter(t => t.buyPrice < 5);
+    const range5to20 = filteredTrades.filter(t => t.buyPrice >= 5 && t.buyPrice < 20);
+    const over20 = filteredTrades.filter(t => t.buyPrice >= 20);
+
+    const calculateWinRate = (trades) => {
+        if (trades.length === 0) return 0;
+        const wins = trades.filter(t => t.pnl > 0).length;
+        return (wins / trades.length) * 100;
+    };
+
+    const under5WinRate = calculateWinRate(under5);
+    const range5to20WinRate = calculateWinRate(range5to20);
+    const over20WinRate = calculateWinRate(over20);
+
+    // Find optimal range
+    const ranges = [
+        { label: 'Under $5', winRate: under5WinRate, trades: under5.length },
+        { label: '$5-$20', winRate: range5to20WinRate, trades: range5to20.length },
+        { label: 'Over $20', winRate: over20WinRate, trades: over20.length }
+    ];
+
+    const optimal = ranges.reduce((best, range) =>
+        range.winRate > best.winRate ? range : best
+    , { label: '-', winRate: 0 });
+
+    return {
+        under5WinRate: under5WinRate.toFixed(1),
+        range5to20WinRate: range5to20WinRate.toFixed(1),
+        over20WinRate: over20WinRate.toFixed(1),
+        optimalPriceRange: optimal.label,
+        totalTrades: filteredTrades.length
+    };
+}
+
+/**
+ * ATR 상관관계 분석 (간소화 버전)
+ * Analyzes correlation with volatility (using high-low range as proxy for ATR)
+ */
+async function analyzeATRCorrelation(filteredTrades) {
+    if (filteredTrades.length === 0) return null;
+
+    const tradesWithVolatility = [];
+    let analyzed = 0;
+    const maxAnalyze = Math.min(filteredTrades.length, 15);
+
+    for (const trade of filteredTrades.slice(0, maxAnalyze)) {
+        try {
+            const dailyData = await getDailyStockData(trade.symbol, 'compact');
+            const timeSeries = dailyData['Time Series (Daily)'];
+
+            if (!timeSeries || !timeSeries[trade.date]) continue;
+
+            const dayData = timeSeries[trade.date];
+            const high = parseFloat(dayData['2. high']);
+            const low = parseFloat(dayData['3. low']);
+            const close = parseFloat(dayData['4. close']);
+
+            // Simple ATR proxy: (high - low) / close * 100
+            const volatilityPct = ((high - low) / close) * 100;
+
+            tradesWithVolatility.push({
+                ...trade,
+                volatilityPct
+            });
+
+            analyzed++;
+            if (analyzed < maxAnalyze) {
+                await new Promise(resolve => setTimeout(resolve, 12000));
+            }
+        } catch (error) {
+            console.error(`Failed to analyze volatility for ${trade.symbol}:`, error);
+        }
+    }
+
+    if (tradesWithVolatility.length === 0) return null;
+
+    // Categorize by volatility
+    const sorted = [...tradesWithVolatility].sort((a, b) => b.volatilityPct - a.volatilityPct);
+    const median = sorted[Math.floor(sorted.length / 2)].volatilityPct;
+
+    const highVol = tradesWithVolatility.filter(t => t.volatilityPct > median * 1.5);
+    const lowVol = tradesWithVolatility.filter(t => t.volatilityPct < median * 0.5);
+
+    const calculateWinRate = (trades) => {
+        if (trades.length === 0) return 0;
+        const wins = trades.filter(t => t.pnl > 0).length;
+        return (wins / trades.length) * 100;
+    };
+
+    return {
+        highVolWinRate: calculateWinRate(highVol).toFixed(1),
+        lowVolWinRate: calculateWinRate(lowVol).toFixed(1),
+        medianVolatility: median.toFixed(1),
+        tradesAnalyzed: tradesWithVolatility.length
     };
 }
