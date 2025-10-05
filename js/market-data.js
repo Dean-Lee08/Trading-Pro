@@ -350,18 +350,59 @@ async function getStockOverview(symbol) {
     };
 
     try {
-        // Twelve Data uses /profile endpoint
-        const profileData = await callTwelveDataAPI('/profile', params);
+        // NOTE: Twelve Data's /profile endpoint is NOT available in free tier
+        // We'll use /quote endpoint as fallback and provide limited data
+        console.log(`⚠️ Attempting to fetch profile for ${symbol} (may not be available in free tier)`);
 
-        // Check if profile data is valid
-        if (!profileData || !profileData.symbol) {
-            console.warn(`⚠️ Profile not available for ${symbol}, using defaults`);
+        // Try /profile first (will fail on free tier)
+        let profileData;
+        try {
+            profileData = await callTwelveDataAPI('/profile', params);
+        } catch (profileError) {
+            console.warn(`⚠️ Profile endpoint not available for ${symbol} (free tier limitation)`);
+
+            // Fallback: Use quote data to at least get symbol validation
+            try {
+                const quoteData = await callTwelveDataAPI('/quote', params);
+                if (quoteData && quoteData.symbol) {
+                    console.log(`✓ Using quote data as fallback for ${symbol}`);
+                    const converted = {
+                        Symbol: quoteData.symbol,
+                        Name: quoteData.name || symbol,
+                        Description: '',
+                        Sector: 'Unknown',
+                        Industry: 'Unknown',
+                        MarketCapitalization: '0',
+                        SharesOutstanding: '0',
+                        SharesFloat: '0',
+                        '52WeekHigh': quoteData.fifty_two_week_high || '0',
+                        '52WeekLow': quoteData.fifty_two_week_low || '0',
+                        Beta: '0',
+                        PERatio: '0',
+                        EPS: '0'
+                    };
+                    setCachedData(cacheKey, converted);
+                    return converted;
+                }
+            } catch (quoteError) {
+                console.warn(`⚠️ Quote fallback also failed for ${symbol}`);
+            }
+
+            // Final fallback: return defaults
             const defaultData = createDefaultOverview(symbol);
             setCachedData(cacheKey, defaultData);
             return defaultData;
         }
 
-        // Convert Twelve Data format to Alpha Vantage-like format for compatibility
+        // If profile succeeded, use it
+        if (!profileData || !profileData.symbol) {
+            console.warn(`⚠️ Profile data invalid for ${symbol}, using defaults`);
+            const defaultData = createDefaultOverview(symbol);
+            setCachedData(cacheKey, defaultData);
+            return defaultData;
+        }
+
+        // Convert Twelve Data profile format to Alpha Vantage-like format
         const converted = {
             Symbol: profileData.symbol || symbol,
             Name: profileData.name || symbol,
@@ -381,7 +422,7 @@ async function getStockOverview(symbol) {
         setCachedData(cacheKey, converted);
         return converted;
     } catch (error) {
-        console.warn(`⚠️ Failed to fetch profile for ${symbol}:`, error.message);
+        console.warn(`⚠️ Failed to fetch any data for ${symbol}:`, error.message);
         const defaultData = createDefaultOverview(symbol);
         setCachedData(cacheKey, defaultData);
         return defaultData;
@@ -568,9 +609,10 @@ async function getSymbolOverviewData(symbol) {
     try {
         const overview = await getStockOverview(symbol);
 
+        // Handle both successful API data and fallback data
         return {
             symbol: overview.Symbol,
-            name: overview.Name,
+            name: overview.Name || symbol,
             marketCap: parseFloat(overview.MarketCapitalization) || 0,
             sharesFloat: parseFloat(overview.SharesFloat) || 0,
             sharesOutstanding: parseFloat(overview.SharesOutstanding) || 0,
@@ -585,7 +627,22 @@ async function getSymbolOverviewData(symbol) {
         };
     } catch (error) {
         console.error(`Failed to get overview data for ${symbol}:`, error);
-        return null;
+        // Return default overview on error
+        return {
+            symbol,
+            name: symbol,
+            marketCap: 0,
+            sharesFloat: 0,
+            sharesOutstanding: 0,
+            beta: 0,
+            peRatio: 0,
+            eps: 0,
+            week52High: 0,
+            week52Low: 0,
+            sector: 'Unknown',
+            industry: 'Unknown',
+            description: ''
+        };
     }
 }
 
