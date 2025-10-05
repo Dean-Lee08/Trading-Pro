@@ -53,6 +53,7 @@ function setAnalyticsPeriod(period) {
 
     document.querySelector(`[onclick="setAnalyticsPeriod('${period}')"]`).classList.add('active');
     analyticsLoadedOnce = false; // Force reload when period changes
+    marketDataLoadedOnce = false; // Force reload market data
     updateDetailedAnalytics();
 }
 
@@ -1956,7 +1957,7 @@ function getMostCommon(arr) {
 // ==================== Market Data Integration ====================
 
 /**
- * 시장 데이터 섹션 로드
+ * 시장 데이터 섹션 로드 (캐싱 적용)
  */
 async function loadMarketDataSection() {
     console.log('📊 Loading market data section...');
@@ -1975,7 +1976,23 @@ async function loadMarketDataSection() {
         return;
     }
 
-    console.log(`📊 Found ${filteredTrades.length} trades, loading market data...`);
+    // Check if market data already loaded with same filter (session cache)
+    const currentFilter = {
+        startDate: analyticsStartDate,
+        endDate: analyticsEndDate,
+        tradeCount: filteredTrades.length
+    };
+
+    if (marketDataLoadedOnce &&
+        JSON.stringify(currentFilter) === JSON.stringify(marketDataFilterState)) {
+        console.log('✓ Using cached market data (no API calls)');
+        return; // Already displayed, keep existing data
+    }
+
+    // Mark as loading new data
+    console.log(`⟳ Loading market data: ${filteredTrades.length} trades...`);
+    marketDataFilterState = currentFilter;
+    marketDataLoadedOnce = true;
 
     showMarketDataLoading();
 
@@ -1997,6 +2014,9 @@ async function loadMarketDataSection() {
                 </div>
             `;
         }
+        // Reset cache flags on error
+        marketDataLoadedOnce = false;
+        marketDataFilterState = null;
     }
 }
 
