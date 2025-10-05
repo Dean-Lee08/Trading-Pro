@@ -2952,3 +2952,370 @@ async function updateATRCorrelation(filteredTrades) {
         document.getElementById('detailMedianVolatility').textContent = errorMsg;
     }
 }
+
+// ==================== Advanced Algorithmic Analysis Functions ====================
+
+/**
+ * Multi-Factor Performance Attribution
+ * Analyzes which factors contribute most to trading performance
+ */
+function renderMultiFactorAttribution() {
+    const element = document.getElementById('multiFactorAttribution');
+    if (!element) return;
+
+    const factors = calculateFeatureImportance();
+
+    if (!factors || factors.length === 0) {
+        element.innerHTML = `
+            <div style="color: #64748b; text-align: center; padding: 20px;">
+                Insufficient data for multi-factor analysis. Need at least 10 trades with psychology data.
+            </div>
+        `;
+        return;
+    }
+
+    const html = factors.map((factor, idx) => {
+        const barWidth = Math.abs(factor.impact) * 100;
+        const barColor = factor.impact > 0 ? '#10b981' : '#ef4444';
+        const impactSign = factor.impact > 0 ? '+' : '';
+
+        return `
+            <div style="margin-bottom: 16px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <span style="color: #e4e4e7; font-size: 13px; font-weight: 500;">${factor.name}</span>
+                    <span style="color: ${barColor}; font-size: 13px; font-weight: 600;">${impactSign}${(factor.impact * 100).toFixed(1)}%</span>
+                </div>
+                <div style="background: #0f172a; height: 8px; border-radius: 4px; overflow: hidden;">
+                    <div style="width: ${barWidth}%; height: 100%; background: ${barColor}; transition: width 0.3s;"></div>
+                </div>
+                <div style="color: #64748b; font-size: 11px; margin-top: 4px;">
+                    Sample: ${factor.sampleSize} days | Confidence: ${(factor.confidence * 100).toFixed(0)}%
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    element.innerHTML = html;
+}
+
+/**
+ * Calculate feature importance using correlation and variance analysis
+ */
+function calculateFeatureImportance() {
+    const features = [];
+    const minSampleSize = 10;
+
+    // Group trades by date and calculate daily performance
+    const dailyData = {};
+    trades.forEach(trade => {
+        if (!dailyData[trade.date]) {
+            dailyData[trade.date] = { trades: [], totalPnL: 0, winRate: 0 };
+        }
+        dailyData[trade.date].trades.push(trade);
+        dailyData[trade.date].totalPnL += trade.pnl;
+    });
+
+    // Calculate win rates
+    Object.keys(dailyData).forEach(date => {
+        const dayTrades = dailyData[date].trades;
+        dailyData[date].winRate = (dayTrades.filter(t => t.pnl > 0).length / dayTrades.length) * 100;
+    });
+
+    // Analyze Sleep Quality impact
+    const sleepData = [];
+    Object.entries(psychologyData).forEach(([date, psych]) => {
+        if (psych.sleepHours && dailyData[date]) {
+            sleepData.push({
+                x: psych.sleepHours,
+                y: dailyData[date].winRate,
+                pnl: dailyData[date].totalPnL
+            });
+        }
+    });
+
+    if (sleepData.length >= minSampleSize) {
+        const correlation = calculatePearsonCorrelation(sleepData.map(d => ({ x: d.x, y: d.y })));
+        if (correlation !== null) {
+            features.push({
+                name: 'Sleep Quality',
+                impact: correlation * 0.4, // Weighted impact
+                sampleSize: sleepData.length,
+                confidence: Math.min(sleepData.length / 30, 1)
+            });
+        }
+    }
+
+    // Analyze Stress Level impact
+    const stressData = [];
+    Object.entries(psychologyData).forEach(([date, psych]) => {
+        if (psych.stress && dailyData[date]) {
+            stressData.push({
+                x: psych.stress,
+                y: dailyData[date].winRate
+            });
+        }
+    });
+
+    if (stressData.length >= minSampleSize) {
+        const correlation = calculatePearsonCorrelation(stressData);
+        if (correlation !== null) {
+            features.push({
+                name: 'Stress Management',
+                impact: -correlation * 0.35, // Negative stress is good
+                sampleSize: stressData.length,
+                confidence: Math.min(stressData.length / 30, 1)
+            });
+        }
+    }
+
+    // Analyze Focus Level impact
+    const focusData = [];
+    Object.entries(psychologyData).forEach(([date, psych]) => {
+        if (psych.focus && dailyData[date]) {
+            focusData.push({
+                x: psych.focus,
+                y: dailyData[date].winRate
+            });
+        }
+    });
+
+    if (focusData.length >= minSampleSize) {
+        const correlation = calculatePearsonCorrelation(focusData);
+        if (correlation !== null) {
+            features.push({
+                name: 'Focus Level',
+                impact: correlation * 0.45,
+                sampleSize: focusData.length,
+                confidence: Math.min(focusData.length / 30, 1)
+            });
+        }
+    }
+
+    // Analyze Time of Day impact
+    const hourlyPerf = {};
+    trades.forEach(trade => {
+        if (trade.entryTime) {
+            const hour = parseInt(trade.entryTime.split(':')[0]);
+            if (!hourlyPerf[hour]) hourlyPerf[hour] = { wins: 0, total: 0 };
+            hourlyPerf[hour].total++;
+            if (trade.pnl > 0) hourlyPerf[hour].wins++;
+        }
+    });
+
+    const avgWinRate = trades.filter(t => t.pnl > 0).length / trades.length * 100;
+    let bestHourImpact = 0;
+    Object.values(hourlyPerf).forEach(hour => {
+        if (hour.total >= 5) {
+            const hourWinRate = (hour.wins / hour.total) * 100;
+            const impact = (hourWinRate - avgWinRate) / 100;
+            if (Math.abs(impact) > Math.abs(bestHourImpact)) {
+                bestHourImpact = impact;
+            }
+        }
+    });
+
+    if (bestHourImpact !== 0) {
+        features.push({
+            name: 'Optimal Timing',
+            impact: bestHourImpact * 0.3,
+            sampleSize: trades.filter(t => t.entryTime).length,
+            confidence: 0.8
+        });
+    }
+
+    // Analyze Position Sizing Discipline
+    if (trades.length >= minSampleSize) {
+        const amounts = trades.map(t => t.amount);
+        const avgAmount = amounts.reduce((a, b) => a + b, 0) / amounts.length;
+        const stdDev = Math.sqrt(amounts.reduce((sum, a) => sum + Math.pow(a - avgAmount, 2), 0) / amounts.length);
+        const cvCoefficient = stdDev / avgAmount;
+
+        // Lower coefficient of variation = better discipline = positive impact
+        const disciplineImpact = Math.max(0, (0.5 - cvCoefficient) * 0.6);
+
+        features.push({
+            name: 'Position Sizing Discipline',
+            impact: disciplineImpact,
+            sampleSize: trades.length,
+            confidence: Math.min(trades.length / 50, 1)
+        });
+    }
+
+    // Sort by absolute impact
+    features.sort((a, b) => Math.abs(b.impact) - Math.abs(a.impact));
+
+    return features.slice(0, 5); // Top 5 factors
+}
+
+/**
+ * Predictive Risk Score (0-100)
+ * Real-time assessment of current trading risk level
+ */
+function renderPredictiveRiskScore() {
+    const element = document.getElementById('predictiveRiskScore');
+    if (!element) return;
+
+    const riskScore = computePredictiveRiskScore();
+
+    const scoreColor = riskScore.overall >= 70 ? '#10b981' :
+                       riskScore.overall >= 50 ? '#f59e0b' : '#ef4444';
+
+    const riskLevel = riskScore.overall >= 70 ? (currentLanguage === 'ko' ? '양호' : 'GOOD') :
+                      riskScore.overall >= 50 ? (currentLanguage === 'ko' ? '보통' : 'NEUTRAL') :
+                      (currentLanguage === 'ko' ? '주의' : 'ELEVATED');
+
+    element.innerHTML = `
+        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 24px;">
+            <div style="text-align: center; padding: 20px;">
+                <div style="font-size: 64px; font-weight: 700; color: ${scoreColor}; line-height: 1;">
+                    ${riskScore.overall}
+                </div>
+                <div style="font-size: 14px; color: #94a3b8; margin-top: 8px;">/ 100</div>
+                <div style="font-size: 16px; font-weight: 600; color: ${scoreColor}; margin-top: 12px; text-transform: uppercase;">
+                    ${riskLevel}
+                </div>
+            </div>
+            <div>
+                <div style="margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: #94a3b8; font-size: 13px;" data-lang="psychological-state">Psychological State</span>
+                        <span style="color: #e4e4e7; font-weight: 600;">${riskScore.psychology}/100</span>
+                    </div>
+                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
+                        <div style="width: ${riskScore.psychology}%; height: 100%; background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981); transition: width 0.3s;"></div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: #94a3b8; font-size: 13px;" data-lang="market-conditions">Market Conditions</span>
+                        <span style="color: #e4e4e7; font-weight: 600;">${riskScore.market}/100</span>
+                    </div>
+                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
+                        <div style="width: ${riskScore.market}%; height: 100%; background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981); transition: width 0.3s;"></div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: #94a3b8; font-size: 13px;" data-lang="performance-trend">Performance Trend</span>
+                        <span style="color: #e4e4e7; font-weight: 600;">${riskScore.performance}/100</span>
+                    </div>
+                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
+                        <div style="width: ${riskScore.performance}%; height: 100%; background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981); transition: width 0.3s;"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: #94a3b8; font-size: 13px;" data-lang="bias-risk">Behavioral Bias Risk</span>
+                        <span style="color: #e4e4e7; font-weight: 600;">${riskScore.biasRisk}/100</span>
+                    </div>
+                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
+                        <div style="width: ${riskScore.biasRisk}%; height: 100%; background: linear-gradient(90deg, #10b981, #f59e0b, #ef4444); transition: width 0.3s;"></div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px; padding: 12px; background: #0f172a; border-radius: 6px; border-left: 3px solid ${scoreColor};">
+                    <div style="color: #94a3b8; font-size: 11px; text-transform: uppercase; margin-bottom: 4px;" data-lang="recommended-action">Recommended Action</div>
+                    <div style="color: #e4e4e7; font-size: 13px; line-height: 1.5;">${riskScore.recommendation}</div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+/**
+ * Compute predictive risk score based on multiple factors
+ */
+function computePredictiveRiskScore() {
+    const today = formatTradingDate(new Date());
+    const todayPsych = psychologyData[today] || {};
+
+    // Psychological State Score (0-100)
+    let psychScore = 50; // Default neutral
+    if (Object.keys(todayPsych).length > 0) {
+        const sleepScore = todayPsych.sleepHours ? Math.min((todayPsych.sleepHours / 8) * 100, 100) : 50;
+        const stressScore = todayPsych.stress ? (5 - todayPsych.stress) * 20 : 50;
+        const focusScore = todayPsych.focus ? todayPsych.focus * 20 : 50;
+        const energyScore = todayPsych.energyLevel ? todayPsych.energyLevel * 20 : 50;
+
+        psychScore = (sleepScore * 0.3 + stressScore * 0.3 + focusScore * 0.25 + energyScore * 0.15);
+    }
+
+    // Market Conditions Score (based on recent volatility and win rate)
+    let marketScore = 50;
+    const last10Trades = trades.slice(-10);
+    if (last10Trades.length >= 5) {
+        const volatility = calculateVolatility(last10Trades.map(t => t.returnPct));
+        // Lower volatility = better conditions for most traders
+        marketScore = Math.max(0, Math.min(100, 70 - volatility * 10));
+    }
+
+    // Performance Trend Score (last 5 days)
+    let perfScore = 50;
+    const last5Days = getLast5TradingDays();
+    if (last5Days.length >= 3) {
+        const recentWinRate = (last5Days.filter(d => d.pnl > 0).length / last5Days.length) * 100;
+        perfScore = recentWinRate;
+    }
+
+    // Behavioral Bias Risk (inverted - higher number = lower risk)
+    let biasScore = 70; // Default low risk
+    const emotionalPatterns = detectEmotionalTradingPatterns();
+    if (emotionalPatterns.revengeTrading) biasScore -= 30;
+    if (emotionalPatterns.overconfidenceRisk) biasScore -= 20;
+    if (emotionalPatterns.stressOvertrading) biasScore -= 15;
+    biasScore = Math.max(0, biasScore);
+
+    const overall = Math.round((psychScore * 0.35 + marketScore * 0.2 + perfScore * 0.25 + biasScore * 0.2));
+
+    // Generate recommendation
+    let recommendation = '';
+    if (overall >= 70) {
+        recommendation = currentLanguage === 'ko' ?
+            '조건이 최적입니다. 정상적인 포지션 크기로 거래하세요.' :
+            'Conditions are optimal. Trade with normal position sizing.';
+    } else if (overall >= 50) {
+        recommendation = currentLanguage === 'ko' ?
+            '조건이 보통입니다. 포지션 크기를 20-30% 줄이는 것을 고려하세요.' :
+            'Conditions are neutral. Consider reducing position size by 20-30%.';
+    } else {
+        recommendation = currentLanguage === 'ko' ?
+            '조건이 좋지 않습니다. 거래를 피하거나 최소 포지션만 사용하세요.' :
+            'Conditions are poor. Avoid trading or use minimum position sizes only.';
+    }
+
+    return {
+        overall: Math.round(overall),
+        psychology: Math.round(psychScore),
+        market: Math.round(marketScore),
+        performance: Math.round(perfScore),
+        biasRisk: Math.round(biasScore),
+        recommendation
+    };
+}
+
+/**
+ * Calculate volatility (standard deviation of returns)
+ */
+function calculateVolatility(returns) {
+    if (returns.length === 0) return 0;
+    const mean = returns.reduce((a, b) => a + b, 0) / returns.length;
+    const variance = returns.reduce((sum, r) => sum + Math.pow(r - mean, 2), 0) / returns.length;
+    return Math.sqrt(variance);
+}
+
+/**
+ * Get last 5 trading days performance
+ */
+function getLast5TradingDays() {
+    const dailyPnL = {};
+    trades.forEach(trade => {
+        if (!dailyPnL[trade.date]) dailyPnL[trade.date] = 0;
+        dailyPnL[trade.date] += trade.pnl;
+    });
+
+    const sortedDays = Object.keys(dailyPnL).sort().reverse().slice(0, 5);
+    return sortedDays.map(date => ({ date, pnl: dailyPnL[date] }));
+}
