@@ -572,6 +572,8 @@ async function getMultipleOverviews(symbols, maxSymbols = 5) {
     const results = {};
     const limitedSymbols = symbols.slice(0, maxSymbols);
 
+    console.log(`📊 Fetching overviews for ${limitedSymbols.length} symbols:`, limitedSymbols.join(', '));
+
     for (const symbol of limitedSymbols) {
         try {
             if (Object.keys(results).length > 0) {
@@ -580,11 +582,20 @@ async function getMultipleOverviews(symbols, maxSymbols = 5) {
 
             const overview = await getSymbolOverviewData(symbol);
             results[symbol] = overview;
+
+            if (overview && overview.Symbol) {
+                console.log(`  ✓ ${symbol}: Success (${overview.Sector})`);
+            } else {
+                console.log(`  ⚠️ ${symbol}: Using default data`);
+            }
         } catch (error) {
-            console.error(`Failed to fetch overview for ${symbol}:`, error);
-            results[symbol] = null;
+            console.error(`  ✗ ${symbol}: Failed -`, error.message);
+            results[symbol] = createDefaultOverview(symbol);
         }
     }
+
+    const successCount = Object.values(results).filter(r => r && r.Sector !== 'Unknown').length;
+    console.log(`📊 Overview fetch complete: ${successCount}/${limitedSymbols.length} successful`);
 
     return results;
 }
