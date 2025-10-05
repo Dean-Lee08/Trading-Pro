@@ -415,10 +415,10 @@ function changeLanguageFromSettings() {
 }
 
 /**
- * Alpha Vantage API 키 저장
+ * Twelve Data API 키 저장
  */
-function saveAlphaVantageApiKey() {
-    const apiKeyInput = document.getElementById('alphaVantageApiKeyInput');
+function saveTwelveDataApiKey() {
+    const apiKeyInput = document.getElementById('twelveDataApiKeyInput');
     const apiKey = apiKeyInput.value.trim();
 
     if (!apiKey) {
@@ -426,17 +426,17 @@ function saveAlphaVantageApiKey() {
         return;
     }
 
-    setAlphaVantageApiKey(apiKey);
+    setTwelveDataApiKey(apiKey);
     showToast(currentLanguage === 'ko' ? 'API 키가 저장되었습니다' : 'API key saved');
 }
 
 /**
- * Alpha Vantage API 키 설정 페이지에 로드
+ * Twelve Data API 키 설정 페이지에 로드
  */
-function loadAlphaVantageApiKeyToSettings() {
-    const apiKeyInput = document.getElementById('alphaVantageApiKeyInput');
+function loadTwelveDataApiKeyToSettings() {
+    const apiKeyInput = document.getElementById('twelveDataApiKeyInput');
     if (apiKeyInput) {
-        const currentKey = getAlphaVantageApiKey();
+        const currentKey = getTwelveDataApiKey();
         if (currentKey) {
             apiKeyInput.value = currentKey;
         }
@@ -479,7 +479,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     // Initialize market data module
     initializeMarketDataModule();
-    loadAlphaVantageApiKeyToSettings();
+    loadTwelveDataApiKeyToSettings();
 
     // Initialize current date
     const now = new Date();

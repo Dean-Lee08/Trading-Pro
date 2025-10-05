@@ -1,16 +1,16 @@
-// market-data.js - Alpha Vantage API 통합 및 시장 데이터 관리
+// market-data.js - Twelve Data API 통합 및 시장 데이터 관리
 
-// ==================== Alpha Vantage API Configuration ====================
+// ==================== Twelve Data API Configuration ====================
 
-const ALPHA_VANTAGE_BASE_URL = 'https://www.alphavantage.co/query';
+const TWELVE_DATA_BASE_URL = 'https://api.twelvedata.com';
 const API_RATE_LIMIT = {
-    callsPerMinute: 5,
-    callsPerDay: 25
+    callsPerMinute: 8,
+    callsPerDay: 800
 };
 
 // ==================== Market Data State ====================
 
-let alphaVantageApiKey = 'XLAZ5MW6NTMVPLKE'; // Default API key
+let twelveDataApiKey = '66cd99ab4cd046dda3ef8af62af9b06d'; // Default API key
 let marketDataCache = {};
 let apiCallLog = [];
 
@@ -143,14 +143,14 @@ function clearMarketDataCache() {
     console.log('Market data cache cleared');
 }
 
-// ==================== Alpha Vantage API Functions ====================
+// ==================== Twelve Data API Functions ====================
 
 /**
- * Alpha Vantage API 호출 (공통 함수)
+ * Twelve Data API 호출 (공통 함수)
  */
-async function callAlphaVantageAPI(params) {
-    if (!alphaVantageApiKey) {
-        const error = new Error('Alpha Vantage API key not set');
+async function callTwelveDataAPI(endpoint, params = {}) {
+    if (!twelveDataApiKey) {
+        const error = new Error('Twelve Data API key not set');
         error.code = 'NO_API_KEY';
         throw error;
     }
@@ -161,14 +161,14 @@ async function callAlphaVantageAPI(params) {
         throw error;
     }
 
-    const url = new URL(ALPHA_VANTAGE_BASE_URL);
-    url.searchParams.append('apikey', alphaVantageApiKey);
+    const url = new URL(`${TWELVE_DATA_BASE_URL}${endpoint}`);
+    url.searchParams.append('apikey', twelveDataApiKey);
 
     for (const [key, value] of Object.entries(params)) {
         url.searchParams.append(key, value);
     }
 
-    console.log('Calling Alpha Vantage API:', url.toString().replace(alphaVantageApiKey, 'API_KEY'));
+    console.log('Calling Twelve Data API:', url.toString().replace(twelveDataApiKey, 'API_KEY'));
 
     try {
         const response = await fetch(url.toString());
@@ -182,29 +182,22 @@ async function callAlphaVantageAPI(params) {
         const data = await response.json();
 
         // Check for API error messages
-        if (data['Error Message']) {
-            const error = new Error(data['Error Message']);
+        if (data.status === 'error' || data.code === 400 || data.code === 401 || data.code === 404) {
+            const error = new Error(data.message || 'API Error');
             error.code = 'API_ERROR';
-            throw error;
-        }
-
-        if (data['Note']) {
-            // Rate limit message from Alpha Vantage
-            const error = new Error('API call frequency limit reached. Please wait a minute.');
-            error.code = 'RATE_LIMIT';
             throw error;
         }
 
         logApiCall();
         return data;
     } catch (error) {
-        console.error('Alpha Vantage API error:', error);
+        console.error('Twelve Data API error:', error);
         throw error;
     }
 }
 
 /**
- * 일일 시세 데이터 가져오기 (TIME_SERIES_DAILY)
+ * 일일 시세 데이터 가져오기 (TIME_SERIES)
  */
 async function getDailyStockData(symbol, outputsize = 'compact') {
     const cacheKey = `daily_${symbol}_${outputsize}`;
@@ -215,23 +208,42 @@ async function getDailyStockData(symbol, outputsize = 'compact') {
     }
 
     const params = {
-        function: 'TIME_SERIES_DAILY',
         symbol: symbol,
-        outputsize: outputsize // 'compact' (100 days) or 'full' (20+ years)
+        interval: '1day',
+        outputsize: outputsize === 'full' ? '5000' : '100' // Twelve Data uses numeric outputsize
     };
 
-    const data = await callAlphaVantageAPI(params);
+    const data = await callTwelveDataAPI('/time_series', params);
 
-    if (data['Time Series (Daily)']) {
-        setCachedData(cacheKey, data);
-        return data;
+    if (data.values) {
+        // Convert Twelve Data format to Alpha Vantage-like format for compatibility
+        const converted = {
+            'Meta Data': {
+                'Information': 'Daily Time Series',
+                'Symbol': symbol
+            },
+            'Time Series (Daily)': {}
+        };
+
+        data.values.forEach(item => {
+            converted['Time Series (Daily)'][item.datetime] = {
+                '1. open': item.open,
+                '2. high': item.high,
+                '3. low': item.low,
+                '4. close': item.close,
+                '5. volume': item.volume
+            };
+        });
+
+        setCachedData(cacheKey, converted);
+        return converted;
     } else {
         throw new Error(`Failed to fetch daily data for ${symbol}`);
     }
 }
 
 /**
- * 인트라데이 시세 데이터 가져오기 (TIME_SERIES_INTRADAY)
+ * 인트라데이 시세 데이터 가져오기 (TIME_SERIES)
  */
 async function getIntradayStockData(symbol, interval = '5min', outputsize = 'compact') {
     const cacheKey = `intraday_${symbol}_${interval}_${outputsize}`;
@@ -242,24 +254,43 @@ async function getIntradayStockData(symbol, interval = '5min', outputsize = 'com
     }
 
     const params = {
-        function: 'TIME_SERIES_INTRADAY',
         symbol: symbol,
-        interval: interval, // '1min', '5min', '15min', '30min', '60min'
-        outputsize: outputsize
+        interval: interval, // '1min', '5min', '15min', '30min', '1h'
+        outputsize: outputsize === 'full' ? '5000' : '100'
     };
 
-    const data = await callAlphaVantageAPI(params);
+    const data = await callTwelveDataAPI('/time_series', params);
 
-    if (data[`Time Series (${interval})`]) {
-        setCachedData(cacheKey, data);
-        return data;
+    if (data.values) {
+        // Convert Twelve Data format to Alpha Vantage-like format for compatibility
+        const converted = {
+            'Meta Data': {
+                'Information': `Intraday (${interval}) Time Series`,
+                'Symbol': symbol,
+                'Interval': interval
+            },
+            [`Time Series (${interval})`]: {}
+        };
+
+        data.values.forEach(item => {
+            converted[`Time Series (${interval})`][item.datetime] = {
+                '1. open': item.open,
+                '2. high': item.high,
+                '3. low': item.low,
+                '4. close': item.close,
+                '5. volume': item.volume
+            };
+        });
+
+        setCachedData(cacheKey, converted);
+        return converted;
     } else {
         throw new Error(`Failed to fetch intraday data for ${symbol}`);
     }
 }
 
 /**
- * 종목 개요 정보 가져오기 (OVERVIEW)
+ * 종목 개요 정보 가져오기 (PROFILE & STATISTICS)
  */
 async function getStockOverview(symbol) {
     const cacheKey = `overview_${symbol}`;
@@ -270,22 +301,35 @@ async function getStockOverview(symbol) {
     }
 
     const params = {
-        function: 'OVERVIEW',
         symbol: symbol
     };
 
-    const data = await callAlphaVantageAPI(params);
+    // Twelve Data uses /profile and /statistics endpoints
+    const profileData = await callTwelveDataAPI('/profile', params);
 
-    if (data.Symbol) {
-        setCachedData(cacheKey, data);
-        return data;
-    } else {
-        throw new Error(`Failed to fetch overview for ${symbol}`);
-    }
+    // Convert Twelve Data format to Alpha Vantage-like format for compatibility
+    const converted = {
+        Symbol: profileData.symbol || symbol,
+        Name: profileData.name || '',
+        Description: profileData.description || '',
+        Sector: profileData.sector || 'Unknown',
+        Industry: profileData.industry || 'Unknown',
+        MarketCapitalization: profileData.market_cap || '0',
+        SharesOutstanding: profileData.shares_outstanding || '0',
+        SharesFloat: profileData.shares_float || '0',
+        '52WeekHigh': profileData.fifty_two_week.high || '0',
+        '52WeekLow': profileData.fifty_two_week.low || '0',
+        Beta: profileData.beta || '0',
+        PERatio: profileData.pe_ratio || '0',
+        EPS: profileData.eps || '0'
+    };
+
+    setCachedData(cacheKey, converted);
+    return converted;
 }
 
 /**
- * 글로벌 시세 데이터 가져오기 (GLOBAL_QUOTE)
+ * 글로벌 시세 데이터 가져오기 (QUOTE)
  */
 async function getGlobalQuote(symbol) {
     const cacheKey = `quote_${symbol}`;
@@ -296,18 +340,29 @@ async function getGlobalQuote(symbol) {
     }
 
     const params = {
-        function: 'GLOBAL_QUOTE',
         symbol: symbol
     };
 
-    const data = await callAlphaVantageAPI(params);
+    const data = await callTwelveDataAPI('/quote', params);
 
-    if (data['Global Quote']) {
-        setCachedData(cacheKey, data);
-        return data;
-    } else {
-        throw new Error(`Failed to fetch quote for ${symbol}`);
-    }
+    // Convert Twelve Data format to Alpha Vantage-like format for compatibility
+    const converted = {
+        'Global Quote': {
+            '01. symbol': data.symbol,
+            '02. open': data.open,
+            '03. high': data.high,
+            '04. low': data.low,
+            '05. price': data.close,
+            '06. volume': data.volume,
+            '07. latest trading day': data.datetime ? data.datetime.split(' ')[0] : '',
+            '08. previous close': data.previous_close,
+            '09. change': data.change,
+            '10. change percent': data.percent_change
+        }
+    };
+
+    setCachedData(cacheKey, converted);
+    return converted;
 }
 
 // ==================== Market Data Analysis Functions ====================
@@ -686,31 +741,31 @@ async function analyzeMarketCapPerformance(filteredTrades) {
 /**
  * API 키 설정
  */
-function setAlphaVantageApiKey(apiKey) {
-    alphaVantageApiKey = apiKey;
-    localStorage.setItem('tradingPlatformAlphaVantageApiKey', apiKey);
-    console.log('Alpha Vantage API key saved');
+function setTwelveDataApiKey(apiKey) {
+    twelveDataApiKey = apiKey;
+    localStorage.setItem('tradingPlatformTwelveDataApiKey', apiKey);
+    console.log('Twelve Data API key saved');
 }
 
 /**
  * API 키 불러오기
  */
-function loadAlphaVantageApiKey() {
-    const stored = localStorage.getItem('tradingPlatformAlphaVantageApiKey');
+function loadTwelveDataApiKey() {
+    const stored = localStorage.getItem('tradingPlatformTwelveDataApiKey');
     if (stored) {
-        alphaVantageApiKey = stored;
-        console.log('Alpha Vantage API key loaded');
+        twelveDataApiKey = stored;
+        console.log('Twelve Data API key loaded');
     } else {
         // Use default key
-        alphaVantageApiKey = 'XLAZ5MW6NTMVPLKE';
+        twelveDataApiKey = '66cd99ab4cd046dda3ef8af62af9b06d';
     }
 }
 
 /**
  * API 키 가져오기
  */
-function getAlphaVantageApiKey() {
-    return alphaVantageApiKey;
+function getTwelveDataApiKey() {
+    return twelveDataApiKey;
 }
 
 /**
@@ -1006,7 +1061,7 @@ async function analyzeRelativeVolumeCorrelation(filteredTrades) {
  * 시장 데이터 모듈 초기화
  */
 function initializeMarketDataModule() {
-    loadAlphaVantageApiKey();
+    loadTwelveDataApiKey();
     loadMarketDataCache();
     loadApiCallLog();
     console.log('Market data module initialized');
@@ -1030,9 +1085,9 @@ if (typeof module !== 'undefined' && module.exports) {
         getSymbolTradeStats,
 
         // Settings
-        setAlphaVantageApiKey,
-        loadAlphaVantageApiKey,
-        getAlphaVantageApiKey,
+        setTwelveDataApiKey,
+        loadTwelveDataApiKey,
+        getTwelveDataApiKey,
 
         // Cache management
         clearMarketDataCache,
