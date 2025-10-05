@@ -643,9 +643,17 @@ async function updateBasicCharts() {
     ['basicCumulativePLChart', 'basicWinLossChart', 'basicDailyPLChart', 'basicMonthlyChart'].forEach(chartId => {
         const existing = document.getElementById(chartId);
         if (!existing || existing.tagName !== 'CANVAS') {
-            const parent = document.querySelector(`#${chartId}`);
-            if (parent && parent.parentElement) {
-                parent.parentElement.innerHTML = `<canvas id="${chartId}" class="chart-canvas"></canvas>`;
+            // Find the chart container by looking for parent that has chart-card class
+            const containers = document.querySelectorAll('.chart-card');
+            for (const container of containers) {
+                const canvasInContainer = container.querySelector(`canvas`);
+                const noDataInContainer = container.querySelector('div');
+
+                // If we found a "No data" message, replace it with canvas
+                if (noDataInContainer && noDataInContainer.textContent.includes('No data')) {
+                    container.innerHTML = `<canvas id="${chartId}" class="chart-canvas"></canvas>`;
+                    break;
+                }
             }
         }
     });
