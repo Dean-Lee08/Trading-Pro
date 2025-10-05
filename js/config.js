@@ -27,6 +27,8 @@ let analyticsEndDate = null;
 let tradesStartDate = null;
 let tradesEndDate = null;
 let currentAnalyticsSection = 'detail';
+let analyticsLoadedOnce = false;
+let analyticsFilterState = null;
 
 // Notes State
 let editingNoteId = null;
