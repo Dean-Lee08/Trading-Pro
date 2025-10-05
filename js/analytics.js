@@ -50,8 +50,9 @@ function setAnalyticsPeriod(period) {
     document.querySelectorAll('.filter-controls .filter-btn').forEach(btn => {
         btn.classList.remove('active');
     });
-    
+
     document.querySelector(`[onclick="setAnalyticsPeriod('${period}')"]`).classList.add('active');
+    analyticsLoadedOnce = false; // Force reload when period changes
     updateDetailedAnalytics();
 }
 
@@ -63,7 +64,18 @@ function clearAnalyticsRange() {
     analyticsEndDate = null;
     document.getElementById('analyticsStartDate').value = '';
     document.getElementById('analyticsEndDate').value = '';
+    analyticsLoadedOnce = false; // Force reload when filter changes
     updateDetailedAnalytics();
+}
+
+/**
+ * 분석 데이터 수동 새로고침
+ */
+function refreshAnalyticsData() {
+    analyticsLoadedOnce = false;
+    analyticsFilterState = null;
+    updateDetailedAnalytics();
+    showToast(currentLanguage === 'ko' ? '분석 데이터 새로고침 완료' : 'Analytics data refreshed');
 }
 
 /**
@@ -91,12 +103,30 @@ function getFilteredTradesForAnalytics() {
  */
 function updateDetailedAnalytics() {
     const filteredTrades = getFilteredTradesForAnalytics();
-    
+
     if (filteredTrades.length === 0) {
         resetDetailedAnalyticsDisplay();
         return;
     }
-    
+
+    // Check if analytics already loaded with same filter (session cache)
+    const currentFilter = {
+        startDate: analyticsStartDate,
+        endDate: analyticsEndDate,
+        tradeCount: filteredTrades.length
+    };
+
+    if (analyticsLoadedOnce &&
+        JSON.stringify(currentFilter) === JSON.stringify(analyticsFilterState)) {
+        console.log('✓ Using cached analytics data (no API calls)');
+        return; // Already displayed, keep existing data
+    }
+
+    // Mark as loading new data
+    console.log('⟳ Loading analytics data...');
+    analyticsFilterState = currentFilter;
+    analyticsLoadedOnce = true;
+
     // Calculate basic metrics
     const totalPL = filteredTrades.reduce((sum, trade) => sum + trade.pnl, 0);
     const uniqueDatesForFees = [...new Set(filteredTrades.map(trade => trade.date))];
