@@ -67,10 +67,6 @@ let marketDataEnabled = true;
 let loadingMarketData = false;
 let marketDataQuotes = {};
 
-// Analytics Session Cache (prevents re-loading on page navigation)
-let analyticsLoadedOnce = false;
-let analyticsFilterState = null;
-
 // ============================================
 // Language Translations
 // ============================================
@@ -427,10 +423,9 @@ const translations = {
         'previous-close': 'Prev Close',
         'last-updated': 'Last Updated',
         'refresh-quotes': 'Refresh Quotes',
-        'refresh': 'Refresh',
         'loading-market-data': 'Loading market data...',
         'api-key-settings': 'API Key Settings',
-        'twelve-data-api-key': 'Twelve Data API Key',
+        'alpha-vantage-api-key': 'Alpha Vantage API Key',
         'save-api-key': 'Save API Key',
         'clear-market-cache': 'Clear Market Data Cache',
         'entry-position': 'Entry Position',
@@ -840,10 +835,9 @@ const translations = {
         'previous-close': '전일종가',
         'last-updated': '업데이트',
         'refresh-quotes': '시세 새로고침',
-        'refresh': '새로고침',
         'loading-market-data': '시장 데이터 로딩 중...',
         'api-key-settings': 'API 키 설정',
-        'twelve-data-api-key': 'Twelve Data API 키',
+        'alpha-vantage-api-key': 'Alpha Vantage API 키',
         'save-api-key': 'API 키 저장',
         'clear-market-cache': '시장 데이터 캐시 삭제',
         'entry-position': '진입 위치',

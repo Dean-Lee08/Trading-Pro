@@ -664,7 +664,7 @@ async function analyzeVolumePerformance(filteredTrades) {
  */
 async function analyzeVolatilityPerformance(filteredTrades) {
     const symbols = [...new Set(filteredTrades.map(t => t.symbol))];
-    const overviews = await getMultipleOverviews(symbols, 5);
+    const overviews = await getMultipleOverviews(symbols); // ALL SYMBOLS
 
     // 각 거래에 Beta 정보 추가
     const tradesWithBeta = filteredTrades
@@ -712,7 +712,7 @@ async function analyzeVolatilityPerformance(filteredTrades) {
  */
 async function analyzeMarketCapPerformance(filteredTrades) {
     const symbols = [...new Set(filteredTrades.map(t => t.symbol))];
-    const overviews = await getMultipleOverviews(symbols, 5);
+    const overviews = await getMultipleOverviews(symbols); // ALL SYMBOLS
 
     // 각 거래에 시가총액 정보 추가
     const tradesWithMarketCap = filteredTrades
@@ -871,7 +871,7 @@ async function analyzeIntradayPerformance(filteredTrades) {
 async function analyzeSectorPerformance(filteredTrades) {
     try {
         const symbols = [...new Set(filteredTrades.map(t => t.symbol))];
-        const overviews = await getMultipleOverviews(symbols, 5);
+        const overviews = await getMultipleOverviews(symbols); // ALL SYMBOLS
 
         const sectorStats = {};
 
