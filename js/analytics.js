@@ -145,17 +145,34 @@ function updateDetailedAnalytics() {
     const profitFactor = totalLosses > 0 ? totalWins / totalLosses : 0;
     
     // Update Summary Cards
-    document.getElementById('summaryNetProfit').textContent = `$${netTotalPL.toFixed(2)}`;
-    document.getElementById('summaryNetProfit').className = `summary-card-value ${netTotalPL >= 0 ? 'positive' : 'negative'}`;
-    document.getElementById('summaryTotalTrades').textContent = filteredTrades.length;
-    document.getElementById('summaryWinRate').textContent = `${winRate.toFixed(1)}%`;
-    document.getElementById('summaryWinRate').className = `summary-card-value ${winRate >= 50 ? 'positive' : 'negative'}`;
-    document.getElementById('summaryProfitFactor').textContent = profitFactor.toFixed(2);
-    document.getElementById('summaryProfitFactor').className = `summary-card-value ${profitFactor >= 1 ? 'positive' : 'negative'}`;
-    document.getElementById('summaryLargestWin').textContent = `$${largestWin.toFixed(2)}`;
-    document.getElementById('summaryLargestWin').className = `summary-card-value positive`;
-    document.getElementById('summaryLargestLoss').textContent = `$${largestLoss.toFixed(2)}`;
-    document.getElementById('summaryLargestLoss').className = `summary-card-value negative`;
+    const summaryNetProfit = document.getElementById('summaryNetProfit');
+    if (summaryNetProfit) {
+        summaryNetProfit.textContent = `$${netTotalPL.toFixed(2)}`;
+        summaryNetProfit.className = `summary-card-value ${netTotalPL >= 0 ? 'positive' : 'negative'}`;
+    }
+    const summaryTotalTrades = document.getElementById('summaryTotalTrades');
+    if (summaryTotalTrades) summaryTotalTrades.textContent = filteredTrades.length;
+
+    const summaryWinRate = document.getElementById('summaryWinRate');
+    if (summaryWinRate) {
+        summaryWinRate.textContent = `${winRate.toFixed(1)}%`;
+        summaryWinRate.className = `summary-card-value ${winRate >= 50 ? 'positive' : 'negative'}`;
+    }
+    const summaryProfitFactor = document.getElementById('summaryProfitFactor');
+    if (summaryProfitFactor) {
+        summaryProfitFactor.textContent = profitFactor.toFixed(2);
+        summaryProfitFactor.className = `summary-card-value ${profitFactor >= 1 ? 'positive' : 'negative'}`;
+    }
+    const summaryLargestWin = document.getElementById('summaryLargestWin');
+    if (summaryLargestWin) {
+        summaryLargestWin.textContent = `$${largestWin.toFixed(2)}`;
+        summaryLargestWin.className = `summary-card-value positive`;
+    }
+    const summaryLargestLoss = document.getElementById('summaryLargestLoss');
+    if (summaryLargestLoss) {
+        summaryLargestLoss.textContent = `$${largestLoss.toFixed(2)}`;
+        summaryLargestLoss.className = `summary-card-value negative`;
+    }
 
     // Update detail cards
     updateTradingPerformanceDetails(filteredTrades, totalPL, totalWins, totalLosses, totalDailyFees);
