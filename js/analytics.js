@@ -66,6 +66,7 @@ function clearAnalyticsRange() {
     document.getElementById('analyticsStartDate').value = '';
     document.getElementById('analyticsEndDate').value = '';
     analyticsLoadedOnce = false; // Force reload when filter changes
+    marketDataLoadedOnce = false; // Force reload market data
     updateDetailedAnalytics();
 }
 
@@ -75,6 +76,8 @@ function clearAnalyticsRange() {
 function refreshAnalyticsData() {
     analyticsLoadedOnce = false;
     analyticsFilterState = null;
+    marketDataLoadedOnce = false;
+    marketDataFilterState = null;
     updateDetailedAnalytics();
     showToast(currentLanguage === 'ko' ? '분석 데이터 새로고침 완료' : 'Analytics data refreshed');
 }
