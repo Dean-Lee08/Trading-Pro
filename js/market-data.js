@@ -484,23 +484,79 @@ async function getSymbolOverviewData(symbol) {
 }
 
 /**
- * 여러 종목의 Overview 데이터 배치 조회
+ * 여러 종목의 Overview 데이터 배치 조회 (최적화됨)
+ * STRATEGY: 캐시 우선, API 호출 최소화
  */
-async function getMultipleOverviews(symbols, maxSymbols = 5) {
+async function getMultipleOverviews(symbols, maxSymbols = null) {
     const results = {};
-    const limitedSymbols = symbols.slice(0, maxSymbols);
 
-    for (const symbol of limitedSymbols) {
-        try {
-            if (Object.keys(results).length > 0) {
-                await new Promise(resolve => setTimeout(resolve, 12000)); // 12초 delay
+    // OPTIMIZATION: No limit by default - analyze ALL symbols
+    const targetSymbols = maxSymbols ? symbols.slice(0, maxSymbols) : symbols;
+
+    // STEP 1: Check cache first for ALL symbols
+    const uncachedSymbols = [];
+    for (const symbol of targetSymbols) {
+        const cacheKey = `overview_${symbol}`;
+        const cached = getCachedData(cacheKey, 'overview');
+
+        if (cached) {
+            // Parse cached overview data
+            results[symbol] = {
+                symbol: cached.Symbol,
+                name: cached.Name,
+                marketCap: parseFloat(cached.MarketCapitalization) || 0,
+                sharesFloat: parseFloat(cached.SharesFloat) || 0,
+                sharesOutstanding: parseFloat(cached.SharesOutstanding) || 0,
+                beta: parseFloat(cached.Beta) || 0,
+                peRatio: parseFloat(cached.PERatio) || 0,
+                eps: parseFloat(cached.EPS) || 0,
+                week52High: parseFloat(cached['52WeekHigh']) || 0,
+                week52Low: parseFloat(cached['52WeekLow']) || 0,
+                sector: cached.Sector || 'Unknown',
+                industry: cached.Industry || 'Unknown',
+                description: cached.Description || ''
+            };
+        } else {
+            uncachedSymbols.push(symbol);
+        }
+    }
+
+    console.log(`📊 Overview Analysis: ${targetSymbols.length} symbols total, ${Object.keys(results).length} cached, ${uncachedSymbols.length} need API`);
+
+    // STEP 2: Fetch uncached symbols (respecting daily limit)
+    if (uncachedSymbols.length > 0) {
+        const remainingCalls = 25 - apiCallLog.length;
+        const canFetch = Math.min(uncachedSymbols.length, remainingCalls);
+
+        console.log(`⚠️ API Budget: ${remainingCalls}/25 calls remaining today`);
+
+        if (canFetch <= 0) {
+            console.warn(`❌ Daily API limit reached! Using cached data only.`);
+        } else {
+            console.log(`📡 Fetching ${canFetch} symbols from API...`);
+
+            for (let i = 0; i < canFetch; i++) {
+                const symbol = uncachedSymbols[i];
+                try {
+                    if (i > 0) {
+                        // Rate limit: 12 seconds between calls (5 calls/min)
+                        console.log(`⏱️ Waiting 12s for rate limit... (${i}/${canFetch})`);
+                        await new Promise(resolve => setTimeout(resolve, 12000));
+                    }
+
+                    const overview = await getSymbolOverviewData(symbol);
+                    results[symbol] = overview;
+                    console.log(`  ✓ ${symbol}: Success`);
+                } catch (error) {
+                    console.error(`  ✗ ${symbol}: Failed -`, error.message);
+                    results[symbol] = null;
+                }
             }
 
-            const overview = await getSymbolOverviewData(symbol);
-            results[symbol] = overview;
-        } catch (error) {
-            console.error(`Failed to fetch overview for ${symbol}:`, error);
-            results[symbol] = null;
+            // Notify about remaining uncached symbols
+            if (uncachedSymbols.length > canFetch) {
+                console.warn(`⚠️ ${uncachedSymbols.length - canFetch} symbols not fetched (API limit). They'll be fetched next time.`);
+            }
         }
     }
 
