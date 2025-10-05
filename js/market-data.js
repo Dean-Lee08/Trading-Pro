@@ -217,7 +217,7 @@ async function callAlphaVantageAPI(params) {
  */
 async function getDailyStockData(symbol, outputsize = 'compact') {
     const cacheKey = `daily_${symbol}_${outputsize}`;
-    const cached = getCachedData(cacheKey, 'quote');
+    const cached = getCachedData(cacheKey, 'daily'); // Changed to 'daily' type
 
     if (cached) {
         return cached;
