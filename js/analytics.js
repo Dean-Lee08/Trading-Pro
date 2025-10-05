@@ -1154,9 +1154,10 @@ async function updateAdvancedCharts() {
  * 알고리즘 분석 업데이트 (Palantir-style comprehensive analysis)
  */
 function updateAlgorithmicAnalysis() {
-    // Legacy pattern analysis
+    // Original pattern insights (preserved)
     analyzeTimeBasedPerformance();
     analyzeConsecutiveTradesPattern();
+    generateAIInsights();
 
     // New algorithmic analysis modules
     renderMultiFactorAttribution();
