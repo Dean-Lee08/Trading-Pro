@@ -144,12 +144,60 @@ function loadMarketDataCache() {
 }
 
 /**
- * 캐시 클리어
+ * 캐시 통계 가져오기
  */
-function clearMarketDataCache() {
-    marketDataCache = {};
-    localStorage.removeItem('tradingPlatformMarketDataCache');
-    console.log('Market data cache cleared');
+function getCacheStatistics() {
+    const stats = {
+        totalEntries: Object.keys(marketDataCache).length,
+        byType: {
+            overview: 0,
+            quote: 0,
+            daily: 0,
+            intraday: 0
+        },
+        symbols: new Set()
+    };
+
+    Object.keys(marketDataCache).forEach(key => {
+        if (key.startsWith('overview_')) {
+            stats.byType.overview++;
+            stats.symbols.add(key.replace('overview_', ''));
+        } else if (key.startsWith('quote_')) {
+            stats.byType.quote++;
+            stats.symbols.add(key.replace('quote_', ''));
+        } else if (key.startsWith('daily_')) {
+            stats.byType.daily++;
+        } else if (key.startsWith('intraday_')) {
+            stats.byType.intraday++;
+        }
+    });
+
+    stats.uniqueSymbols = stats.symbols.size;
+
+    return stats;
+}
+
+/**
+ * 캐시 클리어 (Overview 제외 옵션)
+ */
+function clearMarketDataCache(preserveOverview = false) {
+    if (preserveOverview) {
+        // Keep overview data, clear everything else
+        const newCache = {};
+        Object.keys(marketDataCache).forEach(key => {
+            if (key.startsWith('overview_')) {
+                newCache[key] = marketDataCache[key];
+            }
+        });
+        marketDataCache = newCache;
+        localStorage.setItem('tradingPlatformMarketDataCache', JSON.stringify(marketDataCache));
+        console.log('✓ Market data cache cleared (Overview data preserved)');
+    } else {
+        // Clear everything
+        marketDataCache = {};
+        localStorage.removeItem('tradingPlatformMarketDataCache');
+        console.log('✓ Market data cache completely cleared');
+    }
 }
 
 // ==================== Alpha Vantage API Functions ====================
