@@ -1,16 +1,16 @@
-// market-data.js - Twelve Data API 통합 및 시장 데이터 관리
+// market-data.js - Alpha Vantage API 통합 및 시장 데이터 관리
 
-// ==================== Twelve Data API Configuration ====================
+// ==================== Alpha Vantage API Configuration ====================
 
-const TWELVE_DATA_BASE_URL = 'https://api.twelvedata.com';
+const ALPHA_VANTAGE_BASE_URL = 'https://www.alphavantage.co/query';
 const API_RATE_LIMIT = {
-    callsPerMinute: 8,
-    callsPerDay: 800
+    callsPerMinute: 5,
+    callsPerDay: 25
 };
 
 // ==================== Market Data State ====================
 
-let twelveDataApiKey = '66cd99ab4cd046dda3ef8af62af9b06d'; // Default API key
+let alphaVantageApiKey = 'XLAZ5MW6NTMVPLKE'; // Default API key
 let marketDataCache = {};
 let apiCallLog = [];
 
@@ -143,14 +143,14 @@ function clearMarketDataCache() {
     console.log('Market data cache cleared');
 }
 
-// ==================== Twelve Data API Functions ====================
+// ==================== Alpha Vantage API Functions ====================
 
 /**
- * Twelve Data API 호출 (공통 함수)
+ * Alpha Vantage API 호출 (공통 함수)
  */
-async function callTwelveDataAPI(endpoint, params = {}) {
-    if (!twelveDataApiKey) {
-        const error = new Error('Twelve Data API key not set');
+async function callAlphaVantageAPI(params) {
+    if (!alphaVantageApiKey) {
+        const error = new Error('Alpha Vantage API key not set');
         error.code = 'NO_API_KEY';
         throw error;
     }
@@ -161,14 +161,14 @@ async function callTwelveDataAPI(endpoint, params = {}) {
         throw error;
     }
 
-    const url = new URL(`${TWELVE_DATA_BASE_URL}${endpoint}`);
-    url.searchParams.append('apikey', twelveDataApiKey);
+    const url = new URL(ALPHA_VANTAGE_BASE_URL);
+    url.searchParams.append('apikey', alphaVantageApiKey);
 
     for (const [key, value] of Object.entries(params)) {
         url.searchParams.append(key, value);
     }
 
-    console.log('Calling Twelve Data API:', url.toString().replace(twelveDataApiKey, 'API_KEY'));
+    console.log('Calling Alpha Vantage API:', url.toString().replace(alphaVantageApiKey, 'API_KEY'));
 
     try {
         const response = await fetch(url.toString());
@@ -181,47 +181,30 @@ async function callTwelveDataAPI(endpoint, params = {}) {
 
         const data = await response.json();
 
-        // Log full response for debugging
-        console.log('📥 Twelve Data API Response:', {
-            endpoint,
-            params,
-            status: data.status,
-            hasData: !!data.values || !!data.symbol || !!data.price
-        });
-
         // Check for API error messages
-        if (data.status === 'error') {
-            console.error('❌ API Error Response:', data);
-            const error = new Error(data.message || `API Error: ${data.code || 'Unknown'}`);
+        if (data['Error Message']) {
+            const error = new Error(data['Error Message']);
             error.code = 'API_ERROR';
-            error.details = data;
             throw error;
         }
 
-        // Check for specific error codes
-        if (data.code && (data.code === 400 || data.code === 401 || data.code === 404 || data.code === 429)) {
-            console.error('❌ API Error Code:', data.code, data.message);
-            const error = new Error(data.message || `API Error Code: ${data.code}`);
-            error.code = 'API_ERROR';
-            error.details = data;
+        if (data['Note']) {
+            // Rate limit message from Alpha Vantage
+            const error = new Error('API call frequency limit reached. Please wait a minute.');
+            error.code = 'RATE_LIMIT';
             throw error;
         }
 
         logApiCall();
         return data;
     } catch (error) {
-        console.error('❌ Twelve Data API error:', {
-            endpoint,
-            params,
-            error: error.message,
-            details: error.details
-        });
+        console.error('Alpha Vantage API error:', error);
         throw error;
     }
 }
 
 /**
- * 일일 시세 데이터 가져오기 (TIME_SERIES)
+ * 일일 시세 데이터 가져오기 (TIME_SERIES_DAILY)
  */
 async function getDailyStockData(symbol, outputsize = 'compact') {
     const cacheKey = `daily_${symbol}_${outputsize}`;
@@ -232,42 +215,23 @@ async function getDailyStockData(symbol, outputsize = 'compact') {
     }
 
     const params = {
+        function: 'TIME_SERIES_DAILY',
         symbol: symbol,
-        interval: '1day',
-        outputsize: outputsize === 'full' ? '5000' : '100' // Twelve Data uses numeric outputsize
+        outputsize: outputsize // 'compact' (100 days) or 'full' (20+ years)
     };
 
-    const data = await callTwelveDataAPI('/time_series', params);
+    const data = await callAlphaVantageAPI(params);
 
-    if (data.values) {
-        // Convert Twelve Data format to Alpha Vantage-like format for compatibility
-        const converted = {
-            'Meta Data': {
-                'Information': 'Daily Time Series',
-                'Symbol': symbol
-            },
-            'Time Series (Daily)': {}
-        };
-
-        data.values.forEach(item => {
-            converted['Time Series (Daily)'][item.datetime] = {
-                '1. open': item.open,
-                '2. high': item.high,
-                '3. low': item.low,
-                '4. close': item.close,
-                '5. volume': item.volume
-            };
-        });
-
-        setCachedData(cacheKey, converted);
-        return converted;
+    if (data['Time Series (Daily)']) {
+        setCachedData(cacheKey, data);
+        return data;
     } else {
         throw new Error(`Failed to fetch daily data for ${symbol}`);
     }
 }
 
 /**
- * 인트라데이 시세 데이터 가져오기 (TIME_SERIES)
+ * 인트라데이 시세 데이터 가져오기 (TIME_SERIES_INTRADAY)
  */
 async function getIntradayStockData(symbol, interval = '5min', outputsize = 'compact') {
     const cacheKey = `intraday_${symbol}_${interval}_${outputsize}`;
@@ -278,64 +242,24 @@ async function getIntradayStockData(symbol, interval = '5min', outputsize = 'com
     }
 
     const params = {
+        function: 'TIME_SERIES_INTRADAY',
         symbol: symbol,
-        interval: interval, // '1min', '5min', '15min', '30min', '1h'
-        outputsize: outputsize === 'full' ? '5000' : '100'
+        interval: interval, // '1min', '5min', '15min', '30min', '60min'
+        outputsize: outputsize
     };
 
-    const data = await callTwelveDataAPI('/time_series', params);
+    const data = await callAlphaVantageAPI(params);
 
-    if (data.values) {
-        // Convert Twelve Data format to Alpha Vantage-like format for compatibility
-        const converted = {
-            'Meta Data': {
-                'Information': `Intraday (${interval}) Time Series`,
-                'Symbol': symbol,
-                'Interval': interval
-            },
-            [`Time Series (${interval})`]: {}
-        };
-
-        data.values.forEach(item => {
-            converted[`Time Series (${interval})`][item.datetime] = {
-                '1. open': item.open,
-                '2. high': item.high,
-                '3. low': item.low,
-                '4. close': item.close,
-                '5. volume': item.volume
-            };
-        });
-
-        setCachedData(cacheKey, converted);
-        return converted;
+    if (data[`Time Series (${interval})`]) {
+        setCachedData(cacheKey, data);
+        return data;
     } else {
         throw new Error(`Failed to fetch intraday data for ${symbol}`);
     }
 }
 
 /**
- * 기본 Overview 데이터 생성 (폴백용)
- */
-function createDefaultOverview(symbol) {
-    return {
-        Symbol: symbol,
-        Name: symbol,
-        Description: '',
-        Sector: 'Unknown',
-        Industry: 'Unknown',
-        MarketCapitalization: '0',
-        SharesOutstanding: '0',
-        SharesFloat: '0',
-        '52WeekHigh': '0',
-        '52WeekLow': '0',
-        Beta: '0',
-        PERatio: '0',
-        EPS: '0'
-    };
-}
-
-/**
- * 종목 개요 정보 가져오기 (PROFILE & STATISTICS)
+ * 종목 개요 정보 가져오기 (OVERVIEW)
  */
 async function getStockOverview(symbol) {
     const cacheKey = `overview_${symbol}`;
@@ -346,91 +270,22 @@ async function getStockOverview(symbol) {
     }
 
     const params = {
+        function: 'OVERVIEW',
         symbol: symbol
     };
 
-    try {
-        // NOTE: Twelve Data's /profile endpoint is NOT available in free tier
-        // We'll use /quote endpoint as fallback and provide limited data
-        console.log(`⚠️ Attempting to fetch profile for ${symbol} (may not be available in free tier)`);
+    const data = await callAlphaVantageAPI(params);
 
-        // Try /profile first (will fail on free tier)
-        let profileData;
-        try {
-            profileData = await callTwelveDataAPI('/profile', params);
-        } catch (profileError) {
-            console.warn(`⚠️ Profile endpoint not available for ${symbol} (free tier limitation)`);
-
-            // Fallback: Use quote data to at least get symbol validation
-            try {
-                const quoteData = await callTwelveDataAPI('/quote', params);
-                if (quoteData && quoteData.symbol) {
-                    console.log(`✓ Using quote data as fallback for ${symbol}`);
-                    const converted = {
-                        Symbol: quoteData.symbol,
-                        Name: quoteData.name || symbol,
-                        Description: '',
-                        Sector: 'Unknown',
-                        Industry: 'Unknown',
-                        MarketCapitalization: '0',
-                        SharesOutstanding: '0',
-                        SharesFloat: '0',
-                        '52WeekHigh': quoteData.fifty_two_week_high || '0',
-                        '52WeekLow': quoteData.fifty_two_week_low || '0',
-                        Beta: '0',
-                        PERatio: '0',
-                        EPS: '0'
-                    };
-                    setCachedData(cacheKey, converted);
-                    return converted;
-                }
-            } catch (quoteError) {
-                console.warn(`⚠️ Quote fallback also failed for ${symbol}`);
-            }
-
-            // Final fallback: return defaults
-            const defaultData = createDefaultOverview(symbol);
-            setCachedData(cacheKey, defaultData);
-            return defaultData;
-        }
-
-        // If profile succeeded, use it
-        if (!profileData || !profileData.symbol) {
-            console.warn(`⚠️ Profile data invalid for ${symbol}, using defaults`);
-            const defaultData = createDefaultOverview(symbol);
-            setCachedData(cacheKey, defaultData);
-            return defaultData;
-        }
-
-        // Convert Twelve Data profile format to Alpha Vantage-like format
-        const converted = {
-            Symbol: profileData.symbol || symbol,
-            Name: profileData.name || symbol,
-            Description: profileData.description || '',
-            Sector: profileData.sector || 'Unknown',
-            Industry: profileData.industry || 'Unknown',
-            MarketCapitalization: profileData.market_cap || '0',
-            SharesOutstanding: profileData.shares_outstanding || '0',
-            SharesFloat: profileData.shares_float || '0',
-            '52WeekHigh': (profileData.fifty_two_week && profileData.fifty_two_week.high) || '0',
-            '52WeekLow': (profileData.fifty_two_week && profileData.fifty_two_week.low) || '0',
-            Beta: profileData.beta || '0',
-            PERatio: profileData.pe_ratio || '0',
-            EPS: profileData.eps || '0'
-        };
-
-        setCachedData(cacheKey, converted);
-        return converted;
-    } catch (error) {
-        console.warn(`⚠️ Failed to fetch any data for ${symbol}:`, error.message);
-        const defaultData = createDefaultOverview(symbol);
-        setCachedData(cacheKey, defaultData);
-        return defaultData;
+    if (data.Symbol) {
+        setCachedData(cacheKey, data);
+        return data;
+    } else {
+        throw new Error(`Failed to fetch overview for ${symbol}`);
     }
 }
 
 /**
- * 글로벌 시세 데이터 가져오기 (QUOTE)
+ * 글로벌 시세 데이터 가져오기 (GLOBAL_QUOTE)
  */
 async function getGlobalQuote(symbol) {
     const cacheKey = `quote_${symbol}`;
@@ -441,41 +296,17 @@ async function getGlobalQuote(symbol) {
     }
 
     const params = {
+        function: 'GLOBAL_QUOTE',
         symbol: symbol
     };
 
-    try {
-        const data = await callTwelveDataAPI('/quote', params);
+    const data = await callAlphaVantageAPI(params);
 
-        // Validate response
-        if (!data || !data.symbol) {
-            console.warn(`⚠️ Invalid quote response for ${symbol}`, data);
-            throw new Error(`No valid quote data for ${symbol}`);
-        }
-
-        // Convert Twelve Data format to Alpha Vantage-like format for compatibility
-        const converted = {
-            'Global Quote': {
-                '01. symbol': data.symbol || symbol,
-                '02. open': data.open || '0',
-                '03. high': data.high || '0',
-                '04. low': data.low || '0',
-                '05. price': data.close || data.price || '0',
-                '06. volume': data.volume || '0',
-                '07. latest trading day': data.datetime ? data.datetime.split(' ')[0] : '',
-                '08. previous close': data.previous_close || data.close || '0',
-                '09. change': data.change || '0',
-                '10. change percent': data.percent_change || '0.00%'
-            }
-        };
-
-        console.log(`✓ Quote fetched for ${symbol}:`, converted['Global Quote']['05. price']);
-
-        setCachedData(cacheKey, converted);
-        return converted;
-    } catch (error) {
-        console.error(`❌ Failed to fetch quote for ${symbol}:`, error.message);
-        throw error;
+    if (data['Global Quote']) {
+        setCachedData(cacheKey, data);
+        return data;
+    } else {
+        throw new Error(`Failed to fetch quote for ${symbol}`);
     }
 }
 
@@ -622,10 +453,9 @@ async function getSymbolOverviewData(symbol) {
     try {
         const overview = await getStockOverview(symbol);
 
-        // Handle both successful API data and fallback data
         return {
             symbol: overview.Symbol,
-            name: overview.Name || symbol,
+            name: overview.Name,
             marketCap: parseFloat(overview.MarketCapitalization) || 0,
             sharesFloat: parseFloat(overview.SharesFloat) || 0,
             sharesOutstanding: parseFloat(overview.SharesOutstanding) || 0,
@@ -640,22 +470,7 @@ async function getSymbolOverviewData(symbol) {
         };
     } catch (error) {
         console.error(`Failed to get overview data for ${symbol}:`, error);
-        // Return default overview on error
-        return {
-            symbol,
-            name: symbol,
-            marketCap: 0,
-            sharesFloat: 0,
-            sharesOutstanding: 0,
-            beta: 0,
-            peRatio: 0,
-            eps: 0,
-            week52High: 0,
-            week52Low: 0,
-            sector: 'Unknown',
-            industry: 'Unknown',
-            description: ''
-        };
+        return null;
     }
 }
 
@@ -666,8 +481,6 @@ async function getMultipleOverviews(symbols, maxSymbols = 5) {
     const results = {};
     const limitedSymbols = symbols.slice(0, maxSymbols);
 
-    console.log(`📊 Fetching overviews for ${limitedSymbols.length} symbols:`, limitedSymbols.join(', '));
-
     for (const symbol of limitedSymbols) {
         try {
             if (Object.keys(results).length > 0) {
@@ -676,20 +489,11 @@ async function getMultipleOverviews(symbols, maxSymbols = 5) {
 
             const overview = await getSymbolOverviewData(symbol);
             results[symbol] = overview;
-
-            if (overview && overview.Symbol) {
-                console.log(`  ✓ ${symbol}: Success (${overview.Sector})`);
-            } else {
-                console.log(`  ⚠️ ${symbol}: Using default data`);
-            }
         } catch (error) {
-            console.error(`  ✗ ${symbol}: Failed -`, error.message);
-            results[symbol] = createDefaultOverview(symbol);
+            console.error(`Failed to fetch overview for ${symbol}:`, error);
+            results[symbol] = null;
         }
     }
-
-    const successCount = Object.values(results).filter(r => r && r.Sector !== 'Unknown').length;
-    console.log(`📊 Overview fetch complete: ${successCount}/${limitedSymbols.length} successful`);
 
     return results;
 }
@@ -710,25 +514,17 @@ async function analyzeWinningTradesMarketChar(filteredTrades) {
     // Overview 데이터 가져오기
     const overviews = await getMultipleOverviews(winningSymbols, 5);
 
-    // 데이터가 있는 것만 필터링 (Sector가 'Unknown'이 아닌 것)
-    const validOverviews = Object.values(overviews).filter(o => {
-        if (!o) return false;
-        const hasValidData = o.Sector !== 'Unknown' ||
-                            parseFloat(o.MarketCapitalization) > 0 ||
-                            parseFloat(o.SharesFloat) > 0 ||
-                            parseFloat(o.Beta) > 0;
-        return hasValidData;
-    });
+    // 데이터가 있는 것만 필터링
+    const validOverviews = Object.values(overviews).filter(o => o !== null);
 
     if (validOverviews.length === 0) {
-        console.warn('⚠️ No valid overview data available for winning symbols');
         return null;
     }
 
     // 평균 계산
-    const avgFloat = validOverviews.reduce((sum, o) => sum + parseFloat(o.SharesFloat || 0), 0) / validOverviews.length;
-    const avgMarketCap = validOverviews.reduce((sum, o) => sum + parseFloat(o.MarketCapitalization || 0), 0) / validOverviews.length;
-    const avgBeta = validOverviews.reduce((sum, o) => sum + parseFloat(o.Beta || 0), 0) / validOverviews.length;
+    const avgFloat = validOverviews.reduce((sum, o) => sum + o.sharesFloat, 0) / validOverviews.length;
+    const avgMarketCap = validOverviews.reduce((sum, o) => sum + o.marketCap, 0) / validOverviews.length;
+    const avgBeta = validOverviews.reduce((sum, o) => sum + o.beta, 0) / validOverviews.length;
 
     return {
         avgFloat,
@@ -890,31 +686,31 @@ async function analyzeMarketCapPerformance(filteredTrades) {
 /**
  * API 키 설정
  */
-function setTwelveDataApiKey(apiKey) {
-    twelveDataApiKey = apiKey;
-    localStorage.setItem('tradingPlatformTwelveDataApiKey', apiKey);
-    console.log('Twelve Data API key saved');
+function setAlphaVantageApiKey(apiKey) {
+    alphaVantageApiKey = apiKey;
+    localStorage.setItem('tradingPlatformAlphaVantageApiKey', apiKey);
+    console.log('Alpha Vantage API key saved');
 }
 
 /**
  * API 키 불러오기
  */
-function loadTwelveDataApiKey() {
-    const stored = localStorage.getItem('tradingPlatformTwelveDataApiKey');
+function loadAlphaVantageApiKey() {
+    const stored = localStorage.getItem('tradingPlatformAlphaVantageApiKey');
     if (stored) {
-        twelveDataApiKey = stored;
-        console.log('Twelve Data API key loaded');
+        alphaVantageApiKey = stored;
+        console.log('Alpha Vantage API key loaded');
     } else {
         // Use default key
-        twelveDataApiKey = '66cd99ab4cd046dda3ef8af62af9b06d';
+        alphaVantageApiKey = 'XLAZ5MW6NTMVPLKE';
     }
 }
 
 /**
  * API 키 가져오기
  */
-function getTwelveDataApiKey() {
-    return twelveDataApiKey;
+function getAlphaVantageApiKey() {
+    return alphaVantageApiKey;
 }
 
 /**
@@ -1210,7 +1006,7 @@ async function analyzeRelativeVolumeCorrelation(filteredTrades) {
  * 시장 데이터 모듈 초기화
  */
 function initializeMarketDataModule() {
-    loadTwelveDataApiKey();
+    loadAlphaVantageApiKey();
     loadMarketDataCache();
     loadApiCallLog();
     console.log('Market data module initialized');
@@ -1234,9 +1030,9 @@ if (typeof module !== 'undefined' && module.exports) {
         getSymbolTradeStats,
 
         // Settings
-        setTwelveDataApiKey,
-        loadTwelveDataApiKey,
-        getTwelveDataApiKey,
+        setAlphaVantageApiKey,
+        loadAlphaVantageApiKey,
+        getAlphaVantageApiKey,
 
         // Cache management
         clearMarketDataCache,
