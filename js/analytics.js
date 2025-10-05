@@ -632,9 +632,8 @@ async function updateBasicCharts() {
             }
             // Show "No data" message
             const canvas = document.getElementById(chartId);
-            if (canvas) {
-                const parent = canvas.parentElement;
-                parent.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 200px; color: #64748b;">No data available</div>';
+            if (canvas && canvas.parentElement) {
+                canvas.parentElement.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 200px; color: #64748b;">No data available</div>';
             }
         });
         return;
