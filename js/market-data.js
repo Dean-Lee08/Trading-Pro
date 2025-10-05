@@ -564,7 +564,7 @@ async function getMultipleOverviews(symbols, maxSymbols = null) {
 }
 
 /**
- * 승리 거래의 평균 시장 특성 계산
+ * 승리 거래의 평균 시장 특성 계산 (전체 종목 분석)
  */
 async function analyzeWinningTradesMarketChar(filteredTrades) {
     const winningTrades = filteredTrades.filter(trade => trade.pnl > 0);
@@ -576,8 +576,8 @@ async function analyzeWinningTradesMarketChar(filteredTrades) {
     // 승리 거래 종목 목록
     const winningSymbols = [...new Set(winningTrades.map(trade => trade.symbol))];
 
-    // Overview 데이터 가져오기
-    const overviews = await getMultipleOverviews(winningSymbols, 5);
+    // Overview 데이터 가져오기 - ALL SYMBOLS (no limit)
+    const overviews = await getMultipleOverviews(winningSymbols);
 
     // 데이터가 있는 것만 필터링
     const validOverviews = Object.values(overviews).filter(o => o !== null);
@@ -601,13 +601,13 @@ async function analyzeWinningTradesMarketChar(filteredTrades) {
 }
 
 /**
- * 거래량 기반 성과 분석
+ * 거래량 기반 성과 분석 (전체 종목)
  */
 async function analyzeVolumePerformance(filteredTrades) {
     const tradesWithVolume = [];
 
-    // 각 거래의 당일 거래량 가져오기
-    const symbols = [...new Set(filteredTrades.map(t => t.symbol))].slice(0, 5);
+    // 각 거래의 당일 거래량 가져오기 - ALL SYMBOLS
+    const symbols = [...new Set(filteredTrades.map(t => t.symbol))];
 
     for (const trade of filteredTrades) {
         if (!symbols.includes(trade.symbol)) continue;
