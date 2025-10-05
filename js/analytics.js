@@ -1921,23 +1921,45 @@ function getMostCommon(arr) {
  * 시장 데이터 섹션 로드
  */
 async function loadMarketDataSection() {
+    console.log('📊 Loading market data section...');
+
     if (!marketDataEnabled) {
-        console.log('Market data is disabled');
+        console.log('⚠️ Market data is disabled');
+        displayNoMarketData();
         return;
     }
 
     const filteredTrades = getFilteredTradesForAnalytics();
 
     if (filteredTrades.length === 0) {
+        console.log('⚠️ No trades to analyze');
         displayNoMarketData();
         return;
     }
 
+    console.log(`📊 Found ${filteredTrades.length} trades, loading market data...`);
+
     showMarketDataLoading();
-    await Promise.all([
-        loadSymbolQuotes(filteredTrades),
-        loadPriceContextAnalysis(filteredTrades)
-    ]);
+
+    try {
+        await Promise.all([
+            loadSymbolQuotes(filteredTrades),
+            loadPriceContextAnalysis(filteredTrades)
+        ]);
+        console.log('✓ Market data section loaded successfully');
+    } catch (error) {
+        console.error('❌ Failed to load market data section:', error);
+        const quotesContainer = document.getElementById('symbolQuotesContainer');
+        if (quotesContainer) {
+            quotesContainer.innerHTML = `
+                <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; text-align: center;">
+                    <div style="font-size: 18px; margin-bottom: 8px;">❌</div>
+                    <div style="color: #ef4444; margin-bottom: 8px;">Failed to load market data</div>
+                    <div style="color: #64748b; font-size: 14px;">${error.message}</div>
+                </div>
+            `;
+        }
+    }
 }
 
 /**
