@@ -219,8 +219,12 @@ function updateTradingPerformanceDetails(filteredTrades, totalPL, totalWins, tot
 
     const detailTotalVolume = document.getElementById('detailTotalVolume');
     if (detailTotalVolume) detailTotalVolume.textContent = `$${totalVolume.toFixed(2)}`;
-    document.getElementById('detailProfitFactor').textContent = profitFactor.toFixed(2);
-    document.getElementById('detailProfitFactor').className = `detail-value ${profitFactor >= 1 ? 'positive' : 'negative'}`;
+
+    const detailProfitFactor = document.getElementById('detailProfitFactor');
+    if (detailProfitFactor) {
+        detailProfitFactor.textContent = profitFactor.toFixed(2);
+        detailProfitFactor.className = `detail-value ${profitFactor >= 1 ? 'positive' : 'negative'}`;
+    }
 }
 
 /**
