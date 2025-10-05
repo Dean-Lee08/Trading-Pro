@@ -927,7 +927,36 @@ const translations = {
         'api-limit-reached': 'API 한도 도달',
         'data-unavailable': '데이터 없음',
         'no-api-key': 'API 키 미설정',
-        'rate-limit-wait': 'API 한도 도달. 잠시만 기다려주세요...'
+        'rate-limit-wait': 'API 한도 도달. 잠시만 기다려주세요...',
+
+        // Advanced Analysis
+        'entry-exit-timing': '진입/청산 타이밍 품질',
+        'avg-entry-position': '평균 진입 위치',
+        'avg-exit-position': '평균 청산 위치',
+        'timing-score': '타이밍 점수',
+        'early-entry-rate': '조기 진입 비율',
+        'profit-taking-rate': '익절 실행 비율',
+        'of-range': '구간 내',
+        'gap-trading-performance': '갭 트레이딩 성과',
+        'gap-up-winrate': '갭업 승률',
+        'gap-down-winrate': '갭다운 승률',
+        'large-gap-winrate': '큰 갭(5%+) 승률',
+        'best-gap-range': '최적 갭 범위',
+        'sector-rotation': '섹터 회전 분석',
+        'top-sector': '최고 성과 섹터',
+        'sector-winrate': '섹터 승률',
+        'sector-avg-return': '섹터 평균 수익',
+        'sector-diversity': '섹터 다양성',
+        'price-level-psychology': '가격대 심리',
+        'under-5-winrate': '$5 미만 승률',
+        'range-5-20-winrate': '$5-$20 승률',
+        'over-20-winrate': '$20 초과 승률',
+        'optimal-price-range': '최적 가격대',
+        'atr-correlation': '변동성 (ATR) 상관관계',
+        'high-vol-winrate': '고변동성 승률',
+        'low-vol-winrate': '저변동성 승률',
+        'median-volatility': '중간 변동성',
+        'trades-analyzed': '분석된 거래 수'
     }
 };
 
