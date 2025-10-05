@@ -292,7 +292,7 @@ function updateTimeAnalysisDetails(filteredTrades) {
     const daysOfWeekKo = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
 
     filteredTrades.forEach(trade => {
-        const day = new Date(trade.date).getDay();
+        const day = new Date(trade.date + 'T12:00:00').getDay();
         if (!dayStats[day]) {
             dayStats[day] = { count: 0, totalPL: 0 };
         }
