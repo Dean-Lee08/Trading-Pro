@@ -340,7 +340,7 @@ const translations = {
         'daily-input': 'Daily Input',
         'metrics-dashboard': 'Metrics Dashboard',
         'bias-analysis': 'Bias Analysis',
-        'pattern-insights': 'Pattern Insights',
+        'algorithmic-analysis': 'Algorithmic Analysis',
         'daily-data-input': 'Daily Data Input',
         'biological-data': 'Biological Data',
         'screen-time': 'Screen Time Before Trading (hours)',
