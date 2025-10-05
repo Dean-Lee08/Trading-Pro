@@ -290,6 +290,27 @@ async function getIntradayStockData(symbol, interval = '5min', outputsize = 'com
 }
 
 /**
+ * 기본 Overview 데이터 생성 (폴백용)
+ */
+function createDefaultOverview(symbol) {
+    return {
+        Symbol: symbol,
+        Name: symbol,
+        Description: '',
+        Sector: 'Unknown',
+        Industry: 'Unknown',
+        MarketCapitalization: '0',
+        SharesOutstanding: '0',
+        SharesFloat: '0',
+        '52WeekHigh': '0',
+        '52WeekLow': '0',
+        Beta: '0',
+        PERatio: '0',
+        EPS: '0'
+    };
+}
+
+/**
  * 종목 개요 정보 가져오기 (PROFILE & STATISTICS)
  */
 async function getStockOverview(symbol) {
@@ -304,28 +325,43 @@ async function getStockOverview(symbol) {
         symbol: symbol
     };
 
-    // Twelve Data uses /profile and /statistics endpoints
-    const profileData = await callTwelveDataAPI('/profile', params);
+    try {
+        // Twelve Data uses /profile endpoint
+        const profileData = await callTwelveDataAPI('/profile', params);
 
-    // Convert Twelve Data format to Alpha Vantage-like format for compatibility
-    const converted = {
-        Symbol: profileData.symbol || symbol,
-        Name: profileData.name || '',
-        Description: profileData.description || '',
-        Sector: profileData.sector || 'Unknown',
-        Industry: profileData.industry || 'Unknown',
-        MarketCapitalization: profileData.market_cap || '0',
-        SharesOutstanding: profileData.shares_outstanding || '0',
-        SharesFloat: profileData.shares_float || '0',
-        '52WeekHigh': profileData.fifty_two_week.high || '0',
-        '52WeekLow': profileData.fifty_two_week.low || '0',
-        Beta: profileData.beta || '0',
-        PERatio: profileData.pe_ratio || '0',
-        EPS: profileData.eps || '0'
-    };
+        // Check if profile data is valid
+        if (!profileData || !profileData.symbol) {
+            console.warn(`⚠️ Profile not available for ${symbol}, using defaults`);
+            const defaultData = createDefaultOverview(symbol);
+            setCachedData(cacheKey, defaultData);
+            return defaultData;
+        }
 
-    setCachedData(cacheKey, converted);
-    return converted;
+        // Convert Twelve Data format to Alpha Vantage-like format for compatibility
+        const converted = {
+            Symbol: profileData.symbol || symbol,
+            Name: profileData.name || symbol,
+            Description: profileData.description || '',
+            Sector: profileData.sector || 'Unknown',
+            Industry: profileData.industry || 'Unknown',
+            MarketCapitalization: profileData.market_cap || '0',
+            SharesOutstanding: profileData.shares_outstanding || '0',
+            SharesFloat: profileData.shares_float || '0',
+            '52WeekHigh': (profileData.fifty_two_week && profileData.fifty_two_week.high) || '0',
+            '52WeekLow': (profileData.fifty_two_week && profileData.fifty_two_week.low) || '0',
+            Beta: profileData.beta || '0',
+            PERatio: profileData.pe_ratio || '0',
+            EPS: profileData.eps || '0'
+        };
+
+        setCachedData(cacheKey, converted);
+        return converted;
+    } catch (error) {
+        console.warn(`⚠️ Failed to fetch profile for ${symbol}:`, error.message);
+        const defaultData = createDefaultOverview(symbol);
+        setCachedData(cacheKey, defaultData);
+        return defaultData;
+    }
 }
 
 /**
