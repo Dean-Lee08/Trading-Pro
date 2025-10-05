@@ -840,6 +840,7 @@ const translations = {
         'previous-close': '전일종가',
         'last-updated': '업데이트',
         'refresh-quotes': '시세 새로고침',
+        'refresh': '새로고침',
         'loading-market-data': '시장 데이터 로딩 중...',
         'api-key-settings': 'API 키 설정',
         'twelve-data-api-key': 'Twelve Data API 키',
