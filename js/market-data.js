@@ -616,17 +616,25 @@ async function analyzeWinningTradesMarketChar(filteredTrades) {
     // Overview 데이터 가져오기
     const overviews = await getMultipleOverviews(winningSymbols, 5);
 
-    // 데이터가 있는 것만 필터링
-    const validOverviews = Object.values(overviews).filter(o => o !== null);
+    // 데이터가 있는 것만 필터링 (Sector가 'Unknown'이 아닌 것)
+    const validOverviews = Object.values(overviews).filter(o => {
+        if (!o) return false;
+        const hasValidData = o.Sector !== 'Unknown' ||
+                            parseFloat(o.MarketCapitalization) > 0 ||
+                            parseFloat(o.SharesFloat) > 0 ||
+                            parseFloat(o.Beta) > 0;
+        return hasValidData;
+    });
 
     if (validOverviews.length === 0) {
+        console.warn('⚠️ No valid overview data available for winning symbols');
         return null;
     }
 
     // 평균 계산
-    const avgFloat = validOverviews.reduce((sum, o) => sum + o.sharesFloat, 0) / validOverviews.length;
-    const avgMarketCap = validOverviews.reduce((sum, o) => sum + o.marketCap, 0) / validOverviews.length;
-    const avgBeta = validOverviews.reduce((sum, o) => sum + o.beta, 0) / validOverviews.length;
+    const avgFloat = validOverviews.reduce((sum, o) => sum + parseFloat(o.SharesFloat || 0), 0) / validOverviews.length;
+    const avgMarketCap = validOverviews.reduce((sum, o) => sum + parseFloat(o.MarketCapitalization || 0), 0) / validOverviews.length;
+    const avgBeta = validOverviews.reduce((sum, o) => sum + parseFloat(o.Beta || 0), 0) / validOverviews.length;
 
     return {
         avgFloat,
