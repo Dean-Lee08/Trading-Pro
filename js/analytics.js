@@ -2337,9 +2337,10 @@ async function updateMarketCharacteristics(filteredTrades) {
         betaEl.className = analysis.avgBeta > 1.5 ? 'detail-value negative' :
                           analysis.avgBeta < 1.0 ? 'detail-value positive' : 'detail-value neutral';
 
-        // Symbols analyzed
+        // Symbols analyzed (show total traded symbols for context)
+        const totalTradedSymbols = getTradedSymbols().length;
         document.getElementById('detailSymbolsAnalyzed').textContent =
-            `${analysis.symbolsAnalyzed} / ${analysis.totalWinningSymbols}`;
+            `${analysis.symbolsAnalyzed} / ${Math.min(analysis.totalWinningSymbols, 5)} (${totalTradedSymbols} total)`;
 
     } catch (error) {
         console.error('Market characteristics analysis failed:', error);
