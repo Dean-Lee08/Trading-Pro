@@ -73,7 +73,7 @@ function loadApiCallLog() {
 // ==================== Market Data Cache Management ====================
 
 /**
- * 캐시에서 데이터 가져오기
+ * 캐시에서 데이터 가져오기 (최적화된 만료 정책)
  */
 function getCachedData(cacheKey, cacheType = 'quote') {
     if (marketDataCache[cacheKey]) {
@@ -81,21 +81,30 @@ function getCachedData(cacheKey, cacheType = 'quote') {
         const now = Date.now();
         const cacheAge = now - cached.timestamp;
 
-        // Cache duration based on data type
+        // OPTIMIZED: Cache duration based on data type
         let maxAge;
         if (cacheType === 'overview') {
-            maxAge = 24 * 60 * 60 * 1000; // 24 hours for overview data
+            // Overview data (Beta, Sector, Market Cap) rarely changes
+            // Cache PERMANENTLY to save API calls
+            maxAge = Infinity; // NEVER EXPIRE
+        } else if (cacheType === 'daily') {
+            // Daily data doesn't change after market close
+            // Cache for 24 hours
+            maxAge = 24 * 60 * 60 * 1000;
         } else if (cacheType === 'intraday') {
-            maxAge = 60 * 60 * 1000; // 1 hour for intraday data
+            // Intraday data for post-trading analysis
+            maxAge = 60 * 60 * 1000; // 1 hour
         } else {
-            maxAge = 5 * 60 * 1000; // 5 minutes for quote/daily data
+            // Quote data for live tracking
+            // Extended from 5min to 1 hour for better efficiency
+            maxAge = 60 * 60 * 1000; // 1 hour (was 5 minutes)
         }
 
         if (cacheAge < maxAge) {
-            console.log(`Using cached data for: ${cacheKey} (${cacheType}, age: ${Math.floor(cacheAge/1000)}s)`);
+            console.log(`✓ Cache HIT: ${cacheKey} (${cacheType}, age: ${Math.floor(cacheAge/1000)}s)`);
             return cached.data;
         } else {
-            console.log(`Cache expired for: ${cacheKey} (age: ${Math.floor(cacheAge/1000)}s, max: ${Math.floor(maxAge/1000)}s)`);
+            console.log(`⚠️ Cache EXPIRED: ${cacheKey} (age: ${Math.floor(cacheAge/1000)}s, max: ${maxAge === Infinity ? 'NEVER' : Math.floor(maxAge/1000)}s)`);
         }
     }
     return null;
