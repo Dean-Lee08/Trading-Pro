@@ -203,12 +203,22 @@ function updateTradingPerformanceDetails(filteredTrades, totalPL, totalWins, tot
     const netTotalPL = totalPL - totalDailyFees;
     const profitFactor = totalLosses > 0 ? totalWins / totalLosses : 0;
 
-    document.getElementById('detailTotalPL').textContent = `$${netTotalPL.toFixed(2)}`;
-    document.getElementById('detailTotalPL').className = `detail-value ${netTotalPL >= 0 ? 'positive' : 'negative'}`;
-    document.getElementById('detailTotalGain').textContent = `$${totalWins.toFixed(2)}`;
-    document.getElementById('detailTotalLoss').textContent = `$${totalLosses.toFixed(2)}`;
-    document.getElementById('detailTotalFees').textContent = `$${totalDailyFees.toFixed(2)}`;
-    document.getElementById('detailTotalVolume').textContent = `$${totalVolume.toFixed(2)}`;
+    const detailTotalPL = document.getElementById('detailTotalPL');
+    if (detailTotalPL) {
+        detailTotalPL.textContent = `$${netTotalPL.toFixed(2)}`;
+        detailTotalPL.className = `detail-value ${netTotalPL >= 0 ? 'positive' : 'negative'}`;
+    }
+    const detailTotalGain = document.getElementById('detailTotalGain');
+    if (detailTotalGain) detailTotalGain.textContent = `$${totalWins.toFixed(2)}`;
+
+    const detailTotalLoss = document.getElementById('detailTotalLoss');
+    if (detailTotalLoss) detailTotalLoss.textContent = `$${totalLosses.toFixed(2)}`;
+
+    const detailTotalFees = document.getElementById('detailTotalFees');
+    if (detailTotalFees) detailTotalFees.textContent = `$${totalDailyFees.toFixed(2)}`;
+
+    const detailTotalVolume = document.getElementById('detailTotalVolume');
+    if (detailTotalVolume) detailTotalVolume.textContent = `$${totalVolume.toFixed(2)}`;
     document.getElementById('detailProfitFactor').textContent = profitFactor.toFixed(2);
     document.getElementById('detailProfitFactor').className = `detail-value ${profitFactor >= 1 ? 'positive' : 'negative'}`;
 }
