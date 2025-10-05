@@ -67,6 +67,10 @@ let marketDataEnabled = true;
 let loadingMarketData = false;
 let marketDataQuotes = {};
 
+// Analytics Session Cache (prevents re-loading on page navigation)
+let analyticsLoadedOnce = false;
+let analyticsFilterState = null;
+
 // ============================================
 // Language Translations
 // ============================================
