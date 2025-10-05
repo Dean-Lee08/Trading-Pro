@@ -2288,7 +2288,13 @@ async function updateMarketDataAnalysisCards(filteredTrades) {
             updateIntradayPerformance(filteredTrades),
             updateSectorPerformance(filteredTrades),
             updateSPYCorrelation(filteredTrades),
-            updateRelativeVolumeCorrelation(filteredTrades)
+            updateRelativeVolumeCorrelation(filteredTrades),
+            // NEW Advanced Analysis
+            updateEntryExitTiming(filteredTrades),
+            updateGapTradingPerformance(filteredTrades),
+            updateSectorRotationCard(filteredTrades),
+            updatePriceLevelPsychology(filteredTrades),
+            updateATRCorrelation(filteredTrades)
         ];
 
         // 모든 분석이 완료될 때까지 대기 (에러 발생 시에도 계속 진행)
