@@ -796,7 +796,7 @@ async function analyzeIntradayPerformance(filteredTrades) {
             results[range.label] = { wins: 0, losses: 0, totalPnl: 0, count: 0 };
         }
 
-        const symbols = [...new Set(filteredTrades.map(t => t.symbol))].slice(0, 5);
+        const symbols = [...new Set(filteredTrades.map(t => t.symbol))]; // ALL SYMBOLS
 
         // Fetch all daily data first
         const dailyDataCache = {};
@@ -982,7 +982,7 @@ async function analyzeSPYCorrelation(filteredTrades) {
  */
 async function analyzeRelativeVolumeCorrelation(filteredTrades) {
     try {
-        const symbols = [...new Set(filteredTrades.map(t => t.symbol))].slice(0, 5);
+        const symbols = [...new Set(filteredTrades.map(t => t.symbol))]; // ALL SYMBOLS
         const tradesWithRelVol = [];
 
         for (const trade of filteredTrades) {
