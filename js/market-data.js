@@ -181,17 +181,41 @@ async function callTwelveDataAPI(endpoint, params = {}) {
 
         const data = await response.json();
 
+        // Log full response for debugging
+        console.log('📥 Twelve Data API Response:', {
+            endpoint,
+            params,
+            status: data.status,
+            hasData: !!data.values || !!data.symbol || !!data.price
+        });
+
         // Check for API error messages
-        if (data.status === 'error' || data.code === 400 || data.code === 401 || data.code === 404) {
-            const error = new Error(data.message || 'API Error');
+        if (data.status === 'error') {
+            console.error('❌ API Error Response:', data);
+            const error = new Error(data.message || `API Error: ${data.code || 'Unknown'}`);
             error.code = 'API_ERROR';
+            error.details = data;
+            throw error;
+        }
+
+        // Check for specific error codes
+        if (data.code && (data.code === 400 || data.code === 401 || data.code === 404 || data.code === 429)) {
+            console.error('❌ API Error Code:', data.code, data.message);
+            const error = new Error(data.message || `API Error Code: ${data.code}`);
+            error.code = 'API_ERROR';
+            error.details = data;
             throw error;
         }
 
         logApiCall();
         return data;
     } catch (error) {
-        console.error('Twelve Data API error:', error);
+        console.error('❌ Twelve Data API error:', {
+            endpoint,
+            params,
+            error: error.message,
+            details: error.details
+        });
         throw error;
     }
 }
