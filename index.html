@@ -1119,6 +1119,136 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Entry/Exit Timing Quality (NEW) -->
+                            <div class="detail-card">
+                                <div class="detail-card-header" data-lang="entry-exit-timing" onclick="toggleDetailCard(this)">
+                                    Entry/Exit Timing Quality
+                                    <span class="collapse-icon">▼</span>
+                                </div>
+                                <div class="detail-card-content">
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="avg-entry-position">Avg Entry Position</span>
+                                        <span class="detail-value neutral" id="detailAvgEntryPosition">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="avg-exit-position">Avg Exit Position</span>
+                                        <span class="detail-value neutral" id="detailAvgExitPosition">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="timing-score">Timing Score</span>
+                                        <span class="detail-value" id="detailTimingScore">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="early-entry-rate">Early Entry Rate</span>
+                                        <span class="detail-value neutral" id="detailEarlyEntryRate">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="profit-taking-rate">Profit Taking Rate</span>
+                                        <span class="detail-value neutral" id="detailProfitTakingRate">-</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Gap Trading Performance (NEW) -->
+                            <div class="detail-card">
+                                <div class="detail-card-header" data-lang="gap-trading-performance" onclick="toggleDetailCard(this)">
+                                    Gap Trading Performance
+                                    <span class="collapse-icon">▼</span>
+                                </div>
+                                <div class="detail-card-content">
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="gap-up-winrate">Gap Up Win Rate</span>
+                                        <span class="detail-value" id="detailGapUpWinRate">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="gap-down-winrate">Gap Down Win Rate</span>
+                                        <span class="detail-value" id="detailGapDownWinRate">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="large-gap-winrate">Large Gap (5%+) Win Rate</span>
+                                        <span class="detail-value" id="detailLargeGapWinRate">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="best-gap-range">Best Gap Range</span>
+                                        <span class="detail-value neutral" id="detailBestGapRange">-</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sector Rotation (NEW) -->
+                            <div class="detail-card">
+                                <div class="detail-card-header" data-lang="sector-rotation" onclick="toggleDetailCard(this)">
+                                    Sector Rotation Analysis
+                                    <span class="collapse-icon">▼</span>
+                                </div>
+                                <div class="detail-card-content">
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="top-sector">Top Performing Sector</span>
+                                        <span class="detail-value neutral" id="detailTopSector">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="sector-winrate">Sector Win Rate</span>
+                                        <span class="detail-value" id="detailSectorWinRate">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="sector-avg-return">Sector Avg Return</span>
+                                        <span class="detail-value" id="detailSectorAvgReturn">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="sector-diversity">Sector Diversity</span>
+                                        <span class="detail-value neutral" id="detailSectorDiversity">-</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Price Level Psychology (NEW) -->
+                            <div class="detail-card">
+                                <div class="detail-card-header" data-lang="price-level-psychology" onclick="toggleDetailCard(this)">
+                                    Price Level Psychology
+                                    <span class="collapse-icon">▼</span>
+                                </div>
+                                <div class="detail-card-content">
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="under-5-winrate">Under $5 Win Rate</span>
+                                        <span class="detail-value" id="detailUnder5WinRate">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="range-5-20-winrate">$5-$20 Win Rate</span>
+                                        <span class="detail-value" id="detailRange5to20WinRate">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="over-20-winrate">Over $20 Win Rate</span>
+                                        <span class="detail-value" id="detailOver20WinRate">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="optimal-price-range">Optimal Price Range</span>
+                                        <span class="detail-value neutral" id="detailOptimalPriceRange">-</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ATR Correlation (NEW) -->
+                            <div class="detail-card">
+                                <div class="detail-card-header" data-lang="atr-correlation" onclick="toggleDetailCard(this)">
+                                    Volatility (ATR) Correlation
+                                    <span class="collapse-icon">▼</span>
+                                </div>
+                                <div class="detail-card-content">
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="high-vol-winrate">High Volatility Win Rate</span>
+                                        <span class="detail-value" id="detailHighVolWinRate">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="low-vol-winrate">Low Volatility Win Rate</span>
+                                        <span class="detail-value" id="detailLowVolWinRate">-</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label" data-lang="median-volatility">Median Volatility</span>
+                                        <span class="detail-value neutral" id="detailMedianVolatility">-</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         
                         <!-- Basic Charts Section in Detail -->
