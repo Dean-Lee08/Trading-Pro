@@ -29,6 +29,8 @@ let tradesEndDate = null;
 let currentAnalyticsSection = 'detail';
 let analyticsLoadedOnce = false;
 let analyticsFilterState = null;
+let marketDataLoadedOnce = false;
+let marketDataFilterState = null;
 
 // Notes State
 let editingNoteId = null;
