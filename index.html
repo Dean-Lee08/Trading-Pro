@@ -1597,74 +1597,77 @@
                             </div>
 
                             <!-- Behavioral Intelligence - UNIFIED -->
-                            <div class="premium-analytics-card" style="margin-bottom: 28px;">
-                                <div class="card-header">
+                            <div class="analysis-section-glass card-reveal stagger-3" style="margin-bottom: 28px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; cursor: pointer;" onclick="toggleAdvancedSection('behavioralIntelligence')">
                                     <div style="display: flex; align-items: center; gap: 12px;">
-                                        <div class="accent-bar" style="width: 6px; height: 36px; background: linear-gradient(180deg, #ec4899, #8b5cf6);"></div>
-                                        <div>
-                                            <h2 class="card-title" data-lang="behavioral-intelligence">Behavioral Intelligence</h2>
-                                            <div style="color: #64748b; font-size: 11px; margin-top: 4px;" data-lang="behavioral-subtitle">Streak analysis and cognitive bias detection</div>
+                                        <div style="width: 4px; height: 28px; background: linear-gradient(180deg, #ec4899, #8b5cf6); border-radius: 2px;"></div>
+                                        <h3 data-lang="behavioral-intelligence" style="color: #f8fafc; font-size: 18px; font-weight: 600; margin: 0;">Behavioral Intelligence</h3>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div style="background: rgba(236, 72, 153, 0.1); border: 1px solid rgba(236, 72, 153, 0.3); padding: 6px 12px; border-radius: 8px;">
+                                            <span style="color: #f9a8d4; font-size: 11px; font-weight: 600; letter-spacing: 0.5px;">🧠 PSYCHOLOGY</span>
+                                        </div>
+                                        <button class="collapse-btn" style="background: rgba(236, 72, 153, 0.1); border: 1px solid rgba(236, 72, 153, 0.3); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s;">
+                                            <span style="color: #f9a8d4; font-size: 18px; transition: transform 0.3s;" id="behavioralIntelligence-toggle">▼</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="behavioralIntelligence-content" class="section-content">
+                                    <!-- Streak Performance Grid -->
+                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">
+                                        <!-- After 1 Loss -->
+                                        <div class="glass-card hover-lift" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.08), rgba(220, 38, 38, 0.03)); border: 1px solid rgba(239, 68, 68, 0.2); padding: 20px; position: relative; overflow: hidden;">
+                                            <div style="position: absolute; top: -10px; right: -10px; font-size: 60px; opacity: 0.05;">📉</div>
+                                            <div data-lang="after-1-loss" style="color: #fca5a5; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 12px; text-transform: uppercase;">After 1 Loss</div>
+                                            <div id="after1Loss" style="color: #ef4444; font-size: 28px; font-weight: 700; margin-bottom: 8px;">--%</div>
+                                            <div style="color: #cbd5e1; font-size: 13px;">Win Rate</div>
+                                        </div>
+
+                                        <!-- After 2 Losses -->
+                                        <div class="glass-card hover-lift" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(220, 38, 38, 0.05)); border: 1px solid rgba(239, 68, 68, 0.3); padding: 20px; position: relative; overflow: hidden;">
+                                            <div style="position: absolute; top: -10px; right: -10px; font-size: 60px; opacity: 0.05;">⚠️</div>
+                                            <div data-lang="after-2-losses" style="color: #fca5a5; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 12px; text-transform: uppercase;">After 2 Losses</div>
+                                            <div id="after2Losses" style="color: #dc2626; font-size: 28px; font-weight: 700; margin-bottom: 8px;">--%</div>
+                                            <div style="color: #cbd5e1; font-size: 13px;">Win Rate</div>
+                                        </div>
+
+                                        <!-- After 3 Losses -->
+                                        <div class="glass-card hover-lift" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.16), rgba(220, 38, 38, 0.08)); border: 1px solid rgba(239, 68, 68, 0.4); padding: 20px; position: relative; overflow: hidden;">
+                                            <div style="position: absolute; top: -10px; right: -10px; font-size: 60px; opacity: 0.05;">🔥</div>
+                                            <div data-lang="after-3-losses" style="color: #fca5a5; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 12px; text-transform: uppercase;">After 3+ Losses</div>
+                                            <div id="after3Losses" style="color: #b91c1c; font-size: 28px; font-weight: 700; margin-bottom: 8px;">--%</div>
+                                            <div style="color: #cbd5e1; font-size: 13px;">Win Rate</div>
+                                        </div>
+
+                                        <!-- After 1 Win -->
+                                        <div class="glass-card hover-lift" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(5, 150, 105, 0.03)); border: 1px solid rgba(16, 185, 129, 0.2); padding: 20px; position: relative; overflow: hidden;">
+                                            <div style="position: absolute; top: -10px; right: -10px; font-size: 60px; opacity: 0.05;">📈</div>
+                                            <div data-lang="after-1-win" style="color: #6ee7b7; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 12px; text-transform: uppercase;">After 1 Win</div>
+                                            <div id="after1Win" style="color: #10b981; font-size: 28px; font-weight: 700; margin-bottom: 8px;">--%</div>
+                                            <div style="color: #cbd5e1; font-size: 13px;">Win Rate</div>
+                                        </div>
+
+                                        <!-- After 2 Wins -->
+                                        <div class="glass-card hover-lift" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(5, 150, 105, 0.05)); border: 1px solid rgba(16, 185, 129, 0.3); padding: 20px; position: relative; overflow: hidden;">
+                                            <div style="position: absolute; top: -10px; right: -10px; font-size: 60px; opacity: 0.05;">🌟</div>
+                                            <div data-lang="after-2-wins" style="color: #6ee7b7; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 12px; text-transform: uppercase;">After 2 Wins</div>
+                                            <div id="after2Wins" style="color: #059669; font-size: 28px; font-weight: 700; margin-bottom: 8px;">--%</div>
+                                            <div style="color: #cbd5e1; font-size: 13px;">Win Rate</div>
+                                        </div>
+
+                                        <!-- After 3 Wins -->
+                                        <div class="glass-card hover-lift" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.16), rgba(5, 150, 105, 0.08)); border: 1px solid rgba(16, 185, 129, 0.4); padding: 20px; position: relative; overflow: hidden;">
+                                            <div style="position: absolute; top: -10px; right: -10px; font-size: 60px; opacity: 0.05;">💚</div>
+                                            <div data-lang="after-3-wins" style="color: #6ee7b7; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 12px; text-transform: uppercase;">After 3+ Wins</div>
+                                            <div id="after3Wins" style="color: #047857; font-size: 28px; font-weight: 700; margin-bottom: 8px;">--%</div>
+                                            <div style="color: #cbd5e1; font-size: 13px;">Win Rate</div>
                                         </div>
                                     </div>
-                                    <div class="card-badge" style="background: rgba(236, 72, 153, 0.1); border: 1px solid rgba(236, 72, 153, 0.3); color: #f9a8d4;">
-                                        🧠 PSYCHOLOGY
-                                    </div>
-                                </div>
 
-                                <!-- Primary Metrics Grid: Streak Performance -->
-                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 24px;">
-                                    <!-- After 1 Loss -->
-                                    <div class="metric-display" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.05)); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 12px; padding: 20px;">
-                                        <div style="font-size: 32px; margin-bottom: 8px;">📉</div>
-                                        <div class="metric-label" data-lang="after-1-loss">After 1 Loss</div>
-                                        <div id="after1Loss" class="metric-value" style="color: #ef4444;">--%</div>
-                                        <div class="metric-change">Win Rate</div>
+                                    <!-- Detailed Behavioral Patterns Content -->
+                                    <div id="behavioralPatternsContent">
+                                        <!-- Will be populated by detectAdvancedBehavioralPatterns() -->
                                     </div>
-
-                                    <!-- After 2 Losses -->
-                                    <div class="metric-display" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.08)); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 20px;">
-                                        <div style="font-size: 32px; margin-bottom: 8px;">⚠️</div>
-                                        <div class="metric-label" data-lang="after-2-losses">After 2 Losses</div>
-                                        <div id="after2Losses" class="metric-value" style="color: #dc2626;">--%</div>
-                                        <div class="metric-change">Win Rate</div>
-                                    </div>
-
-                                    <!-- After 1 Win -->
-                                    <div class="metric-display" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.05)); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; padding: 20px;">
-                                        <div style="font-size: 32px; margin-bottom: 8px;">📈</div>
-                                        <div class="metric-label" data-lang="after-1-win">After 1 Win</div>
-                                        <div id="after1Win" class="metric-value" style="color: #10b981;">--%</div>
-                                        <div class="metric-change">Win Rate</div>
-                                    </div>
-
-                                    <!-- After 2 Wins -->
-                                    <div class="metric-display" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.08)); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 20px;">
-                                        <div style="font-size: 32px; margin-bottom: 8px;">🌟</div>
-                                        <div class="metric-label" data-lang="after-2-wins">After 2 Wins</div>
-                                        <div id="after2Wins" class="metric-value" style="color: #059669;">--%</div>
-                                        <div class="metric-change">Win Rate</div>
-                                    </div>
-
-                                    <!-- After 3 Losses -->
-                                    <div class="metric-display" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.1)); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 12px; padding: 20px;">
-                                        <div style="font-size: 32px; margin-bottom: 8px;">🔥</div>
-                                        <div class="metric-label" data-lang="after-3-losses">After 3+ Losses</div>
-                                        <div id="after3Losses" class="metric-value" style="color: #b91c1c;">--%</div>
-                                        <div class="metric-change">Win Rate</div>
-                                    </div>
-
-                                    <!-- After 3 Wins -->
-                                    <div class="metric-display" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.1)); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 12px; padding: 20px;">
-                                        <div style="font-size: 32px; margin-bottom: 8px;">💚</div>
-                                        <div class="metric-label" data-lang="after-3-wins">After 3+ Wins</div>
-                                        <div id="after3Wins" class="metric-value" style="color: #047857;">--%</div>
-                                        <div class="metric-change">Win Rate</div>
-                                    </div>
-                                </div>
-
-                                <!-- Detailed Behavioral Patterns Content -->
-                                <div id="behavioralPatternsContent">
-                                    <!-- Will be populated by detectAdvancedBehavioralPatterns() -->
                                 </div>
                             </div>
 
