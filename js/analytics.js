@@ -3381,37 +3381,80 @@ function renderBehavioralPatterns() {
 
     if (patterns.length === 0) {
         element.innerHTML = `
-            <div style="color: #64748b; text-align: center; padding: 20px;">
-                No significant behavioral patterns detected yet. Continue trading to build pattern data.
+            <div style="background: rgba(15, 23, 42, 0.5); text-align: center; padding: 30px; border-radius: 10px; border: 1px solid rgba(100, 116, 139, 0.2);">
+                <div style="color: #64748b; font-size: 14px;" data-lang="no-behavioral-patterns">
+                    No significant behavioral patterns detected yet. Continue trading to build pattern data.
+                </div>
             </div>
         `;
         return;
     }
 
-    const html = patterns.map(pattern => {
-        const iconColor = pattern.severity === 'danger' ? '#ef4444' :
-                         pattern.severity === 'warning' ? '#f59e0b' :
-                         pattern.severity === 'good' ? '#10b981' : '#3b82f6';
+    // Group patterns by severity
+    const dangerPatterns = patterns.filter(p => p.severity === 'danger');
+    const warningPatterns = patterns.filter(p => p.severity === 'warning');
+    const goodPatterns = patterns.filter(p => p.severity === 'good');
+    const infoPatterns = patterns.filter(p => p.severity === 'info');
 
-        const icon = pattern.severity === 'danger' ? '⚠️' :
-                    pattern.severity === 'warning' ? '⚡' :
-                    pattern.severity === 'good' ? '✓' : 'ℹ️';
+    const severityConfig = {
+        danger: { icon: '🚨', label: 'Critical Patterns', color: '#ef4444', bgGradient: 'rgba(239, 68, 68, 0.1)', borderColor: 'rgba(239, 68, 68, 0.3)' },
+        warning: { icon: '⚡', label: 'Warning Patterns', color: '#f59e0b', bgGradient: 'rgba(245, 158, 11, 0.1)', borderColor: 'rgba(245, 158, 11, 0.3)' },
+        good: { icon: '✅', label: 'Positive Patterns', color: '#10b981', bgGradient: 'rgba(16, 185, 129, 0.1)', borderColor: 'rgba(16, 185, 129, 0.3)' },
+        info: { icon: 'ℹ️', label: 'Insights', color: '#3b82f6', bgGradient: 'rgba(59, 130, 246, 0.1)', borderColor: 'rgba(59, 130, 246, 0.3)' }
+    };
 
-        return `
-            <div style="padding: 14px; background: #0f172a; border-radius: 8px; border-left: 4px solid ${iconColor}; margin-bottom: 12px;">
-                <div style="display: flex; align-items: start; gap: 12px;">
-                    <span style="font-size: 20px;">${icon}</span>
+    const renderPatternGroup = (groupPatterns, severity) => {
+        if (groupPatterns.length === 0) return '';
+
+        const config = severityConfig[severity];
+        const patternsHTML = groupPatterns.map(pattern => `
+            <div class="glass-card hover-lift" style="background: linear-gradient(135deg, ${config.bgGradient}, rgba(15, 23, 42, 0.5)); border-left: 4px solid ${config.color}; padding: 20px; margin-bottom: 16px; border-radius: 10px;">
+                <div style="display: flex; align-items: flex-start; gap: 16px;">
+                    <div style="font-size: 32px; line-height: 1;">${pattern.icon || config.icon}</div>
                     <div style="flex: 1;">
-                        <div style="color: #e4e4e7; font-size: 14px; font-weight: 500; margin-bottom: 6px;">${pattern.title}</div>
-                        <div style="color: #94a3b8; font-size: 12px; line-height: 1.6;">${pattern.description}</div>
-                        ${pattern.actionable ? `<div style="color: ${iconColor}; font-size: 12px; margin-top: 8px; font-weight: 500;">→ ${pattern.actionable}</div>` : ''}
+                        <div style="color: #e4e4e7; font-size: 15px; font-weight: 600; margin-bottom: 8px;">
+                            ${pattern.title}
+                        </div>
+                        <div style="color: #94a3b8; font-size: 13px; line-height: 1.6; margin-bottom: ${pattern.actionable ? '12px' : '0'};">
+                            ${pattern.description}
+                        </div>
+                        ${pattern.actionable ? `
+                            <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid ${config.borderColor}; padding: 12px 16px; border-radius: 8px; margin-top: 12px;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <span style="color: ${config.color}; font-size: 18px;">💡</span>
+                                    <div style="color: ${config.color}; font-size: 13px; font-weight: 600; line-height: 1.5;">
+                                        ${pattern.actionable}
+                                    </div>
+                                </div>
+                            </div>
+                        ` : ''}
                     </div>
                 </div>
             </div>
-        `;
-    }).join('');
+        `).join('');
 
-    element.innerHTML = html;
+        return `
+            <div style="margin-bottom: 24px;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+                    <span style="font-size: 24px;">${config.icon}</span>
+                    <h4 style="color: ${config.color}; font-size: 16px; font-weight: 700; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">
+                        ${config.label}
+                    </h4>
+                    <div style="background: ${config.color}30; border: 1px solid ${config.color}60; padding: 4px 10px; border-radius: 12px;">
+                        <span style="color: ${config.color}; font-size: 11px; font-weight: 700;">${groupPatterns.length}</span>
+                    </div>
+                </div>
+                ${patternsHTML}
+            </div>
+        `;
+    };
+
+    element.innerHTML = `
+        ${renderPatternGroup(dangerPatterns, 'danger')}
+        ${renderPatternGroup(warningPatterns, 'warning')}
+        ${renderPatternGroup(goodPatterns, 'good')}
+        ${renderPatternGroup(infoPatterns, 'info')}
+    `;
 }
 
 /**
