@@ -1363,10 +1363,107 @@
                     <!-- Algorithmic Analysis Section -->
                     <div class="detail-section" id="patternsSection">
                         <div class="psychology-container">
-                            <h2 class="psychology-header" data-lang="algorithmic-analysis-title">Algorithmic Analysis & Intelligence</h2>
-                            <p style="color: #94a3b8; font-size: 14px; margin-bottom: 24px; line-height: 1.6;">
-                                Powered by advanced statistical analysis, behavioral pattern recognition, and machine learning-inspired algorithms
-                            </p>
+
+                            <!-- ========== HERO DASHBOARD ========== -->
+                            <div class="ai-hero-dashboard">
+                                <div class="hero-header">
+                                    <div class="ai-badge-container">
+                                        <div class="ai-badge pulse">
+                                            <span class="badge-icon">🤖</span>
+                                            <span class="badge-text">AI-POWERED</span>
+                                        </div>
+                                    </div>
+                                    <h1 class="hero-title">
+                                        <span class="title-gradient">Trading Intelligence Center</span>
+                                    </h1>
+                                    <p class="hero-subtitle">
+                                        Real-time algorithmic analysis powered by machine learning and behavioral pattern recognition
+                                    </p>
+                                </div>
+
+                                <div class="hero-metrics-grid">
+                                    <!-- Trade Quality Card -->
+                                    <div class="hero-metric-card quality-card glass-card">
+                                        <div class="card-glow quality-glow"></div>
+                                        <div class="metric-header">
+                                            <div class="metric-icon">🎯</div>
+                                            <div class="metric-badge">QUALITY</div>
+                                        </div>
+                                        <div class="metric-value-container">
+                                            <div class="metric-value-large" id="heroQualityScore">--</div>
+                                            <div class="metric-value-suffix">/100</div>
+                                        </div>
+                                        <div class="metric-label">Trade Quality Score</div>
+                                        <div class="metric-trend" id="heroQualityTrend">
+                                            <span class="trend-icon">▲</span>
+                                            <span class="trend-value">-- from avg</span>
+                                        </div>
+                                        <div class="mini-gauge">
+                                            <div class="gauge-fill" id="heroQualityGauge" style="width: 0%"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Win Prediction Card -->
+                                    <div class="hero-metric-card prediction-card glass-card">
+                                        <div class="card-glow prediction-glow"></div>
+                                        <div class="metric-header">
+                                            <div class="signal-light" id="heroSignalLight">
+                                                <div class="signal-dot pulse"></div>
+                                            </div>
+                                            <div class="metric-badge">PREDICTION</div>
+                                        </div>
+                                        <div class="metric-value-container">
+                                            <div class="metric-value-large" id="heroWinProbability">--</div>
+                                            <div class="metric-value-suffix">%</div>
+                                        </div>
+                                        <div class="metric-label">Win Probability</div>
+                                        <div class="recommendation-badge" id="heroRecommendation">
+                                            <span class="rec-icon">🟡</span>
+                                            <span class="rec-text">Calculating...</span>
+                                        </div>
+                                        <div class="confidence-bar">
+                                            <div class="confidence-label">Confidence:</div>
+                                            <div class="confidence-value" id="heroConfidence">--</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Performance Forecast Card -->
+                                    <div class="hero-metric-card performance-card glass-card">
+                                        <div class="card-glow performance-glow"></div>
+                                        <div class="metric-header">
+                                            <div class="metric-icon">💰</div>
+                                            <div class="metric-badge">FORECAST</div>
+                                        </div>
+                                        <div class="metric-value-container">
+                                            <div class="metric-value-large" id="heroForecastValue">$--</div>
+                                        </div>
+                                        <div class="metric-label">Session Prediction</div>
+                                        <div class="metric-trend" id="heroForecastTrend">
+                                            <span class="trend-icon">▲</span>
+                                            <span class="trend-value">--% vs avg</span>
+                                        </div>
+                                        <div class="sparkline-container">
+                                            <canvas id="heroSparkline" width="200" height="40"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="hero-actions">
+                                    <button class="action-btn primary-action" onclick="triggerAnalysis()">
+                                        <span class="btn-icon">⚡</span>
+                                        <span class="btn-text">Analyze Now</span>
+                                        <div class="btn-shimmer"></div>
+                                    </button>
+                                    <button class="action-btn secondary-action" onclick="showPredictionDetails()">
+                                        <span class="btn-icon">🔮</span>
+                                        <span class="btn-text">Predict Session</span>
+                                    </button>
+                                    <button class="action-btn outline-action" onclick="exportAnalysisReport()">
+                                        <span class="btn-icon">📤</span>
+                                        <span class="btn-text">Export Report</span>
+                                    </button>
+                                </div>
+                            </div>
 
                             <!-- ========== FOUNDATION ANALYTICS (Original Pattern Insights) ========== -->
 
