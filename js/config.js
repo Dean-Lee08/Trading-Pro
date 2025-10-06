@@ -606,7 +606,74 @@ const translations = {
         'worst-case': 'Worst Case',
         'pattern-match': 'Pattern Match',
         'historical-similarity': 'Historical Similarity',
-        'recommended-symbols': 'Recommended Symbols'
+        'recommended-symbols': 'Recommended Symbols',
+
+        // Additional Hero Dashboard translations
+        'hero-subtitle': 'Real-time algorithmic analysis powered by machine learning and behavioral pattern recognition',
+        'quality-badge': 'QUALITY',
+        'prediction-badge': 'PREDICTION',
+        'forecast-badge': 'FORECAST',
+        'hero-quality-label': 'Trade Quality Score',
+        'hero-probability-label': 'Win Probability',
+        'hero-forecast-label': 'Session Prediction',
+        'confidence-label': 'Confidence:',
+        'calculating-status': 'Calculating...',
+        'trend-from-avg': 'from avg',
+        'trend-vs-avg': 'vs avg',
+
+        // Loading and status messages
+        'loading-analysis': 'Loading feature importance analysis...',
+        'calculating-risk': 'Calculating real-time risk assessment...',
+        'analyzing-patterns': 'Analyzing trading patterns...',
+        'analyzing-market': 'Analyzing market conditions...',
+        'computing-stats': 'Computing statistical significance...',
+        'generating-recs': 'Generating personalized recommendations...',
+        'insufficient-data-multi': 'Insufficient data for multi-factor analysis. Need at least 10 trades with psychology data.',
+
+        // New AI analysis module titles
+        'temporal-pattern-recognition': 'Temporal Pattern Recognition',
+        'trade-clustering-analysis': 'Trade Clustering Analysis',
+        'correlation-matrix-analysis': 'Multivariate Correlation Analysis',
+        'predictive-model': 'Predictive Performance Model',
+        'optimization-engine': 'Optimization Recommendation Engine',
+
+        // Correlation analysis
+        'sleep-caffeine-interaction': 'Sleep-Caffeine Interaction',
+        'stress-confidence-combo': 'Stress-Confidence Combination',
+        'time-psychology-cross': 'Time-Psychology Cross Analysis',
+        'environment-focus-correlation': 'Environment-Focus Correlation',
+        'correlation-coefficient': 'Correlation Coefficient',
+        'correlation-heatmap': 'Correlation Heatmap',
+
+        // Temporal patterns
+        'weekday-weekend-diff': 'Weekday vs Weekend Performance',
+        'monthly-seasonality': 'Monthly Seasonality Pattern',
+        'optimal-trading-days': 'Optimal Trading Days',
+        'consecutive-day-fatigue': 'Consecutive Day Fatigue Analysis',
+        'post-break-performance': 'Post-Break Performance',
+
+        // Clustering
+        'cluster-scalping': 'Quick Scalping (5-30 min)',
+        'cluster-swing': 'Swing Trades (30-120 min)',
+        'cluster-position': 'Position Trades (120+ min)',
+        'cluster-performance': 'Cluster Performance',
+        'optimal-cluster': 'Optimal Cluster',
+
+        // Predictive model
+        'win-prediction-model': 'Win/Loss Prediction Model',
+        'feature-importance-rank': 'Feature Importance Ranking',
+        'threshold-analysis': 'Threshold Analysis',
+        'real-time-probability': 'Real-time Probability',
+        'roc-curve': 'ROC Curve',
+        'prediction-accuracy': 'Prediction Accuracy',
+
+        // Optimization
+        'optimal-position-size-rec': 'Optimal Position Size',
+        'optimal-time-window': 'Optimal Time Window',
+        'optimal-psychology-state': 'Optimal Psychology State',
+        'what-if-scenario': 'What-If Scenario Analysis',
+        'expected-profit-range': 'Expected Profit Range',
+        'simulation-results': 'Simulation Results'
     },
     ko: {
         'dashboard': '대시보드',
@@ -1138,7 +1205,74 @@ const translations = {
         'worst-case': '최악의 경우',
         'pattern-match': '패턴 매칭',
         'historical-similarity': '과거 유사도',
-        'recommended-symbols': '추천 심볼'
+        'recommended-symbols': '추천 심볼',
+
+        // 추가 Hero Dashboard 번역
+        'hero-subtitle': '머신러닝과 행동 패턴 인식 기반 실시간 알고리즘 분석',
+        'quality-badge': '품질',
+        'prediction-badge': '예측',
+        'forecast-badge': '전망',
+        'hero-quality-label': '거래 품질 점수',
+        'hero-probability-label': '승률 확률',
+        'hero-forecast-label': '세션 예측',
+        'confidence-label': '신뢰도:',
+        'calculating-status': '계산 중...',
+        'trend-from-avg': '평균 대비',
+        'trend-vs-avg': '평균 대비',
+
+        // 로딩 및 상태 메시지
+        'loading-analysis': '특성 중요도 분석 로딩 중...',
+        'calculating-risk': '실시간 리스크 평가 계산 중...',
+        'analyzing-patterns': '거래 패턴 분석 중...',
+        'analyzing-market': '시장 상황 분석 중...',
+        'computing-stats': '통계적 유의성 계산 중...',
+        'generating-recs': '맞춤형 권장사항 생성 중...',
+        'insufficient-data-multi': '다변량 분석을 위한 데이터가 부족합니다. 심리 데이터가 있는 거래가 최소 10개 필요합니다.',
+
+        // 새로운 AI 분석 모듈 제목
+        'temporal-pattern-recognition': '시계열 패턴 인식',
+        'trade-clustering-analysis': '거래 군집 분석',
+        'correlation-matrix-analysis': '다변량 상관관계 분석',
+        'predictive-model': '예측 성과 모델',
+        'optimization-engine': '최적화 추천 엔진',
+
+        // 상관관계 분석
+        'sleep-caffeine-interaction': '수면-카페인 상호작용',
+        'stress-confidence-combo': '스트레스-자신감 조합',
+        'time-psychology-cross': '시간-심리 교차 분석',
+        'environment-focus-correlation': '환경-집중도 상관관계',
+        'correlation-coefficient': '상관계수',
+        'correlation-heatmap': '상관관계 히트맵',
+
+        // 시계열 패턴
+        'weekday-weekend-diff': '평일 vs 주말 성과',
+        'monthly-seasonality': '월별 계절성 패턴',
+        'optimal-trading-days': '최적 거래일',
+        'consecutive-day-fatigue': '연속 거래일 피로도 분석',
+        'post-break-performance': '휴식 후 성과',
+
+        // 군집 분석
+        'cluster-scalping': '빠른 스캘핑 (5-30분)',
+        'cluster-swing': '스윙 트레이드 (30-120분)',
+        'cluster-position': '포지션 트레이드 (120분+)',
+        'cluster-performance': '군집 성과',
+        'optimal-cluster': '최적 군집',
+
+        // 예측 모델
+        'win-prediction-model': '승/패 예측 모델',
+        'feature-importance-rank': '특성 중요도 순위',
+        'threshold-analysis': '임계값 분석',
+        'real-time-probability': '실시간 확률',
+        'roc-curve': 'ROC 곡선',
+        'prediction-accuracy': '예측 정확도',
+
+        // 최적화
+        'optimal-position-size-rec': '최적 포지션 크기',
+        'optimal-time-window': '최적 시간대',
+        'optimal-psychology-state': '최적 심리 상태',
+        'what-if-scenario': '만약 ~라면 시나리오 분석',
+        'expected-profit-range': '예상 수익 범위',
+        'simulation-results': '시뮬레이션 결과'
     }
 };
 
