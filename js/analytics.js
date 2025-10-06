@@ -1675,10 +1675,11 @@ function analyzeTimeBasedPerformance() {
 }
 
 /**
- * 연속 거래 패턴 분석
+ * Behavioral Intelligence Analysis (UNIFIED)
+ * Combines streak analysis with cognitive bias detection
  */
-function analyzeConsecutiveTradesPattern() {
-    // 연속 거래 패턴 분석
+function analyzeBehavioralIntelligence() {
+    // PART 1: Streak Performance Analysis
     const sortedTrades = [...trades].sort((a, b) => new Date(a.date + ' ' + (a.entryTime || '00:00')) - new Date(b.date + ' ' + (b.entryTime || '00:00')));
 
     const patterns = {
@@ -1713,7 +1714,7 @@ function analyzeConsecutiveTradesPattern() {
         }
     }
 
-    // 패턴 결과 업데이트
+    // Update UI - Streak Performance Metrics
     Object.entries(patterns).forEach(([key, values]) => {
         if (values.length > 0) {
             const winRate = (values.reduce((sum, val) => sum + val, 0) / values.length) * 100;
@@ -1725,6 +1726,59 @@ function analyzeConsecutiveTradesPattern() {
             }
         }
     });
+
+    // PART 2: Advanced Behavioral Pattern Detection
+    const behavioralPatterns = detectAdvancedBehavioralPatterns();
+
+    // Render detailed behavioral patterns
+    const container = document.getElementById('behavioralPatternsContent');
+    if (container && behavioralPatterns.length > 0) {
+        const html = behavioralPatterns.map(pattern => {
+            let severityColor, severityBg, severityIcon;
+
+            switch (pattern.severity) {
+                case 'danger':
+                    severityColor = '#ef4444';
+                    severityBg = 'rgba(239, 68, 68, 0.1)';
+                    severityIcon = '🚨';
+                    break;
+                case 'warning':
+                    severityColor = '#f59e0b';
+                    severityBg = 'rgba(245, 158, 11, 0.1)';
+                    severityIcon = '⚠️';
+                    break;
+                case 'good':
+                    severityColor = '#10b981';
+                    severityBg = 'rgba(16, 185, 129, 0.1)';
+                    severityIcon = '✅';
+                    break;
+                default:
+                    severityColor = '#3b82f6';
+                    severityBg = 'rgba(59, 130, 246, 0.1)';
+                    severityIcon = 'ℹ️';
+            }
+
+            return `
+                <div style="background: ${severityBg}; border-left: 4px solid ${severityColor}; padding: 20px; border-radius: 0 12px 12px 0; margin-bottom: 12px;">
+                    <div style="display: flex; align-items: start; gap: 12px;">
+                        <div style="font-size: 24px;">${severityIcon}</div>
+                        <div style="flex: 1;">
+                            <div style="color: #f8fafc; font-size: 15px; font-weight: 600; margin-bottom: 8px;">${pattern.title}</div>
+                            <div style="color: #cbd5e1; font-size: 13px; line-height: 1.6; margin-bottom: 8px;">${pattern.description}</div>
+                            ${pattern.actionable ? `
+                                <div style="background: rgba(15, 23, 42, 0.6); border-left: 2px solid ${severityColor}; padding: 10px 12px; border-radius: 6px; margin-top: 12px;">
+                                    <div style="color: ${severityColor}; font-size: 11px; font-weight: 600; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">${currentLanguage === 'ko' ? '권장 조치' : 'Recommended Action'}</div>
+                                    <div style="color: #e4e4e7; font-size: 13px;">${pattern.actionable}</div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        container.innerHTML = html;
+    }
 }
 
 /**
