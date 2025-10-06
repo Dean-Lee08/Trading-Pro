@@ -1541,11 +1541,11 @@ function updatePatternInsights() {
 }
 
 /**
- * 시간 기반 성과 분석
+ * 시간 기반 성과 분석 (Temporal Intelligence - UNIFIED)
  */
 function analyzeTimeBasedPerformance() {
+    // Hour Analysis
     const hourlyPerformance = {};
-
     trades.forEach(trade => {
         if (trade.entryTime) {
             const hour = parseInt(trade.entryTime.split(':')[0]);
@@ -1558,12 +1558,11 @@ function analyzeTimeBasedPerformance() {
         }
     });
 
-    // 최고/최악 시간대 찾기
     let bestHour = null, worstHour = null;
     let bestWinRate = 0, worstWinRate = 100;
 
     Object.entries(hourlyPerformance).forEach(([hour, data]) => {
-        if (data.total >= 3) { // 최소 3거래 이상
+        if (data.total >= 3) {
             const winRate = (data.wins / data.total) * 100;
             if (winRate > bestWinRate) {
                 bestWinRate = winRate;
@@ -1576,14 +1575,102 @@ function analyzeTimeBasedPerformance() {
         }
     });
 
-    if (bestHour) {
-        document.getElementById('bestTradingHour').textContent = `${bestHour}:00`;
-        document.getElementById('bestHourPerformance').textContent = `Win Rate: ${bestWinRate.toFixed(0)}%`;
+    // Update UI - Best/Worst Hour
+    const bestHourEl = document.getElementById('bestTradingHour');
+    const bestHourPerfEl = document.getElementById('bestHourPerformance');
+    const worstHourEl = document.getElementById('worstTradingHour');
+    const worstHourPerfEl = document.getElementById('worstHourPerformance');
+
+    if (bestHour && bestHourEl) {
+        bestHourEl.textContent = `${bestHour}:00`;
+        if (bestHourPerfEl) bestHourPerfEl.textContent = `${bestWinRate.toFixed(0)}% WR`;
     }
 
-    if (worstHour) {
-        document.getElementById('worstTradingHour').textContent = `${worstHour}:00`;
-        document.getElementById('worstHourPerformance').textContent = `Win Rate: ${worstWinRate.toFixed(0)}%`;
+    if (worstHour && worstHourEl) {
+        worstHourEl.textContent = `${worstHour}:00`;
+        if (worstHourPerfEl) worstHourPerfEl.textContent = `${worstWinRate.toFixed(0)}% WR`;
+    }
+
+    // Day of Week Analysis
+    const dayStats = Array(7).fill(null).map(() => ({ trades: [], wins: 0, total: 0 }));
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const dayNamesKo = ['일', '월', '화', '수', '목', '금', '토'];
+
+    trades.forEach(trade => {
+        const date = new Date(trade.date + 'T12:00:00');
+        const dayOfWeek = date.getDay();
+        dayStats[dayOfWeek].trades.push(trade);
+        dayStats[dayOfWeek].total++;
+        if (trade.pnl > 0) dayStats[dayOfWeek].wins++;
+    });
+
+    let bestDay = null, bestDayWinRate = 0;
+    dayStats.forEach((stats, day) => {
+        if (stats.total >= 3) {
+            const winRate = (stats.wins / stats.total) * 100;
+            if (winRate > bestDayWinRate) {
+                bestDayWinRate = winRate;
+                bestDay = day;
+            }
+        }
+    });
+
+    // Update UI - Best Day
+    const bestDayEl = document.getElementById('bestTradingDay');
+    const bestDayPerfEl = document.getElementById('bestDayPerformance');
+
+    if (bestDay !== null && bestDayEl) {
+        const dayName = currentLanguage === 'ko' ? dayNamesKo[bestDay] : dayNames[bestDay];
+        bestDayEl.textContent = dayName;
+        if (bestDayPerfEl) bestDayPerfEl.textContent = `${bestDayWinRate.toFixed(0)}% WR`;
+    }
+
+    // Fatigue Detection (Consecutive Trading Days)
+    const tradingDates = [...new Set(trades.map(t => t.date))].sort();
+    let consecutiveDays = 0;
+    let maxConsecutive = 0;
+
+    for (let i = 1; i < tradingDates.length; i++) {
+        const prevDate = new Date(tradingDates[i-1]);
+        const currDate = new Date(tradingDates[i]);
+        const dayDiff = (currDate - prevDate) / (1000 * 60 * 60 * 24);
+
+        if (dayDiff === 1) {
+            consecutiveDays++;
+            maxConsecutive = Math.max(maxConsecutive, consecutiveDays);
+        } else {
+            consecutiveDays = 0;
+        }
+    }
+
+    // Update UI - Fatigue Status
+    const fatigueEl = document.getElementById('fatigueIndicator');
+    const fatigueDetailEl = document.getElementById('fatigueDetail');
+
+    if (fatigueEl) {
+        if (maxConsecutive >= 5) {
+            fatigueEl.textContent = currentLanguage === 'ko' ? '높음' : 'HIGH';
+            fatigueEl.style.color = '#ef4444';
+            if (fatigueDetailEl) {
+                fatigueDetailEl.textContent = `${maxConsecutive} ${currentLanguage === 'ko' ? '일 연속' : 'days straight'}`;
+                fatigueDetailEl.classList.remove('positive');
+                fatigueDetailEl.classList.add('negative');
+            }
+        } else if (maxConsecutive >= 3) {
+            fatigueEl.textContent = currentLanguage === 'ko' ? '보통' : 'MODERATE';
+            fatigueEl.style.color = '#f59e0b';
+            if (fatigueDetailEl) {
+                fatigueDetailEl.textContent = `${maxConsecutive} ${currentLanguage === 'ko' ? '일 연속' : 'days straight'}`;
+            }
+        } else {
+            fatigueEl.textContent = currentLanguage === 'ko' ? '낮음' : 'LOW';
+            fatigueEl.style.color = '#10b981';
+            if (fatigueDetailEl) {
+                fatigueDetailEl.textContent = currentLanguage === 'ko' ? '충분한 휴식' : 'Well rested';
+                fatigueDetailEl.classList.remove('negative');
+                fatigueDetailEl.classList.add('positive');
+            }
+        }
     }
 }
 
