@@ -3,6 +3,25 @@
 // ==================== Analytics Section Management ====================
 
 /**
+ * Toggle Advanced Section Collapse
+ */
+function toggleAdvancedSection(sectionId) {
+    const content = document.getElementById(`${sectionId}-content`);
+    const toggle = document.getElementById(`${sectionId}-toggle`);
+    const btn = toggle.parentElement;
+
+    if (content.classList.contains('collapsed')) {
+        // Expand
+        content.classList.remove('collapsed');
+        btn.classList.remove('collapsed');
+    } else {
+        // Collapse
+        content.classList.add('collapsed');
+        btn.classList.add('collapsed');
+    }
+}
+
+/**
  * 분석 섹션 전환
  */
 function showAnalyticsSection(sectionName) {
