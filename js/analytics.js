@@ -1387,8 +1387,7 @@ function renderWeeklyHeatmap() {
  */
 function renderRiskGauge() {
     const riskValueEl = document.getElementById('riskValue');
-    const riskLabelEl = document.querySelector('.gauge-label');
-    const riskUpdatedEl = document.getElementById('riskUpdated');
+    const riskLabelEl = document.getElementById('riskLabel');
 
     if (!riskValueEl) return;
 
@@ -1417,13 +1416,10 @@ function renderRiskGauge() {
 
     riskValueEl.textContent = riskScore;
     riskValueEl.style.color = riskColor;
-    riskLabelEl.textContent = riskLabel;
-    riskLabelEl.setAttribute('data-lang', riskLabel === 'SAFE' ? 'safe-label' : (riskLabel === 'NEUTRAL' ? 'neutral-label' : 'high-risk-label'));
-
-    // Update timestamp
-    const now = new Date();
-    const timeStr = now.toLocaleTimeString(currentLanguage === 'ko' ? 'ko-KR' : 'en-US', { hour: '2-digit', minute: '2-digit' });
-    if (riskUpdatedEl) riskUpdatedEl.textContent = timeStr;
+    if (riskLabelEl) {
+        riskLabelEl.textContent = riskLabel;
+        riskLabelEl.setAttribute('data-lang', riskLabel === 'SAFE' ? 'safe-label' : (riskLabel === 'NEUTRAL' ? 'neutral-label' : 'high-risk-label'));
+    }
 }
 
 /**
