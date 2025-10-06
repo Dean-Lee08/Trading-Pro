@@ -1525,7 +1525,7 @@
 
                             <!-- ========== TIER 2: CORE ANALYTICS ========== -->
 
-                            <!-- Temporal Intelligence - UNIFIED -->
+                            <!-- Temporal Intelligence - COMPACT -->
                             <div class="analysis-section-glass card-reveal stagger-2" style="margin-bottom: 28px;">
                                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; cursor: pointer;" onclick="toggleAdvancedSection('temporalIntelligence')">
                                     <div style="display: flex; align-items: center; gap: 12px;">
@@ -1542,45 +1542,34 @@
                                     </div>
                                 </div>
                                 <div id="temporalIntelligence-content" class="section-content">
-                                    <!-- Primary Metrics Grid -->
-                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;">
-                                        <!-- Best Hour -->
-                                        <div class="glass-card hover-lift" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(5, 150, 105, 0.03)); border: 1px solid rgba(16, 185, 129, 0.2); padding: 20px; position: relative; overflow: hidden;">
-                                            <div style="position: absolute; top: -10px; right: -10px; font-size: 60px; opacity: 0.05;">🌟</div>
-                                            <div data-lang="best-hour" style="color: #6ee7b7; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 12px; text-transform: uppercase;">Best Hour</div>
-                                            <div id="bestTradingHour" style="color: #10b981; font-size: 28px; font-weight: 700; margin-bottom: 8px;">--:--</div>
-                                            <div id="bestHourPerformance" style="color: #cbd5e1; font-size: 13px;">--% WR</div>
+                                    <!-- Compact Metrics -->
+                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 16px;">
+                                        <div class="glass-card" style="padding: 12px; text-align: center;">
+                                            <div style="font-size: 18px; margin-bottom: 4px;">🌟</div>
+                                            <div data-lang="best-hour" style="color: #64748b; font-size: 10px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Best Hour</div>
+                                            <div id="bestTradingHour" style="color: #10b981; font-size: 20px; font-weight: 700;">--:--</div>
+                                            <div id="bestHourPerformance" style="color: #94a3b8; font-size: 11px; margin-top: 2px;">--% WR</div>
                                         </div>
-
-                                        <!-- Worst Hour -->
-                                        <div class="glass-card hover-lift" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.08), rgba(220, 38, 38, 0.03)); border: 1px solid rgba(239, 68, 68, 0.2); padding: 20px; position: relative; overflow: hidden;">
-                                            <div style="position: absolute; top: -10px; right: -10px; font-size: 60px; opacity: 0.05;">⚠️</div>
-                                            <div data-lang="worst-hour" style="color: #fca5a5; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 12px; text-transform: uppercase;">Worst Hour</div>
-                                            <div id="worstTradingHour" style="color: #ef4444; font-size: 28px; font-weight: 700; margin-bottom: 8px;">--:--</div>
-                                            <div id="worstHourPerformance" style="color: #cbd5e1; font-size: 13px;">--% WR</div>
+                                        <div class="glass-card" style="padding: 12px; text-align: center;">
+                                            <div style="font-size: 18px; margin-bottom: 4px;">⚠️</div>
+                                            <div data-lang="worst-hour" style="color: #64748b; font-size: 10px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Worst Hour</div>
+                                            <div id="worstTradingHour" style="color: #ef4444; font-size: 20px; font-weight: 700;">--:--</div>
+                                            <div id="worstHourPerformance" style="color: #94a3b8; font-size: 11px; margin-top: 2px;">--% WR</div>
                                         </div>
-
-                                        <!-- Best Day -->
-                                        <div class="glass-card hover-lift" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(37, 99, 235, 0.03)); border: 1px solid rgba(59, 130, 246, 0.2); padding: 20px; position: relative; overflow: hidden;">
-                                            <div style="position: absolute; top: -10px; right: -10px; font-size: 60px; opacity: 0.05;">📅</div>
-                                            <div data-lang="best-day" style="color: #93c5fd; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 12px; text-transform: uppercase;">Best Day</div>
-                                            <div id="bestTradingDay" style="color: #3b82f6; font-size: 28px; font-weight: 700; margin-bottom: 8px;">---</div>
-                                            <div id="bestDayPerformance" style="color: #cbd5e1; font-size: 13px;">--% WR</div>
+                                        <div class="glass-card" style="padding: 12px; text-align: center;">
+                                            <div style="font-size: 18px; margin-bottom: 4px;">📅</div>
+                                            <div data-lang="best-day" style="color: #64748b; font-size: 10px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Best Day</div>
+                                            <div id="bestTradingDay" style="color: #3b82f6; font-size: 20px; font-weight: 700;">---</div>
+                                            <div id="bestDayPerformance" style="color: #94a3b8; font-size: 11px; margin-top: 2px;">--% WR</div>
                                         </div>
-
-                                        <!-- Fatigue Indicator -->
-                                        <div class="glass-card hover-lift" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(217, 119, 6, 0.03)); border: 1px solid rgba(245, 158, 11, 0.2); padding: 20px; position: relative; overflow: hidden;">
-                                            <div style="position: absolute; top: -10px; right: -10px; font-size: 60px; opacity: 0.05;">⚡</div>
-                                            <div data-lang="fatigue-status" style="color: #fcd34d; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 12px; text-transform: uppercase;">Fatigue Status</div>
-                                            <div id="fatigueIndicator" style="color: #f59e0b; font-size: 28px; font-weight: 700; margin-bottom: 8px;">--</div>
-                                            <div id="fatigueDetail" style="color: #cbd5e1; font-size: 13px;">--</div>
+                                        <div class="glass-card" style="padding: 12px; text-align: center;">
+                                            <div style="font-size: 18px; margin-bottom: 4px;">⚡</div>
+                                            <div data-lang="fatigue-status" style="color: #64748b; font-size: 10px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">Fatigue</div>
+                                            <div id="fatigueIndicator" style="color: #f59e0b; font-size: 20px; font-weight: 700;">--</div>
+                                            <div id="fatigueDetail" style="color: #94a3b8; font-size: 11px; margin-top: 2px;">--</div>
                                         </div>
                                     </div>
-
-                                    <!-- Detailed Temporal Content -->
-                                    <div id="temporalPatternContent">
-                                        <!-- Will be populated by renderTemporalPatterns() -->
-                                    </div>
+                                    <div id="temporalPatternContent"></div>
                                 </div>
                             </div>
 
