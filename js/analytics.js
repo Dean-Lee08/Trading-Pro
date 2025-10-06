@@ -919,7 +919,7 @@ async function updateBasicChartsImpl() {
 /**
  * 고급 차트 업데이트
  */
-async function updateAdvancedCharts() {
+async function updateAdvancedChartsImpl() {
     const filteredTrades = getFilteredTradesForAnalytics();
 
     if (filteredTrades.length === 0) {
