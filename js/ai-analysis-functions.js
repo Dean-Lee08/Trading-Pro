@@ -421,6 +421,11 @@ function runMonteCarloSimulation(simulations, days) {
  * Analyzes interactions between multiple psychological and performance variables
  */
 function analyzeMultivariateCorrelations() {
+    // Check cache first
+    const cacheKey = `correlations_${trades.length}_${Object.keys(psychologyData).length}`;
+    const cached = analysisCache.get(cacheKey);
+    if (cached) return cached;
+
     if (trades.length < 20 || Object.keys(psychologyData).length < 10) return null;
 
     // Group trades by date and calculate daily metrics
