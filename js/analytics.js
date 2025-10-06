@@ -2,8 +2,41 @@
 
 // ==================== Analytics Section Management ====================
 
+// Analysis cache for performance optimization
+const analysisCache = {
+    data: {},
+    timestamps: {},
+    ttl: 60000, // 1 minute cache TTL
+
+    get(key) {
+        const now = Date.now();
+        if (this.data[key] && this.timestamps[key] && (now - this.timestamps[key]) < this.ttl) {
+            return this.data[key];
+        }
+        return null;
+    },
+
+    set(key, value) {
+        this.data[key] = value;
+        this.timestamps[key] = Date.now();
+    },
+
+    clear() {
+        this.data = {};
+        this.timestamps = {};
+    },
+
+    invalidate(key) {
+        delete this.data[key];
+        delete this.timestamps[key];
+    }
+};
+
+// Track which sections have been rendered
+const renderedSections = new Set();
+
 /**
- * Toggle Advanced Section Collapse
+ * Toggle Advanced Section Collapse with Lazy Loading
  */
 function toggleAdvancedSection(sectionId) {
     const content = document.getElementById(`${sectionId}-content`);
@@ -11,13 +44,44 @@ function toggleAdvancedSection(sectionId) {
     const btn = toggle.parentElement;
 
     if (content.classList.contains('collapsed')) {
-        // Expand
+        // Expand and lazy load if not rendered yet
         content.classList.remove('collapsed');
         btn.classList.remove('collapsed');
+
+        // Lazy render on first expand
+        if (!renderedSections.has(sectionId)) {
+            renderSectionLazy(sectionId);
+            renderedSections.add(sectionId);
+        }
     } else {
         // Collapse
         content.classList.add('collapsed');
         btn.classList.add('collapsed');
+    }
+}
+
+/**
+ * Lazy render individual section
+ */
+function renderSectionLazy(sectionId) {
+    const renderMap = {
+        'multiFactorAttribution': renderMultiFactorAttribution,
+        'predictiveRiskScore': renderPredictiveRiskScore,
+        'behavioralPatterns': renderBehavioralPatterns,
+        'marketIntelligence': renderMarketIntelligence,
+        'statisticalEdge': renderStatisticalEdge
+    };
+
+    const renderFn = renderMap[sectionId];
+    if (renderFn) {
+        // Show loading state
+        const element = document.getElementById(sectionId);
+        if (element) {
+            element.innerHTML = '<div style="text-align: center; padding: 20px; color: #64748b;">Loading...</div>';
+        }
+
+        // Render with slight delay for smooth animation
+        setTimeout(() => renderFn(), 50);
     }
 }
 
