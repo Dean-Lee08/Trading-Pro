@@ -1,5 +1,84 @@
 // ==================== ADDITIONAL AI ANALYSIS FUNCTIONS ====================
 
+// ========== Statistical Helper Functions ==========
+
+/**
+ * Calculate t-statistic for correlation coefficient
+ * Used to test statistical significance of correlations
+ */
+function calculateCorrelationSignificance(r, n) {
+    if (n < 3) return { tStat: 0, pValue: 1, significant: false };
+
+    // t-statistic: t = r * sqrt((n-2)/(1-r^2))
+    const tStat = r * Math.sqrt((n - 2) / (1 - r * r));
+
+    // Degrees of freedom
+    const df = n - 2;
+
+    // Approximate p-value using t-distribution
+    // For simplicity, using two-tailed test
+    const pValue = approximateTDistribution(Math.abs(tStat), df);
+
+    return {
+        tStat: tStat,
+        pValue: pValue * 2, // two-tailed
+        significant: pValue * 2 < 0.05,
+        confidenceLevel: pValue * 2 < 0.01 ? '99%' : pValue * 2 < 0.05 ? '95%' : 'Not significant'
+    };
+}
+
+/**
+ * Approximate p-value from t-distribution
+ * Using simplified approximation for browser environment
+ */
+function approximateTDistribution(t, df) {
+    // Simplified approximation using normal distribution for large df
+    if (df > 30) {
+        return approximateNormalCDF(t);
+    }
+
+    // For smaller df, use rough approximation
+    const x = df / (df + t * t);
+    return Math.pow(x, df / 2) / 2;
+}
+
+/**
+ * Approximate cumulative normal distribution
+ */
+function approximateNormalCDF(z) {
+    const t = 1 / (1 + 0.2316419 * Math.abs(z));
+    const d = 0.3989423 * Math.exp(-z * z / 2);
+    const prob = d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
+    return z > 0 ? 1 - prob : prob;
+}
+
+/**
+ * Calculate confidence interval for correlation
+ */
+function calculateCorrelationCI(r, n, confidenceLevel = 0.95) {
+    if (n < 3) return { lower: 0, upper: 0 };
+
+    // Fisher z-transformation
+    const z = 0.5 * Math.log((1 + r) / (1 - r));
+    const se = 1 / Math.sqrt(n - 3);
+
+    // Z-score for confidence level
+    const zScore = confidenceLevel === 0.99 ? 2.576 : 1.96; // 99% or 95%
+
+    // Confidence interval in z-space
+    const zLower = z - zScore * se;
+    const zUpper = z + zScore * se;
+
+    // Transform back to correlation space
+    const rLower = (Math.exp(2 * zLower) - 1) / (Math.exp(2 * zLower) + 1);
+    const rUpper = (Math.exp(2 * zUpper) - 1) / (Math.exp(2 * zUpper) + 1);
+
+    return {
+        lower: rLower,
+        upper: rUpper
+    };
+}
+
 /**
  * Phase 2: Behavioral Bias Detection
  * Detects cognitive biases in trading behavior
