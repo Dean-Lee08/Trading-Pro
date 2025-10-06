@@ -1433,15 +1433,15 @@
                                         <div class="card-glow performance-glow"></div>
                                         <div class="metric-header">
                                             <div class="metric-icon">💰</div>
-                                            <div class="metric-badge">FORECAST</div>
+                                            <div class="metric-badge" data-lang="forecast-badge">FORECAST</div>
                                         </div>
                                         <div class="metric-value-container">
                                             <div class="metric-value-large" id="heroForecastValue">$--</div>
                                         </div>
-                                        <div class="metric-label">Session Prediction</div>
+                                        <div class="metric-label" data-lang="hero-forecast-label">Session Prediction</div>
                                         <div class="metric-trend" id="heroForecastTrend">
                                             <span class="trend-icon">▲</span>
-                                            <span class="trend-value">--% vs avg</span>
+                                            <span class="trend-value"><span data-lang="trend-vs-avg">vs avg</span></span>
                                         </div>
                                         <div class="sparkline-container">
                                             <canvas id="heroSparkline" width="200" height="40"></canvas>
@@ -1452,16 +1452,16 @@
                                 <div class="hero-actions">
                                     <button class="action-btn primary-action" onclick="triggerAnalysis()">
                                         <span class="btn-icon">⚡</span>
-                                        <span class="btn-text">Analyze Now</span>
+                                        <span class="btn-text" data-lang="hero-analyze-now">Analyze Now</span>
                                         <div class="btn-shimmer"></div>
                                     </button>
                                     <button class="action-btn secondary-action" onclick="showPredictionDetails()">
                                         <span class="btn-icon">🔮</span>
-                                        <span class="btn-text">Predict Session</span>
+                                        <span class="btn-text" data-lang="hero-predict-session">Predict Session</span>
                                     </button>
                                     <button class="action-btn outline-action" onclick="exportAnalysisReport()">
                                         <span class="btn-icon">📤</span>
-                                        <span class="btn-text">Export Report</span>
+                                        <span class="btn-text" data-lang="hero-export-report">Export Report</span>
                                     </button>
                                 </div>
                             </div>
