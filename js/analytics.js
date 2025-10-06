@@ -1306,6 +1306,10 @@ async function updateAdvancedChartsImpl() {
     });
 }
 
+// Create debounced versions of chart update functions
+const updateBasicCharts = debounce(updateBasicChartsImpl, 300);
+const updateAdvancedCharts = debounce(updateAdvancedChartsImpl, 300);
+
 
 // ==================== Algorithmic Analysis ====================
 
