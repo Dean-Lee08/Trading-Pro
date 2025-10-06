@@ -1161,7 +1161,12 @@ function updateAlgorithmicAnalysis() {
     analyzeConsecutiveTradesPattern();
     generateAIInsights();
 
-    // New algorithmic analysis modules
+    // NEW: Phase 1 - Core AI Analysis Modules
+    renderCorrelationMatrix();
+    renderTemporalPatterns();
+    renderClusterAnalysis();
+
+    // Phase 2: Advanced algorithmic analysis modules
     renderMultiFactorAttribution();
     renderPredictiveRiskScore();
     renderBehavioralPatterns();
