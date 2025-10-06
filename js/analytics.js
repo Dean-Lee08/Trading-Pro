@@ -1300,6 +1300,10 @@ async function updateAdvancedCharts() {
  * 알고리즘 분석 업데이트 (Palantir-style comprehensive analysis)
  */
 function updateAlgorithmicAnalysis() {
+    // Clear cache when data updates
+    analysisCache.clear();
+    renderedSections.clear();
+
     // Update Hero Dashboard first
     if (typeof updateHeroDashboard === 'function') {
         updateHeroDashboard();
@@ -1310,17 +1314,14 @@ function updateAlgorithmicAnalysis() {
     analyzeConsecutiveTradesPattern();
     generateAIInsights();
 
-    // NEW: Phase 1 - Core AI Analysis Modules
+    // NEW: Phase 1 - Core AI Analysis Modules (always visible)
     renderCorrelationMatrix();
     renderTemporalPatterns();
     renderClusterAnalysis();
 
-    // Phase 2: Advanced algorithmic analysis modules
-    renderMultiFactorAttribution();
-    renderPredictiveRiskScore();
-    renderBehavioralPatterns();
-    renderMarketIntelligence();
-    renderStatisticalEdge();
+    // Phase 2: Advanced algorithmic analysis modules (lazy loaded)
+    // These will be rendered only when sections are expanded
+    // Just render the merged AI Insights section
     renderAdaptiveRecommendations();
 }
 
