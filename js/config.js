@@ -1208,6 +1208,7 @@ const translations = {
         'recommended-symbols': '추천 심볼',
 
         // 추가 Hero Dashboard 번역
+        'trading-intelligence-center': 'Trading Intelligence Center',
         'hero-subtitle': '머신러닝과 행동 패턴 인식 기반 실시간 알고리즘 분석',
         'quality-badge': '품질',
         'prediction-badge': '예측',
