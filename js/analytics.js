@@ -2,102 +2,6 @@
 
 // ==================== Analytics Section Management ====================
 
-// Debounce utility for performance optimization
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
-// Analysis cache for performance optimization
-const analysisCache = {
-    data: {},
-    timestamps: {},
-    ttl: 60000, // 1 minute cache TTL
-
-    get(key) {
-        const now = Date.now();
-        if (this.data[key] && this.timestamps[key] && (now - this.timestamps[key]) < this.ttl) {
-            return this.data[key];
-        }
-        return null;
-    },
-
-    set(key, value) {
-        this.data[key] = value;
-        this.timestamps[key] = Date.now();
-    },
-
-    clear() {
-        this.data = {};
-        this.timestamps = {};
-    },
-
-    invalidate(key) {
-        delete this.data[key];
-        delete this.timestamps[key];
-    }
-};
-
-// Track which sections have been rendered
-const renderedSections = new Set();
-
-/**
- * Toggle Advanced Section Collapse with Lazy Loading
- */
-function toggleAdvancedSection(sectionId) {
-    const content = document.getElementById(`${sectionId}-content`);
-    const toggle = document.getElementById(`${sectionId}-toggle`);
-    const btn = toggle.parentElement;
-
-    if (content.classList.contains('collapsed')) {
-        // Expand and lazy load if not rendered yet
-        content.classList.remove('collapsed');
-        btn.classList.remove('collapsed');
-
-        // Lazy render on first expand
-        if (!renderedSections.has(sectionId)) {
-            renderSectionLazy(sectionId);
-            renderedSections.add(sectionId);
-        }
-    } else {
-        // Collapse
-        content.classList.add('collapsed');
-        btn.classList.add('collapsed');
-    }
-}
-
-/**
- * Lazy render individual section
- */
-function renderSectionLazy(sectionId) {
-    const renderMap = {
-        'multiFactorAttribution': renderMultiFactorAttribution,
-        'predictiveRiskScore': renderPredictiveRiskScore,
-        'behavioralPatterns': renderBehavioralPatterns,
-        'marketIntelligence': renderMarketIntelligence,
-        'statisticalEdge': renderStatisticalEdge
-    };
-
-    const renderFn = renderMap[sectionId];
-    if (renderFn) {
-        // Show loading state
-        const element = document.getElementById(sectionId);
-        if (element) {
-            element.innerHTML = '<div style="text-align: center; padding: 20px; color: #64748b;">Loading...</div>';
-        }
-
-        // Render with slight delay for smooth animation
-        setTimeout(() => renderFn(), 50);
-    }
-}
-
 /**
  * 분석 섹션 전환
  */
@@ -173,72 +77,6 @@ function refreshAnalyticsData() {
     marketDataFilterState = null;
     updateDetailedAnalytics();
     showToast(currentLanguage === 'ko' ? '분석 데이터 새로고침 완료' : 'Analytics data refreshed');
-}
-
-/**
- * Export all analysis data to JSON
- */
-function exportAnalysisData() {
-    try {
-        // Collect all analysis results
-        const exportData = {
-            timestamp: new Date().toISOString(),
-            dateRange: {
-                start: analyticsStartDate || 'all',
-                end: analyticsEndDate || 'all'
-            },
-            trades: filteredTrades,
-            statistics: {
-                totalTrades: filteredTrades.length,
-                netProfit: filteredTrades.reduce((sum, t) => sum + t.pnl, 0),
-                winRate: filteredTrades.length > 0
-                    ? (filteredTrades.filter(t => t.pnl > 0).length / filteredTrades.length * 100)
-                    : 0,
-                avgProfit: calculateAverageProfit(),
-                profitFactor: calculateProfitFactor()
-            },
-            correlationAnalysis: analyzeMultivariateCorrelations ? analyzeMultivariateCorrelations() : null,
-            temporalPatterns: detectTemporalPatterns ? detectTemporalPatterns() : null,
-            clusterAnalysis: performTradeClustering ? performTradeClustering() : null,
-            multiFactorAttribution: calculateFeatureImportance ? calculateFeatureImportance() : null,
-            predictiveRisk: computePredictiveRiskScore ? computePredictiveRiskScore() : null,
-            behavioralPatterns: detectAdvancedBehavioralPatterns ? detectAdvancedBehavioralPatterns() : null,
-            statisticalEdge: calculateStatisticalEdge ? calculateStatisticalEdge() : null,
-            recommendations: generateAdaptiveRecommendations ? generateAdaptiveRecommendations() : null
-        };
-
-        // Create downloadable file
-        const dataStr = JSON.stringify(exportData, null, 2);
-        const dataBlob = new Blob([dataStr], { type: 'application/json' });
-        const url = URL.createObjectURL(dataBlob);
-
-        const link = document.createElement('a');
-        link.href = url;
-        const filename = `trading-analysis-${new Date().toISOString().split('T')[0]}.json`;
-        link.download = filename;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-
-        showToast(currentLanguage === 'ko' ? '분석 데이터 내보내기 완료' : 'Analysis data exported successfully');
-    } catch (error) {
-        console.error('Export error:', error);
-        showToast(currentLanguage === 'ko' ? '내보내기 실패' : 'Export failed', 'error');
-    }
-}
-
-function calculateAverageProfit() {
-    const winningTrades = filteredTrades.filter(t => t.pnl > 0);
-    return winningTrades.length > 0
-        ? winningTrades.reduce((sum, t) => sum + t.pnl, 0) / winningTrades.length
-        : 0;
-}
-
-function calculateProfitFactor() {
-    const grossProfit = filteredTrades.filter(t => t.pnl > 0).reduce((sum, t) => sum + t.pnl, 0);
-    const grossLoss = Math.abs(filteredTrades.filter(t => t.pnl < 0).reduce((sum, t) => sum + t.pnl, 0));
-    return grossLoss > 0 ? grossProfit / grossLoss : 0;
 }
 
 /**
@@ -781,9 +619,9 @@ function resetDetailedAnalyticsDisplay() {
 // ==================== Basic Charts (Detail Section) ====================
 
 /**
- * 기본 차트 업데이트 (internal implementation)
+ * 기본 차트 업데이트
  */
-async function updateBasicChartsImpl() {
+async function updateBasicCharts() {
     const filteredTrades = getFilteredTradesForAnalytics();
 
     if (filteredTrades.length === 0) {
@@ -919,7 +757,7 @@ async function updateBasicChartsImpl() {
 /**
  * 고급 차트 업데이트
  */
-async function updateAdvancedChartsImpl() {
+async function updateAdvancedCharts() {
     const filteredTrades = getFilteredTradesForAnalytics();
 
     if (filteredTrades.length === 0) {
@@ -1306,222 +1144,34 @@ async function updateAdvancedChartsImpl() {
     });
 }
 
-// Create debounced versions of chart update functions
-const updateBasicCharts = debounce(updateBasicChartsImpl, 300);
-const updateAdvancedCharts = debounce(updateAdvancedChartsImpl, 300);
-
 
 // ==================== Algorithmic Analysis ====================
-
-/**
- * Render Executive Summary Dashboard (Tier 1)
- */
-function renderExecutiveSummary() {
-    // Weekly Heatmap
-    renderWeeklyHeatmap();
-
-    // Risk Gauge
-    renderRiskGauge();
-
-    // Top 3 Insights
-    renderTopInsights();
-}
-
-/**
- * Weekly Performance Heatmap
- */
-function renderWeeklyHeatmap() {
-    const heatmapContainer = document.getElementById('weeklyHeatmap');
-    if (!heatmapContainer) return;
-
-    // Group trades by day of week
-    const dayStats = Array(7).fill(null).map(() => ({ trades: [], wins: 0, total: 0 }));
-
-    trades.forEach(trade => {
-        const date = new Date(trade.date + 'T12:00:00');
-        const dayOfWeek = date.getDay();
-        dayStats[dayOfWeek].trades.push(trade);
-        dayStats[dayOfWeek].total++;
-        if (trade.pnl > 0) dayStats[dayOfWeek].wins++;
-    });
-
-    // Calculate win rates and generate cells
-    const html = dayStats.map((stats, day) => {
-        if (stats.total === 0) {
-            return `<div class="heatmap-cell" style="background: rgba(100, 116, 139, 0.1); color: #64748b;">-</div>`;
-        }
-
-        const winRate = (stats.wins / stats.total) * 100;
-        const totalPnL = stats.trades.reduce((sum, t) => sum + t.pnl, 0);
-
-        // Color based on win rate
-        let bgColor, textColor;
-        if (winRate >= 60) {
-            bgColor = `rgba(16, 185, 129, ${0.2 + (winRate - 60) / 100})`;
-            textColor = '#10b981';
-        } else if (winRate >= 50) {
-            bgColor = `rgba(245, 158, 11, ${0.2 + (winRate - 50) / 100})`;
-            textColor = '#f59e0b';
-        } else {
-            bgColor = `rgba(239, 68, 68, ${0.2 + (50 - winRate) / 100})`;
-            textColor = '#ef4444';
-        }
-
-        const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-        const tooltip = `${dayNames[day]}: ${winRate.toFixed(0)}% WR | $${totalPnL.toFixed(0)}`;
-
-        return `
-            <div class="heatmap-cell"
-                 style="background: ${bgColor}; color: ${textColor}; font-weight: 700;"
-                 data-tooltip="${tooltip}">
-                ${winRate.toFixed(0)}%
-            </div>
-        `;
-    }).join('');
-
-    heatmapContainer.innerHTML = html;
-}
-
-/**
- * Risk Gauge (Predictive Risk Score)
- */
-function renderRiskGauge() {
-    const riskValueEl = document.getElementById('riskValue');
-    const riskLabelEl = document.getElementById('riskLabel');
-
-    if (!riskValueEl) return;
-
-    // Get risk score from predictive risk calculation
-    let riskScore = 85; // Default
-    let riskLabel = 'SAFE';
-    let riskColor = '#10b981';
-
-    if (typeof computePredictiveRiskScore === 'function') {
-        const score = computePredictiveRiskScore();
-        if (score && score.overall !== null) {
-            riskScore = score.overall;
-
-            if (riskScore >= 70) {
-                riskLabel = currentLanguage === 'ko' ? '안전' : 'SAFE';
-                riskColor = '#10b981';
-            } else if (riskScore >= 50) {
-                riskLabel = currentLanguage === 'ko' ? '보통' : 'NEUTRAL';
-                riskColor = '#f59e0b';
-            } else {
-                riskLabel = currentLanguage === 'ko' ? '위험' : 'HIGH RISK';
-                riskColor = '#ef4444';
-            }
-        }
-    }
-
-    riskValueEl.textContent = riskScore;
-    riskValueEl.style.color = riskColor;
-    if (riskLabelEl) {
-        riskLabelEl.textContent = riskLabel;
-        riskLabelEl.setAttribute('data-lang', riskLabel === 'SAFE' ? 'safe-label' : (riskLabel === 'NEUTRAL' ? 'neutral-label' : 'high-risk-label'));
-    }
-}
-
-/**
- * Top 3 AI Insights
- */
-function renderTopInsights() {
-    const container = document.getElementById('topInsightsList');
-    if (!container) return;
-
-    // Get all insights from AI analysis (would be generated by generateAIInsights)
-    // For now, get top 3 high-priority insights
-    const insights = [];
-
-    // Check for high-priority conditions
-    // 1. Consecutive Loss Warning
-    const consecutiveData = getConsecutiveLossPattern();
-    if (consecutiveData && consecutiveData.after3Losses < 45) {
-        insights.push({
-            priority: 'high',
-            icon: '🚨',
-            title: currentLanguage === 'ko' ? '연속 손실 패턴 감지' : 'Consecutive Loss Pattern',
-            description: currentLanguage === 'ko' ?
-                `3연속 손실 후 승률 ${consecutiveData.after3Losses.toFixed(0)}%로 급감` :
-                `Win rate drops to ${consecutiveData.after3Losses.toFixed(0)}% after 3 losses`
-        });
-    }
-
-    // 2. Low Focus Risk
-    if (Object.keys(psychologyData).length >= 5) {
-        const lowFocusDays = Object.values(psychologyData).filter(d => d.focus && d.focus <= 2);
-        if (lowFocusDays.length >= 3) {
-            insights.push({
-                priority: 'medium',
-                icon: '⚠️',
-                title: currentLanguage === 'ko' ? '집중력 관리 필요' : 'Focus Management Needed',
-                description: currentLanguage === 'ko' ?
-                    `낮은 집중력 상태에서 거래 빈도가 높습니다` :
-                    `High trading frequency with low focus detected`
-            });
-        }
-    }
-
-    // 3. Optimal Conditions Found
-    const optimalCond = identifyOptimalConditions();
-    if (optimalCond && optimalCond.optimal) {
-        insights.push({
-            priority: 'low',
-            icon: '💡',
-            title: currentLanguage === 'ko' ? '최적 조건 발견' : 'Optimal Conditions Found',
-            description: currentLanguage === 'ko' ?
-                `수면 ${optimalCond.optimal.sleepRange.min.toFixed(1)}-${optimalCond.optimal.sleepRange.max.toFixed(1)}시간에서 최고 성과` :
-                `Best performance at ${optimalCond.optimal.sleepRange.min.toFixed(1)}-${optimalCond.optimal.sleepRange.max.toFixed(1)}hrs sleep`
-        });
-    }
-
-    // Render top insight (compact mode - only show #1)
-    if (insights.length === 0) {
-        container.innerHTML = `<span data-lang="collecting-insights" style="color: #64748b; font-size: 12px;">Collecting data...</span>`;
-        return;
-    }
-
-    const topInsight = insights[0];
-    container.innerHTML = `
-        <div style="display: flex; align-items: start; gap: 8px;">
-            <div style="font-size: 16px; flex-shrink: 0;">${topInsight.icon}</div>
-            <div style="flex: 1;">
-                <div style="color: #e4e4e7; font-size: 12px; font-weight: 600; margin-bottom: 4px;">${topInsight.title}</div>
-                <div style="color: #94a3b8; font-size: 11px; line-height: 1.4;">${topInsight.description}</div>
-            </div>
-        </div>
-    `;
-}
 
 /**
  * 알고리즘 분석 업데이트 (Palantir-style comprehensive analysis)
  */
 function updateAlgorithmicAnalysis() {
-    // Clear cache when data updates
-    analysisCache.clear();
-    renderedSections.clear();
-
     // Update Hero Dashboard first
     if (typeof updateHeroDashboard === 'function') {
         updateHeroDashboard();
     }
 
-    // TIER 1: Executive Summary (always render)
-    renderExecutiveSummary();
-
-    // Core Analytics (Tier 2)
+    // Original pattern insights (preserved)
     analyzeTimeBasedPerformance();
-    analyzeBehavioralIntelligence();
+    analyzeConsecutiveTradesPattern();
     generateAIInsights();
 
-    // NEW: Phase 1 - Core AI Analysis Modules (always visible)
+    // NEW: Phase 1 - Core AI Analysis Modules
     renderCorrelationMatrix();
     renderTemporalPatterns();
     renderClusterAnalysis();
 
-    // Phase 2: Advanced algorithmic analysis modules (lazy loaded)
-    // These will be rendered only when sections are expanded
-    // Just render the merged AI Insights section
+    // Phase 2: Advanced algorithmic analysis modules
+    renderMultiFactorAttribution();
+    renderPredictiveRiskScore();
+    renderBehavioralPatterns();
+    renderMarketIntelligence();
+    renderStatisticalEdge();
     renderAdaptiveRecommendations();
 }
 
@@ -1533,11 +1183,11 @@ function updatePatternInsights() {
 }
 
 /**
- * 시간 기반 성과 분석 (Temporal Intelligence - UNIFIED)
+ * 시간 기반 성과 분석
  */
 function analyzeTimeBasedPerformance() {
-    // Hour Analysis
     const hourlyPerformance = {};
+
     trades.forEach(trade => {
         if (trade.entryTime) {
             const hour = parseInt(trade.entryTime.split(':')[0]);
@@ -1550,11 +1200,12 @@ function analyzeTimeBasedPerformance() {
         }
     });
 
+    // 최고/최악 시간대 찾기
     let bestHour = null, worstHour = null;
     let bestWinRate = 0, worstWinRate = 100;
 
     Object.entries(hourlyPerformance).forEach(([hour, data]) => {
-        if (data.total >= 3) {
+        if (data.total >= 3) { // 최소 3거래 이상
             const winRate = (data.wins / data.total) * 100;
             if (winRate > bestWinRate) {
                 bestWinRate = winRate;
@@ -1567,111 +1218,22 @@ function analyzeTimeBasedPerformance() {
         }
     });
 
-    // Update UI - Best/Worst Hour
-    const bestHourEl = document.getElementById('bestTradingHour');
-    const bestHourPerfEl = document.getElementById('bestHourPerformance');
-    const worstHourEl = document.getElementById('worstTradingHour');
-    const worstHourPerfEl = document.getElementById('worstHourPerformance');
-
-    if (bestHour && bestHourEl) {
-        bestHourEl.textContent = `${bestHour}:00`;
-        if (bestHourPerfEl) bestHourPerfEl.textContent = `${bestWinRate.toFixed(0)}% WR`;
+    if (bestHour) {
+        document.getElementById('bestTradingHour').textContent = `${bestHour}:00`;
+        document.getElementById('bestHourPerformance').textContent = `Win Rate: ${bestWinRate.toFixed(0)}%`;
     }
 
-    if (worstHour && worstHourEl) {
-        worstHourEl.textContent = `${worstHour}:00`;
-        if (worstHourPerfEl) worstHourPerfEl.textContent = `${worstWinRate.toFixed(0)}% WR`;
-    }
-
-    // Day of Week Analysis
-    const dayStats = Array(7).fill(null).map(() => ({ trades: [], wins: 0, total: 0 }));
-    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    const dayNamesKo = ['일', '월', '화', '수', '목', '금', '토'];
-
-    trades.forEach(trade => {
-        const date = new Date(trade.date + 'T12:00:00');
-        const dayOfWeek = date.getDay();
-        dayStats[dayOfWeek].trades.push(trade);
-        dayStats[dayOfWeek].total++;
-        if (trade.pnl > 0) dayStats[dayOfWeek].wins++;
-    });
-
-    let bestDay = null, bestDayWinRate = 0;
-    dayStats.forEach((stats, day) => {
-        if (stats.total >= 3) {
-            const winRate = (stats.wins / stats.total) * 100;
-            if (winRate > bestDayWinRate) {
-                bestDayWinRate = winRate;
-                bestDay = day;
-            }
-        }
-    });
-
-    // Update UI - Best Day
-    const bestDayEl = document.getElementById('bestTradingDay');
-    const bestDayPerfEl = document.getElementById('bestDayPerformance');
-
-    if (bestDay !== null && bestDayEl) {
-        const dayName = currentLanguage === 'ko' ? dayNamesKo[bestDay] : dayNames[bestDay];
-        bestDayEl.textContent = dayName;
-        if (bestDayPerfEl) bestDayPerfEl.textContent = `${bestDayWinRate.toFixed(0)}% WR`;
-    }
-
-    // Fatigue Detection (Consecutive Trading Days)
-    const tradingDates = [...new Set(trades.map(t => t.date))].sort();
-    let consecutiveDays = 0;
-    let maxConsecutive = 0;
-
-    for (let i = 1; i < tradingDates.length; i++) {
-        const prevDate = new Date(tradingDates[i-1]);
-        const currDate = new Date(tradingDates[i]);
-        const dayDiff = (currDate - prevDate) / (1000 * 60 * 60 * 24);
-
-        if (dayDiff === 1) {
-            consecutiveDays++;
-            maxConsecutive = Math.max(maxConsecutive, consecutiveDays);
-        } else {
-            consecutiveDays = 0;
-        }
-    }
-
-    // Update UI - Fatigue Status
-    const fatigueEl = document.getElementById('fatigueIndicator');
-    const fatigueDetailEl = document.getElementById('fatigueDetail');
-
-    if (fatigueEl) {
-        if (maxConsecutive >= 5) {
-            fatigueEl.textContent = currentLanguage === 'ko' ? '높음' : 'HIGH';
-            fatigueEl.style.color = '#ef4444';
-            if (fatigueDetailEl) {
-                fatigueDetailEl.textContent = `${maxConsecutive} ${currentLanguage === 'ko' ? '일 연속' : 'days straight'}`;
-                fatigueDetailEl.classList.remove('positive');
-                fatigueDetailEl.classList.add('negative');
-            }
-        } else if (maxConsecutive >= 3) {
-            fatigueEl.textContent = currentLanguage === 'ko' ? '보통' : 'MODERATE';
-            fatigueEl.style.color = '#f59e0b';
-            if (fatigueDetailEl) {
-                fatigueDetailEl.textContent = `${maxConsecutive} ${currentLanguage === 'ko' ? '일 연속' : 'days straight'}`;
-            }
-        } else {
-            fatigueEl.textContent = currentLanguage === 'ko' ? '낮음' : 'LOW';
-            fatigueEl.style.color = '#10b981';
-            if (fatigueDetailEl) {
-                fatigueDetailEl.textContent = currentLanguage === 'ko' ? '충분한 휴식' : 'Well rested';
-                fatigueDetailEl.classList.remove('negative');
-                fatigueDetailEl.classList.add('positive');
-            }
-        }
+    if (worstHour) {
+        document.getElementById('worstTradingHour').textContent = `${worstHour}:00`;
+        document.getElementById('worstHourPerformance').textContent = `Win Rate: ${worstWinRate.toFixed(0)}%`;
     }
 }
 
 /**
- * Behavioral Intelligence Analysis (UNIFIED)
- * Combines streak analysis with cognitive bias detection
+ * 연속 거래 패턴 분석
  */
-function analyzeBehavioralIntelligence() {
-    // PART 1: Streak Performance Analysis
+function analyzeConsecutiveTradesPattern() {
+    // 연속 거래 패턴 분석
     const sortedTrades = [...trades].sort((a, b) => new Date(a.date + ' ' + (a.entryTime || '00:00')) - new Date(b.date + ' ' + (b.entryTime || '00:00')));
 
     const patterns = {
@@ -1706,7 +1268,7 @@ function analyzeBehavioralIntelligence() {
         }
     }
 
-    // Update UI - Streak Performance Metrics
+    // 패턴 결과 업데이트
     Object.entries(patterns).forEach(([key, values]) => {
         if (values.length > 0) {
             const winRate = (values.reduce((sum, val) => sum + val, 0) / values.length) * 100;
@@ -1718,59 +1280,6 @@ function analyzeBehavioralIntelligence() {
             }
         }
     });
-
-    // PART 2: Advanced Behavioral Pattern Detection
-    const behavioralPatterns = detectAdvancedBehavioralPatterns();
-
-    // Render detailed behavioral patterns
-    const container = document.getElementById('behavioralPatternsContent');
-    if (container && behavioralPatterns.length > 0) {
-        const html = behavioralPatterns.map(pattern => {
-            let severityColor, severityBg, severityIcon;
-
-            switch (pattern.severity) {
-                case 'danger':
-                    severityColor = '#ef4444';
-                    severityBg = 'rgba(239, 68, 68, 0.1)';
-                    severityIcon = '🚨';
-                    break;
-                case 'warning':
-                    severityColor = '#f59e0b';
-                    severityBg = 'rgba(245, 158, 11, 0.1)';
-                    severityIcon = '⚠️';
-                    break;
-                case 'good':
-                    severityColor = '#10b981';
-                    severityBg = 'rgba(16, 185, 129, 0.1)';
-                    severityIcon = '✅';
-                    break;
-                default:
-                    severityColor = '#3b82f6';
-                    severityBg = 'rgba(59, 130, 246, 0.1)';
-                    severityIcon = 'ℹ️';
-            }
-
-            return `
-                <div style="background: ${severityBg}; border-left: 4px solid ${severityColor}; padding: 20px; border-radius: 0 12px 12px 0; margin-bottom: 12px;">
-                    <div style="display: flex; align-items: start; gap: 12px;">
-                        <div style="font-size: 24px;">${severityIcon}</div>
-                        <div style="flex: 1;">
-                            <div style="color: #f8fafc; font-size: 15px; font-weight: 600; margin-bottom: 8px;">${pattern.title}</div>
-                            <div style="color: #cbd5e1; font-size: 13px; line-height: 1.6; margin-bottom: 8px;">${pattern.description}</div>
-                            ${pattern.actionable ? `
-                                <div style="background: rgba(15, 23, 42, 0.6); border-left: 2px solid ${severityColor}; padding: 10px 12px; border-radius: 6px; margin-top: 12px;">
-                                    <div style="color: ${severityColor}; font-size: 11px; font-weight: 600; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">${currentLanguage === 'ko' ? '권장 조치' : 'Recommended Action'}</div>
-                                    <div style="color: #e4e4e7; font-size: 13px;">${pattern.actionable}</div>
-                                </div>
-                            ` : ''}
-                        </div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-
-        container.innerHTML = html;
-    }
 }
 
 /**
@@ -3872,80 +3381,37 @@ function renderBehavioralPatterns() {
 
     if (patterns.length === 0) {
         element.innerHTML = `
-            <div style="background: rgba(15, 23, 42, 0.5); text-align: center; padding: 30px; border-radius: 10px; border: 1px solid rgba(100, 116, 139, 0.2);">
-                <div style="color: #64748b; font-size: 14px;" data-lang="no-behavioral-patterns">
-                    No significant behavioral patterns detected yet. Continue trading to build pattern data.
-                </div>
+            <div style="color: #64748b; text-align: center; padding: 20px;">
+                No significant behavioral patterns detected yet. Continue trading to build pattern data.
             </div>
         `;
         return;
     }
 
-    // Group patterns by severity
-    const dangerPatterns = patterns.filter(p => p.severity === 'danger');
-    const warningPatterns = patterns.filter(p => p.severity === 'warning');
-    const goodPatterns = patterns.filter(p => p.severity === 'good');
-    const infoPatterns = patterns.filter(p => p.severity === 'info');
+    const html = patterns.map(pattern => {
+        const iconColor = pattern.severity === 'danger' ? '#ef4444' :
+                         pattern.severity === 'warning' ? '#f59e0b' :
+                         pattern.severity === 'good' ? '#10b981' : '#3b82f6';
 
-    const severityConfig = {
-        danger: { icon: '🚨', label: 'Critical Patterns', color: '#ef4444', bgGradient: 'rgba(239, 68, 68, 0.1)', borderColor: 'rgba(239, 68, 68, 0.3)' },
-        warning: { icon: '⚡', label: 'Warning Patterns', color: '#f59e0b', bgGradient: 'rgba(245, 158, 11, 0.1)', borderColor: 'rgba(245, 158, 11, 0.3)' },
-        good: { icon: '✅', label: 'Positive Patterns', color: '#10b981', bgGradient: 'rgba(16, 185, 129, 0.1)', borderColor: 'rgba(16, 185, 129, 0.3)' },
-        info: { icon: 'ℹ️', label: 'Insights', color: '#3b82f6', bgGradient: 'rgba(59, 130, 246, 0.1)', borderColor: 'rgba(59, 130, 246, 0.3)' }
-    };
-
-    const renderPatternGroup = (groupPatterns, severity) => {
-        if (groupPatterns.length === 0) return '';
-
-        const config = severityConfig[severity];
-        const patternsHTML = groupPatterns.map(pattern => `
-            <div class="glass-card hover-lift" style="background: linear-gradient(135deg, ${config.bgGradient}, rgba(15, 23, 42, 0.5)); border-left: 4px solid ${config.color}; padding: 20px; margin-bottom: 16px; border-radius: 10px;">
-                <div style="display: flex; align-items: flex-start; gap: 16px;">
-                    <div style="font-size: 32px; line-height: 1;">${pattern.icon || config.icon}</div>
-                    <div style="flex: 1;">
-                        <div style="color: #e4e4e7; font-size: 15px; font-weight: 600; margin-bottom: 8px;">
-                            ${pattern.title}
-                        </div>
-                        <div style="color: #94a3b8; font-size: 13px; line-height: 1.6; margin-bottom: ${pattern.actionable ? '12px' : '0'};">
-                            ${pattern.description}
-                        </div>
-                        ${pattern.actionable ? `
-                            <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid ${config.borderColor}; padding: 12px 16px; border-radius: 8px; margin-top: 12px;">
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <span style="color: ${config.color}; font-size: 18px;">💡</span>
-                                    <div style="color: ${config.color}; font-size: 13px; font-weight: 600; line-height: 1.5;">
-                                        ${pattern.actionable}
-                                    </div>
-                                </div>
-                            </div>
-                        ` : ''}
-                    </div>
-                </div>
-            </div>
-        `).join('');
+        const icon = pattern.severity === 'danger' ? '⚠️' :
+                    pattern.severity === 'warning' ? '⚡' :
+                    pattern.severity === 'good' ? '✓' : 'ℹ️';
 
         return `
-            <div style="margin-bottom: 24px;">
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
-                    <span style="font-size: 24px;">${config.icon}</span>
-                    <h4 style="color: ${config.color}; font-size: 16px; font-weight: 700; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">
-                        ${config.label}
-                    </h4>
-                    <div style="background: ${config.color}30; border: 1px solid ${config.color}60; padding: 4px 10px; border-radius: 12px;">
-                        <span style="color: ${config.color}; font-size: 11px; font-weight: 700;">${groupPatterns.length}</span>
+            <div style="padding: 14px; background: #0f172a; border-radius: 8px; border-left: 4px solid ${iconColor}; margin-bottom: 12px;">
+                <div style="display: flex; align-items: start; gap: 12px;">
+                    <span style="font-size: 20px;">${icon}</span>
+                    <div style="flex: 1;">
+                        <div style="color: #e4e4e7; font-size: 14px; font-weight: 500; margin-bottom: 6px;">${pattern.title}</div>
+                        <div style="color: #94a3b8; font-size: 12px; line-height: 1.6;">${pattern.description}</div>
+                        ${pattern.actionable ? `<div style="color: ${iconColor}; font-size: 12px; margin-top: 8px; font-weight: 500;">→ ${pattern.actionable}</div>` : ''}
                     </div>
                 </div>
-                ${patternsHTML}
             </div>
         `;
-    };
+    }).join('');
 
-    element.innerHTML = `
-        ${renderPatternGroup(dangerPatterns, 'danger')}
-        ${renderPatternGroup(warningPatterns, 'warning')}
-        ${renderPatternGroup(goodPatterns, 'good')}
-        ${renderPatternGroup(infoPatterns, 'info')}
-    `;
+    element.innerHTML = html;
 }
 
 /**
@@ -4268,17 +3734,6 @@ function renderStatisticalEdge() {
 
     const edge = calculateStatisticalEdge();
 
-    if (!edge || edge.winRate === null) {
-        element.innerHTML = `
-            <div style="background: rgba(15, 23, 42, 0.5); text-align: center; padding: 30px; border-radius: 10px; border: 1px solid rgba(100, 116, 139, 0.2);">
-                <div style="color: #64748b; font-size: 14px;" data-lang="insufficient-data-edge">
-                    Insufficient data for statistical edge calculation. Need at least 30 trades.
-                </div>
-            </div>
-        `;
-        return;
-    }
-
     const significanceColor = edge.pValue < 0.01 ? '#10b981' :
                               edge.pValue < 0.05 ? '#f59e0b' : '#ef4444';
 
@@ -4286,94 +3741,43 @@ function renderStatisticalEdge() {
                              edge.pValue < 0.05 ? (currentLanguage === 'ko' ? '유의함' : 'Significant') :
                              (currentLanguage === 'ko' ? '유의하지 않음' : 'Not Significant');
 
-    const metrics = [
-        {
-            icon: '🎯',
-            label: 'Win Rate',
-            value: `${edge.winRate.toFixed(1)}%`,
-            subtext: 'vs 50% baseline',
-            color: edge.winRate >= 55 ? '#10b981' : '#ef4444'
-        },
-        {
-            icon: '💰',
-            label: 'Expected Value',
-            value: `$${edge.expectedValue.toFixed(2)}`,
-            subtext: 'per trade',
-            color: edge.expectedValue > 0 ? '#10b981' : '#ef4444'
-        },
-        {
-            icon: '📊',
-            label: 'Sharpe Ratio',
-            value: edge.sharpe.toFixed(2),
-            subtext: 'risk-adjusted',
-            color: edge.sharpe >= 1.5 ? '#10b981' : edge.sharpe >= 1 ? '#f59e0b' : '#ef4444'
-        },
-        {
-            icon: '🔬',
-            label: 'Statistical Sig.',
-            value: `p=${edge.pValue.toFixed(3)}`,
-            subtext: significanceText,
-            color: significanceColor
-        }
-    ];
-
-    const metricsHTML = metrics.map(metric => `
-        <div class="glass-card hover-lift" style="background: linear-gradient(135deg, ${metric.color}10, rgba(15, 23, 42, 0.5)); border: 1px solid ${metric.color}30; padding: 24px; text-align: center; border-radius: 10px;">
-            <div style="font-size: 36px; margin-bottom: 12px;">${metric.icon}</div>
-            <div style="color: #94a3b8; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">${metric.label}</div>
-            <div style="color: ${metric.color}; font-size: 32px; font-weight: 800; line-height: 1; margin-bottom: 8px; text-shadow: 0 0 20px ${metric.color}30;">
-                ${metric.value}
-            </div>
-            <div style="color: #64748b; font-size: 11px;">${metric.subtext}</div>
-        </div>
-    `).join('');
-
-    const confidenceLeft = Math.max(0, edge.confidenceLow);
-    const confidenceRight = Math.min(100, edge.confidenceHigh);
-    const confidenceWidth = confidenceRight - confidenceLeft;
-
     element.innerHTML = `
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">
-            ${metricsHTML}
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 20px;">
+            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;">Win Rate</div>
+                <div style="color: ${edge.winRate >= 55 ? '#10b981' : '#ef4444'}; font-size: 24px; font-weight: 700;">${edge.winRate.toFixed(1)}%</div>
+                <div style="color: #64748b; font-size: 11px;">vs 50% baseline</div>
+            </div>
+
+            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;">Expected Value</div>
+                <div style="color: ${edge.expectedValue > 0 ? '#10b981' : '#ef4444'}; font-size: 24px; font-weight: 700;">$${edge.expectedValue.toFixed(2)}</div>
+                <div style="color: #64748b; font-size: 11px;">per trade</div>
+            </div>
+
+            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;">Sharpe Ratio</div>
+                <div style="color: ${edge.sharpe >= 1.5 ? '#10b981' : edge.sharpe >= 1 ? '#f59e0b' : '#ef4444'}; font-size: 24px; font-weight: 700;">${edge.sharpe.toFixed(2)}</div>
+                <div style="color: #64748b; font-size: 11px;">risk-adjusted</div>
+            </div>
+
+            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
+                <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;">Statistical Sig.</div>
+                <div style="color: ${significanceColor}; font-size: 24px; font-weight: 700;">p=${edge.pValue.toFixed(3)}</div>
+                <div style="color: #64748b; font-size: 11px;">${significanceText}</div>
+            </div>
         </div>
 
-        <div class="glass-card hover-lift" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.05)); border: 1px solid rgba(59, 130, 246, 0.3); padding: 24px; border-radius: 10px;">
-            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
-                <span style="font-size: 28px;">📏</span>
-                <div>
-                    <div style="color: #e4e4e7; font-size: 15px; font-weight: 700; margin-bottom: 4px;" data-lang="confidence-interval">95% Confidence Interval</div>
-                    <div style="color: #64748b; font-size: 11px;">Expected win rate range with 95% confidence</div>
+        <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
+            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 12px;">95% Confidence Interval</div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="color: #e4e4e7; font-size: 14px; font-weight: 600;">${edge.confidenceLow.toFixed(1)}%</div>
+                <div style="flex: 1; background: #1e293b; height: 8px; border-radius: 4px; position: relative;">
+                    <div style="position: absolute; left: ${edge.confidenceLow}%; right: ${100 - edge.confidenceHigh}%; height: 100%; background: linear-gradient(90deg, #3b82f6, #10b981); border-radius: 4px;"></div>
                 </div>
+                <div style="color: #e4e4e7; font-size: 14px; font-weight: 600;">${edge.confidenceHigh.toFixed(1)}%</div>
             </div>
-
-            <div style="background: rgba(15, 23, 42, 0.6); padding: 20px; border-radius: 8px; border: 1px solid rgba(100, 116, 139, 0.2);">
-                <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
-                    <div style="text-align: center; min-width: 80px;">
-                        <div style="color: #3b82f6; font-size: 24px; font-weight: 700; line-height: 1;">${edge.confidenceLow.toFixed(1)}%</div>
-                        <div style="color: #64748b; font-size: 10px; text-transform: uppercase; margin-top: 4px;">Lower</div>
-                    </div>
-
-                    <div style="flex: 1; position: relative; height: 40px;">
-                        <!-- Background track -->
-                        <div style="position: absolute; top: 50%; transform: translateY(-50%); width: 100%; height: 12px; background: rgba(15, 23, 42, 0.8); border-radius: 6px;"></div>
-
-                        <!-- Confidence range -->
-                        <div style="position: absolute; top: 50%; transform: translateY(-50%); left: ${confidenceLeft}%; width: ${confidenceWidth}%; height: 16px; background: linear-gradient(90deg, #3b82f6, #10b981); border-radius: 8px; box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);"></div>
-
-                        <!-- Current win rate marker -->
-                        <div style="position: absolute; top: 50%; transform: translate(-50%, -50%); left: ${edge.winRate}%; width: 6px; height: 30px; background: #f59e0b; border-radius: 3px; box-shadow: 0 0 15px #f59e0b; z-index: 2;"></div>
-                    </div>
-
-                    <div style="text-align: center; min-width: 80px;">
-                        <div style="color: #10b981; font-size: 24px; font-weight: 700; line-height: 1;">${edge.confidenceHigh.toFixed(1)}%</div>
-                        <div style="color: #64748b; font-size: 10px; text-transform: uppercase; margin-top: 4px;">Upper</div>
-                    </div>
-                </div>
-
-                <div style="text-align: center; margin-top: 16px;">
-                    <span style="color: #f59e0b; font-size: 12px; font-weight: 600;">▲ Current: ${edge.winRate.toFixed(1)}%</span>
-                </div>
-            </div>
+            <div style="color: #64748b; font-size: 11px; margin-top: 8px; text-align: center;">Expected win rate range with 95% confidence</div>
         </div>
     `;
 }
@@ -4439,62 +3843,32 @@ function renderAdaptiveRecommendations() {
 
     if (recommendations.length === 0) {
         element.innerHTML = `
-            <div style="background: rgba(15, 23, 42, 0.5); text-align: center; padding: 24px; border-radius: 8px; border: 1px solid rgba(100, 116, 139, 0.2);">
-                <div style="color: #64748b; font-size: 13px;">Collecting data for personalized recommendations...</div>
+            <div style="color: #64748b; text-align: center; padding: 20px;">
+                Collecting data for personalized recommendations...
             </div>
         `;
         return;
     }
 
-    const priorityConfig = {
-        high: {
-            icon: '🔴',
-            badge: currentLanguage === 'ko' ? '최우선' : 'HIGH PRIORITY',
-            color: '#ef4444',
-            bgGradient: 'rgba(239, 68, 68, 0.15)',
-            borderColor: 'rgba(239, 68, 68, 0.4)'
-        },
-        medium: {
-            icon: '🟡',
-            badge: currentLanguage === 'ko' ? '최적화' : 'OPTIMIZATION',
-            color: '#f59e0b',
-            bgGradient: 'rgba(245, 158, 11, 0.15)',
-            borderColor: 'rgba(245, 158, 11, 0.4)'
-        },
-        low: {
-            icon: '🟢',
-            badge: currentLanguage === 'ko' ? '개선' : 'IMPROVEMENT',
-            color: '#10b981',
-            bgGradient: 'rgba(16, 185, 129, 0.15)',
-            borderColor: 'rgba(16, 185, 129, 0.4)'
-        }
-    };
-
     const html = recommendations.map(rec => {
-        const config = priorityConfig[rec.priority] || priorityConfig.low;
+        const bgColor = rec.priority === 'high' ? '#7f1d1d' :
+                        rec.priority === 'medium' ? '#78350f' : '#14532d';
+
+        const borderColor = rec.priority === 'high' ? '#ef4444' :
+                           rec.priority === 'medium' ? '#f59e0b' : '#10b981';
+
+        const badge = rec.priority === 'high' ? (currentLanguage === 'ko' ? '최우선' : 'HIGH PRIORITY') :
+                      rec.priority === 'medium' ? (currentLanguage === 'ko' ? '최적화' : 'OPTIMIZATION') :
+                      (currentLanguage === 'ko' ? '개선' : 'IMPROVEMENT');
 
         return `
-            <div class="glass-card hover-lift" style="background: linear-gradient(135deg, ${config.bgGradient}, rgba(15, 23, 42, 0.6)); border-left: 4px solid ${config.color}; padding: 20px; margin-bottom: 16px; border-radius: 10px;">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 24px;">${config.icon}</span>
-                        <div style="background: ${config.color}20; border: 1px solid ${config.borderColor}; padding: 4px 12px; border-radius: 12px;">
-                            <span style="color: ${config.color}; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
-                                ${config.badge}
-                            </span>
-                        </div>
-                    </div>
-                    <div style="text-align: right;">
-                        <div style="color: #64748b; font-size: 10px; text-transform: uppercase; margin-bottom: 2px;">Impact</div>
-                        <div style="color: #94a3b8; font-size: 12px; font-weight: 600;">${rec.impact}</div>
-                    </div>
+            <div style="background: ${bgColor}; border: 1px solid ${borderColor}; border-radius: 8px; padding: 16px; margin-bottom: 12px;">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+                    <span style="color: ${borderColor}; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">${badge}</span>
+                    <span style="color: #94a3b8; font-size: 11px;">${rec.impact}</span>
                 </div>
-                <div style="color: #e4e4e7; font-size: 15px; font-weight: 700; margin-bottom: 10px; line-height: 1.4;">
-                    ${rec.title}
-                </div>
-                <div style="color: #cbd5e1; font-size: 13px; line-height: 1.6;">
-                    ${rec.description}
-                </div>
+                <div style="color: #e4e4e7; font-size: 14px; font-weight: 500; margin-bottom: 6px;">${rec.title}</div>
+                <div style="color: #cbd5e1; font-size: 13px; line-height: 1.6;">${rec.description}</div>
             </div>
         `;
     }).join('');
