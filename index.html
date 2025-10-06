@@ -639,6 +639,10 @@
                                 <button class="btn btn-secondary" onclick="clearAnalyticsRange()" style="padding: 4px 8px; font-size: 12px;">Clear</button>
                             </div>
                             <button class="filter-btn active" data-lang="all-time" onclick="setAnalyticsPeriod('all')">All Time</button>
+                            <button class="tooltip-wrapper" data-tooltip="Export all analysis results to JSON" onclick="exportAnalysisData()" style="background: linear-gradient(135deg, #10b981, #059669); border: none; color: white; padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.3s;">
+                                <span>📊</span>
+                                <span data-lang="export-analysis">Export</span>
+                            </button>
                         </div>
                     </div>
                     

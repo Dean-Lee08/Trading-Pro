@@ -99,6 +99,72 @@ function refreshAnalyticsData() {
 }
 
 /**
+ * Export all analysis data to JSON
+ */
+function exportAnalysisData() {
+    try {
+        // Collect all analysis results
+        const exportData = {
+            timestamp: new Date().toISOString(),
+            dateRange: {
+                start: analyticsStartDate || 'all',
+                end: analyticsEndDate || 'all'
+            },
+            trades: filteredTrades,
+            statistics: {
+                totalTrades: filteredTrades.length,
+                netProfit: filteredTrades.reduce((sum, t) => sum + t.pnl, 0),
+                winRate: filteredTrades.length > 0
+                    ? (filteredTrades.filter(t => t.pnl > 0).length / filteredTrades.length * 100)
+                    : 0,
+                avgProfit: calculateAverageProfit(),
+                profitFactor: calculateProfitFactor()
+            },
+            correlationAnalysis: analyzeMultivariateCorrelations ? analyzeMultivariateCorrelations() : null,
+            temporalPatterns: detectTemporalPatterns ? detectTemporalPatterns() : null,
+            clusterAnalysis: performTradeClustering ? performTradeClustering() : null,
+            multiFactorAttribution: calculateFeatureImportance ? calculateFeatureImportance() : null,
+            predictiveRisk: computePredictiveRiskScore ? computePredictiveRiskScore() : null,
+            behavioralPatterns: detectAdvancedBehavioralPatterns ? detectAdvancedBehavioralPatterns() : null,
+            statisticalEdge: calculateStatisticalEdge ? calculateStatisticalEdge() : null,
+            recommendations: generateAdaptiveRecommendations ? generateAdaptiveRecommendations() : null
+        };
+
+        // Create downloadable file
+        const dataStr = JSON.stringify(exportData, null, 2);
+        const dataBlob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(dataBlob);
+
+        const link = document.createElement('a');
+        link.href = url;
+        const filename = `trading-analysis-${new Date().toISOString().split('T')[0]}.json`;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+
+        showToast(currentLanguage === 'ko' ? '분석 데이터 내보내기 완료' : 'Analysis data exported successfully');
+    } catch (error) {
+        console.error('Export error:', error);
+        showToast(currentLanguage === 'ko' ? '내보내기 실패' : 'Export failed', 'error');
+    }
+}
+
+function calculateAverageProfit() {
+    const winningTrades = filteredTrades.filter(t => t.pnl > 0);
+    return winningTrades.length > 0
+        ? winningTrades.reduce((sum, t) => sum + t.pnl, 0) / winningTrades.length
+        : 0;
+}
+
+function calculateProfitFactor() {
+    const grossProfit = filteredTrades.filter(t => t.pnl > 0).reduce((sum, t) => sum + t.pnl, 0);
+    const grossLoss = Math.abs(filteredTrades.filter(t => t.pnl < 0).reduce((sum, t) => sum + t.pnl, 0));
+    return grossLoss > 0 ? grossProfit / grossLoss : 0;
+}
+
+/**
  * 분석용 필터링된 거래 가져오기
  */
 function getFilteredTradesForAnalytics() {
