@@ -1517,9 +1517,9 @@ function updateAlgorithmicAnalysis() {
     // TIER 1: Executive Summary (always render)
     renderExecutiveSummary();
 
-    // Original pattern insights (preserved)
+    // Core Analytics (Tier 2)
     analyzeTimeBasedPerformance();
-    analyzeConsecutiveTradesPattern();
+    analyzeBehavioralIntelligence();
     generateAIInsights();
 
     // NEW: Phase 1 - Core AI Analysis Modules (always visible)
