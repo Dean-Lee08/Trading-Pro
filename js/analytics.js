@@ -3976,3 +3976,197 @@ function analyzePsychologyImpact() {
 
     return null;
 }
+
+// ==================== ADVANCED AI-BASED ALGORITHMIC ANALYSIS ====================
+
+/**
+ * Phase 1: Trade Quality Score System
+ * Calculates a 0-100 quality score for each trade based on multiple factors
+ */
+function calculateTradeQualityScore(trade) {
+    let score = 50; // Base score
+    const psychData = psychologyData[trade.date];
+
+    // Factor 1: Psychology state (max +25 points)
+    if (psychData) {
+        if (psychData.sleepHours >= 7) score += 5;
+        if (psychData.focus >= 4) score += 5;
+        if (psychData.stress <= 2) score += 5;
+        if (psychData.confidence >= 3 && psychData.confidence <= 4) score += 5;
+        if (psychData.marketDelay <= 15) score += 5;
+    }
+
+    // Factor 2: Position sizing (max +15 points)
+    const avgPosition = trades.length > 0 ? trades.reduce((sum, t) => sum + t.amount, 0) / trades.length : trade.amount;
+    const sizeRatio = trade.amount / avgPosition;
+    if (sizeRatio > 0.5 && sizeRatio < 1.5) score += 15; // Consistent sizing
+    else if (sizeRatio > 1.5 && sizeRatio < 2) score += 5; // Slightly oversized
+    else if (sizeRatio > 2) score -= 10; // Dangerous oversizing
+
+    // Factor 3: Hold time appropriateness (max +10 points)
+    if (trade.holdingMinutes) {
+        const holdTime = parseInt(trade.holdingMinutes);
+        if (holdTime >= 15 && holdTime <= 120) score += 10; // Good range
+        else if (holdTime < 5) score -= 5; // Too quick
+    }
+
+    // Factor 4: Profitability (max +20 points, min -20 points)
+    if (trade.pnl > 0) {
+        score += Math.min(20, trade.returnPct * 2);
+    } else {
+        score += Math.max(-20, trade.returnPct * 2);
+    }
+
+    // Factor 5: Time of day (max +10 points)
+    if (trade.entryTime) {
+        const hour = parseInt(trade.entryTime.split(':')[0]);
+        if (hour >= 9 && hour <= 10) score += 10; // Market open (optimal)
+        else if (hour >= 14 && hour <= 15) score += 5; // Afternoon (decent)
+    }
+
+    return Math.max(0, Math.min(100, score)); // Clamp to 0-100
+}
+
+/**
+ * Phase 1: Predictive Win Probability
+ * Predicts the probability of next trade being successful
+ */
+function calculatePredictiveWinProbability() {
+    if (trades.length < 10) return null;
+
+    const recentTrades = [...trades].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 20);
+    const currentDate = formatTradingDate(new Date());
+    const currentPsych = psychologyData[currentDate];
+    const currentHour = new Date().getHours();
+
+    // Factor 1: Recent streak
+    let streak = 0;
+    for (let i = 0; i < recentTrades.length; i++) {
+        if (recentTrades[i].pnl > 0) {
+            if (streak >= 0) streak++;
+            else break;
+        } else {
+            if (streak <= 0) streak--;
+            else break;
+        }
+    }
+
+    // Factor 2: Current psychology state
+    let psychScore = 0.5;
+    if (currentPsych) {
+        if (currentPsych.sleepHours >= 7) psychScore += 0.1;
+        if (currentPsych.focus >= 4) psychScore += 0.1;
+        if (currentPsych.stress <= 2) psychScore += 0.1;
+        if (currentPsych.confidence >= 3 && currentPsych.confidence <= 4) psychScore += 0.1;
+        if (currentPsych.marketDelay <= 15) psychScore += 0.05;
+    }
+
+    // Factor 3: Time of day performance
+    const hourlyStats = {};
+    trades.forEach(trade => {
+        if (trade.entryTime) {
+            const hour = parseInt(trade.entryTime.split(':')[0]);
+            if (!hourlyStats[hour]) hourlyStats[hour] = { wins: 0, total: 0 };
+            hourlyStats[hour].total++;
+            if (trade.pnl > 0) hourlyStats[hour].wins++;
+        }
+    });
+
+    let timeScore = 0.5;
+    if (hourlyStats[currentHour] && hourlyStats[currentHour].total >= 5) {
+        timeScore = hourlyStats[currentHour].wins / hourlyStats[currentHour].total;
+    }
+
+    // Factor 4: Streak adjustment
+    let streakAdjustment = 0;
+    if (streak >= 3) streakAdjustment = -0.1; // Mean reversion after wins
+    else if (streak <= -3) streakAdjustment = 0.1; // Bounce back after losses
+
+    // Combined probability
+    const baseProbability = (recentTrades.filter(t => t.pnl > 0).length / recentTrades.length);
+    const predictedProbability = (baseProbability * 0.4 + psychScore * 0.3 + timeScore * 0.2 + (0.5 + streakAdjustment) * 0.1);
+
+    // Confidence level
+    const confidence = currentPsych && hourlyStats[currentHour] ? 'High' : currentPsych || hourlyStats[currentHour] ? 'Medium' : 'Low';
+
+    return {
+        probability: Math.max(0, Math.min(1, predictedProbability)),
+        confidence: confidence,
+        factors: {
+            baseRate: baseProbability,
+            psychologyBoost: psychScore - 0.5,
+            timeBoost: timeScore - 0.5,
+            streakAdjustment: streakAdjustment
+        },
+        recommendation: predictedProbability >= 0.6 ? 'favorable' : predictedProbability >= 0.45 ? 'neutral' : 'unfavorable'
+    };
+}
+
+/**
+ * Phase 1: Risk-Adjusted Performance Metrics
+ * Calculates Sharpe, Sortino, and Calmar ratios
+ */
+function calculateRiskAdjustedMetrics() {
+    if (trades.length < 10) return null;
+
+    // Daily P&L calculation
+    const dailyPnL = {};
+    trades.forEach(trade => {
+        if (!dailyPnL[trade.date]) dailyPnL[trade.date] = 0;
+        dailyPnL[trade.date] += trade.pnl;
+    });
+
+    // Apply daily fees
+    Object.keys(dailyPnL).forEach(date => {
+        dailyPnL[date] -= (dailyFees[date] || 0);
+    });
+
+    const dailyReturns = Object.values(dailyPnL);
+    const avgReturn = dailyReturns.reduce((sum, r) => sum + r, 0) / dailyReturns.length;
+
+    // Standard deviation (for Sharpe Ratio)
+    const variance = dailyReturns.reduce((sum, r) => sum + Math.pow(r - avgReturn, 2), 0) / dailyReturns.length;
+    const stdDev = Math.sqrt(variance);
+
+    // Sharpe Ratio (assuming risk-free rate = 0)
+    const sharpeRatio = stdDev > 0 ? avgReturn / stdDev : 0;
+
+    // Downside deviation (for Sortino Ratio)
+    const downsideReturns = dailyReturns.filter(r => r < 0);
+    const downsideVariance = downsideReturns.length > 0 ?
+        downsideReturns.reduce((sum, r) => sum + Math.pow(r, 2), 0) / downsideReturns.length : 0;
+    const downsideDeviation = Math.sqrt(downsideVariance);
+
+    // Sortino Ratio
+    const sortinoRatio = downsideDeviation > 0 ? avgReturn / downsideDeviation : 0;
+
+    // Maximum drawdown calculation
+    let peak = 0;
+    let maxDrawdown = 0;
+    let cumulative = 0;
+
+    Object.keys(dailyPnL).sort().forEach(date => {
+        cumulative += dailyPnL[date];
+        if (cumulative > peak) peak = cumulative;
+        const drawdown = peak - cumulative;
+        if (drawdown > maxDrawdown) maxDrawdown = drawdown;
+    });
+
+    // Calmar Ratio (annualized return / max drawdown)
+    const totalReturn = dailyReturns.reduce((sum, r) => sum + r, 0);
+    const calmarRatio = maxDrawdown > 0 ? (totalReturn / maxDrawdown) : 0;
+
+    // Recovery Factor (total profit / max drawdown)
+    const totalProfit = Math.max(0, totalReturn);
+    const recoveryFactor = maxDrawdown > 0 ? (totalProfit / maxDrawdown) : 0;
+
+    return {
+        sharpeRatio: sharpeRatio,
+        sortinoRatio: sortinoRatio,
+        calmarRatio: calmarRatio,
+        recoveryFactor: recoveryFactor,
+        maxDrawdown: maxDrawdown,
+        avgDailyReturn: avgReturn,
+        volatility: stdDev
+    };
+}
