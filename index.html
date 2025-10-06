@@ -1655,66 +1655,126 @@
                             <!-- ========== ADVANCED ALGORITHMIC INTELLIGENCE ========== -->
 
                             <!-- Multi-Factor Performance Attribution -->
-                            <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid #334155; border-radius: 12px; padding: 24px; margin-bottom: 24px;">
-                                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
-                                    <div style="width: 4px; height: 24px; background: linear-gradient(180deg, #3b82f6, #10b981); border-radius: 2px;"></div>
-                                    <h3 data-lang="multi-factor-attribution" style="color: #f8fafc; font-size: 16px; font-weight: 600; margin: 0;">Multi-Factor Performance Attribution</h3>
+                            <div class="analysis-section-glass card-reveal" style="margin-bottom: 28px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; cursor: pointer;" onclick="toggleAdvancedSection('multiFactorAttribution')">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div style="width: 4px; height: 28px; background: linear-gradient(180deg, #3b82f6, #10b981); border-radius: 2px;"></div>
+                                        <h3 data-lang="multi-factor-attribution" style="color: #f8fafc; font-size: 18px; font-weight: 600; margin: 0;">Multi-Factor Performance Attribution</h3>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); padding: 6px 12px; border-radius: 8px;">
+                                            <span style="color: #60a5fa; font-size: 11px; font-weight: 600; letter-spacing: 0.5px;">🎯 ATTRIBUTION</span>
+                                        </div>
+                                        <button class="collapse-btn" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s;">
+                                            <span style="color: #60a5fa; font-size: 18px; transition: transform 0.3s;" id="multiFactorAttribution-toggle">▼</span>
+                                        </button>
+                                    </div>
                                 </div>
-                                <div id="multiFactorAttribution" style="padding: 12px;">
-                                    <div style="color: #64748b; text-align: center; padding: 20px;">
-                                        <span data-lang="loading-analysis">Loading feature importance analysis...</span>
+                                <div id="multiFactorAttribution-content" class="section-content">
+                                    <div id="multiFactorAttribution" style="padding: 12px;">
+                                        <div style="color: #64748b; text-align: center; padding: 20px;">
+                                            <span data-lang="loading-analysis">Loading feature importance analysis...</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Predictive Risk Score -->
-                            <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid #334155; border-radius: 12px; padding: 24px; margin-bottom: 24px;">
-                                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
-                                    <div style="width: 4px; height: 24px; background: linear-gradient(180deg, #f59e0b, #ef4444); border-radius: 2px;"></div>
-                                    <h3 data-lang="predictive-risk-score" style="color: #f8fafc; font-size: 16px; font-weight: 600; margin: 0;">Predictive Risk Score</h3>
+                            <div class="analysis-section-glass card-reveal" style="margin-bottom: 28px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; cursor: pointer;" onclick="toggleAdvancedSection('predictiveRiskScore')">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div style="width: 4px; height: 28px; background: linear-gradient(180deg, #f59e0b, #ef4444); border-radius: 2px;"></div>
+                                        <h3 data-lang="predictive-risk-score" style="color: #f8fafc; font-size: 18px; font-weight: 600; margin: 0;">Predictive Risk Score</h3>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); padding: 6px 12px; border-radius: 8px;">
+                                            <span style="color: #fbbf24; font-size: 11px; font-weight: 600; letter-spacing: 0.5px;">⚠️ RISK</span>
+                                        </div>
+                                        <button class="collapse-btn" style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s;">
+                                            <span style="color: #fbbf24; font-size: 18px; transition: transform 0.3s;" id="predictiveRiskScore-toggle">▼</span>
+                                        </button>
+                                    </div>
                                 </div>
-                                <div id="predictiveRiskScore" style="padding: 12px;">
-                                    <div style="color: #64748b; text-align: center; padding: 20px;">
-                                        <span data-lang="calculating-risk">Calculating real-time risk assessment...</span>
+                                <div id="predictiveRiskScore-content" class="section-content">
+                                    <div id="predictiveRiskScore" style="padding: 12px;">
+                                        <div style="color: #64748b; text-align: center; padding: 20px;">
+                                            <span data-lang="calculating-risk">Calculating real-time risk assessment...</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Behavioral Pattern Recognition -->
-                            <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid #334155; border-radius: 12px; padding: 24px; margin-bottom: 24px;">
-                                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
-                                    <div style="width: 4px; height: 24px; background: linear-gradient(180deg, #8b5cf6, #ec4899); border-radius: 2px;"></div>
-                                    <h3 data-lang="behavioral-patterns" style="color: #f8fafc; font-size: 16px; font-weight: 600; margin: 0;">Behavioral Pattern Recognition</h3>
+                            <div class="analysis-section-glass card-reveal" style="margin-bottom: 28px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; cursor: pointer;" onclick="toggleAdvancedSection('behavioralPatterns')">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div style="width: 4px; height: 28px; background: linear-gradient(180deg, #8b5cf6, #ec4899); border-radius: 2px;"></div>
+                                        <h3 data-lang="behavioral-patterns" style="color: #f8fafc; font-size: 18px; font-weight: 600; margin: 0;">Behavioral Pattern Recognition</h3>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div style="background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3); padding: 6px 12px; border-radius: 8px;">
+                                            <span style="color: #a78bfa; font-size: 11px; font-weight: 600; letter-spacing: 0.5px;">🧠 BEHAVIOR</span>
+                                        </div>
+                                        <button class="collapse-btn" style="background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s;">
+                                            <span style="color: #a78bfa; font-size: 18px; transition: transform 0.3s;" id="behavioralPatterns-toggle">▼</span>
+                                        </button>
+                                    </div>
                                 </div>
-                                <div id="behavioralPatterns" style="padding: 12px;">
-                                    <div style="color: #64748b; text-align: center; padding: 20px;">
-                                        <span data-lang="analyzing-patterns">Analyzing trading patterns...</span>
+                                <div id="behavioralPatterns-content" class="section-content">
+                                    <div id="behavioralPatterns" style="padding: 12px;">
+                                        <div style="color: #64748b; text-align: center; padding: 20px;">
+                                            <span data-lang="analyzing-patterns">Analyzing trading patterns...</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Market Context Intelligence -->
-                            <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid #334155; border-radius: 12px; padding: 24px; margin-bottom: 24px;">
-                                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
-                                    <div style="width: 4px; height: 24px; background: linear-gradient(180deg, #06b6d4, #0891b2); border-radius: 2px;"></div>
-                                    <h3 data-lang="market-intelligence" style="color: #f8fafc; font-size: 16px; font-weight: 600; margin: 0;">Market Context Intelligence</h3>
+                            <div class="analysis-section-glass card-reveal" style="margin-bottom: 28px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; cursor: pointer;" onclick="toggleAdvancedSection('marketIntelligence')">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div style="width: 4px; height: 28px; background: linear-gradient(180deg, #06b6d4, #0891b2); border-radius: 2px;"></div>
+                                        <h3 data-lang="market-intelligence" style="color: #f8fafc; font-size: 18px; font-weight: 600; margin: 0;">Market Context Intelligence</h3>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div style="background: rgba(6, 182, 212, 0.1); border: 1px solid rgba(6, 182, 212, 0.3); padding: 6px 12px; border-radius: 8px;">
+                                            <span style="color: #22d3ee; font-size: 11px; font-weight: 600; letter-spacing: 0.5px;">📊 MARKET</span>
+                                        </div>
+                                        <button class="collapse-btn" style="background: rgba(6, 182, 212, 0.1); border: 1px solid rgba(6, 182, 212, 0.3); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s;">
+                                            <span style="color: #22d3ee; font-size: 18px; transition: transform 0.3s;" id="marketIntelligence-toggle">▼</span>
+                                        </button>
+                                    </div>
                                 </div>
-                                <div id="marketIntelligence" style="padding: 12px;">
-                                    <div style="color: #64748b; text-align: center; padding: 20px;">
-                                        <span data-lang="analyzing-market">Analyzing market conditions...</span>
+                                <div id="marketIntelligence-content" class="section-content">
+                                    <div id="marketIntelligence" style="padding: 12px;">
+                                        <div style="color: #64748b; text-align: center; padding: 20px;">
+                                            <span data-lang="analyzing-market">Analyzing market conditions...</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Statistical Edge Analysis -->
-                            <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid #334155; border-radius: 12px; padding: 24px;">
-                                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
-                                    <div style="width: 4px; height: 24px; background: linear-gradient(180deg, #10b981, #059669); border-radius: 2px;"></div>
-                                    <h3 data-lang="statistical-edge" style="color: #f8fafc; font-size: 16px; font-weight: 600; margin: 0;">Statistical Edge Analysis</h3>
+                            <div class="analysis-section-glass card-reveal" style="margin-bottom: 28px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; cursor: pointer;" onclick="toggleAdvancedSection('statisticalEdge')">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div style="width: 4px; height: 28px; background: linear-gradient(180deg, #10b981, #059669); border-radius: 2px;"></div>
+                                        <h3 data-lang="statistical-edge" style="color: #f8fafc; font-size: 18px; font-weight: 600; margin: 0;">Statistical Edge Analysis</h3>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); padding: 6px 12px; border-radius: 8px;">
+                                            <span style="color: #34d399; font-size: 11px; font-weight: 600; letter-spacing: 0.5px;">📈 EDGE</span>
+                                        </div>
+                                        <button class="collapse-btn" style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s;">
+                                            <span style="color: #34d399; font-size: 18px; transition: transform 0.3s;" id="statisticalEdge-toggle">▼</span>
+                                        </button>
+                                    </div>
                                 </div>
-                                <div id="statisticalEdge" style="padding: 12px;">
-                                    <div style="color: #64748b; text-align: center; padding: 20px;">
-                                        <span data-lang="computing-stats">Computing statistical significance...</span>
+                                <div id="statisticalEdge-content" class="section-content">
+                                    <div id="statisticalEdge" style="padding: 12px;">
+                                        <div style="color: #64748b; text-align: center; padding: 20px;">
+                                            <span data-lang="computing-stats">Computing statistical significance...</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

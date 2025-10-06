@@ -786,3 +786,34 @@
     background-clip: text;
     animation: textGradient 3s ease infinite;
 }
+
+/* Section collapse functionality */
+.section-content {
+    max-height: 5000px;
+    overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+    opacity: 1;
+}
+
+.section-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+}
+
+.collapse-btn {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.collapse-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+}
+
+.collapse-btn span {
+    display: inline-block;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.collapse-btn.collapsed span {
+    transform: rotate(-90deg);
+}
