@@ -1,84 +1,5 @@
 // ==================== ADDITIONAL AI ANALYSIS FUNCTIONS ====================
 
-// ========== Statistical Helper Functions ==========
-
-/**
- * Calculate t-statistic for correlation coefficient
- * Used to test statistical significance of correlations
- */
-function calculateCorrelationSignificance(r, n) {
-    if (n < 3) return { tStat: 0, pValue: 1, significant: false };
-
-    // t-statistic: t = r * sqrt((n-2)/(1-r^2))
-    const tStat = r * Math.sqrt((n - 2) / (1 - r * r));
-
-    // Degrees of freedom
-    const df = n - 2;
-
-    // Approximate p-value using t-distribution
-    // For simplicity, using two-tailed test
-    const pValue = approximateTDistribution(Math.abs(tStat), df);
-
-    return {
-        tStat: tStat,
-        pValue: pValue * 2, // two-tailed
-        significant: pValue * 2 < 0.05,
-        confidenceLevel: pValue * 2 < 0.01 ? '99%' : pValue * 2 < 0.05 ? '95%' : 'Not significant'
-    };
-}
-
-/**
- * Approximate p-value from t-distribution
- * Using simplified approximation for browser environment
- */
-function approximateTDistribution(t, df) {
-    // Simplified approximation using normal distribution for large df
-    if (df > 30) {
-        return approximateNormalCDF(t);
-    }
-
-    // For smaller df, use rough approximation
-    const x = df / (df + t * t);
-    return Math.pow(x, df / 2) / 2;
-}
-
-/**
- * Approximate cumulative normal distribution
- */
-function approximateNormalCDF(z) {
-    const t = 1 / (1 + 0.2316419 * Math.abs(z));
-    const d = 0.3989423 * Math.exp(-z * z / 2);
-    const prob = d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
-    return z > 0 ? 1 - prob : prob;
-}
-
-/**
- * Calculate confidence interval for correlation
- */
-function calculateCorrelationCI(r, n, confidenceLevel = 0.95) {
-    if (n < 3) return { lower: 0, upper: 0 };
-
-    // Fisher z-transformation
-    const z = 0.5 * Math.log((1 + r) / (1 - r));
-    const se = 1 / Math.sqrt(n - 3);
-
-    // Z-score for confidence level
-    const zScore = confidenceLevel === 0.99 ? 2.576 : 1.96; // 99% or 95%
-
-    // Confidence interval in z-space
-    const zLower = z - zScore * se;
-    const zUpper = z + zScore * se;
-
-    // Transform back to correlation space
-    const rLower = (Math.exp(2 * zLower) - 1) / (Math.exp(2 * zLower) + 1);
-    const rUpper = (Math.exp(2 * zUpper) - 1) / (Math.exp(2 * zUpper) + 1);
-
-    return {
-        lower: rLower,
-        upper: rUpper
-    };
-}
-
 /**
  * Phase 2: Behavioral Bias Detection
  * Detects cognitive biases in trading behavior
@@ -500,11 +421,6 @@ function runMonteCarloSimulation(simulations, days) {
  * Analyzes interactions between multiple psychological and performance variables
  */
 function analyzeMultivariateCorrelations() {
-    // Check cache first
-    const cacheKey = `correlations_${trades.length}_${Object.keys(psychologyData).length}`;
-    const cached = analysisCache.get(cacheKey);
-    if (cached) return cached;
-
     if (trades.length < 20 || Object.keys(psychologyData).length < 10) return null;
 
     // Group trades by date and calculate daily metrics
@@ -539,16 +455,10 @@ function analyzeMultivariateCorrelations() {
         }));
         const corr = calculatePearsonCorrelation(interactions.map(i => ({ x: i.interaction, y: i.winRate })));
         if (corr !== null) {
-            const significance = calculateCorrelationSignificance(corr, interactions.length);
-            const ci = calculateCorrelationCI(corr, interactions.length);
-
             correlations.push({
                 name: currentLanguage === 'ko' ? '수면-카페인 상호작용' : 'Sleep-Caffeine Interaction',
                 correlation: corr,
                 strength: Math.abs(corr) > 0.5 ? 'Strong' : Math.abs(corr) > 0.3 ? 'Moderate' : 'Weak',
-                pValue: significance.pValue,
-                significant: significance.significant,
-                confidenceInterval: ci,
                 insight: corr > 0 ?
                     (currentLanguage === 'ko' ? '충분한 수면과 적절한 카페인 섭취가 성과 향상과 상관관계' : 'Adequate sleep with moderate caffeine correlates with better performance') :
                     (currentLanguage === 'ko' ? '부족한 수면에 과도한 카페인이 성과 저하와 상관관계' : 'Poor sleep with excessive caffeine correlates with worse performance')
@@ -566,16 +476,10 @@ function analyzeMultivariateCorrelations() {
         }));
         const corr = calculatePearsonCorrelation(combinations.map(c => ({ x: c.combo, y: c.pnl })));
         if (corr !== null) {
-            const significance = calculateCorrelationSignificance(corr, combinations.length);
-            const ci = calculateCorrelationCI(corr, combinations.length);
-
             correlations.push({
                 name: currentLanguage === 'ko' ? '스트레스-자신감 조합' : 'Stress-Confidence Balance',
                 correlation: corr,
                 strength: Math.abs(corr) > 0.5 ? 'Strong' : Math.abs(corr) > 0.3 ? 'Moderate' : 'Weak',
-                pValue: significance.pValue,
-                significant: significance.significant,
-                confidenceInterval: ci,
                 insight: corr > 0 ?
                     (currentLanguage === 'ko' ? '낮은 스트레스와 높은 자신감이 수익과 양의 상관관계' : 'Low stress with high confidence shows positive correlation with profit') :
                     (currentLanguage === 'ko' ? '높은 스트레스가 과신과 결합되면 손실 위험' : 'High stress combined with overconfidence increases loss risk')
@@ -606,15 +510,11 @@ function analyzeMultivariateCorrelations() {
         }
     }
 
-    const result = {
+    return {
         correlations: correlations,
         sampleSize: dataPoints.length,
         dataQuality: dataPoints.length >= 30 ? 'High' : dataPoints.length >= 20 ? 'Medium' : 'Low'
     };
-
-    // Cache the result
-    analysisCache.set(cacheKey, result);
-    return result;
 }
 
 /**
@@ -622,11 +522,6 @@ function analyzeMultivariateCorrelations() {
  * Detects time-based patterns in trading performance
  */
 function detectTemporalPatterns() {
-    // Check cache first
-    const cacheKey = `temporal_${trades.length}`;
-    const cached = analysisCache.get(cacheKey);
-    if (cached) return cached;
-
     if (trades.length < 30) return null;
 
     const patterns = [];
@@ -722,15 +617,11 @@ function detectTemporalPatterns() {
         }
     }
 
-    const result = {
+    return {
         patterns: patterns,
         totalTradingDays: tradingDates.length,
         avgTradesPerDay: trades.length / tradingDates.length
     };
-
-    // Cache the result
-    analysisCache.set(cacheKey, result);
-    return result;
 }
 
 /**
