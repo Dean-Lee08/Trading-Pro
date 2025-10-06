@@ -539,10 +539,16 @@ function analyzeMultivariateCorrelations() {
         }));
         const corr = calculatePearsonCorrelation(interactions.map(i => ({ x: i.interaction, y: i.winRate })));
         if (corr !== null) {
+            const significance = calculateCorrelationSignificance(corr, interactions.length);
+            const ci = calculateCorrelationCI(corr, interactions.length);
+
             correlations.push({
                 name: currentLanguage === 'ko' ? '수면-카페인 상호작용' : 'Sleep-Caffeine Interaction',
                 correlation: corr,
                 strength: Math.abs(corr) > 0.5 ? 'Strong' : Math.abs(corr) > 0.3 ? 'Moderate' : 'Weak',
+                pValue: significance.pValue,
+                significant: significance.significant,
+                confidenceInterval: ci,
                 insight: corr > 0 ?
                     (currentLanguage === 'ko' ? '충분한 수면과 적절한 카페인 섭취가 성과 향상과 상관관계' : 'Adequate sleep with moderate caffeine correlates with better performance') :
                     (currentLanguage === 'ko' ? '부족한 수면에 과도한 카페인이 성과 저하와 상관관계' : 'Poor sleep with excessive caffeine correlates with worse performance')
