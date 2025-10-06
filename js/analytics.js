@@ -781,9 +781,9 @@ function resetDetailedAnalyticsDisplay() {
 // ==================== Basic Charts (Detail Section) ====================
 
 /**
- * 기본 차트 업데이트
+ * 기본 차트 업데이트 (internal implementation)
  */
-async function updateBasicCharts() {
+async function updateBasicChartsImpl() {
     const filteredTrades = getFilteredTradesForAnalytics();
 
     if (filteredTrades.length === 0) {
