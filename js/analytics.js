@@ -3181,6 +3181,17 @@ function renderPredictiveRiskScore() {
 
     const riskScore = computePredictiveRiskScore();
 
+    if (!riskScore || riskScore.overall === null) {
+        element.innerHTML = `
+            <div style="background: rgba(15, 23, 42, 0.5); text-align: center; padding: 30px; border-radius: 10px; border: 1px solid rgba(100, 116, 139, 0.2);">
+                <div style="color: #64748b; font-size: 14px;" data-lang="insufficient-data-risk">
+                    Insufficient data for risk score calculation. Need trades and psychology data.
+                </div>
+            </div>
+        `;
+        return;
+    }
+
     const scoreColor = riskScore.overall >= 70 ? '#10b981' :
                        riskScore.overall >= 50 ? '#f59e0b' : '#ef4444';
 
@@ -3188,61 +3199,76 @@ function renderPredictiveRiskScore() {
                       riskScore.overall >= 50 ? (currentLanguage === 'ko' ? '보통' : 'NEUTRAL') :
                       (currentLanguage === 'ko' ? '주의' : 'ELEVATED');
 
-    element.innerHTML = `
-        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 24px;">
-            <div style="text-align: center; padding: 20px;">
-                <div style="font-size: 64px; font-weight: 700; color: ${scoreColor}; line-height: 1;">
-                    ${riskScore.overall}
+    const riskIcon = riskScore.overall >= 70 ? '✅' : riskScore.overall >= 50 ? '⚠️' : '🚨';
+
+    const factors = [
+        { icon: '🧠', key: 'psychology', label: 'psychological-state', color: '#8b5cf6' },
+        { icon: '📈', key: 'market', label: 'market-conditions', color: '#3b82f6' },
+        { icon: '📊', key: 'performance', label: 'performance-trend', color: '#10b981' },
+        { icon: '⚖️', key: 'biasRisk', label: 'bias-risk', color: '#ef4444', inverted: true }
+    ];
+
+    const factorCardsHTML = factors.map(factor => {
+        const value = riskScore[factor.key];
+        const barColor = factor.inverted
+            ? (value <= 30 ? '#10b981' : value <= 60 ? '#f59e0b' : '#ef4444')
+            : (value >= 70 ? '#10b981' : value >= 50 ? '#f59e0b' : '#ef4444');
+
+        return `
+            <div class="glass-card hover-lift" style="background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(100, 116, 139, 0.2); padding: 20px; border-radius: 10px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 28px;">${factor.icon}</span>
+                        <span style="color: #e4e4e7; font-size: 13px; font-weight: 600;" data-lang="${factor.label}">${factor.label}</span>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: flex-end;">
+                        <span style="color: ${barColor}; font-size: 24px; font-weight: 700; line-height: 1;">${value}</span>
+                        <span style="color: #64748b; font-size: 11px;">/100</span>
+                    </div>
                 </div>
-                <div style="font-size: 14px; color: #94a3b8; margin-top: 8px;">/ 100</div>
-                <div style="font-size: 16px; font-weight: 600; color: ${scoreColor}; margin-top: 12px; text-transform: uppercase;">
-                    ${riskLevel}
+                <div style="background: rgba(15, 23, 42, 0.6); height: 10px; border-radius: 5px; overflow: hidden; position: relative;">
+                    <div class="progress-animated" style="width: ${value}%; height: 100%; background: linear-gradient(90deg, ${barColor}, ${barColor}aa); border-radius: 5px; box-shadow: 0 0 10px ${barColor}40; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);"></div>
                 </div>
             </div>
-            <div>
-                <div style="margin-bottom: 16px;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="color: #94a3b8; font-size: 13px;" data-lang="psychological-state">Psychological State</span>
-                        <span style="color: #e4e4e7; font-weight: 600;">${riskScore.psychology}/100</span>
+        `;
+    }).join('');
+
+    element.innerHTML = `
+        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 24px; margin-bottom: 24px;">
+            <!-- Main Risk Score Gauge -->
+            <div class="glass-card" style="background: linear-gradient(135deg, rgba(${scoreColor === '#10b981' ? '16, 185, 129' : scoreColor === '#f59e0b' ? '245, 158, 11' : '239, 68, 68'}, 0.15), rgba(15, 23, 42, 0.6)); border: 2px solid ${scoreColor}40; padding: 30px; text-align: center; border-radius: 12px; position: relative; overflow: hidden;">
+                <!-- Animated background glow -->
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 200px; height: 200px; background: radial-gradient(circle, ${scoreColor}20, transparent 70%); animation: glow-pulse 3s ease-in-out infinite;"></div>
+
+                <div style="position: relative; z-index: 1;">
+                    <div style="font-size: 48px; margin-bottom: 12px;">${riskIcon}</div>
+                    <div style="font-size: 72px; font-weight: 800; color: ${scoreColor}; line-height: 1; text-shadow: 0 0 20px ${scoreColor}40;">
+                        ${riskScore.overall}
                     </div>
-                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
-                        <div style="width: ${riskScore.psychology}%; height: 100%; background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981); transition: width 0.3s;"></div>
+                    <div style="font-size: 16px; color: #64748b; margin-top: 8px; letter-spacing: 1px;">/ 100</div>
+                    <div style="display: inline-block; margin-top: 16px; padding: 8px 20px; background: ${scoreColor}20; border: 1px solid ${scoreColor}60; border-radius: 20px;">
+                        <span style="font-size: 14px; font-weight: 700; color: ${scoreColor}; text-transform: uppercase; letter-spacing: 1px;">
+                            ${riskLevel}
+                        </span>
                     </div>
                 </div>
+            </div>
 
-                <div style="margin-bottom: 16px;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="color: #94a3b8; font-size: 13px;" data-lang="market-conditions">Market Conditions</span>
-                        <span style="color: #e4e4e7; font-weight: 600;">${riskScore.market}/100</span>
-                    </div>
-                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
-                        <div style="width: ${riskScore.market}%; height: 100%; background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981); transition: width 0.3s;"></div>
-                    </div>
-                </div>
+            <!-- Factor Breakdown -->
+            <div style="display: grid; gap: 16px;">
+                ${factorCardsHTML}
+            </div>
+        </div>
 
-                <div style="margin-bottom: 16px;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="color: #94a3b8; font-size: 13px;" data-lang="performance-trend">Performance Trend</span>
-                        <span style="color: #e4e4e7; font-weight: 600;">${riskScore.performance}/100</span>
+        <!-- Recommendation Banner -->
+        <div class="glass-card hover-lift" style="background: linear-gradient(135deg, ${scoreColor}10, rgba(15, 23, 42, 0.5)); border-left: 4px solid ${scoreColor}; padding: 20px; border-radius: 10px;">
+            <div style="display: flex; align-items: flex-start; gap: 16px;">
+                <div style="font-size: 32px; line-height: 1;">${riskIcon}</div>
+                <div style="flex: 1;">
+                    <div style="color: #94a3b8; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: 600;" data-lang="recommended-action">Recommended Action</div>
+                    <div style="color: #e4e4e7; font-size: 14px; line-height: 1.6; font-weight: 500;">
+                        ${riskScore.recommendation}
                     </div>
-                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
-                        <div style="width: ${riskScore.performance}%; height: 100%; background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981); transition: width 0.3s;"></div>
-                    </div>
-                </div>
-
-                <div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span style="color: #94a3b8; font-size: 13px;" data-lang="bias-risk">Behavioral Bias Risk</span>
-                        <span style="color: #e4e4e7; font-weight: 600;">${riskScore.biasRisk}/100</span>
-                    </div>
-                    <div style="background: #0f172a; height: 6px; border-radius: 3px; overflow: hidden;">
-                        <div style="width: ${riskScore.biasRisk}%; height: 100%; background: linear-gradient(90deg, #10b981, #f59e0b, #ef4444); transition: width 0.3s;"></div>
-                    </div>
-                </div>
-
-                <div style="margin-top: 20px; padding: 12px; background: #0f172a; border-radius: 6px; border-left: 3px solid ${scoreColor};">
-                    <div style="color: #94a3b8; font-size: 11px; text-transform: uppercase; margin-bottom: 4px;" data-lang="recommended-action">Recommended Action</div>
-                    <div style="color: #e4e4e7; font-size: 13px; line-height: 1.5;">${riskScore.recommendation}</div>
                 </div>
             </div>
         </div>
