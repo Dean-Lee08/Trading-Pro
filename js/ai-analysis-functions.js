@@ -515,11 +515,15 @@ function analyzeMultivariateCorrelations() {
         }
     }
 
-    return {
+    const result = {
         correlations: correlations,
         sampleSize: dataPoints.length,
         dataQuality: dataPoints.length >= 30 ? 'High' : dataPoints.length >= 20 ? 'Medium' : 'Low'
     };
+
+    // Cache the result
+    analysisCache.set(cacheKey, result);
+    return result;
 }
 
 /**
