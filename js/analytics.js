@@ -1151,6 +1151,11 @@ async function updateAdvancedCharts() {
  * 알고리즘 분석 업데이트 (Palantir-style comprehensive analysis)
  */
 function updateAlgorithmicAnalysis() {
+    // Update Hero Dashboard first
+    if (typeof updateHeroDashboard === 'function') {
+        updateHeroDashboard();
+    }
+
     // Original pattern insights (preserved)
     analyzeTimeBasedPerformance();
     analyzeConsecutiveTradesPattern();
