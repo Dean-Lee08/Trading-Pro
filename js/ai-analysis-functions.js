@@ -415,3 +415,274 @@ function runMonteCarloSimulation(simulations, days) {
         probabilityOfProfit: (outcomes.filter(o => o.finalBalance > startingBalance).length / simulations) * 100
     };
 }
+
+/**
+ * Phase 3: Multivariate Correlation Analysis
+ * Analyzes interactions between multiple psychological and performance variables
+ */
+function analyzeMultivariateCorrelations() {
+    if (trades.length < 20 || Object.keys(psychologyData).length < 10) return null;
+
+    // Group trades by date and calculate daily metrics
+    const dailyMetrics = {};
+    Object.keys(psychologyData).forEach(date => {
+        const dayTrades = trades.filter(t => t.date === date);
+        if (dayTrades.length > 0) {
+            const psych = psychologyData[date];
+            dailyMetrics[date] = {
+                psych: psych,
+                trades: dayTrades,
+                totalPnL: dayTrades.reduce((sum, t) => sum + t.pnl, 0),
+                winRate: (dayTrades.filter(t => t.pnl > 0).length / dayTrades.length) * 100,
+                avgReturnPct: dayTrades.reduce((sum, t) => sum + (t.returnPct || 0), 0) / dayTrades.length
+            };
+        }
+    });
+
+    const dataPoints = Object.values(dailyMetrics);
+    if (dataPoints.length < 10) return null;
+
+    // Calculate correlations
+    const correlations = [];
+
+    // 1. Sleep-Caffeine Interaction
+    const sleepCaffeineData = dataPoints.filter(d => d.psych.sleepHours && d.psych.caffeineIntake != null);
+    if (sleepCaffeineData.length >= 10) {
+        // Calculate interaction score: low sleep + high caffeine is concerning
+        const interactions = sleepCaffeineData.map(d => ({
+            interaction: d.psych.sleepHours * (200 - d.psych.caffeineIntake) / 200, // Normalized score
+            winRate: d.winRate
+        }));
+        const corr = calculatePearsonCorrelation(interactions.map(i => ({ x: i.interaction, y: i.winRate })));
+        if (corr !== null) {
+            correlations.push({
+                name: currentLanguage === 'ko' ? '수면-카페인 상호작용' : 'Sleep-Caffeine Interaction',
+                correlation: corr,
+                strength: Math.abs(corr) > 0.5 ? 'Strong' : Math.abs(corr) > 0.3 ? 'Moderate' : 'Weak',
+                insight: corr > 0 ?
+                    (currentLanguage === 'ko' ? '충분한 수면과 적절한 카페인 섭취가 성과 향상과 상관관계' : 'Adequate sleep with moderate caffeine correlates with better performance') :
+                    (currentLanguage === 'ko' ? '부족한 수면에 과도한 카페인이 성과 저하와 상관관계' : 'Poor sleep with excessive caffeine correlates with worse performance')
+            });
+        }
+    }
+
+    // 2. Stress-Confidence Combination
+    const stressConfData = dataPoints.filter(d => d.psych.stress && d.psych.confidence);
+    if (stressConfData.length >= 10) {
+        // Optimal zone: low stress + moderate-high confidence
+        const combinations = stressConfData.map(d => ({
+            combo: d.psych.confidence / d.psych.stress, // Higher is better
+            pnl: d.totalPnL
+        }));
+        const corr = calculatePearsonCorrelation(combinations.map(c => ({ x: c.combo, y: c.pnl })));
+        if (corr !== null) {
+            correlations.push({
+                name: currentLanguage === 'ko' ? '스트레스-자신감 조합' : 'Stress-Confidence Balance',
+                correlation: corr,
+                strength: Math.abs(corr) > 0.5 ? 'Strong' : Math.abs(corr) > 0.3 ? 'Moderate' : 'Weak',
+                insight: corr > 0 ?
+                    (currentLanguage === 'ko' ? '낮은 스트레스와 높은 자신감이 수익과 양의 상관관계' : 'Low stress with high confidence shows positive correlation with profit') :
+                    (currentLanguage === 'ko' ? '높은 스트레스가 과신과 결합되면 손실 위험' : 'High stress combined with overconfidence increases loss risk')
+            });
+        }
+    }
+
+    // 3. Environment-Focus Correlation
+    const envFocusData = dataPoints.filter(d => d.psych.focus);
+    if (envFocusData.length >= 10) {
+        const homeData = envFocusData.filter(d => d.psych.tradingEnvironment === 'home');
+        const officeData = envFocusData.filter(d => d.psych.tradingEnvironment === 'office');
+
+        if (homeData.length >= 5 && officeData.length >= 5) {
+            const homeAvgFocus = homeData.reduce((sum, d) => sum + d.psych.focus, 0) / homeData.length;
+            const officeAvgFocus = officeData.reduce((sum, d) => sum + d.psych.focus, 0) / officeData.length;
+            const homeAvgWR = homeData.reduce((sum, d) => sum + d.winRate, 0) / homeData.length;
+            const officeAvgWR = officeData.reduce((sum, d) => sum + d.winRate, 0) / officeData.length;
+
+            correlations.push({
+                name: currentLanguage === 'ko' ? '환경-집중도 상관관계' : 'Environment-Focus Correlation',
+                correlation: (homeAvgWR - officeAvgWR) / 100, // Normalized difference
+                strength: 'Comparative',
+                insight: homeAvgWR > officeAvgWR ?
+                    (currentLanguage === 'ko' ? `재택(집중도 ${homeAvgFocus.toFixed(1)}, 승률 ${homeAvgWR.toFixed(0)}%)이 사무실보다 효과적` : `Home trading (focus ${homeAvgFocus.toFixed(1)}, WR ${homeAvgWR.toFixed(0)}%) more effective than office`) :
+                    (currentLanguage === 'ko' ? `사무실(집중도 ${officeAvgFocus.toFixed(1)}, 승률 ${officeAvgWR.toFixed(0)}%)이 재택보다 효과적` : `Office trading (focus ${officeAvgFocus.toFixed(1)}, WR ${officeAvgWR.toFixed(0)}%) more effective than home`)
+            });
+        }
+    }
+
+    return {
+        correlations: correlations,
+        sampleSize: dataPoints.length,
+        dataQuality: dataPoints.length >= 30 ? 'High' : dataPoints.length >= 20 ? 'Medium' : 'Low'
+    };
+}
+
+/**
+ * Phase 3: Temporal Pattern Recognition
+ * Detects time-based patterns in trading performance
+ */
+function detectTemporalPatterns() {
+    if (trades.length < 30) return null;
+
+    const patterns = [];
+
+    // Group trades by day of week
+    const dayOfWeekStats = {};
+    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const dayNamesKo = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+
+    trades.forEach(trade => {
+        const date = new Date(trade.date + 'T12:00:00');
+        const dayOfWeek = date.getDay();
+        if (!dayOfWeekStats[dayOfWeek]) {
+            dayOfWeekStats[dayOfWeek] = { trades: [], totalPnL: 0, wins: 0 };
+        }
+        dayOfWeekStats[dayOfWeek].trades.push(trade);
+        dayOfWeekStats[dayOfWeek].totalPnL += trade.pnl;
+        if (trade.pnl > 0) dayOfWeekStats[dayOfWeek].wins++;
+    });
+
+    // Find best and worst days
+    const dayPerformance = Object.keys(dayOfWeekStats).map(day => ({
+        day: parseInt(day),
+        name: currentLanguage === 'ko' ? dayNamesKo[day] : dayNames[day],
+        avgPnL: dayOfWeekStats[day].totalPnL / dayOfWeekStats[day].trades.length,
+        winRate: (dayOfWeekStats[day].wins / dayOfWeekStats[day].trades.length) * 100,
+        tradeCount: dayOfWeekStats[day].trades.length
+    })).filter(d => d.tradeCount >= 3); // Minimum 3 trades per day
+
+    if (dayPerformance.length > 0) {
+        dayPerformance.sort((a, b) => b.avgPnL - a.avgPnL);
+        const bestDay = dayPerformance[0];
+        const worstDay = dayPerformance[dayPerformance.length - 1];
+
+        patterns.push({
+            type: 'weekday_performance',
+            bestDay: bestDay.name,
+            bestDayAvgPnL: bestDay.avgPnL,
+            bestDayWinRate: bestDay.winRate,
+            worstDay: worstDay.name,
+            worstDayAvgPnL: worstDay.avgPnL,
+            worstDayWinRate: worstDay.winRate,
+            insight: currentLanguage === 'ko' ?
+                `${bestDay.name}(평균 $${bestDay.avgPnL.toFixed(2)}, 승률 ${bestDay.winRate.toFixed(0)}%)이 최고 실적. ${worstDay.name} 거래 피할 것을 권장` :
+                `Best performance on ${bestDay.name} (avg $${bestDay.avgPnL.toFixed(2)}, WR ${bestDay.winRate.toFixed(0)}%). Consider avoiding ${worstDay.name} trades`
+        });
+    }
+
+    // Consecutive trading day fatigue analysis
+    const sortedTrades = [...trades].sort((a, b) => new Date(a.date) - new Date(b.date));
+    const tradingDates = [...new Set(sortedTrades.map(t => t.date))].sort();
+
+    let consecutiveGroups = [];
+    let currentGroup = [tradingDates[0]];
+
+    for (let i = 1; i < tradingDates.length; i++) {
+        const prevDate = new Date(tradingDates[i - 1]);
+        const currDate = new Date(tradingDates[i]);
+        const daysDiff = (currDate - prevDate) / (1000 * 60 * 60 * 24);
+
+        if (daysDiff <= 1) {
+            currentGroup.push(tradingDates[i]);
+        } else {
+            if (currentGroup.length >= 3) consecutiveGroups.push([...currentGroup]);
+            currentGroup = [tradingDates[i]];
+        }
+    }
+    if (currentGroup.length >= 3) consecutiveGroups.push(currentGroup);
+
+    if (consecutiveGroups.length > 0) {
+        // Analyze performance decline over consecutive days
+        let fatigueDetected = false;
+        consecutiveGroups.forEach(group => {
+            if (group.length >= 5) {
+                const firstDayPnL = trades.filter(t => t.date === group[0]).reduce((sum, t) => sum + t.pnl, 0);
+                const lastDayPnL = trades.filter(t => t.date === group[group.length - 1]).reduce((sum, t) => sum + t.pnl, 0);
+                const midDayPnL = trades.filter(t => t.date === group[Math.floor(group.length / 2)]).reduce((sum, t) => sum + t.pnl, 0);
+
+                if (firstDayPnL > midDayPnL && midDayPnL > lastDayPnL) {
+                    fatigueDetected = true;
+                }
+            }
+        });
+
+        if (fatigueDetected) {
+            patterns.push({
+                type: 'consecutive_day_fatigue',
+                detected: true,
+                insight: currentLanguage === 'ko' ?
+                    '연속 거래일에서 성과 하락 패턴 감지. 5일 이상 연속 거래 후 휴식 권장' :
+                    'Performance decline detected in consecutive trading days. Consider breaks after 5+ consecutive days'
+            });
+        }
+    }
+
+    return {
+        patterns: patterns,
+        totalTradingDays: tradingDates.length,
+        avgTradesPerDay: trades.length / tradingDates.length
+    };
+}
+
+/**
+ * Phase 3: Trade Clustering Analysis
+ * Groups trades into clusters based on holding time and characteristics
+ */
+function performTradeClustering() {
+    const validTrades = trades.filter(t => t.holdingMinutes && t.holdingMinutes > 0);
+    if (validTrades.length < 20) return null;
+
+    // Define clusters based on holding time
+    const scalpingTrades = validTrades.filter(t => parseInt(t.holdingMinutes) >= 5 && parseInt(t.holdingMinutes) < 30);
+    const swingTrades = validTrades.filter(t => parseInt(t.holdingMinutes) >= 30 && parseInt(t.holdingMinutes) < 120);
+    const positionTrades = validTrades.filter(t => parseInt(t.holdingMinutes) >= 120);
+
+    const analyzeCluster = (clusterTrades, name, nameKo) => {
+        if (clusterTrades.length === 0) return null;
+
+        const wins = clusterTrades.filter(t => t.pnl > 0);
+        const losses = clusterTrades.filter(t => t.pnl < 0);
+        const totalPnL = clusterTrades.reduce((sum, t) => sum + t.pnl, 0);
+        const avgPnL = totalPnL / clusterTrades.length;
+        const winRate = (wins.length / clusterTrades.length) * 100;
+        const avgWin = wins.length > 0 ? wins.reduce((sum, t) => sum + t.pnl, 0) / wins.length : 0;
+        const avgLoss = losses.length > 0 ? losses.reduce((sum, t) => sum + t.pnl, 0) / losses.length : 0;
+        const profitFactor = losses.length > 0 ? (wins.reduce((sum, t) => sum + t.pnl, 0) / Math.abs(losses.reduce((sum, t) => sum + t.pnl, 0))) : 999;
+
+        return {
+            name: currentLanguage === 'ko' ? nameKo : name,
+            tradeCount: clusterTrades.length,
+            totalPnL: totalPnL,
+            avgPnL: avgPnL,
+            winRate: winRate,
+            avgWin: avgWin,
+            avgLoss: avgLoss,
+            profitFactor: profitFactor,
+            avgHoldTime: clusterTrades.reduce((sum, t) => sum + parseInt(t.holdingMinutes), 0) / clusterTrades.length
+        };
+    };
+
+    const clusters = [
+        analyzeCluster(scalpingTrades, 'Quick Scalping (5-30 min)', '빠른 스캘핑 (5-30분)'),
+        analyzeCluster(swingTrades, 'Swing Trades (30-120 min)', '스윙 트레이드 (30-120분)'),
+        analyzeCluster(positionTrades, 'Position Trades (120+ min)', '포지션 트레이드 (120분+)')
+    ].filter(c => c !== null);
+
+    // Find optimal cluster
+    const optimalCluster = clusters.reduce((best, curr) =>
+        curr.avgPnL > best.avgPnL ? curr : best
+    );
+
+    return {
+        clusters: clusters,
+        optimalCluster: optimalCluster.name,
+        optimalMetrics: {
+            avgPnL: optimalCluster.avgPnL,
+            winRate: optimalCluster.winRate,
+            profitFactor: optimalCluster.profitFactor
+        },
+        recommendation: currentLanguage === 'ko' ?
+            `${optimalCluster.name} 스타일에 집중 (평균 손익 $${optimalCluster.avgPnL.toFixed(2)}, 승률 ${optimalCluster.winRate.toFixed(0)}%)` :
+            `Focus on ${optimalCluster.name} style (avg P&L $${optimalCluster.avgPnL.toFixed(2)}, WR ${optimalCluster.winRate.toFixed(0)}%)`
+    };
+}
