@@ -1479,26 +1479,22 @@ function renderTopInsights() {
         });
     }
 
-    // Render top 3
+    // Render top insight (compact mode - only show #1)
     if (insights.length === 0) {
-        container.innerHTML = `
-            <div style="text-align: center; padding: 20px; color: #64748b; font-size: 13px;">
-                <span data-lang="collecting-insights">Collecting data for insights...</span>
-            </div>
-        `;
+        container.innerHTML = `<span data-lang="collecting-insights" style="color: #64748b; font-size: 12px;">Collecting data...</span>`;
         return;
     }
 
-    const top3 = insights.slice(0, 3);
-    const html = top3.map(insight => `
-        <div class="insight-priority-card priority-${insight.priority}">
-            <div class="insight-icon">${insight.icon}</div>
-            <div class="insight-title">${insight.title}</div>
-            <div class="insight-description">${insight.description}</div>
+    const topInsight = insights[0];
+    container.innerHTML = `
+        <div style="display: flex; align-items: start; gap: 8px;">
+            <div style="font-size: 16px; flex-shrink: 0;">${topInsight.icon}</div>
+            <div style="flex: 1;">
+                <div style="color: #e4e4e7; font-size: 12px; font-weight: 600; margin-bottom: 4px;">${topInsight.title}</div>
+                <div style="color: #94a3b8; font-size: 11px; line-height: 1.4;">${topInsight.description}</div>
+            </div>
         </div>
-    `).join('');
-
-    container.innerHTML = html;
+    `;
 }
 
 /**
