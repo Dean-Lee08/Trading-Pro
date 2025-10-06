@@ -1326,6 +1326,9 @@ function updateAlgorithmicAnalysis() {
         updateHeroDashboard();
     }
 
+    // TIER 1: Executive Summary (always render)
+    renderExecutiveSummary();
+
     // Original pattern insights (preserved)
     analyzeTimeBasedPerformance();
     analyzeConsecutiveTradesPattern();
