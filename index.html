@@ -1564,12 +1564,31 @@
                                 </div>
                             </div>
 
-                            <!-- AI-Generated Insights -->
-                            <div style="background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
-                                <h3 data-lang="ai-insights" style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;">AI-Generated Insights</h3>
-                                <div id="aiInsightsList" style="display: grid; gap: 12px;">
-                                    <div style="background: #0f172a; border-left: 4px solid #3b82f6; padding: 12px 16px; border-radius: 0 6px 6px 0;">
-                                        <div data-lang="no-insights" style="color: #e4e4e7; font-size: 14px; line-height: 1.5;">Collect more psychology data to generate personalized insights.</div>
+                            <!-- AI Insights & Recommendations - MERGED -->
+                            <div class="analysis-section-glass card-reveal stagger-3" style="margin-bottom: 28px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div style="width: 4px; height: 28px; background: linear-gradient(180deg, #f59e0b, #d97706); border-radius: 2px;"></div>
+                                        <h3 style="color: #f8fafc; font-size: 18px; font-weight: 600; margin: 0;">
+                                            <span data-lang="ai-insights">AI-Generated Insights</span> & <span data-lang="adaptive-recommendations">Recommendations</span>
+                                        </h3>
+                                    </div>
+                                    <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); padding: 6px 12px; border-radius: 8px;">
+                                        <span style="color: #fbbf24; font-size: 11px; font-weight: 600; letter-spacing: 0.5px;">🤖 AI POWERED</span>
+                                    </div>
+                                </div>
+
+                                <!-- Insights List -->
+                                <div id="aiInsightsList" style="display: grid; gap: 16px; margin-bottom: 20px;">
+                                    <div style="background: rgba(15, 23, 42, 0.5); border-left: 4px solid #3b82f6; padding: 16px 20px; border-radius: 0 10px 10px 0; backdrop-filter: blur(8px);">
+                                        <div data-lang="no-insights" style="color: #e4e4e7; font-size: 14px; line-height: 1.6;">Collect more psychology data to generate personalized insights.</div>
+                                    </div>
+                                </div>
+
+                                <!-- Recommendations List -->
+                                <div id="adaptiveRecommendations" style="display: grid; gap: 16px;">
+                                    <div style="background: rgba(15, 23, 42, 0.5); text-align: center; padding: 20px; border-radius: 10px; border: 1px solid rgba(100, 116, 139, 0.2);">
+                                        <span data-lang="generating-recs" style="color: #64748b;">Generating personalized recommendations...</span>
                                     </div>
                                 </div>
                             </div>
