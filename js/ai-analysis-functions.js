@@ -566,10 +566,16 @@ function analyzeMultivariateCorrelations() {
         }));
         const corr = calculatePearsonCorrelation(combinations.map(c => ({ x: c.combo, y: c.pnl })));
         if (corr !== null) {
+            const significance = calculateCorrelationSignificance(corr, combinations.length);
+            const ci = calculateCorrelationCI(corr, combinations.length);
+
             correlations.push({
                 name: currentLanguage === 'ko' ? '스트레스-자신감 조합' : 'Stress-Confidence Balance',
                 correlation: corr,
                 strength: Math.abs(corr) > 0.5 ? 'Strong' : Math.abs(corr) > 0.3 ? 'Moderate' : 'Weak',
+                pValue: significance.pValue,
+                significant: significance.significant,
+                confidenceInterval: ci,
                 insight: corr > 0 ?
                     (currentLanguage === 'ko' ? '낮은 스트레스와 높은 자신감이 수익과 양의 상관관계' : 'Low stress with high confidence shows positive correlation with profit') :
                     (currentLanguage === 'ko' ? '높은 스트레스가 과신과 결합되면 손실 위험' : 'High stress combined with overconfidence increases loss risk')
