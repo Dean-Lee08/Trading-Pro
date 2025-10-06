@@ -531,6 +531,11 @@ function analyzeMultivariateCorrelations() {
  * Detects time-based patterns in trading performance
  */
 function detectTemporalPatterns() {
+    // Check cache first
+    const cacheKey = `temporal_${trades.length}`;
+    const cached = analysisCache.get(cacheKey);
+    if (cached) return cached;
+
     if (trades.length < 30) return null;
 
     const patterns = [];
@@ -626,11 +631,15 @@ function detectTemporalPatterns() {
         }
     }
 
-    return {
+    const result = {
         patterns: patterns,
         totalTradingDays: tradingDates.length,
         avgTradesPerDay: trades.length / tradingDates.length
     };
+
+    // Cache the result
+    analysisCache.set(cacheKey, result);
+    return result;
 }
 
 /**
