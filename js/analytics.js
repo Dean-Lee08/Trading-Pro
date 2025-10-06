@@ -2,6 +2,19 @@
 
 // ==================== Analytics Section Management ====================
 
+// Debounce utility for performance optimization
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
 // Analysis cache for performance optimization
 const analysisCache = {
     data: {},
