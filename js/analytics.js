@@ -2975,8 +2975,10 @@ function renderMultiFactorAttribution() {
 
     if (!factors || factors.length === 0) {
         element.innerHTML = `
-            <div style="color: #64748b; text-align: center; padding: 20px;">
-                Insufficient data for multi-factor analysis. Need at least 10 trades with psychology data.
+            <div style="background: rgba(15, 23, 42, 0.5); text-align: center; padding: 30px; border-radius: 10px; border: 1px solid rgba(100, 116, 139, 0.2);">
+                <div style="color: #64748b; font-size: 14px;" data-lang="insufficient-data-multi">
+                    Insufficient data for multi-factor analysis. Need at least 10 trades with psychology data.
+                </div>
             </div>
         `;
         return;
@@ -2986,18 +2988,32 @@ function renderMultiFactorAttribution() {
         const barWidth = Math.abs(factor.impact) * 100;
         const barColor = factor.impact > 0 ? '#10b981' : '#ef4444';
         const impactSign = factor.impact > 0 ? '+' : '';
+        const iconMap = ['💤', '🎯', '⏰', '📏'];
 
         return `
-            <div style="margin-bottom: 16px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                    <span style="color: #e4e4e7; font-size: 13px; font-weight: 500;">${factor.name}</span>
-                    <span style="color: ${barColor}; font-size: 13px; font-weight: 600;">${impactSign}${(factor.impact * 100).toFixed(1)}%</span>
+            <div class="glass-card hover-lift" style="background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(100, 116, 139, 0.2); padding: 20px; margin-bottom: 16px; border-radius: 10px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 24px;">${iconMap[idx % iconMap.length]}</span>
+                        <span style="color: #e4e4e7; font-size: 14px; font-weight: 600;">${factor.name}</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <span style="color: ${barColor}; font-size: 18px; font-weight: 700;">${impactSign}${(factor.impact * 100).toFixed(1)}%</span>
+                        <div style="background: ${barColor}20; border: 1px solid ${barColor}40; padding: 4px 8px; border-radius: 6px;">
+                            <span style="color: ${barColor}; font-size: 10px; font-weight: 600;" data-lang="feature-impact">IMPACT</span>
+                        </div>
+                    </div>
                 </div>
-                <div style="background: #0f172a; height: 8px; border-radius: 4px; overflow: hidden;">
-                    <div style="width: ${barWidth}%; height: 100%; background: ${barColor}; transition: width 0.3s;"></div>
+                <div style="background: rgba(15, 23, 42, 0.6); height: 12px; border-radius: 6px; overflow: hidden; margin-bottom: 8px; position: relative;">
+                    <div class="progress-animated" style="width: ${barWidth}%; height: 100%; background: linear-gradient(90deg, ${barColor}, ${barColor}aa); border-radius: 6px; box-shadow: 0 0 10px ${barColor}40;"></div>
                 </div>
-                <div style="color: #64748b; font-size: 11px; margin-top: 4px;">
-                    Sample: ${factor.sampleSize} days | Confidence: ${(factor.confidence * 100).toFixed(0)}%
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #64748b; font-size: 11px;">
+                        <span data-lang="sample-size">Sample</span>: <span style="color: #94a3b8; font-weight: 600;">${factor.sampleSize}</span> days
+                    </span>
+                    <span style="color: #64748b; font-size: 11px;">
+                        Confidence: <span style="color: #94a3b8; font-weight: 600;">${(factor.confidence * 100).toFixed(0)}%</span>
+                    </span>
                 </div>
             </div>
         `;
