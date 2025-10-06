@@ -3948,32 +3948,62 @@ function renderAdaptiveRecommendations() {
 
     if (recommendations.length === 0) {
         element.innerHTML = `
-            <div style="color: #64748b; text-align: center; padding: 20px;">
-                Collecting data for personalized recommendations...
+            <div style="background: rgba(15, 23, 42, 0.5); text-align: center; padding: 24px; border-radius: 8px; border: 1px solid rgba(100, 116, 139, 0.2);">
+                <div style="color: #64748b; font-size: 13px;">Collecting data for personalized recommendations...</div>
             </div>
         `;
         return;
     }
 
+    const priorityConfig = {
+        high: {
+            icon: '🔴',
+            badge: currentLanguage === 'ko' ? '최우선' : 'HIGH PRIORITY',
+            color: '#ef4444',
+            bgGradient: 'rgba(239, 68, 68, 0.15)',
+            borderColor: 'rgba(239, 68, 68, 0.4)'
+        },
+        medium: {
+            icon: '🟡',
+            badge: currentLanguage === 'ko' ? '최적화' : 'OPTIMIZATION',
+            color: '#f59e0b',
+            bgGradient: 'rgba(245, 158, 11, 0.15)',
+            borderColor: 'rgba(245, 158, 11, 0.4)'
+        },
+        low: {
+            icon: '🟢',
+            badge: currentLanguage === 'ko' ? '개선' : 'IMPROVEMENT',
+            color: '#10b981',
+            bgGradient: 'rgba(16, 185, 129, 0.15)',
+            borderColor: 'rgba(16, 185, 129, 0.4)'
+        }
+    };
+
     const html = recommendations.map(rec => {
-        const bgColor = rec.priority === 'high' ? '#7f1d1d' :
-                        rec.priority === 'medium' ? '#78350f' : '#14532d';
-
-        const borderColor = rec.priority === 'high' ? '#ef4444' :
-                           rec.priority === 'medium' ? '#f59e0b' : '#10b981';
-
-        const badge = rec.priority === 'high' ? (currentLanguage === 'ko' ? '최우선' : 'HIGH PRIORITY') :
-                      rec.priority === 'medium' ? (currentLanguage === 'ko' ? '최적화' : 'OPTIMIZATION') :
-                      (currentLanguage === 'ko' ? '개선' : 'IMPROVEMENT');
+        const config = priorityConfig[rec.priority] || priorityConfig.low;
 
         return `
-            <div style="background: ${bgColor}; border: 1px solid ${borderColor}; border-radius: 8px; padding: 16px; margin-bottom: 12px;">
-                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
-                    <span style="color: ${borderColor}; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">${badge}</span>
-                    <span style="color: #94a3b8; font-size: 11px;">${rec.impact}</span>
+            <div class="glass-card hover-lift" style="background: linear-gradient(135deg, ${config.bgGradient}, rgba(15, 23, 42, 0.6)); border-left: 4px solid ${config.color}; padding: 20px; margin-bottom: 16px; border-radius: 10px;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 24px;">${config.icon}</span>
+                        <div style="background: ${config.color}20; border: 1px solid ${config.borderColor}; padding: 4px 12px; border-radius: 12px;">
+                            <span style="color: ${config.color}; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
+                                ${config.badge}
+                            </span>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="color: #64748b; font-size: 10px; text-transform: uppercase; margin-bottom: 2px;">Impact</div>
+                        <div style="color: #94a3b8; font-size: 12px; font-weight: 600;">${rec.impact}</div>
+                    </div>
                 </div>
-                <div style="color: #e4e4e7; font-size: 14px; font-weight: 500; margin-bottom: 6px;">${rec.title}</div>
-                <div style="color: #cbd5e1; font-size: 13px; line-height: 1.6;">${rec.description}</div>
+                <div style="color: #e4e4e7; font-size: 15px; font-weight: 700; margin-bottom: 10px; line-height: 1.4;">
+                    ${rec.title}
+                </div>
+                <div style="color: #cbd5e1; font-size: 13px; line-height: 1.6;">
+                    ${rec.description}
+                </div>
             </div>
         `;
     }).join('');
