@@ -3777,6 +3777,17 @@ function renderStatisticalEdge() {
 
     const edge = calculateStatisticalEdge();
 
+    if (!edge || edge.winRate === null) {
+        element.innerHTML = `
+            <div style="background: rgba(15, 23, 42, 0.5); text-align: center; padding: 30px; border-radius: 10px; border: 1px solid rgba(100, 116, 139, 0.2);">
+                <div style="color: #64748b; font-size: 14px;" data-lang="insufficient-data-edge">
+                    Insufficient data for statistical edge calculation. Need at least 30 trades.
+                </div>
+            </div>
+        `;
+        return;
+    }
+
     const significanceColor = edge.pValue < 0.01 ? '#10b981' :
                               edge.pValue < 0.05 ? '#f59e0b' : '#ef4444';
 
@@ -3784,43 +3795,94 @@ function renderStatisticalEdge() {
                              edge.pValue < 0.05 ? (currentLanguage === 'ko' ? '유의함' : 'Significant') :
                              (currentLanguage === 'ko' ? '유의하지 않음' : 'Not Significant');
 
+    const metrics = [
+        {
+            icon: '🎯',
+            label: 'Win Rate',
+            value: `${edge.winRate.toFixed(1)}%`,
+            subtext: 'vs 50% baseline',
+            color: edge.winRate >= 55 ? '#10b981' : '#ef4444'
+        },
+        {
+            icon: '💰',
+            label: 'Expected Value',
+            value: `$${edge.expectedValue.toFixed(2)}`,
+            subtext: 'per trade',
+            color: edge.expectedValue > 0 ? '#10b981' : '#ef4444'
+        },
+        {
+            icon: '📊',
+            label: 'Sharpe Ratio',
+            value: edge.sharpe.toFixed(2),
+            subtext: 'risk-adjusted',
+            color: edge.sharpe >= 1.5 ? '#10b981' : edge.sharpe >= 1 ? '#f59e0b' : '#ef4444'
+        },
+        {
+            icon: '🔬',
+            label: 'Statistical Sig.',
+            value: `p=${edge.pValue.toFixed(3)}`,
+            subtext: significanceText,
+            color: significanceColor
+        }
+    ];
+
+    const metricsHTML = metrics.map(metric => `
+        <div class="glass-card hover-lift" style="background: linear-gradient(135deg, ${metric.color}10, rgba(15, 23, 42, 0.5)); border: 1px solid ${metric.color}30; padding: 24px; text-align: center; border-radius: 10px;">
+            <div style="font-size: 36px; margin-bottom: 12px;">${metric.icon}</div>
+            <div style="color: #94a3b8; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">${metric.label}</div>
+            <div style="color: ${metric.color}; font-size: 32px; font-weight: 800; line-height: 1; margin-bottom: 8px; text-shadow: 0 0 20px ${metric.color}30;">
+                ${metric.value}
+            </div>
+            <div style="color: #64748b; font-size: 11px;">${metric.subtext}</div>
+        </div>
+    `).join('');
+
+    const confidenceLeft = Math.max(0, edge.confidenceLow);
+    const confidenceRight = Math.min(100, edge.confidenceHigh);
+    const confidenceWidth = confidenceRight - confidenceLeft;
+
     element.innerHTML = `
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 20px;">
-            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;">Win Rate</div>
-                <div style="color: ${edge.winRate >= 55 ? '#10b981' : '#ef4444'}; font-size: 24px; font-weight: 700;">${edge.winRate.toFixed(1)}%</div>
-                <div style="color: #64748b; font-size: 11px;">vs 50% baseline</div>
-            </div>
-
-            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;">Expected Value</div>
-                <div style="color: ${edge.expectedValue > 0 ? '#10b981' : '#ef4444'}; font-size: 24px; font-weight: 700;">$${edge.expectedValue.toFixed(2)}</div>
-                <div style="color: #64748b; font-size: 11px;">per trade</div>
-            </div>
-
-            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;">Sharpe Ratio</div>
-                <div style="color: ${edge.sharpe >= 1.5 ? '#10b981' : edge.sharpe >= 1 ? '#f59e0b' : '#ef4444'}; font-size: 24px; font-weight: 700;">${edge.sharpe.toFixed(2)}</div>
-                <div style="color: #64748b; font-size: 11px;">risk-adjusted</div>
-            </div>
-
-            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
-                <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;">Statistical Sig.</div>
-                <div style="color: ${significanceColor}; font-size: 24px; font-weight: 700;">p=${edge.pValue.toFixed(3)}</div>
-                <div style="color: #64748b; font-size: 11px;">${significanceText}</div>
-            </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">
+            ${metricsHTML}
         </div>
 
-        <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
-            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 12px;">95% Confidence Interval</div>
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="color: #e4e4e7; font-size: 14px; font-weight: 600;">${edge.confidenceLow.toFixed(1)}%</div>
-                <div style="flex: 1; background: #1e293b; height: 8px; border-radius: 4px; position: relative;">
-                    <div style="position: absolute; left: ${edge.confidenceLow}%; right: ${100 - edge.confidenceHigh}%; height: 100%; background: linear-gradient(90deg, #3b82f6, #10b981); border-radius: 4px;"></div>
+        <div class="glass-card hover-lift" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.05)); border: 1px solid rgba(59, 130, 246, 0.3); padding: 24px; border-radius: 10px;">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                <span style="font-size: 28px;">📏</span>
+                <div>
+                    <div style="color: #e4e4e7; font-size: 15px; font-weight: 700; margin-bottom: 4px;" data-lang="confidence-interval">95% Confidence Interval</div>
+                    <div style="color: #64748b; font-size: 11px;">Expected win rate range with 95% confidence</div>
                 </div>
-                <div style="color: #e4e4e7; font-size: 14px; font-weight: 600;">${edge.confidenceHigh.toFixed(1)}%</div>
             </div>
-            <div style="color: #64748b; font-size: 11px; margin-top: 8px; text-align: center;">Expected win rate range with 95% confidence</div>
+
+            <div style="background: rgba(15, 23, 42, 0.6); padding: 20px; border-radius: 8px; border: 1px solid rgba(100, 116, 139, 0.2);">
+                <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
+                    <div style="text-align: center; min-width: 80px;">
+                        <div style="color: #3b82f6; font-size: 24px; font-weight: 700; line-height: 1;">${edge.confidenceLow.toFixed(1)}%</div>
+                        <div style="color: #64748b; font-size: 10px; text-transform: uppercase; margin-top: 4px;">Lower</div>
+                    </div>
+
+                    <div style="flex: 1; position: relative; height: 40px;">
+                        <!-- Background track -->
+                        <div style="position: absolute; top: 50%; transform: translateY(-50%); width: 100%; height: 12px; background: rgba(15, 23, 42, 0.8); border-radius: 6px;"></div>
+
+                        <!-- Confidence range -->
+                        <div style="position: absolute; top: 50%; transform: translateY(-50%); left: ${confidenceLeft}%; width: ${confidenceWidth}%; height: 16px; background: linear-gradient(90deg, #3b82f6, #10b981); border-radius: 8px; box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);"></div>
+
+                        <!-- Current win rate marker -->
+                        <div style="position: absolute; top: 50%; transform: translate(-50%, -50%); left: ${edge.winRate}%; width: 6px; height: 30px; background: #f59e0b; border-radius: 3px; box-shadow: 0 0 15px #f59e0b; z-index: 2;"></div>
+                    </div>
+
+                    <div style="text-align: center; min-width: 80px;">
+                        <div style="color: #10b981; font-size: 24px; font-weight: 700; line-height: 1;">${edge.confidenceHigh.toFixed(1)}%</div>
+                        <div style="color: #64748b; font-size: 10px; text-transform: uppercase; margin-top: 4px;">Upper</div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 16px;">
+                    <span style="color: #f59e0b; font-size: 12px; font-weight: 600;">▲ Current: ${edge.winRate.toFixed(1)}%</span>
+                </div>
+            </div>
         </div>
     `;
 }
