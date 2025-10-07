@@ -6,47 +6,60 @@
  * P&L 계산 및 자동 시간 입력
  */
 function calculatePnL() {
-    const shares = parseFloat(document.getElementById('shares').value) || 0;
-    const buyPrice = parseFloat(document.getElementById('buyPrice').value) || 0;
-    const sellPrice = parseFloat(document.getElementById('sellPrice').value) || 0;
-    
-    // Amount 계산 및 표시
-    if (shares && buyPrice) {
-        const amount = shares * buyPrice;
-        document.getElementById('amountDisplay').value = `$${amount.toFixed(2)}`;
-    } else {
-        document.getElementById('amountDisplay').value = '';
-    }
-    
-    // P&L 및 Return % 계산
-    if (shares && buyPrice && sellPrice) {
-        const pnl = shares * (sellPrice - buyPrice);
-        const returnPct = ((sellPrice - buyPrice) / buyPrice) * 100;
-        
-        document.getElementById('pnlDisplay').value = `${pnl.toFixed(2)}`;
-        document.getElementById('returnPct').value = `${returnPct.toFixed(2)}%`;
-        
-        const pnlInput = document.getElementById('pnlDisplay');
-        const returnInput = document.getElementById('returnPct');
-        
-        if (pnl > 0) {
-            pnlInput.style.color = '#10b981';
-            returnInput.style.color = '#10b981';
-        } else if (pnl < 0) {
-            pnlInput.style.color = '#ef4444';
-            returnInput.style.color = '#ef4444';
-        } else {
-            pnlInput.style.color = '#e4e4e7';
-            returnInput.style.color = '#e4e4e7';
-        }
-    } else {
-        document.getElementById('pnlDisplay').value = '';
-        document.getElementById('returnPct').value = '';
-    }
+    try {
+        const sharesEl = document.getElementById('shares');
+        const buyPriceEl = document.getElementById('buyPrice');
+        const sellPriceEl = document.getElementById('sellPrice');
+        const amountDisplayEl = document.getElementById('amountDisplay');
+        const pnlDisplayEl = document.getElementById('pnlDisplay');
+        const returnPctEl = document.getElementById('returnPct');
 
-    // 자동 시간 입력
-    if (!timeEditMode) {
-        autoFillTradingTimes();
+        if (!sharesEl || !buyPriceEl || !sellPriceEl || !amountDisplayEl || !pnlDisplayEl || !returnPctEl) {
+            console.error('Required form elements not found');
+            return;
+        }
+
+        const shares = parseFloat(sharesEl.value) || 0;
+        const buyPrice = parseFloat(buyPriceEl.value) || 0;
+        const sellPrice = parseFloat(sellPriceEl.value) || 0;
+
+        // Amount 계산 및 표시
+        if (shares && buyPrice) {
+            const amount = shares * buyPrice;
+            amountDisplayEl.value = `$${amount.toFixed(2)}`;
+        } else {
+            amountDisplayEl.value = '';
+        }
+
+        // P&L 및 Return % 계산
+        if (shares && buyPrice && sellPrice) {
+            const pnl = shares * (sellPrice - buyPrice);
+            const returnPct = ((sellPrice - buyPrice) / buyPrice) * 100;
+
+            pnlDisplayEl.value = `${pnl.toFixed(2)}`;
+            returnPctEl.value = `${returnPct.toFixed(2)}%`;
+
+            if (pnl > 0) {
+                pnlDisplayEl.style.color = '#10b981';
+                returnPctEl.style.color = '#10b981';
+            } else if (pnl < 0) {
+                pnlDisplayEl.style.color = '#ef4444';
+                returnPctEl.style.color = '#ef4444';
+            } else {
+                pnlDisplayEl.style.color = '#e4e4e7';
+                returnPctEl.style.color = '#e4e4e7';
+            }
+        } else {
+            pnlDisplayEl.value = '';
+            returnPctEl.value = '';
+        }
+
+        // 자동 시간 입력
+        if (!timeEditMode) {
+            autoFillTradingTimes();
+        }
+    } catch (error) {
+        console.error('Error calculating P&L:', error);
     }
 }
 
@@ -367,60 +380,84 @@ function handleEditTradeSubmit(event) {
  * 통계 업데이트
  */
 function updateStats() {
-    const filteredTrades = getFilteredDashboardTrades();
-    
-    if (filteredTrades.length === 0) {
-        document.getElementById('totalPL').textContent = '$0.00';
-        document.getElementById('totalTrades').textContent = '0';
-        document.getElementById('winRate').textContent = '0%';
-        document.getElementById('winLossCount').textContent = '0W / 0L';
-        document.getElementById('bestTrade').textContent = '$0.00';
-        document.getElementById('worstTrade').textContent = '$0.00';
-        document.getElementById('avgWin').textContent = '$0.00';
-        document.getElementById('avgLoss').textContent = '$0.00';
-        document.getElementById('totalVolume').textContent = '$0.00';
-        document.getElementById('profitFactorSidebar').textContent = '0.00';
-        return;
+    try {
+        const filteredTrades = getFilteredDashboardTrades();
+
+        // 필수 DOM 요소 확인
+        const elements = {
+            totalPL: document.getElementById('totalPL'),
+            totalTrades: document.getElementById('totalTrades'),
+            winRate: document.getElementById('winRate'),
+            winLossCount: document.getElementById('winLossCount'),
+            bestTrade: document.getElementById('bestTrade'),
+            worstTrade: document.getElementById('worstTrade'),
+            avgWin: document.getElementById('avgWin'),
+            avgLoss: document.getElementById('avgLoss'),
+            totalVolume: document.getElementById('totalVolume'),
+            profitFactorSidebar: document.getElementById('profitFactorSidebar')
+        };
+
+        // 요소가 없으면 조기 반환
+        if (Object.values(elements).some(el => !el)) {
+            console.error('Some stat elements not found');
+            return;
+        }
+
+        if (filteredTrades.length === 0) {
+            elements.totalPL.textContent = '$0.00';
+            elements.totalTrades.textContent = '0';
+            elements.winRate.textContent = '0%';
+            elements.winLossCount.textContent = '0W / 0L';
+            elements.bestTrade.textContent = '$0.00';
+            elements.worstTrade.textContent = '$0.00';
+            elements.avgWin.textContent = '$0.00';
+            elements.avgLoss.textContent = '$0.00';
+            elements.totalVolume.textContent = '$0.00';
+            elements.profitFactorSidebar.textContent = '0.00';
+            return;
+        }
+
+        const totalPL = filteredTrades.reduce((sum, trade) => sum + (trade.pnl || 0), 0);
+        const currentDate = currentTradingDate;
+        const dailyFee = dailyFees[currentDate] || 0;
+        const netPL = totalPL - dailyFee;
+        const wins = filteredTrades.filter(trade => trade.pnl > 0);
+        const losses = filteredTrades.filter(trade => trade.pnl < 0);
+        const winRate = filteredTrades.length > 0 ? (wins.length / filteredTrades.length) * 100 : 0;
+
+        const pnls = filteredTrades.map(trade => trade.pnl || 0);
+        const bestTrade = pnls.length > 0 ? Math.max(...pnls) : 0;
+        const worstTrade = pnls.length > 0 ? Math.min(...pnls) : 0;
+
+        const avgWin = wins.length > 0 ? wins.reduce((sum, trade) => sum + trade.pnl, 0) / wins.length : 0;
+        const avgLoss = losses.length > 0 ? losses.reduce((sum, trade) => sum + trade.pnl, 0) / losses.length : 0;
+        const totalVolume = filteredTrades.reduce((sum, trade) => sum + (trade.amount || 0), 0);
+
+        const totalWins = wins.reduce((sum, trade) => sum + trade.pnl, 0);
+        const totalLosses = Math.abs(losses.reduce((sum, trade) => sum + trade.pnl, 0));
+        const profitFactor = totalLosses > 0 ? totalWins / totalLosses : 0;
+
+        elements.totalPL.textContent = `$${netPL.toFixed(2)}`;
+        elements.totalPL.className = `stat-value ${netPL >= 0 ? 'positive' : 'negative'}`;
+
+        elements.totalTrades.textContent = filteredTrades.length.toString();
+        elements.winRate.textContent = `${winRate.toFixed(1)}%`;
+        elements.winRate.className = `stat-value ${winRate >= 50 ? 'positive' : 'negative'}`;
+
+        elements.winLossCount.textContent = `${wins.length}W / ${losses.length}L`;
+
+        elements.bestTrade.textContent = `$${bestTrade.toFixed(2)}`;
+        elements.worstTrade.textContent = `$${worstTrade.toFixed(2)}`;
+
+        elements.avgWin.textContent = `$${avgWin.toFixed(2)}`;
+        elements.avgLoss.textContent = `$${avgLoss.toFixed(2)}`;
+        elements.totalVolume.textContent = `$${totalVolume.toFixed(2)}`;
+
+        elements.profitFactorSidebar.textContent = profitFactor.toFixed(2);
+        elements.profitFactorSidebar.className = `sidebar-stat-value ${profitFactor >= 1 ? 'positive' : 'negative'}`;
+    } catch (error) {
+        console.error('Error updating stats:', error);
     }
-
-    const totalPL = filteredTrades.reduce((sum, trade) => sum + trade.pnl, 0);
-    const currentDate = formatTradingDate(currentTradingDate);
-    const dailyFee = dailyFees[currentDate] || 0;
-    const netPL = totalPL - dailyFee;
-    const wins = filteredTrades.filter(trade => trade.pnl > 0);
-    const losses = filteredTrades.filter(trade => trade.pnl < 0);
-    const winRate = filteredTrades.length > 0 ? (wins.length / filteredTrades.length) * 100 : 0;
-    
-    const pnls = filteredTrades.map(trade => trade.pnl);
-    const bestTrade = Math.max(...pnls);
-    const worstTrade = Math.min(...pnls);
-    
-    const avgWin = wins.length > 0 ? wins.reduce((sum, trade) => sum + trade.pnl, 0) / wins.length : 0;
-    const avgLoss = losses.length > 0 ? losses.reduce((sum, trade) => sum + trade.pnl, 0) / losses.length : 0;
-    const totalVolume = filteredTrades.reduce((sum, trade) => sum + trade.amount, 0);
-    
-    const totalWins = wins.reduce((sum, trade) => sum + trade.pnl, 0);
-    const totalLosses = Math.abs(losses.reduce((sum, trade) => sum + trade.pnl, 0));
-    const profitFactor = totalLosses > 0 ? totalWins / totalLosses : 0;
-
-    document.getElementById('totalPL').textContent = `$${netPL.toFixed(2)}`;
-    document.getElementById('totalPL').className = `stat-value ${netPL >= 0 ? 'positive' : 'negative'}`;
-    
-    document.getElementById('totalTrades').textContent = filteredTrades.length.toString();
-    document.getElementById('winRate').textContent = `${winRate.toFixed(1)}%`;
-    document.getElementById('winRate').className = `stat-value ${winRate >= 50 ? 'positive' : 'negative'}`;
-    
-    document.getElementById('winLossCount').textContent = `${wins.length}W / ${losses.length}L`;
-    
-    document.getElementById('bestTrade').textContent = `$${bestTrade.toFixed(2)}`;
-    document.getElementById('worstTrade').textContent = `$${worstTrade.toFixed(2)}`;
-    
-    document.getElementById('avgWin').textContent = `$${avgWin.toFixed(2)}`;
-    document.getElementById('avgLoss').textContent = `$${avgLoss.toFixed(2)}`;
-    document.getElementById('totalVolume').textContent = `$${totalVolume.toFixed(2)}`;
-    
-    document.getElementById('profitFactorSidebar').textContent = profitFactor.toFixed(2);
-    document.getElementById('profitFactorSidebar').className = `sidebar-stat-value ${profitFactor >= 1 ? 'positive' : 'negative'}`;
 }
 
 // ==================== Trade Table Management ====================
