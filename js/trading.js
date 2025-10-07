@@ -832,38 +832,27 @@ function clearDashboardRange() {
  * 대시보드 필터링된 거래 가져오기
  */
 function getFilteredDashboardTrades() {
-    let filteredTrades = trades;
-
     // currentTradingDate는 항상 YYYY-MM-DD 형식의 문자열
-    const currentDate = currentTradingDate;
-
     if (dashboardStartDate || dashboardEndDate) {
-        filteredTrades = trades.filter(trade => {
-            const tradeDate = trade.date;
-            if (dashboardStartDate && tradeDate < dashboardStartDate) return false;
-            if (dashboardEndDate && tradeDate > dashboardEndDate) return false;
-            return true;
+        return filterTrades(trades, {
+            startDate: dashboardStartDate,
+            endDate: dashboardEndDate
         });
     } else {
-        filteredTrades = trades.filter(trade => trade.date === currentDate);
+        return filterTrades(trades, {
+            specificDate: currentTradingDate
+        });
     }
-
-    return filteredTrades;
 }
 
 /**
  * 거래 목록 필터링된 거래 가져오기
  */
 function getFilteredTradesList() {
-    if (tradesStartDate || tradesEndDate) {
-        return trades.filter(trade => {
-            const tradeDate = trade.date;
-            if (tradesStartDate && tradeDate < tradesStartDate) return false;
-           if (tradesEndDate && tradeDate > tradesEndDate) return false;
-            return true;
-        });
-    }
-    return trades;
+    return filterTrades(trades, {
+        startDate: tradesStartDate,
+        endDate: tradesEndDate
+    });
 }
 
 /**
@@ -883,31 +872,33 @@ function clearTradesRange() {
  * 일일 수수료 저장
  */
 function saveDailyFees() {
-    // currentTradingDate를 문자열로 확실하게 변환
-    const currentDate = typeof currentTradingDate === 'string' 
-        ? currentTradingDate 
-        : formatTradingDate(currentTradingDate);
-    
+    // currentTradingDate는 항상 YYYY-MM-DD 형식의 문자열
+    const currentDate = currentTradingDate;
+
     const feesValue = parseFloat(document.getElementById('dailyFees').value) || 0;
     dailyFees[currentDate] = feesValue;
-    localStorage.setItem('tradingPlatformDailyFees', JSON.stringify(dailyFees));
-    updateStats();
-    updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
-    showToast('Daily fees saved');
+
+    try {
+        localStorage.setItem('tradingPlatformDailyFees', JSON.stringify(dailyFees));
+        updateStats();
+        updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
+        showToast('Daily fees saved');
+    } catch (error) {
+        console.error('Error saving daily fees:', error);
+        showToast('Error saving fees');
+    }
 }
 
 /**
  * 일일 수수료 불러오기
  */
 function loadDailyFees() {
-    // currentTradingDate를 문자열로 확실하게 변환
-    const currentDate = typeof currentTradingDate === 'string' 
-        ? currentTradingDate 
-        : formatTradingDate(currentTradingDate);
-    
+    // currentTradingDate는 항상 YYYY-MM-DD 형식의 문자열
+    const currentDate = currentTradingDate;
+
     const feesInput = document.getElementById('dailyFees');
     if (!feesInput) return;
-    
+
     if (dailyFees[currentDate]) {
         feesInput.value = dailyFees[currentDate];
     } else {

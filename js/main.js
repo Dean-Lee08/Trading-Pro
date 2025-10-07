@@ -241,17 +241,25 @@ function handleFileImport() {
             
             if (data.dailyFees) {
                 dailyFees = data.dailyFees;
-                localStorage.setItem('tradingPlatformDailyFees', JSON.stringify(dailyFees));
+                try {
+                    localStorage.setItem('tradingPlatformDailyFees', JSON.stringify(dailyFees));
+                } catch (error) {
+                    console.error('Error saving daily fees:', error);
+                }
             }
-            
+
             if (data.notes) {
                 notes = data.notes;
                 saveNotes();
             }
-            
+
             if (data.psychologyData) {
                 psychologyData = data.psychologyData;
-                localStorage.setItem('tradingPlatformPsychologyData', JSON.stringify(psychologyData));
+                try {
+                    localStorage.setItem('tradingPlatformPsychologyData', JSON.stringify(psychologyData));
+                } catch (error) {
+                    console.error('Error saving psychology data:', error);
+                }
             }
             
             updateStats();

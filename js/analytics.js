@@ -83,18 +83,10 @@ function refreshAnalyticsData() {
  * 분석용 필터링된 거래 가져오기
  */
 function getFilteredTradesForAnalytics() {
-    // Apply custom date range if set
-    if (analyticsStartDate || analyticsEndDate) {
-        return trades.filter(trade => {
-            const tradeDate = trade.date;
-            if (analyticsStartDate && tradeDate < analyticsStartDate) return false;
-            if (analyticsEndDate && tradeDate > analyticsEndDate) return false;
-            return true;
-        });
-    }
-
-    // Return all trades if no filter is set (default "All Time")
-    return trades;
+    return filterTrades(trades, {
+        startDate: analyticsStartDate,
+        endDate: analyticsEndDate
+    });
 }
 
 // ==================== Detailed Analytics Update ====================

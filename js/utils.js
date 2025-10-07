@@ -148,10 +148,15 @@ function changeLanguageFromSettings() {
  */
 function saveTrades() {
     try {
-        localStorage.setItem('tradingPlatformTrades', JSON.stringify(trades));
+        const dataStr = JSON.stringify(trades);
+        localStorage.setItem('tradingPlatformTrades', dataStr);
     } catch (error) {
         console.error('Error saving trades:', error);
-        alert('Failed to save data. Please check browser storage.');
+        if (error.name === 'QuotaExceededError') {
+            alert('Storage quota exceeded. Please export your data and clear old entries.');
+        } else {
+            alert('Failed to save data. Please check browser storage permissions.');
+        }
     }
 }
 
@@ -185,9 +190,15 @@ function loadTrades() {
  */
 function saveNotes() {
     try {
-        localStorage.setItem('tradingPlatformNotes', JSON.stringify(notes));
+        const dataStr = JSON.stringify(notes);
+        localStorage.setItem('tradingPlatformNotes', dataStr);
     } catch (error) {
         console.error('Error saving notes:', error);
+        if (error.name === 'QuotaExceededError') {
+            showToast('Storage quota exceeded');
+        } else {
+            showToast('Failed to save notes');
+        }
     }
 }
 
@@ -236,18 +247,25 @@ function waitForChart() {
 }
 
 /**
- * 기본 차트 생성
+ * 차트 생성 통합 함수
  */
-async function createBasicChart(canvasId, type, data, options = {}) {
+async function createChart(canvasId, type, data, options = {}, chartStore = basicCharts) {
     try {
         await waitForChart();
         const ctx = document.getElementById(canvasId);
-        if (!ctx) return null;
+        if (!ctx) {
+            console.error(`Canvas element not found: ${canvasId}`);
+            return null;
+        }
 
         // 기존 차트가 있다면 완전히 제거
-        if (basicCharts[canvasId]) {
-            basicCharts[canvasId].destroy();
-            delete basicCharts[canvasId];
+        if (chartStore[canvasId]) {
+            try {
+                chartStore[canvasId].destroy();
+            } catch (error) {
+                console.error(`Error destroying chart ${canvasId}:`, error);
+            }
+            delete chartStore[canvasId];
         }
 
         const defaultOptions = {
@@ -272,70 +290,93 @@ async function createBasicChart(canvasId, type, data, options = {}) {
             } : {}
         };
 
-        basicCharts[canvasId] = new Chart(ctx, {
+        chartStore[canvasId] = new Chart(ctx, {
             type: type,
             data: data,
             options: { ...defaultOptions, ...options }
         });
 
-        return basicCharts[canvasId];
+        return chartStore[canvasId];
     } catch (error) {
-        console.error(`Error creating basic chart ${canvasId}:`, error);
+        console.error(`Error creating chart ${canvasId}:`, error);
         return null;
     }
+}
+
+/**
+ * 기본 차트 생성
+ */
+async function createBasicChart(canvasId, type, data, options = {}) {
+    return createChart(canvasId, type, data, options, basicCharts);
 }
 
 /**
  * 고급 차트 생성
  */
 async function createAdvancedChart(canvasId, type, data, options = {}) {
-    try {
-        await waitForChart();
-        const ctx = document.getElementById(canvasId);
-        if (!ctx) return null;
+    return createChart(canvasId, type, data, options, advancedCharts);
+}
 
-        // Destroy existing chart if it exists
-        if (advancedCharts[canvasId]) {
-            advancedCharts[canvasId].destroy();
+/**
+ * 모든 차트 정리
+ */
+function destroyAllCharts() {
+    // 기본 차트 정리
+    Object.keys(basicCharts).forEach(key => {
+        try {
+            if (basicCharts[key]) {
+                basicCharts[key].destroy();
+            }
+        } catch (error) {
+            console.error(`Error destroying basic chart ${key}:`, error);
         }
+    });
+    basicCharts = {};
 
-        const defaultOptions = {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    labels: {
-                        color: '#e4e4e7'
-                    }
-                }
-            },
-            scales: type !== 'pie' && type !== 'doughnut' ? {
-                x: {
-                    ticks: { color: '#94a3b8' },
-                    grid: { color: '#334155' }
-                },
-                y: {
-                    ticks: { color: '#94a3b8' },
-                    grid: { color: '#334155' }
-                }
-            } : {}
-        };
-
-        advancedCharts[canvasId] = new Chart(ctx, {
-            type: type,
-            data: data,
-            options: { ...defaultOptions, ...options }
-        });
-
-        return advancedCharts[canvasId];
-    } catch (error) {
-        console.error(`Error creating advanced chart ${canvasId}:`, error);
-        return null;
-    }
+    // 고급 차트 정리
+    Object.keys(advancedCharts).forEach(key => {
+        try {
+            if (advancedCharts[key]) {
+                advancedCharts[key].destroy();
+            }
+        } catch (error) {
+            console.error(`Error destroying advanced chart ${key}:`, error);
+        }
+    });
+    advancedCharts = {};
 }
 
 // ==================== Element Update Utilities ====================
 
+// ==================== Data Filtering Utilities ====================
+
+/**
+ * 범용 거래 필터링 함수
+ * @param {Array} trades - 필터링할 거래 배열
+ * @param {Object} options - 필터 옵션
+ * @param {string} options.startDate - 시작 날짜 (YYYY-MM-DD)
+ * @param {string} options.endDate - 종료 날짜 (YYYY-MM-DD)
+ * @param {string} options.specificDate - 특정 날짜 (YYYY-MM-DD)
+ * @returns {Array} 필터링된 거래 배열
+ */
+function filterTrades(allTrades, options = {}) {
+    const { startDate, endDate, specificDate } = options;
+
+    if (specificDate) {
+        return allTrades.filter(trade => trade.date === specificDate);
+    }
+
+    if (startDate || endDate) {
+        return allTrades.filter(trade => {
+            const tradeDate = trade.date;
+            if (startDate && tradeDate < startDate) return false;
+            if (endDate && tradeDate > endDate) return false;
+            return true;
+        });
+    }
+
+    return allTrades;
+}
 
 // ==================== Data Export/Import Utilities ====================
 
