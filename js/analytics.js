@@ -119,12 +119,10 @@ function updateDetailedAnalytics() {
 
     if (analyticsLoadedOnce &&
         JSON.stringify(currentFilter) === JSON.stringify(analyticsFilterState)) {
-        console.log('✓ Using cached analytics data (no API calls)');
         return; // Already displayed, keep existing data
     }
 
     // Mark as loading new data
-    console.log('⟳ Loading analytics data...');
     analyticsFilterState = currentFilter;
     analyticsLoadedOnce = true;
 

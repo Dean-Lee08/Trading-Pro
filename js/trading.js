@@ -6,13 +6,9 @@
  * P&L 계산 및 자동 시간 입력
  */
 function calculatePnL() {
-    console.log('=== calculatePnL 호출됨 ===');
-    
     const shares = parseFloat(document.getElementById('shares').value) || 0;
     const buyPrice = parseFloat(document.getElementById('buyPrice').value) || 0;
     const sellPrice = parseFloat(document.getElementById('sellPrice').value) || 0;
-    
-    console.log('현재 값:', { shares, buyPrice, sellPrice });
     
     // Amount 계산 및 표시
     if (shares && buyPrice) {
@@ -47,14 +43,10 @@ function calculatePnL() {
         document.getElementById('pnlDisplay').value = '';
         document.getElementById('returnPct').value = '';
     }
-    
+
     // 자동 시간 입력
-    console.log('timeEditMode:', timeEditMode);
     if (!timeEditMode) {
-        console.log('자동 시간 입력 모드 - autoFillTradingTimes 호출');
         autoFillTradingTimes();
-    } else {
-        console.log('수동 편집 모드 - 자동 입력 스킵');
     }
 }
 
@@ -62,114 +54,85 @@ function calculatePnL() {
  * 거래 시간 자동 입력
  */
 function autoFillTradingTimes() {
-    console.log('=== autoFillTradingTimes 호출됨 ===');
-    
     const buyPriceInput = document.getElementById('buyPrice');
     const sellPriceInput = document.getElementById('sellPrice');
     const entryTimeInput = document.getElementById('entryTime');
     const exitTimeInput = document.getElementById('exitTime');
-    
+
     if (!buyPriceInput || !sellPriceInput || !entryTimeInput || !exitTimeInput) {
-        console.error('필수 입력 필드를 찾을 수 없음');
         return;
     }
-    
+
     const buyPrice = parseFloat(buyPriceInput.value) || 0;
     const sellPrice = parseFloat(sellPriceInput.value) || 0;
-    
-    console.log('buyPrice:', buyPrice);
-    console.log('sellPrice:', sellPrice);
-    console.log('entryTime 현재값:', entryTimeInput.value);
-    console.log('exitTime 현재값:', exitTimeInput.value);
-    
+
     // 현재 시간 가져오기
     const now = new Date();
     const hours = now.getHours().toString().padStart(2, '0');
     const minutes = now.getMinutes().toString().padStart(2, '0');
     const currentTime = `${hours}:${minutes}`;
-    
-    console.log('현재 시간:', currentTime);
-    
+
     // Entry Time 자동 입력
     if (buyPrice > 0 && !entryTimeInput.value) {
-        console.log('✅ Entry Time 설정:', currentTime);
         entryTimeInput.value = currentTime;
         calculateHoldingTime();
-    } else {
-        console.log('❌ Entry Time 설정 안함 - buyPrice:', buyPrice, ', entryTime 있음:', !!entryTimeInput.value);
     }
-    
+
     // Exit Time 자동 입력 - sellPrice만 있으면 설정 (entryTime이 없어도 설정)
     if (sellPrice > 0 && !exitTimeInput.value) {
-        console.log('✅ Exit Time 설정:', currentTime);
         exitTimeInput.value = currentTime;
 
         // entryTime이 아직 없으면 지금 설정
         if (buyPrice > 0 && !entryTimeInput.value) {
-            console.log('✅ Entry Time도 함께 설정:', currentTime);
             entryTimeInput.value = currentTime;
         }
 
         calculateHoldingTime();
-    } else {
-        console.log('❌ Exit Time 설정 안함');
-        console.log('  - sellPrice > 0:', sellPrice > 0);
-        console.log('  - exitTime 비어있음:', !exitTimeInput.value);
     }
-    
-    console.log('=== autoFillTradingTimes 완료 ===');
 }
 
 /**
  * 보유 시간 계산
  */
 function calculateHoldingTime() {
-    console.log('=== calculateHoldingTime 호출됨 ===');
-    
     const entryTime = document.getElementById('entryTime').value;
     const exitTime = document.getElementById('exitTime').value;
     const holdingTimeDisplay = document.getElementById('holdingTimeDisplay');
-    
-    console.log('entryTime:', entryTime);
-    console.log('exitTime:', exitTime);
-    
+
     if (!holdingTimeDisplay) {
-        console.error('holdingTimeDisplay 요소를 찾을 수 없음');
         return;
     }
-    
+
     if (entryTime && exitTime) {
         try {
             const [entryHour, entryMin] = entryTime.split(':').map(Number);
             const [exitHour, exitMin] = exitTime.split(':').map(Number);
-            
+
             let entryMinutes = entryHour * 60 + entryMin;
             let exitMinutes = exitHour * 60 + exitMin;
-            
+
             if (exitMinutes < entryMinutes) {
                 exitMinutes += 24 * 60;
             }
-            
+
             const diffMinutes = exitMinutes - entryMinutes;
-            
+
             const hours = Math.floor(diffMinutes / 60);
             const minutes = diffMinutes % 60;
-            
+
             let holdingTimeText = '';
             if (hours > 0) {
                 holdingTimeText = `${hours}h ${minutes}m`;
             } else {
                 holdingTimeText = `${minutes}m`;
             }
-            
-            console.log('보유 시간 계산됨:', holdingTimeText);
+
             holdingTimeDisplay.value = holdingTimeText;
         } catch (error) {
-            console.error('보유 시간 계산 오류:', error);
+            console.error('Error calculating holding time:', error);
             holdingTimeDisplay.value = '';
         }
     } else {
-        console.log('entryTime 또는 exitTime이 없어서 보유 시간 계산 스킵');
         holdingTimeDisplay.value = '';
     }
 }
@@ -178,24 +141,17 @@ function calculateHoldingTime() {
  * 시간 편집 모드 토글
  */
 function toggleTimeEdit() {
-    console.log('=== toggleTimeEdit 호출됨 ===');
-    console.log('현재 timeEditMode:', timeEditMode);
-    
     timeEditMode = !timeEditMode;
-    
-    console.log('변경된 timeEditMode:', timeEditMode);
-    
+
     const editBtn = document.querySelector('.time-edit-btn');
-    
+
     if (timeEditMode) {
         editBtn.textContent = translations[currentLanguage]['auto'] || 'Auto';
         editBtn.classList.add('active');
-        console.log('수동 편집 모드 활성화');
     } else {
         editBtn.textContent = translations[currentLanguage]['edit'] || 'Edit';
         editBtn.classList.remove('active');
-        console.log('자동 입력 모드 활성화');
-        
+
         // Auto 모드로 돌아갈 때 자동 설정
         autoFillTradingTimes();
     }
@@ -286,23 +242,18 @@ function handleTradeSubmit(event) {
  * 거래 폼 초기화
  */
 function resetForm() {
-    console.log('=== resetForm 호출됨 ===');
-    
     document.getElementById('tradeForm').reset();
-    
+
     document.getElementById('entryTime').value = '';
     document.getElementById('exitTime').value = '';
     document.getElementById('pnlDisplay').value = '';
     document.getElementById('returnPct').value = '';
     document.getElementById('holdingTimeDisplay').value = '';
     document.getElementById('amountDisplay').value = '';
-    
+
     if (timeEditMode) {
-        console.log('Edit 모드였음 - Auto 모드로 전환');
         toggleTimeEdit();
     }
-    
-    console.log('폼 초기화 완료');
 }
 
 // ==================== Trade Edit & Delete ====================
