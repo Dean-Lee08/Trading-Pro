@@ -833,17 +833,10 @@ function clearDashboardRange() {
  */
 function getFilteredDashboardTrades() {
     let filteredTrades = trades;
-    
-    // currentTradingDate를 안전하게 문자열로 변환
-    let currentDate;
-    if (typeof currentTradingDate === 'string') {
-        currentDate = currentTradingDate;
-    } else if (currentTradingDate instanceof Date) {
-        currentDate = formatTradingDate(currentTradingDate);
-    } else {
-        currentDate = formatTradingDate(new Date());
-    }
-    
+
+    // currentTradingDate는 항상 YYYY-MM-DD 형식의 문자열
+    const currentDate = currentTradingDate;
+
     if (dashboardStartDate || dashboardEndDate) {
         filteredTrades = trades.filter(trade => {
             const tradeDate = trade.date;
@@ -854,7 +847,7 @@ function getFilteredDashboardTrades() {
     } else {
         filteredTrades = trades.filter(trade => trade.date === currentDate);
     }
-    
+
     return filteredTrades;
 }
 

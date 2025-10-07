@@ -130,30 +130,9 @@ function applySelectedDate() {
 // Date Range Clearing Functions
 // ============================================
 
-function clearDashboardRange() {
-    dashboardStartDate = null;
-    dashboardEndDate = null;
-    document.getElementById('dashboardStartDate').value = '';
-    document.getElementById('dashboardEndDate').value = '';
-    updateStats();
-    updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
-}
-
-function clearAnalyticsRange() {
-    analyticsStartDate = null;
-    analyticsEndDate = null;
-    document.getElementById('analyticsStartDate').value = '';
-    document.getElementById('analyticsEndDate').value = '';
-    updateDetailedAnalytics();
-}
-
-function clearTradesRange() {
-    tradesStartDate = null;
-    tradesEndDate = null;
-    document.getElementById('tradesStartDate').value = '';
-    document.getElementById('tradesEndDate').value = '';
-    updateAllTradesList();
-}
+// clearDashboardRange is defined in trading.js
+// clearAnalyticsRange is defined in analytics.js
+// clearTradesRange is defined in trading.js
 
 // ============================================
 // Trade Form Handling
@@ -193,58 +172,8 @@ function openEditTradeModal(tradeId) {
     document.getElementById('editTradeModal').style.display = 'flex';
 }
 
-function closeEditTradeModal() {
-    document.getElementById('editTradeModal').style.display = 'none';
-}
-
-function handleEditTradeSubmit(e) {
-    e.preventDefault();
-    
-    const tradeId = parseInt(document.getElementById('editTradeId').value);
-    const symbol = document.getElementById('editSymbol').value.trim().toUpperCase();
-    const shares = parseFloat(document.getElementById('editShares').value);
-    const buyPrice = parseFloat(document.getElementById('editBuyPrice').value);
-    const sellPrice = parseFloat(document.getElementById('editSellPrice').value);
-    const entryTime = document.getElementById('editEntryTime').value;
-    const exitTime = document.getElementById('editExitTime').value;
-    
-    const tradeIndex = trades.findIndex(t => t.id === tradeId);
-    if (tradeIndex === -1) return;
-    
-    const pnl = (sellPrice - buyPrice) * shares;
-    const returnPct = ((sellPrice - buyPrice) / buyPrice) * 100;
-    const amount = buyPrice * shares;
-    
-    let holdingMinutes = 0;
-    if (entryTime && exitTime) {
-        const [entryHours, entryMinutes] = entryTime.split(':').map(Number);
-        const [exitHours, exitMinutes] = exitTime.split(':').map(Number);
-        holdingMinutes = (exitHours * 60 + exitMinutes) - (entryHours * 60 + entryMinutes);
-        if (holdingMinutes < 0) holdingMinutes += 24 * 60;
-    }
-    
-    trades[tradeIndex] = {
-        ...trades[tradeIndex],
-        symbol: symbol,
-        shares: shares,
-        buyPrice: buyPrice,
-        sellPrice: sellPrice,
-        pnl: pnl,
-        returnPct: returnPct,
-        amount: amount,
-        entryTime: entryTime,
-        exitTime: exitTime,
-        holdingMinutes: holdingMinutes
-    };
-    
-    saveTrades();
-    updateStats();
-    updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
-    updateAllTradesList();
-    closeEditTradeModal();
-    
-    showToast(currentLanguage === 'ko' ? '거래가 수정되었습니다' : 'Trade updated successfully');
-}
+// closeEditTradeModal is defined in trading.js
+// handleEditTradeSubmit is defined in trading.js
 
 // ============================================
 // Trade Deletion
@@ -263,24 +192,8 @@ function handleEditTradeSubmit(e) {
 // Daily Fees Management
 // ============================================
 
-function saveDailyFees() {
-    const feesInput = document.getElementById('dailyFees').value;
-    const fees = parseFloat(feesInput) || 0;
-    
-    if (fees >= 0) {
-        dailyFees[currentTradingDate] = fees;
-        localStorage.setItem('tradingPlatformDailyFees', JSON.stringify(dailyFees));
-        updateStats();
-        updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
-        
-        showToast(currentLanguage === 'ko' ? '수수료가 저장되었습니다' : 'Fees saved');
-    }
-}
-
-function loadDailyFees() {
-    const fees = dailyFees[currentTradingDate] || 0;
-    document.getElementById('dailyFees').value = fees > 0 ? fees.toFixed(2) : '';
-}
+// saveDailyFees is defined in trading.js
+// loadDailyFees is defined in trading.js
 
 // ============================================
 // Data Management (Export/Import/Clear)
