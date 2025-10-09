@@ -264,11 +264,6 @@ function updateSliderDisplay(sliderId, displayId) {
 }
 
 /**
- * 목표 비율 업데이트
- */
-// updateTargetPercentages - 원칙 섹션으로 이동됨 (principles.js)
-
-/**
  * 모든 비주얼 카드 업데이트
  */
 function updateVisualCards() {
