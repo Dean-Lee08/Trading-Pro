@@ -166,13 +166,6 @@ function resetPsychologyData() {
     if (confirm(confirmMessage)) {
         // 모든 입력 필드 초기화
         document.getElementById('sleepHours').value = '';
-        document.getElementById('startTime').value = '09:30';
-        document.getElementById('endTime').value = '';
-        document.getElementById('environmentType').value = 'home';
-        document.getElementById('accountBalance').value = '';
-        document.getElementById('dailyTarget').value = '';
-        document.getElementById('maxDailyLoss').value = '';
-        document.getElementById('maxTradeCount').value = '';
         document.getElementById('stressLevel').value = '3';
         document.getElementById('confidenceLevel').value = '3';
         document.getElementById('focusLevel').value = '3';
@@ -243,13 +236,6 @@ function loadPsychologyData() {
     } else {
         // 저장된 데이터가 없는 경우 모든 필드 초기화
         updateElement('sleepHours', '');
-        updateElement('startTime', '09:30');
-        updateElement('endTime', '');
-        updateElement('environmentType', 'home');
-        updateElement('accountBalance', '');
-        updateElement('dailyTarget', '');
-        updateElement('maxDailyLoss', '');
-        updateElement('maxTradeCount', '');
         updateElement('stressLevel', 3);
         updateElement('confidenceLevel', 3);
         updateElement('focusLevel', 3);
@@ -261,12 +247,6 @@ function loadPsychologyData() {
         if (stressValue) stressValue.textContent = '3';
         if (confidenceValue) confidenceValue.textContent = '3';
         if (focusValue) focusValue.textContent = '3';
-
-        // 퍼센트 표시 초기화
-        const dailyTargetPercent = document.getElementById('dailyTargetPercent');
-        const maxLossPercent = document.getElementById('maxLossPercent');
-        if (dailyTargetPercent) dailyTargetPercent.textContent = '0%';
-        if (maxLossPercent) maxLossPercent.textContent = '0%';
 
         // 기본값으로 차트 생성
         setTimeout(() => {
