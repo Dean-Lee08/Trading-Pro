@@ -2920,55 +2920,8 @@ async function updatePriceLevelPsychology(filteredTrades) {
 // ==================== Advanced Algorithmic Analysis Functions ====================
 
 /**
- * Correlation Matrix Analysis
- * Analyzes correlations between different psychology factors and performance
- */
-function renderCorrelationMatrix() {
-    const element = document.getElementById('correlationMatrixContent');
-    if (!element) return;
-
-    const correlations = calculateCorrelationMatrix();
-
-    if (!correlations || correlations.length === 0) {
-        element.innerHTML = `
-            <div style="background: rgba(15, 23, 42, 0.5); text-align: center; padding: 30px; border-radius: 10px; border: 1px solid rgba(100, 116, 139, 0.2);">
-                <div style="color: #64748b; font-size: 14px;">
-                    Insufficient data for correlation analysis. Need at least 10 trades with psychology data.
-                </div>
-            </div>
-        `;
-        return;
-    }
-
-    const html = correlations.map(corr => {
-        const strength = Math.abs(corr.value);
-        const color = corr.value > 0 ? '#10b981' : '#ef4444';
-        const barWidth = strength * 100;
-        const sign = corr.value > 0 ? '+' : '';
-
-        return `
-            <div class="glass-card hover-lift" style="background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(100, 116, 139, 0.2); padding: 20px; margin-bottom: 16px; border-radius: 10px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <div>
-                        <div style="color: #e4e4e7; font-size: 14px; font-weight: 600;">${corr.factor1} ↔ ${corr.factor2}</div>
-                        <div style="color: #64748b; font-size: 12px; margin-top: 4px;">${corr.description || 'Correlation'}</div>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        <span style="color: ${color}; font-size: 18px; font-weight: 700;">${sign}${(corr.value * 100).toFixed(0)}%</span>
-                    </div>
-                </div>
-                <div style="background: rgba(15, 23, 42, 0.6); height: 10px; border-radius: 6px; overflow: hidden;">
-                    <div style="width: ${barWidth}%; height: 100%; background: linear-gradient(90deg, ${color}, ${color}aa); border-radius: 6px;"></div>
-                </div>
-            </div>
-        `;
-    }).join('');
-
-    element.innerHTML = html;
-}
-
-/**
  * Calculate correlation matrix between psychology factors and performance
+ * Note: renderCorrelationMatrix() is defined in new-ai-renders.js
  */
 function calculateCorrelationMatrix() {
     const correlations = [];
