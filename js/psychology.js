@@ -145,7 +145,8 @@ function savePsychologyData() {
         accountBalance: parseFloat(document.getElementById('accountBalance').value) || 0,
         dailyTarget: parseFloat(document.getElementById('dailyTarget').value) || 0,
         maxDailyLoss: parseFloat(document.getElementById('maxDailyLoss').value) || 0,
-        
+        maxTradeCount: parseInt(document.getElementById('maxTradeCount').value) || 0,
+
         // Emotional state
         stressLevel: parseInt(document.getElementById('stressLevel').value) || 3,
         confidenceLevel: parseInt(document.getElementById('confidenceLevel').value) || 3,
