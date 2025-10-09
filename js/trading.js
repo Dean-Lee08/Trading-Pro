@@ -1231,15 +1231,15 @@ function resetRiskCalculatorDisplay() {
  * 일일 손익 한도 체크
  */
 function checkDailyLimits(tradeDate) {
-    // 심리 데이터에서 해당 날짜의 한도 정보 가져오기
-    if (!psychologyData || !psychologyData[tradeDate]) {
-        return; // 심리 데이터가 없으면 체크하지 않음
+    // 원칙 데이터에서 해당 날짜의 한도 정보 가져오기
+    if (!principlesData || !principlesData[tradeDate]) {
+        return; // 원칙 데이터가 없으면 체크하지 않음
     }
 
-    const psyData = psychologyData[tradeDate];
-    const dailyTarget = parseFloat(psyData.dailyTarget) || 0;
-    const maxDailyLoss = parseFloat(psyData.maxDailyLoss) || 0;
-    const maxTradeCount = parseInt(psyData.maxTradeCount) || 0;
+    const principlesForDate = principlesData[tradeDate];
+    const dailyTarget = parseFloat(principlesForDate.dailyTarget) || 0;
+    const maxDailyLoss = parseFloat(principlesForDate.maxDailyLoss) || 0;
+    const maxTradeCount = parseInt(principlesForDate.maxTradeCount) || 0;
 
     // 한도가 설정되지 않았으면 체크하지 않음
     if (dailyTarget === 0 && maxDailyLoss === 0 && maxTradeCount === 0) {
