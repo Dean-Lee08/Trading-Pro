@@ -1342,214 +1342,358 @@
 
                     <!-- Algorithmic Analysis Section -->
                     <div class="detail-section" id="patternsSection">
-                        <div class="detail-grid">
+                        <div class="psychology-container">
 
-                            <!-- Time-Based Performance Analysis -->
-                            <div class="detail-card">
-                                <div class="detail-card-header" data-lang="time-based-performance" onclick="toggleDetailCard(this)">
-                                    Time-Based Performance Analysis
-                                    <span class="collapse-icon">▼</span>
-                                </div>
-                                <div class="detail-card-content">
-                                    <div class="detail-item">
-                                        <span class="detail-label" data-lang="best-trading-hour">Best Trading Hour</span>
-                                        <span class="detail-value positive" id="bestTradingHour">--:--</span>
-                                    </div>
-                                    <div class="detail-item">
-                                        <span class="detail-label" data-lang="best-hour-winrate">Best Hour Win Rate</span>
-                                        <span class="detail-value positive" id="bestHourPerformance">--%</span>
-                                    </div>
-                                    <div class="detail-item">
-                                        <span class="detail-label" data-lang="worst-trading-hour">Worst Trading Hour</span>
-                                        <span class="detail-value negative" id="worstTradingHour">--:--</span>
-                                    </div>
-                                    <div class="detail-item">
-                                        <span class="detail-label" data-lang="worst-hour-winrate">Worst Hour Win Rate</span>
-                                        <span class="detail-value negative" id="worstHourPerformance">--%</span>
-                                    </div>
-                                    <div class="detail-item">
-                                        <span class="detail-label" data-lang="optimal-sleep-range">Optimal Sleep Range</span>
-                                        <span class="detail-value neutral" id="optimalSleepRange">--</span>
-                                    </div>
-                                    <div class="detail-item">
-                                        <span class="detail-label" data-lang="sleep-performance">Sleep Performance</span>
-                                        <span class="detail-value neutral" id="sleepRangePerformance">$--</span>
-                                    </div>
-                                    <div class="detail-item">
-                                        <span class="detail-label" data-lang="delay-impact">Start Delay Impact</span>
-                                        <span class="detail-value" id="delayImpact">--</span>
-                                    </div>
-                                    <div class="detail-item">
-                                        <span class="detail-label" data-lang="delay-performance">Delay Performance</span>
-                                        <span class="detail-value" id="delayPerformance">--%</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Consecutive Trades Pattern -->
-                            <div class="detail-card">
-                                <div class="detail-card-header" data-lang="consecutive-pattern" onclick="toggleDetailCard(this)">
-                                    Consecutive Trades Pattern
-                                    <span class="collapse-icon">▼</span>
-                                </div>
-                                <div class="detail-card-content">
-                                    <div class="detail-item">
-                                        <span class="detail-label" data-lang="after-1-loss">After 1 Loss Win Rate</span>
-                                        <span class="detail-value" id="after1Loss">--%</span>
-                                    </div>
-                                    <div class="detail-item">
-                                        <span class="detail-label" data-lang="after-2-losses">After 2 Losses Win Rate</span>
-                                        <span class="detail-value" id="after2Losses">--%</span>
-                                    </div>
-                                    <div class="detail-item">
-                                        <span class="detail-label" data-lang="after-3-losses">After 3+ Losses Win Rate</span>
-                                        <span class="detail-value" id="after3Losses">--%</span>
-                                    </div>
-                                    <div class="detail-item">
-                                        <span class="detail-label" data-lang="after-1-win">After 1 Win Win Rate</span>
-                                        <span class="detail-value" id="after1Win">--%</span>
-                                    </div>
-                                    <div class="detail-item">
-                                        <span class="detail-label" data-lang="after-2-wins">After 2 Wins Win Rate</span>
-                                        <span class="detail-value" id="after2Wins">--%</span>
-                                    </div>
-                                    <div class="detail-item">
-                                        <span class="detail-label" data-lang="after-3-wins">After 3+ Wins Win Rate</span>
-                                        <span class="detail-value" id="after3Wins">--%</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- AI Insights & Recommendations -->
-                            <div class="detail-card">
-                                <div class="detail-card-header" data-lang="ai-insights" onclick="toggleDetailCard(this)">
-                                    AI-Generated Insights & Recommendations
-                                    <span class="collapse-icon">▼</span>
-                                </div>
-                                <div class="detail-card-content">
-                                    <div id="aiInsightsList" style="margin-bottom: 12px;">
-                                        <div style="color: #94a3b8; font-size: 12px; text-align: center; padding: 8px;">
-                                            <span data-lang="no-insights">Collect more psychology data to generate personalized insights.</span>
+                            <!-- ========== HERO DASHBOARD ========== -->
+                            <div class="ai-hero-dashboard">
+                                <div class="hero-header">
+                                    <div class="ai-badge-container">
+                                        <div class="ai-badge pulse">
+                                            <span class="badge-icon">🤖</span>
+                                            <span class="badge-text" data-lang="ai-powered-badge">AI-POWERED</span>
                                         </div>
                                     </div>
-                                    <div id="adaptiveRecommendations">
-                                        <div style="color: #94a3b8; font-size: 12px; text-align: center; padding: 8px;">
-                                            <span data-lang="generating-recs">Generating personalized recommendations...</span>
+                                    <h1 class="hero-title">
+                                        <span class="title-gradient" data-lang="trading-intelligence-center">Trading Intelligence Center</span>
+                                    </h1>
+                                    <p class="hero-subtitle" data-lang="hero-subtitle">
+                                        Real-time algorithmic analysis powered by machine learning and behavioral pattern recognition
+                                    </p>
+                                </div>
+
+                                <div class="hero-metrics-grid">
+                                    <!-- Trade Quality Card -->
+                                    <div class="hero-metric-card quality-card glass-card">
+                                        <div class="card-glow quality-glow"></div>
+                                        <div class="metric-header">
+                                            <div class="metric-icon">🎯</div>
+                                            <div class="metric-badge" data-lang="quality-badge">QUALITY</div>
+                                        </div>
+                                        <div class="metric-value-container">
+                                            <div class="metric-value-large" id="heroQualityScore">--</div>
+                                            <div class="metric-value-suffix">/100</div>
+                                        </div>
+                                        <div class="metric-label" data-lang="hero-quality-label">Trade Quality Score</div>
+                                        <div class="metric-trend" id="heroQualityTrend">
+                                            <span class="trend-icon">▲</span>
+                                            <span class="trend-value"><span data-lang="trend-from-avg">from avg</span></span>
+                                        </div>
+                                        <div class="mini-gauge">
+                                            <div class="gauge-fill" id="heroQualityGauge" style="width: 0%"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Win Prediction Card -->
+                                    <div class="hero-metric-card prediction-card glass-card">
+                                        <div class="card-glow prediction-glow"></div>
+                                        <div class="metric-header">
+                                            <div class="signal-light" id="heroSignalLight">
+                                                <div class="signal-dot pulse"></div>
+                                            </div>
+                                            <div class="metric-badge" data-lang="prediction-badge">PREDICTION</div>
+                                        </div>
+                                        <div class="metric-value-container">
+                                            <div class="metric-value-large" id="heroWinProbability">--</div>
+                                            <div class="metric-value-suffix">%</div>
+                                        </div>
+                                        <div class="metric-label" data-lang="hero-probability-label">Win Probability</div>
+                                        <div class="recommendation-badge" id="heroRecommendation">
+                                            <span class="rec-icon">🟡</span>
+                                            <span class="rec-text" data-lang="calculating-status">Calculating...</span>
+                                        </div>
+                                        <div class="confidence-bar">
+                                            <div class="confidence-label" data-lang="confidence-label">Confidence:</div>
+                                            <div class="confidence-value" id="heroConfidence">--</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Performance Forecast Card -->
+                                    <div class="hero-metric-card performance-card glass-card">
+                                        <div class="card-glow performance-glow"></div>
+                                        <div class="metric-header">
+                                            <div class="metric-icon">💰</div>
+                                            <div class="metric-badge" data-lang="forecast-badge">FORECAST</div>
+                                        </div>
+                                        <div class="metric-value-container">
+                                            <div class="metric-value-large" id="heroForecastValue">$--</div>
+                                        </div>
+                                        <div class="metric-label" data-lang="hero-forecast-label">Session Prediction</div>
+                                        <div class="metric-trend" id="heroForecastTrend">
+                                            <span class="trend-icon">▲</span>
+                                            <span class="trend-value"><span data-lang="trend-vs-avg">vs avg</span></span>
+                                        </div>
+                                        <div class="sparkline-container">
+                                            <canvas id="heroSparkline" width="200" height="40"></canvas>
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="hero-actions">
+                                    <button class="action-btn primary-action" onclick="triggerAnalysis()">
+                                        <span class="btn-icon">⚡</span>
+                                        <span class="btn-text" data-lang="hero-analyze-now">Analyze Now</span>
+                                        <div class="btn-shimmer"></div>
+                                    </button>
+                                    <button class="action-btn secondary-action" onclick="showPredictionDetails()">
+                                        <span class="btn-icon">🔮</span>
+                                        <span class="btn-text" data-lang="hero-predict-session">Predict Session</span>
+                                    </button>
+                                    <button class="action-btn outline-action" onclick="exportAnalysisReport()">
+                                        <span class="btn-icon">📤</span>
+                                        <span class="btn-text" data-lang="hero-export-report">Export Report</span>
+                                    </button>
+                                </div>
                             </div>
+
+                            <!-- ========== FOUNDATION ANALYTICS (Original Pattern Insights) ========== -->
+
+                            <!-- Time-Based Performance Analysis - REDESIGNED -->
+                            <div class="analysis-section-glass card-reveal stagger-1" style="margin-bottom: 28px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div style="width: 4px; height: 28px; background: linear-gradient(180deg, #3b82f6, #8b5cf6); border-radius: 2px;"></div>
+                                        <h3 data-lang="time-based-performance" style="color: #f8fafc; font-size: 18px; font-weight: 600; margin: 0;">Time-Based Performance Analysis</h3>
+                                    </div>
+                                    <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); padding: 6px 12px; border-radius: 8px;">
+                                        <span style="color: #60a5fa; font-size: 11px; font-weight: 600; letter-spacing: 0.5px;">⏱️ TIMING</span>
+                                    </div>
+                                </div>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;">
+                                    <!-- Best Trading Hour -->
+                                    <div class="glass-card hover-lift" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.05)); border: 1px solid rgba(16, 185, 129, 0.2); padding: 20px; text-align: center; position: relative; overflow: hidden;">
+                                        <div style="position: absolute; top: 10px; right: 10px; font-size: 24px; opacity: 0.2;">🟢</div>
+                                        <div data-lang="best-trading-hour" style="color: #6ee7b7; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 12px; text-transform: uppercase;">Best Trading Hour</div>
+                                        <div id="bestTradingHour" class="count-up" style="color: #10b981; font-size: 32px; font-weight: 700; margin-bottom: 8px; text-shadow: 0 0 20px rgba(16, 185, 129, 0.3);">--:--</div>
+                                        <div id="bestHourPerformance" style="color: #94a3b8; font-size: 12px;"><span data-lang="win-rate-label">Win Rate</span>: <span style="color: #10b981; font-weight: 600;">--%</span></div>
+                                    </div>
+                                    <!-- Worst Trading Hour -->
+                                    <div class="glass-card hover-lift" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.05)); border: 1px solid rgba(239, 68, 68, 0.2); padding: 20px; text-align: center; position: relative; overflow: hidden;">
+                                        <div style="position: absolute; top: 10px; right: 10px; font-size: 24px; opacity: 0.2;">🔴</div>
+                                        <div data-lang="worst-trading-hour" style="color: #fca5a5; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 12px; text-transform: uppercase;">Worst Trading Hour</div>
+                                        <div id="worstTradingHour" class="count-up" style="color: #ef4444; font-size: 32px; font-weight: 700; margin-bottom: 8px; text-shadow: 0 0 20px rgba(239, 68, 68, 0.3);">--:--</div>
+                                        <div id="worstHourPerformance" style="color: #94a3b8; font-size: 12px;"><span data-lang="win-rate-label">Win Rate</span>: <span style="color: #ef4444; font-weight: 600;">--%</span></div>
+                                    </div>
+                                    <!-- Optimal Sleep Range -->
+                                    <div class="glass-card hover-lift" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.05)); border: 1px solid rgba(59, 130, 246, 0.2); padding: 20px; text-align: center; position: relative; overflow: hidden;">
+                                        <div style="position: absolute; top: 10px; right: 10px; font-size: 24px; opacity: 0.2;">😴</div>
+                                        <div data-lang="optimal-sleep-range" style="color: #93c5fd; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 12px; text-transform: uppercase;">Optimal Sleep Range</div>
+                                        <div id="optimalSleepRange" class="count-up" style="color: #3b82f6; font-size: 32px; font-weight: 700; margin-bottom: 8px; text-shadow: 0 0 20px rgba(59, 130, 246, 0.3);">--</div>
+                                        <div id="sleepRangePerformance" style="color: #94a3b8; font-size: 12px;"><span style="color: #3b82f6; font-weight: 600;">$--</span></div>
+                                    </div>
+                                    <!-- Start Delay Impact -->
+                                    <div class="glass-card hover-lift" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.05)); border: 1px solid rgba(245, 158, 11, 0.2); padding: 20px; text-align: center; position: relative; overflow: hidden;">
+                                        <div style="position: absolute; top: 10px; right: 10px; font-size: 24px; opacity: 0.2;">⚠️</div>
+                                        <div data-lang="delay-impact" style="color: #fcd34d; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 12px; text-transform: uppercase;">Start Delay Impact</div>
+                                        <div id="delayImpact" class="count-up" style="color: #f59e0b; font-size: 32px; font-weight: 700; margin-bottom: 8px; text-shadow: 0 0 20px rgba(245, 158, 11, 0.3);">--</div>
+                                        <div id="delayPerformance" style="color: #94a3b8; font-size: 12px;"><span style="color: #f59e0b; font-weight: 600;">--%</span></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Consecutive Trades Pattern - REDESIGNED -->
+                            <div class="analysis-section-glass card-reveal stagger-2" style="margin-bottom: 28px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div style="width: 4px; height: 28px; background: linear-gradient(180deg, #ec4899, #8b5cf6); border-radius: 2px;"></div>
+                                        <h3 data-lang="consecutive-pattern" style="color: #f8fafc; font-size: 18px; font-weight: 600; margin: 0;">Consecutive Trades Pattern</h3>
+                                    </div>
+                                    <div style="background: rgba(236, 72, 153, 0.1); border: 1px solid rgba(236, 72, 153, 0.3); padding: 6px 12px; border-radius: 8px;">
+                                        <span style="color: #f9a8d4; font-size: 11px; font-weight: 600; letter-spacing: 0.5px;">📊 STREAKS</span>
+                                    </div>
+                                </div>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+                                    <!-- Performance After Losses -->
+                                    <div class="glass-card hover-lift" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.08), rgba(220, 38, 38, 0.03)); border: 1px solid rgba(239, 68, 68, 0.2); padding: 24px; position: relative; overflow: hidden;">
+                                        <div style="position: absolute; top: -10px; right: -10px; font-size: 80px; opacity: 0.05;">📉</div>
+                                        <div data-lang="after-losses" style="color: #fca5a5; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 16px; text-transform: uppercase;">Performance After Losses</div>
+                                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: rgba(15, 23, 42, 0.5); border-radius: 8px; border-left: 3px solid #ef4444;">
+                                                <span data-lang="after-1-loss" style="color: #cbd5e1; font-size: 13px;">After 1 loss</span>
+                                                <span id="after1Loss" class="count-up" style="font-weight: 700; font-size: 16px; color: #ef4444;">--%</span>
+                                            </div>
+                                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: rgba(15, 23, 42, 0.5); border-radius: 8px; border-left: 3px solid #dc2626;">
+                                                <span data-lang="after-2-losses" style="color: #cbd5e1; font-size: 13px;">After 2 losses</span>
+                                                <span id="after2Losses" class="count-up" style="font-weight: 700; font-size: 16px; color: #dc2626;">--%</span>
+                                            </div>
+                                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: rgba(15, 23, 42, 0.5); border-radius: 8px; border-left: 3px solid #b91c1c;">
+                                                <span data-lang="after-3-losses" style="color: #cbd5e1; font-size: 13px;">After 3+ losses</span>
+                                                <span id="after3Losses" class="count-up" style="font-weight: 700; font-size: 16px; color: #b91c1c;">--%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Performance After Wins -->
+                                    <div class="glass-card hover-lift" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(5, 150, 105, 0.03)); border: 1px solid rgba(16, 185, 129, 0.2); padding: 24px; position: relative; overflow: hidden;">
+                                        <div style="position: absolute; top: -10px; right: -10px; font-size: 80px; opacity: 0.05;">📈</div>
+                                        <div data-lang="after-wins" style="color: #6ee7b7; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 16px; text-transform: uppercase;">Performance After Wins</div>
+                                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: rgba(15, 23, 42, 0.5); border-radius: 8px; border-left: 3px solid #10b981;">
+                                                <span data-lang="after-1-win" style="color: #cbd5e1; font-size: 13px;">After 1 win</span>
+                                                <span id="after1Win" class="count-up" style="font-weight: 700; font-size: 16px; color: #10b981;">--%</span>
+                                            </div>
+                                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: rgba(15, 23, 42, 0.5); border-radius: 8px; border-left: 3px solid #059669;">
+                                                <span data-lang="after-2-wins" style="color: #cbd5e1; font-size: 13px;">After 2 wins</span>
+                                                <span id="after2Wins" class="count-up" style="font-weight: 700; font-size: 16px; color: #059669;">--%</span>
+                                            </div>
+                                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: rgba(15, 23, 42, 0.5); border-radius: 8px; border-left: 3px solid #047857;">
+                                                <span data-lang="after-3-wins" style="color: #cbd5e1; font-size: 13px;">After 3+ wins</span>
+                                                <span id="after3Wins" class="count-up" style="font-weight: 700; font-size: 16px; color: #047857;">--%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- AI Insights & Recommendations - MERGED -->
+                            <div class="analysis-section-glass card-reveal stagger-3" style="margin-bottom: 28px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div style="width: 4px; height: 28px; background: linear-gradient(180deg, #f59e0b, #d97706); border-radius: 2px;"></div>
+                                        <h3 style="color: #f8fafc; font-size: 18px; font-weight: 600; margin: 0;">
+                                            <span data-lang="ai-insights">AI-Generated Insights</span> & <span data-lang="adaptive-recommendations">Recommendations</span>
+                                        </h3>
+                                    </div>
+                                    <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); padding: 6px 12px; border-radius: 8px;">
+                                        <span style="color: #fbbf24; font-size: 11px; font-weight: 600; letter-spacing: 0.5px;">🤖 AI POWERED</span>
+                                    </div>
+                                </div>
+
+                                <!-- Insights List -->
+                                <div id="aiInsightsList" style="display: grid; gap: 16px; margin-bottom: 20px;">
+                                    <div style="background: rgba(15, 23, 42, 0.5); border-left: 4px solid #3b82f6; padding: 16px 20px; border-radius: 0 10px 10px 0; backdrop-filter: blur(8px);">
+                                        <div data-lang="no-insights" style="color: #e4e4e7; font-size: 14px; line-height: 1.6;">Collect more psychology data to generate personalized insights.</div>
+                                    </div>
+                                </div>
+
+                                <!-- Recommendations List -->
+                                <div id="adaptiveRecommendations" style="display: grid; gap: 16px;">
+                                    <div style="background: rgba(15, 23, 42, 0.5); text-align: center; padding: 20px; border-radius: 10px; border: 1px solid rgba(100, 116, 139, 0.2);">
+                                        <span data-lang="generating-recs" style="color: #64748b;">Generating personalized recommendations...</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ========== NEW AI ANALYSIS MODULES ========== -->
 
                             <!-- Multivariate Correlation Matrix -->
-                            <div class="detail-card">
-                                <div class="detail-card-header" data-lang="correlation-matrix-analysis" onclick="toggleDetailCard(this)">
-                                    Multivariate Correlation Analysis
-                                    <span class="collapse-icon">▼</span>
+                            <div class="analysis-section-glass card-reveal stagger-4" style="margin-bottom: 28px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div style="width: 4px; height: 28px; background: linear-gradient(180deg, #8b5cf6, #ec4899); border-radius: 2px;"></div>
+                                        <h3 data-lang="correlation-matrix-analysis" style="color: #f8fafc; font-size: 18px; font-weight: 600; margin: 0;">Multivariate Correlation Analysis</h3>
+                                    </div>
+                                    <div style="background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.3); padding: 6px 12px; border-radius: 8px;">
+                                        <span style="color: #c084fc; font-size: 11px; font-weight: 600; letter-spacing: 0.5px;">🔗 CORRELATIONS</span>
+                                    </div>
                                 </div>
-                                <div class="detail-card-content">
-                                    <div id="correlationMatrixContent">
-                                        <div style="color: #94a3b8; font-size: 12px; text-align: center; padding: 8px;">Analyzing multivariate correlations...</div>
+                                <div id="correlationMatrixContent" style="display: grid; gap: 20px;">
+                                    <div style="background: rgba(15, 23, 42, 0.5); text-align: center; padding: 30px; border-radius: 10px; border: 1px solid rgba(100, 116, 139, 0.2);">
+                                        <div style="color: #64748b; font-size: 14px;">Analyzing multivariate correlations...</div>
+                                        <div class="skeleton" style="width: 60%; height: 20px; margin: 12px auto;"></div>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Temporal Pattern Intelligence -->
-                            <div class="detail-card">
-                                <div class="detail-card-header" data-lang="temporal-pattern-recognition" onclick="toggleDetailCard(this)">
-                                    Temporal Pattern Recognition
-                                    <span class="collapse-icon">▼</span>
+                            <div class="analysis-section-glass card-reveal stagger-5" style="margin-bottom: 28px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div style="width: 4px; height: 28px; background: linear-gradient(180deg, #06b6d4, #0891b2); border-radius: 2px;"></div>
+                                        <h3 data-lang="temporal-pattern-recognition" style="color: #f8fafc; font-size: 18px; font-weight: 600; margin: 0;">Temporal Pattern Recognition</h3>
+                                    </div>
+                                    <div style="background: rgba(6, 182, 212, 0.1); border: 1px solid rgba(6, 182, 212, 0.3); padding: 6px 12px; border-radius: 8px;">
+                                        <span style="color: #67e8f9; font-size: 11px; font-weight: 600; letter-spacing: 0.5px;">📅 TIMING</span>
+                                    </div>
                                 </div>
-                                <div class="detail-card-content">
-                                    <div id="temporalPatternContent">
-                                        <div style="color: #94a3b8; font-size: 12px; text-align: center; padding: 8px;">Detecting temporal patterns...</div>
+                                <div id="temporalPatternContent" style="display: grid; gap: 20px;">
+                                    <div style="background: rgba(15, 23, 42, 0.5); text-align: center; padding: 30px; border-radius: 10px; border: 1px solid rgba(100, 116, 139, 0.2);">
+                                        <div style="color: #64748b; font-size: 14px;">Detecting temporal patterns...</div>
+                                        <div class="skeleton" style="width: 70%; height: 20px; margin: 12px auto;"></div>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Trading Style Cluster Analysis -->
-                            <div class="detail-card">
-                                <div class="detail-card-header" data-lang="trade-clustering-analysis" onclick="toggleDetailCard(this)">
-                                    Trade Clustering Analysis
-                                    <span class="collapse-icon">▼</span>
+                            <div class="analysis-section-glass card-reveal stagger-6" style="margin-bottom: 28px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div style="width: 4px; height: 28px; background: linear-gradient(180deg, #10b981, #059669); border-radius: 2px;"></div>
+                                        <h3 data-lang="trade-clustering-analysis" style="color: #f8fafc; font-size: 18px; font-weight: 600; margin: 0;">Trade Clustering Analysis</h3>
+                                    </div>
+                                    <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); padding: 6px 12px; border-radius: 8px;">
+                                        <span style="color: #6ee7b7; font-size: 11px; font-weight: 600; letter-spacing: 0.5px;">🎯 CLUSTERS</span>
+                                    </div>
                                 </div>
-                                <div class="detail-card-content">
-                                    <div id="clusterAnalysisContent">
-                                        <div style="color: #94a3b8; font-size: 12px; text-align: center; padding: 8px;">Performing cluster analysis...</div>
+                                <div id="clusterAnalysisContent" style="display: grid; gap: 20px;">
+                                    <div style="background: rgba(15, 23, 42, 0.5); text-align: center; padding: 30px; border-radius: 10px; border: 1px solid rgba(100, 116, 139, 0.2);">
+                                        <div style="color: #64748b; font-size: 14px;">Performing cluster analysis...</div>
+                                        <div class="skeleton" style="width: 50%; height: 20px; margin: 12px auto;"></div>
                                     </div>
                                 </div>
                             </div>
 
+                            <!-- ========== ADVANCED ALGORITHMIC INTELLIGENCE ========== -->
+
                             <!-- Multi-Factor Performance Attribution -->
-                            <div class="detail-card">
-                                <div class="detail-card-header" data-lang="multi-factor-attribution" onclick="toggleDetailCard(this)">
-                                    Multi-Factor Performance Attribution
-                                    <span class="collapse-icon">▼</span>
+                            <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid #334155; border-radius: 12px; padding: 24px; margin-bottom: 24px;">
+                                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                                    <div style="width: 4px; height: 24px; background: linear-gradient(180deg, #3b82f6, #10b981); border-radius: 2px;"></div>
+                                    <h3 data-lang="multi-factor-attribution" style="color: #f8fafc; font-size: 16px; font-weight: 600; margin: 0;">Multi-Factor Performance Attribution</h3>
                                 </div>
-                                <div class="detail-card-content">
-                                    <div id="multiFactorAttribution">
-                                        <div style="color: #94a3b8; font-size: 12px; text-align: center; padding: 8px;">
-                                            <span data-lang="loading-analysis">Loading feature importance analysis...</span>
-                                        </div>
+                                <div id="multiFactorAttribution" style="padding: 12px;">
+                                    <div style="color: #64748b; text-align: center; padding: 20px;">
+                                        <span data-lang="loading-analysis">Loading feature importance analysis...</span>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Predictive Risk Score -->
-                            <div class="detail-card">
-                                <div class="detail-card-header" data-lang="predictive-risk-score" onclick="toggleDetailCard(this)">
-                                    Predictive Risk Score
-                                    <span class="collapse-icon">▼</span>
+                            <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid #334155; border-radius: 12px; padding: 24px; margin-bottom: 24px;">
+                                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                                    <div style="width: 4px; height: 24px; background: linear-gradient(180deg, #f59e0b, #ef4444); border-radius: 2px;"></div>
+                                    <h3 data-lang="predictive-risk-score" style="color: #f8fafc; font-size: 16px; font-weight: 600; margin: 0;">Predictive Risk Score</h3>
                                 </div>
-                                <div class="detail-card-content">
-                                    <div id="predictiveRiskScore">
-                                        <div style="color: #94a3b8; font-size: 12px; text-align: center; padding: 8px;">
-                                            <span data-lang="calculating-risk">Calculating real-time risk assessment...</span>
-                                        </div>
+                                <div id="predictiveRiskScore" style="padding: 12px;">
+                                    <div style="color: #64748b; text-align: center; padding: 20px;">
+                                        <span data-lang="calculating-risk">Calculating real-time risk assessment...</span>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Behavioral Pattern Recognition -->
-                            <div class="detail-card">
-                                <div class="detail-card-header" data-lang="behavioral-patterns" onclick="toggleDetailCard(this)">
-                                    Behavioral Pattern Recognition
-                                    <span class="collapse-icon">▼</span>
+                            <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid #334155; border-radius: 12px; padding: 24px; margin-bottom: 24px;">
+                                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                                    <div style="width: 4px; height: 24px; background: linear-gradient(180deg, #8b5cf6, #ec4899); border-radius: 2px;"></div>
+                                    <h3 data-lang="behavioral-patterns" style="color: #f8fafc; font-size: 16px; font-weight: 600; margin: 0;">Behavioral Pattern Recognition</h3>
                                 </div>
-                                <div class="detail-card-content">
-                                    <div id="behavioralPatterns">
-                                        <div style="color: #94a3b8; font-size: 12px; text-align: center; padding: 8px;">
-                                            <span data-lang="analyzing-patterns">Analyzing trading patterns...</span>
-                                        </div>
+                                <div id="behavioralPatterns" style="padding: 12px;">
+                                    <div style="color: #64748b; text-align: center; padding: 20px;">
+                                        <span data-lang="analyzing-patterns">Analyzing trading patterns...</span>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Market Context Intelligence -->
-                            <div class="detail-card">
-                                <div class="detail-card-header" data-lang="market-intelligence" onclick="toggleDetailCard(this)">
-                                    Market Context Intelligence
-                                    <span class="collapse-icon">▼</span>
+                            <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid #334155; border-radius: 12px; padding: 24px; margin-bottom: 24px;">
+                                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                                    <div style="width: 4px; height: 24px; background: linear-gradient(180deg, #06b6d4, #0891b2); border-radius: 2px;"></div>
+                                    <h3 data-lang="market-intelligence" style="color: #f8fafc; font-size: 16px; font-weight: 600; margin: 0;">Market Context Intelligence</h3>
                                 </div>
-                                <div class="detail-card-content">
-                                    <div id="marketIntelligence">
-                                        <div style="color: #94a3b8; font-size: 12px; text-align: center; padding: 8px;">
-                                            <span data-lang="analyzing-market">Analyzing market conditions...</span>
-                                        </div>
+                                <div id="marketIntelligence" style="padding: 12px;">
+                                    <div style="color: #64748b; text-align: center; padding: 20px;">
+                                        <span data-lang="analyzing-market">Analyzing market conditions...</span>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Statistical Edge Analysis -->
-                            <div class="detail-card">
-                                <div class="detail-card-header" data-lang="statistical-edge" onclick="toggleDetailCard(this)">
-                                    Statistical Edge Analysis
-                                    <span class="collapse-icon">▼</span>
+                            <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid #334155; border-radius: 12px; padding: 24px;">
+                                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                                    <div style="width: 4px; height: 24px; background: linear-gradient(180deg, #10b981, #059669); border-radius: 2px;"></div>
+                                    <h3 data-lang="statistical-edge" style="color: #f8fafc; font-size: 16px; font-weight: 600; margin: 0;">Statistical Edge Analysis</h3>
                                 </div>
-                                <div class="detail-card-content">
-                                    <div id="statisticalEdge">
-                                        <div style="color: #94a3b8; font-size: 12px; text-align: center; padding: 8px;">
-                                            <span data-lang="computing-stats">Computing statistical significance...</span>
-                                        </div>
+                                <div id="statisticalEdge" style="padding: 12px;">
+                                    <div style="color: #64748b; text-align: center; padding: 20px;">
+                                        <span data-lang="computing-stats">Computing statistical significance...</span>
                                     </div>
                                 </div>
                             </div>
