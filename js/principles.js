@@ -77,6 +77,11 @@ function showPrinciplesDatePicker() {
 function loadPrinciplesDataForDate(date) {
     const data = principlesData[date] || {};
 
+    // Load trading environment data
+    document.getElementById('principlesStartTime').value = data.startTime || '';
+    document.getElementById('principlesEndTime').value = data.endTime || '';
+    document.getElementById('principlesEnvironmentType').value = data.environmentType || 'home';
+
     // Load economic pressure data
     document.getElementById('principlesAccountBalance').value = data.accountBalance || '';
     document.getElementById('principlesDailyTarget').value = data.dailyTarget || '';
@@ -103,6 +108,12 @@ function updatePrinciplesTargetPercentages() {
 // Save principles data
 function savePrinciplesData() {
     const data = {
+        // Trading environment
+        startTime: document.getElementById('principlesStartTime').value || '',
+        endTime: document.getElementById('principlesEndTime').value || '',
+        environmentType: document.getElementById('principlesEnvironmentType').value || 'home',
+
+        // Economic pressure
         accountBalance: parseFloat(document.getElementById('principlesAccountBalance').value) || 0,
         dailyTarget: parseFloat(document.getElementById('principlesDailyTarget').value) || 0,
         maxDailyLoss: parseFloat(document.getElementById('principlesMaxDailyLoss').value) || 0,

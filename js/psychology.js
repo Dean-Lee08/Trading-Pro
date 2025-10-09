@@ -132,20 +132,9 @@ function savePsychologyData() {
     const data = {
         date: currentPsychologyDate,
         timestamp: new Date().toISOString(),
-        
+
         // Biological data
         sleepHours: parseFloat(document.getElementById('sleepHours').value) || 0,
-        
-        // Time & environment
-        startTime: document.getElementById('startTime').value || '09:30',
-        endTime: document.getElementById('endTime').value || '',
-        environmentType: document.getElementById('environmentType').value || 'home',
-        
-        // Economic pressure
-        accountBalance: parseFloat(document.getElementById('accountBalance').value) || 0,
-        dailyTarget: parseFloat(document.getElementById('dailyTarget').value) || 0,
-        maxDailyLoss: parseFloat(document.getElementById('maxDailyLoss').value) || 0,
-        maxTradeCount: parseInt(document.getElementById('maxTradeCount').value) || 0,
 
         // Emotional state
         stressLevel: parseInt(document.getElementById('stressLevel').value) || 3,
