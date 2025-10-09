@@ -3004,51 +3004,8 @@ function calculateCorrelationMatrix() {
 }
 
 /**
- * Temporal Pattern Recognition
- * Identifies patterns based on time and sequence
- */
-function renderTemporalPatterns() {
-    const element = document.getElementById('temporalPatternContent');
-    if (!element) return;
-
-    const patterns = analyzeTemporalPatterns();
-
-    if (!patterns || patterns.length === 0) {
-        element.innerHTML = `
-            <div style="background: rgba(15, 23, 42, 0.5); text-align: center; padding: 30px; border-radius: 10px; border: 1px solid rgba(100, 116, 139, 0.2);">
-                <div style="color: #64748b; font-size: 14px;">
-                    Insufficient data for temporal analysis. Need more historical trading data.
-                </div>
-            </div>
-        `;
-        return;
-    }
-
-    const html = patterns.map(pattern => {
-        const color = pattern.performance > 50 ? '#10b981' : '#ef4444';
-
-        return `
-            <div class="glass-card hover-lift" style="background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(100, 116, 139, 0.2); padding: 20px; margin-bottom: 16px; border-radius: 10px;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div style="flex: 1;">
-                        <div style="color: #e4e4e7; font-size: 14px; font-weight: 600; margin-bottom: 8px;">${pattern.name}</div>
-                        <div style="color: #64748b; font-size: 12px;">${pattern.description}</div>
-                        <div style="color: #94a3b8; font-size: 11px; margin-top: 4px;">Sample: ${pattern.sampleSize} occurrences</div>
-                    </div>
-                    <div style="text-align: right;">
-                        <div style="color: ${color}; font-size: 24px; font-weight: 700;">${pattern.performance.toFixed(0)}%</div>
-                        <div style="color: #64748b; font-size: 11px;">Win Rate</div>
-                    </div>
-                </div>
-            </div>
-        `;
-    }).join('');
-
-    element.innerHTML = html;
-}
-
-/**
  * Analyze temporal patterns
+ * Note: renderTemporalPatterns() is defined in new-ai-renders.js
  */
 function analyzeTemporalPatterns() {
     const patterns = [];
@@ -3084,59 +3041,8 @@ function analyzeTemporalPatterns() {
 }
 
 /**
- * Cluster Analysis
- * Groups similar trading patterns
- */
-function renderClusterAnalysis() {
-    const element = document.getElementById('clusterAnalysisContent');
-    if (!element) return;
-
-    const clusters = performClusterAnalysis();
-
-    if (!clusters || clusters.length === 0) {
-        element.innerHTML = `
-            <div style="background: rgba(15, 23, 42, 0.5); text-align: center; padding: 30px; border-radius: 10px; border: 1px solid rgba(100, 116, 139, 0.2);">
-                <div style="color: #64748b; font-size: 14px;">
-                    Insufficient data for cluster analysis. Need at least 20 trades.
-                </div>
-            </div>
-        `;
-        return;
-    }
-
-    const html = clusters.map((cluster, idx) => {
-        const color = cluster.avgPnL > 0 ? '#10b981' : '#ef4444';
-
-        return `
-            <div class="glass-card hover-lift" style="background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(100, 116, 139, 0.2); padding: 20px; margin-bottom: 16px; border-radius: 10px;">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
-                    <div style="flex: 1;">
-                        <div style="color: #e4e4e7; font-size: 14px; font-weight: 600; margin-bottom: 4px;">Cluster ${idx + 1}: ${cluster.name}</div>
-                        <div style="color: #64748b; font-size: 12px; line-height: 1.5;">${cluster.characteristics}</div>
-                    </div>
-                    <div style="background: ${color}20; border: 1px solid ${color}40; padding: 4px 8px; border-radius: 6px;">
-                        <span style="color: ${color}; font-size: 11px; font-weight: 600;">${cluster.count} trades</span>
-                    </div>
-                </div>
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
-                    <div>
-                        <div style="color: #64748b; font-size: 11px;">Avg P&L</div>
-                        <div style="color: ${color}; font-size: 16px; font-weight: 700;">$${cluster.avgPnL.toFixed(2)}</div>
-                    </div>
-                    <div>
-                        <div style="color: #64748b; font-size: 11px;">Win Rate</div>
-                        <div style="color: ${color}; font-size: 16px; font-weight: 700;">${cluster.winRate.toFixed(0)}%</div>
-                    </div>
-                </div>
-            </div>
-        `;
-    }).join('');
-
-    element.innerHTML = html;
-}
-
-/**
  * Perform simple cluster analysis on trades
+ * Note: renderClusterAnalysis() is defined in new-ai-renders.js
  */
 function performClusterAnalysis() {
     if (trades.length < 20) return null;
