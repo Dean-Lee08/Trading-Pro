@@ -88,8 +88,9 @@ function loadPrinciplesDataForDate(date) {
     document.getElementById('principlesMaxDailyLoss').value = data.maxDailyLoss || '';
     document.getElementById('principlesMaxTradeCount').value = data.maxTradeCount || '';
 
-    // Update percentages
+    // Update percentages and visual cards
     updatePrinciplesTargetPercentages();
+    updatePrinciplesVisualCards();
 }
 
 // Update target percentages
@@ -103,6 +104,96 @@ function updatePrinciplesTargetPercentages() {
 
     document.getElementById('principlesDailyTargetPercent').textContent = targetPercent + '%';
     document.getElementById('principlesMaxLossPercent').textContent = lossPercent + '%';
+
+    // Update visual cards when percentages change
+    updatePrinciplesVisualCards();
+}
+
+// Update Environment Score Card
+function updatePrinciplesEnvironmentCard() {
+    const envTypeEl = document.getElementById('principlesEnvironmentType');
+    if (!envTypeEl) return;
+
+    const envType = envTypeEl.value || 'home';
+
+    const envScores = {
+        'home': 85,
+        'office': 70,
+        'cafe': 50,
+        'hotel': 40
+    };
+
+    const baseScore = envScores[envType] || 50;
+    const totalScore = Math.max(0, Math.min(100, baseScore));
+
+    const scoreEl = document.getElementById('principlesEnvironmentScore');
+    const typeDisplayEl = document.getElementById('principlesEnvironmentTypeDisplay');
+    const circleEl = document.getElementById('principlesEnvironmentCircle');
+    const statusEl = document.getElementById('principlesEnvironmentStatus');
+
+    if (scoreEl) scoreEl.textContent = Math.round(totalScore);
+    if (typeDisplayEl) typeDisplayEl.textContent = envType.charAt(0).toUpperCase() + envType.slice(1);
+
+    if (circleEl) {
+        const circumference = 157;
+        const offset = circumference - (totalScore / 100) * circumference;
+        circleEl.style.strokeDashoffset = offset;
+    }
+
+    let status = 'Good';
+    if (totalScore >= 80) status = 'Excellent';
+    else if (totalScore >= 60) status = 'Good';
+    else if (totalScore >= 40) status = 'Fair';
+    else status = 'Poor';
+
+    if (statusEl) statusEl.textContent = status;
+}
+
+// Update Risk Assessment Card
+function updatePrinciplesRiskCard() {
+    const balance = parseFloat(document.getElementById('principlesAccountBalance').value) || 0;
+    const target = parseFloat(document.getElementById('principlesDailyTarget').value) || 0;
+    const maxLoss = parseFloat(document.getElementById('principlesMaxDailyLoss').value) || 0;
+
+    const targetPercentEl = document.getElementById('principlesTargetRiskPercent');
+    const maxLossPercentEl = document.getElementById('principlesMaxLossRiskPercent');
+    const targetBarEl = document.getElementById('principlesTargetRiskBar');
+    const maxLossBarEl = document.getElementById('principlesMaxLossRiskBar');
+    const riskStatusEl = document.getElementById('principlesRiskStatus');
+
+    if (balance > 0) {
+        const targetPercent = (target / balance * 100);
+        const lossPercent = (maxLoss / balance * 100);
+
+        if (targetPercentEl) targetPercentEl.textContent = `${targetPercent.toFixed(1)}%`;
+        if (maxLossPercentEl) maxLossPercentEl.textContent = `${lossPercent.toFixed(1)}%`;
+
+        if (targetBarEl) targetBarEl.style.width = `${Math.min(targetPercent * 10, 100)}%`;
+        if (maxLossBarEl) maxLossBarEl.style.width = `${Math.min(lossPercent * 10, 100)}%`;
+
+        let status = 'Conservative';
+        if (targetPercent > 5 || lossPercent > 10) status = 'High risk';
+        else if (targetPercent > 3 || lossPercent > 5) status = 'Moderate risk';
+        else if (targetPercent > 1 || lossPercent > 2) status = 'Low risk';
+
+        if (riskStatusEl) riskStatusEl.textContent = status;
+    } else {
+        if (targetPercentEl) targetPercentEl.textContent = '0%';
+        if (maxLossPercentEl) maxLossPercentEl.textContent = '0%';
+        if (targetBarEl) targetBarEl.style.width = '0%';
+        if (maxLossBarEl) maxLossBarEl.style.width = '0%';
+        if (riskStatusEl) riskStatusEl.textContent = 'No data';
+    }
+}
+
+// Update all visual cards
+function updatePrinciplesVisualCards() {
+    try {
+        updatePrinciplesEnvironmentCard();
+        updatePrinciplesRiskCard();
+    } catch (error) {
+        console.error('Error updating principles visual cards:', error);
+    }
 }
 
 // Save principles data
