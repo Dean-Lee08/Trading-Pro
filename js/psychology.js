@@ -209,13 +209,6 @@ function loadPsychologyData() {
     if (todayData) {
         // 저장된 데이터가 있는 경우 불러오기
         updateElement('sleepHours', todayData.sleepHours || '');
-        updateElement('startTime', todayData.startTime || '09:30');
-        updateElement('endTime', todayData.endTime || '');
-        updateElement('environmentType', todayData.environmentType || 'home');
-        updateElement('accountBalance', todayData.accountBalance || '');
-        updateElement('dailyTarget', todayData.dailyTarget || '');
-        updateElement('maxDailyLoss', todayData.maxDailyLoss || '');
-        updateElement('maxTradeCount', todayData.maxTradeCount || '');
         updateElement('stressLevel', todayData.stressLevel || 3);
         updateElement('confidenceLevel', todayData.confidenceLevel || 3);
         updateElement('focusLevel', todayData.focusLevel || 3);
@@ -367,40 +360,10 @@ function updateSleepCard() {
 }
 
 /**
- * 환경 카드 업데이트
+ * 환경 카드 업데이트 - 제거됨 (원칙 섹션으로 이동)
  */
 function updateEnvironmentCard() {
-    const envType = document.getElementById('environmentType').value;
-    const focusLevel = parseInt(document.getElementById('focusLevel').value) || 3;
-    
-    const envScores = {
-        'home': 85,
-        'office': 70,
-        'cafe': 50,
-        'hotel': 40
-    };
-    
-    const baseScore = envScores[envType] || 50;
-    const focusAdjustment = (focusLevel - 3) * 10;
-    const totalScore = Math.max(0, Math.min(100, baseScore + focusAdjustment));
-    
-    document.getElementById('environmentScore').textContent = Math.round(totalScore);
-    document.getElementById('environmentTypeDisplay').textContent = envType.charAt(0).toUpperCase() + envType.slice(1);
-    
-    const circle = document.getElementById('environmentCircle');
-    if (circle) {
-        const circumference = 157;
-        const offset = circumference - (totalScore / 100) * circumference;
-        circle.style.strokeDashoffset = offset;
-    }
-    
-    let status = 'Good';
-    if (totalScore >= 80) status = 'Excellent';
-    else if (totalScore >= 60) status = 'Good';
-    else if (totalScore >= 40) status = 'Fair';
-    else status = 'Poor';
-    
-    document.getElementById('environmentStatus').textContent = status;
+    // This function is now deprecated as environment fields moved to principles section
 }
 
 /**
