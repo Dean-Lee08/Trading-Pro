@@ -44,6 +44,10 @@ let psychologyData = {};
 let currentPsychologySection = 'input';
 let currentPsychologyDate = null;
 
+// Principles State
+let principlesData = {};
+let currentPrinciplesDate = null;
+
 // Calendar State
 let selectedWeekPnl = null;
 let selectedMonthYear = null;

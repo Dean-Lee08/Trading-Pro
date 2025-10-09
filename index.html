@@ -1527,6 +1527,63 @@
                 </div>
             </div>
 
+            <!-- Principles Page -->
+            <div class="page" id="principles">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title" data-lang="principles-title">Trading Principles</h1>
+                        <p class="page-subtitle" data-lang="principles-subtitle">Define and track your trading rules</p>
+                    </div>
+                    <div class="page-header-info">
+                        <div class="date-navigation">
+                            <button class="date-nav-btn" onclick="previousPrinciplesDay()" title="Previous day">&larr;</button>
+                            <div class="current-date-display" id="principlesDateDisplay" onclick="showPrinciplesDatePicker()">
+                                <span id="principlesDateText">Today</span>
+                            </div>
+                            <button class="date-nav-btn" onclick="nextPrinciplesDay()" title="Next day">&rarr;</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="principles-container">
+                    <h2 class="principles-header" data-lang="economic-pressure">Economic Pressure</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 24px;">
+                        <!-- Economic Pressure Settings -->
+                        <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
+                            <h3 data-lang="risk-management" style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;">Risk Management</h3>
+                            <div style="margin-bottom: 16px;">
+                                <label data-lang="account-balance" style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;">Account Balance ($)</label>
+                                <input id="principlesAccountBalance" min="0" oninput="updatePrinciplesTargetPercentages()" placeholder="10000" style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;" type="number"/>
+                            </div>
+                            <div style="margin-bottom: 16px;">
+                                <label data-lang="daily-target" style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;">Daily P&L Target ($)</label>
+                                <div style="display: flex; gap: 8px; align-items: center;">
+                                    <input id="principlesDailyTarget" oninput="updatePrinciplesTargetPercentages()" placeholder="200" style="flex: 1; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;" type="number"/>
+                                    <span id="principlesDailyTargetPercent" style="color: #64748b; font-size: 12px; min-width: 40px;">0%</span>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 16px;">
+                                <label data-lang="max-daily-loss" style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;">Max Daily Loss ($)</label>
+                                <div style="display: flex; gap: 8px; align-items: center;">
+                                    <input id="principlesMaxDailyLoss" oninput="updatePrinciplesTargetPercentages()" placeholder="500" style="flex: 1; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;" type="number"/>
+                                    <span id="principlesMaxLossPercent" style="color: #64748b; font-size: 12px; min-width: 40px;">0%</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label data-lang="max-trade-count" style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;">Trade Count Limit</label>
+                                <input id="principlesMaxTradeCount" min="0" placeholder="20" style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;" type="number"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div style="display: flex; gap: 12px; justify-content: center; margin-bottom: 24px;">
+                        <button class="psychology-save-btn" data-lang="save-principles-data" onclick="savePrinciplesData()">Save Principles Data</button>
+                        <button class="psychology-save-btn" data-lang="reset-principles-data" onclick="resetPrinciplesData()" style="background: #ef4444;">Reset Data</button>
+                    </div>
+                </div>
+            </div>
+
             <!-- Psychology Page -->
             <div class="page" id="psychology">
                 <div class="page-header">
