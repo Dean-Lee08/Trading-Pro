@@ -2490,6 +2490,25 @@
     -moz-appearance: textfield !important;
 }
 
+            /* Principles Section Styles */
+        .principles-container {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .principles-header {
+            color: #f8fafc;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #334155;
+        }
+
             /* Psychology Section Styles */
         .psychology-container {
             background: #1e293b;
