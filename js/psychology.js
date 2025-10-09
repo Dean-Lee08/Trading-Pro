@@ -817,11 +817,12 @@ function generatePsychologyInsights() {
         });
     }
     
-    // Environment insights
-    if (todayData.environmentType === 'cafe' || todayData.environmentType === 'home-noisy') {
+    // Environment insights - 이제 principlesData에서 가져옴
+    const principlesForToday = principlesData && principlesData[currentPsychologyDate];
+    if (principlesForToday && (principlesForToday.environmentType === 'cafe' || principlesForToday.environmentType === 'home-noisy')) {
         insights.push({
             type: 'warning',
-            text: currentLanguage === 'ko' ? 
+            text: currentLanguage === 'ko' ?
                 '거래 환경 주의: 소음이 있는 환경은 집중력을 저해할 수 있습니다. 조용한 환경을 찾아보세요.' :
                 'Trading Environment Warning: Noisy environments may impair focus. Consider finding a quieter space.'
         });
