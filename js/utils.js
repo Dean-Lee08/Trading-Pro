@@ -65,8 +65,6 @@ function updateCurrentDateDisplay() {
     }
 }
 
-// calculateHoldingTime is defined in trading.js
-
 /**
  * 표준 편차 계산
  */
@@ -98,8 +96,6 @@ function showToast(message) {
 function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('open');
 }
-
-// showPage is defined in main.js
 
 /**
  * 상세 카드 접기/펼치기
@@ -379,5 +375,4 @@ function filterTrades(allTrades, options = {}) {
 }
 
 // ==================== Data Export/Import Utilities ====================
-
-// exportData, importData, handleFileImport, clearAllData 함수는 main.js에 정의되어 있습니다.
+// Functions defined in main.js: exportData, importData, handleFileImport, clearAllData
