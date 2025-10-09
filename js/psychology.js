@@ -233,6 +233,7 @@ function loadPsychologyData() {
         updateElement('accountBalance', todayData.accountBalance || '');
         updateElement('dailyTarget', todayData.dailyTarget || '');
         updateElement('maxDailyLoss', todayData.maxDailyLoss || '');
+        updateElement('maxTradeCount', todayData.maxTradeCount || '');
         updateElement('stressLevel', todayData.stressLevel || 3);
         updateElement('confidenceLevel', todayData.confidenceLevel || 3);
         updateElement('focusLevel', todayData.focusLevel || 3);
