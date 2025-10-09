@@ -4,6 +4,12 @@
  * Update Hero Dashboard Metrics
  */
 function updateHeroDashboard() {
+    // Check if hero dashboard elements exist
+    if (!document.getElementById('heroQualityScore')) {
+        console.log('ℹ️ Hero Dashboard elements not found - skipping update');
+        return;
+    }
+
     if (trades.length < 5) {
         setHeroDefaults();
         return;
@@ -23,16 +29,22 @@ function updateHeroDashboard() {
  * Set default hero dashboard values
  */
 function setHeroDefaults() {
-    document.getElementById('heroQualityScore').textContent = '--';
-    document.getElementById('heroQualityTrend').innerHTML = '<span class="trend-icon">▲</span><span class="trend-value">Collect more data</span>';
-    document.getElementById('heroQualityGauge').style.width = '0%';
+    const setElementContent = (id, content, property = 'textContent') => {
+        const el = document.getElementById(id);
+        if (el) el[property] = content;
+    };
 
-    document.getElementById('heroWinProbability').textContent = '--';
-    document.getElementById('heroRecommendation').innerHTML = '<span class="rec-icon">🟡</span><span class="rec-text">Insufficient data</span>';
-    document.getElementById('heroConfidence').textContent = '--';
+    setElementContent('heroQualityScore', '--');
+    setElementContent('heroQualityTrend', '<span class="trend-icon">▲</span><span class="trend-value">Collect more data</span>', 'innerHTML');
+    const gaugeEl = document.getElementById('heroQualityGauge');
+    if (gaugeEl) gaugeEl.style.width = '0%';
 
-    document.getElementById('heroForecastValue').textContent = '$--';
-    document.getElementById('heroForecastTrend').innerHTML = '<span class="trend-icon">▲</span><span class="trend-value">--% vs avg</span>';
+    setElementContent('heroWinProbability', '--');
+    setElementContent('heroRecommendation', '<span class="rec-icon">🟡</span><span class="rec-text">Insufficient data</span>', 'innerHTML');
+    setElementContent('heroConfidence', '--');
+
+    setElementContent('heroForecastValue', '$--');
+    setElementContent('heroForecastTrend', '<span class="trend-icon">▲</span><span class="trend-value">--% vs avg</span>', 'innerHTML');
 }
 
 /**
@@ -55,6 +67,8 @@ function updateHeroQualityScore() {
     const qualityTrendEl = document.getElementById('heroQualityTrend');
     const qualityGaugeEl = document.getElementById('heroQualityGauge');
 
+    if (!qualityScoreEl || !qualityTrendEl || !qualityGaugeEl) return;
+
     // Animate number
     animateValue(qualityScoreEl, 0, Math.round(recentAvg), 1000);
 
@@ -76,46 +90,56 @@ function updateHeroQualityScore() {
 function updateHeroWinProbability() {
     const prediction = calculatePredictiveWinProbability();
 
+    const winProbEl = document.getElementById('heroWinProbability');
+    if (!winProbEl) return;
+
     if (!prediction) {
-        document.getElementById('heroWinProbability').textContent = '--';
+        winProbEl.textContent = '--';
         return;
     }
 
     const probability = Math.round(prediction.probability * 100);
 
     // Update probability
-    animateValue(document.getElementById('heroWinProbability'), 0, probability, 1000);
+    animateValue(winProbEl, 0, probability, 1000);
 
     // Update signal light
     const signalLight = document.getElementById('heroSignalLight');
-    signalLight.className = 'signal-light';
-    if (prediction.recommendation === 'favorable') {
-        signalLight.classList.add('green');
-    } else if (prediction.recommendation === 'unfavorable') {
-        signalLight.classList.add('red');
+    if (signalLight) {
+        signalLight.className = 'signal-light';
+        if (prediction.recommendation === 'favorable') {
+            signalLight.classList.add('green');
+        } else if (prediction.recommendation === 'unfavorable') {
+            signalLight.classList.add('red');
+        }
     }
 
     // Update recommendation badge
     const recBadge = document.getElementById('heroRecommendation');
-    let recIcon = '🟡';
-    let recText = 'Neutral';
-    let recClass = '';
+    if (recBadge) {
+        let recIcon = '🟡';
+        let recText = 'Neutral';
+        let recClass = '';
 
-    if (prediction.recommendation === 'favorable') {
-        recIcon = '🟢';
-        recText = currentLanguage === 'ko' ? '유리함' : 'Favorable';
-        recClass = 'favorable';
-    } else if (prediction.recommendation === 'unfavorable') {
-        recIcon = '🔴';
-        recText = currentLanguage === 'ko' ? '불리함' : 'Unfavorable';
-        recClass = 'unfavorable';
+        if (prediction.recommendation === 'favorable') {
+            recIcon = '🟢';
+            recText = currentLanguage === 'ko' ? '유리함' : 'Favorable';
+            recClass = 'favorable';
+        } else if (prediction.recommendation === 'unfavorable') {
+            recIcon = '🔴';
+            recText = currentLanguage === 'ko' ? '불리함' : 'Unfavorable';
+            recClass = 'unfavorable';
+        }
+
+        recBadge.className = 'recommendation-badge ' + recClass;
+        recBadge.innerHTML = '<span class="rec-icon">' + recIcon + '</span><span class="rec-text">' + recText + '</span>';
     }
 
-    recBadge.className = 'recommendation-badge ' + recClass;
-    recBadge.innerHTML = '<span class="rec-icon">' + recIcon + '</span><span class="rec-text">' + recText + '</span>';
-
     // Update confidence
-    document.getElementById('heroConfidence').textContent = prediction.confidence;
+    const confidenceEl = document.getElementById('heroConfidence');
+    if (confidenceEl) {
+        confidenceEl.textContent = prediction.confidence;
+    }
 }
 
 /**
@@ -124,16 +148,21 @@ function updateHeroWinProbability() {
 function updateHeroPerformanceForecast() {
     const sessionPrediction = predictSessionPerformance();
 
+    const forecastValueEl = document.getElementById('heroForecastValue');
+    const forecastTrendEl = document.getElementById('heroForecastTrend');
+
+    if (!forecastValueEl || !forecastTrendEl) return;
+
     if (!sessionPrediction) {
         // Fallback to simple average
         const recentTrades = [...trades].slice(-20);
         if (recentTrades.length > 0) {
             const avgPnL = recentTrades.reduce((sum, t) => sum + t.pnl, 0) / recentTrades.length;
-            document.getElementById('heroForecastValue').textContent = '$' + avgPnL.toFixed(0);
+            forecastValueEl.textContent = '$' + avgPnL.toFixed(0);
         } else {
-            document.getElementById('heroForecastValue').textContent = '$--';
+            forecastValueEl.textContent = '$--';
         }
-        document.getElementById('heroForecastTrend').innerHTML = '<span class="trend-icon">▲</span><span class="trend-value">Based on avg</span>';
+        forecastTrendEl.innerHTML = '<span class="trend-icon">▲</span><span class="trend-value">Based on avg</span>';
         drawHeroSparkline();
         return;
     }
@@ -143,12 +172,11 @@ function updateHeroPerformanceForecast() {
     const trendPct = ((forecast - allPnL) / Math.abs(allPnL)) * 100;
 
     // Update value
-    document.getElementById('heroForecastValue').textContent = '$' + forecast.toFixed(0);
+    forecastValueEl.textContent = '$' + forecast.toFixed(0);
 
     // Update trend
     const trendIcon = trendPct >= 0 ? '▲' : '▼';
     const trendClass = trendPct >= 0 ? 'positive' : 'negative';
-    const forecastTrendEl = document.getElementById('heroForecastTrend');
     forecastTrendEl.className = 'metric-trend ' + trendClass;
     forecastTrendEl.innerHTML = '<span class="trend-icon">' + trendIcon + '</span><span class="trend-value">' + Math.abs(trendPct).toFixed(0) + '% vs avg</span>';
 
@@ -221,6 +249,8 @@ function drawHeroSparkline() {
  * Animate number counter
  */
 function animateValue(element, start, end, duration) {
+    if (!element) return;
+
     const range = end - start;
     const increment = range / (duration / 16);
     let current = start;
