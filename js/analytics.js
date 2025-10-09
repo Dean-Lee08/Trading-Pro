@@ -1210,12 +1210,14 @@ function analyzeTimeBasedPerformance() {
 
     if (bestHour) {
         document.getElementById('bestTradingHour').textContent = `${bestHour}:00`;
-        document.getElementById('bestHourPerformance').textContent = `Win Rate: ${bestWinRate.toFixed(0)}%`;
+        const bestWinRateEl = document.getElementById('bestHourWinRate');
+        if (bestWinRateEl) bestWinRateEl.textContent = `${bestWinRate.toFixed(0)}%`;
     }
 
     if (worstHour) {
         document.getElementById('worstTradingHour').textContent = `${worstHour}:00`;
-        document.getElementById('worstHourPerformance').textContent = `Win Rate: ${worstWinRate.toFixed(0)}%`;
+        const worstWinRateEl = document.getElementById('worstHourWinRate');
+        if (worstWinRateEl) worstWinRateEl.textContent = `${worstWinRate.toFixed(0)}%`;
     }
 }
 
@@ -1266,7 +1268,7 @@ function analyzeConsecutiveTradesPattern() {
             const element = document.getElementById(elementId);
             if (element) {
                 element.textContent = `${winRate.toFixed(0)}%`;
-                element.style.color = winRate >= 50 ? '#10b981' : '#ef4444';
+                element.style.color = winRate >= 50 ? '#1ec426' : '#ef4444';
             }
         }
     });
