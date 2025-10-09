@@ -805,53 +805,7 @@ function deleteSelectedTradesList() {
 
 // ==================== Dashboard Section & Date Range ====================
 
-/**
- * 대시보드 섹션 표시
- */
-function showDashboardSection(section) {
-    currentDashboardSection = section;
-    
-    // 탭 상태 업데이트
-    document.querySelectorAll('.dashboard-tab').forEach(tab => {
-        tab.classList.remove('active');
-    });
-    event.target.classList.add('active');
-    
-    // 섹션 표시/숨기기
-    const positionSection = document.getElementById('positionCalculatorSection');
-    const dashboardGrid = document.querySelector('.dashboard-grid');
-    const tradesSection = document.querySelector('.trades-section');
-    const statsOverview = document.querySelector('.stats-overview');
-    const dateRangeSelector = document.querySelector('.date-range-selector');
-    const dateNavigation = document.querySelector('.date-navigation');
-    
-    if (section === 'trading') {
-        if (positionSection) positionSection.style.display = 'none';
-        if (dashboardGrid) dashboardGrid.style.display = 'grid';
-        if (tradesSection) tradesSection.style.display = 'block';
-        if (statsOverview) statsOverview.style.display = 'grid';
-        // 거래 기록에서는 날짜 요소들 표시
-        if (dateRangeSelector) dateRangeSelector.style.display = 'flex';
-        if (dateNavigation) dateNavigation.style.display = 'flex';
-    } else if (section === 'position-calc' || section === 'risk-calc') {
-        if (positionSection) positionSection.style.display = 'block';
-        if (dashboardGrid) dashboardGrid.style.display = 'none';
-        if (tradesSection) tradesSection.style.display = 'none';
-        if (statsOverview) statsOverview.style.display = 'none';
-        // 포지션 계산기에서는 날짜 요소들 숨기기
-        if (dateRangeSelector) dateRangeSelector.style.display = 'none';
-        if (dateNavigation) dateNavigation.style.display = 'none';
-        
-        // 적절한 탭 활성화
-        setTimeout(() => {
-            if (section === 'position-calc') {
-                showCalculatorTab('kelly');
-            } else if (section === 'risk-calc') {
-                showCalculatorTab('risk');
-            }
-        }, 100);
-    }
-}
+// showDashboardSection() is defined in main.js
 
 /**
  * 대시보드 날짜 범위 초기화

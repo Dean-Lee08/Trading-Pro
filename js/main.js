@@ -2,70 +2,7 @@
 // main.js - Main Application Logic & Initialization
 // ============================================
 
-// ============================================
-// Data Migration
-// ============================================
-
-/**
- * Migrate economic pressure data from psychologyData to principlesData
- * This is a one-time migration for existing users
- */
-function migratePsychologyDataToPrinciples() {
-    if (!psychologyData || Object.keys(psychologyData).length === 0) {
-        return; // No psychology data to migrate
-    }
-
-    let migratedCount = 0;
-    const migrationKey = 'tradingPlatformMigrationDone_v1';
-
-    // Check if migration has already been done
-    if (localStorage.getItem(migrationKey) === 'true') {
-        return;
-    }
-
-    // Iterate through psychology data and migrate economic pressure fields
-    for (const date in psychologyData) {
-        const psyData = psychologyData[date];
-
-        // Check if this psychology data has economic pressure fields
-        if (psyData.accountBalance || psyData.dailyTarget || psyData.maxDailyLoss ||
-            psyData.maxTradeCount || psyData.startTime || psyData.endTime || psyData.environmentType) {
-
-            // Only migrate if principles data doesn't already exist for this date
-            if (!principlesData[date]) {
-                principlesData[date] = {
-                    startTime: psyData.startTime || '',
-                    endTime: psyData.endTime || '',
-                    environmentType: psyData.environmentType || 'home',
-                    accountBalance: psyData.accountBalance || 0,
-                    dailyTarget: psyData.dailyTarget || 0,
-                    maxDailyLoss: psyData.maxDailyLoss || 0,
-                    maxTradeCount: psyData.maxTradeCount || 0
-                };
-                migratedCount++;
-            }
-        }
-    }
-
-    // Save migrated data
-    if (migratedCount > 0) {
-        localStorage.setItem('tradingPlatformPrinciplesData', JSON.stringify(principlesData));
-        localStorage.setItem(migrationKey, 'true');
-
-        // Show notification to user
-        setTimeout(() => {
-            showToast(currentLanguage === 'en'
-                ? `Migrated ${migratedCount} dates of economic pressure data to Principles section`
-                : `${migratedCount}개 날짜의 경제적 압박 데이터를 원칙 섹션으로 이전했습니다`
-            );
-        }, 2000);
-
-        console.log(`Data migration complete: ${migratedCount} dates migrated from psychology to principles`);
-    } else {
-        // Mark migration as done even if no data was migrated
-        localStorage.setItem(migrationKey, 'true');
-    }
-}
+// Data migration was removed - migration completed for existing users
 
 // ============================================
 // Page Navigation
@@ -480,9 +417,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     loadNotes();
     loadPrinciplesData();
     loadPsychologyData();
-
-    // Migrate economic pressure data from psychology to principles (one-time migration)
-    migratePsychologyDataToPrinciples();
 
     updateStats();
     renderCalendar();
