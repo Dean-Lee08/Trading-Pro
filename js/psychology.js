@@ -183,6 +183,7 @@ function resetPsychologyData() {
         document.getElementById('accountBalance').value = '';
         document.getElementById('dailyTarget').value = '';
         document.getElementById('maxDailyLoss').value = '';
+        document.getElementById('maxTradeCount').value = '';
         document.getElementById('stressLevel').value = '3';
         document.getElementById('confidenceLevel').value = '3';
         document.getElementById('focusLevel').value = '3';
