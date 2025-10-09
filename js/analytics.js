@@ -6,6 +6,7 @@
  * 분석 섹션 전환
  */
 function showAnalyticsSection(sectionName) {
+    console.log('📑 showAnalyticsSection called with:', sectionName);
     currentAnalyticsSection = sectionName;
 
     // Update tab states
@@ -34,8 +35,18 @@ function showAnalyticsSection(sectionName) {
         document.getElementById('chartSection').classList.add('active');
         setTimeout(async () => await updateAdvancedCharts(), 100);
     } else if (sectionName === 'patterns') {
-        document.getElementById('patternsSection').classList.add('active');
-        setTimeout(() => updatePatternInsights(), 100);
+        console.log('🎯 Switching to patterns section...');
+        const patternsSection = document.getElementById('patternsSection');
+        if (patternsSection) {
+            patternsSection.classList.add('active');
+            console.log('✅ patternsSection active class added');
+        } else {
+            console.error('❌ patternsSection element not found!');
+        }
+        setTimeout(() => {
+            console.log('⏰ Calling updatePatternInsights after timeout...');
+            updatePatternInsights();
+        }, 100);
     }
 }
 
@@ -183,6 +194,11 @@ function updateDetailedAnalytics() {
     // Update basic charts if in detail section
     if (currentAnalyticsSection === 'detail') {
         setTimeout(async () => await updateBasicCharts(), 100);
+    }
+
+    // Update algorithmic analysis if in patterns section
+    if (currentAnalyticsSection === 'patterns') {
+        setTimeout(() => updateAlgorithmicAnalysis(), 100);
     }
 }
 
@@ -1141,6 +1157,10 @@ async function updateAdvancedCharts() {
  * 알고리즘 분석 업데이트 (Palantir-style comprehensive analysis)
  */
 function updateAlgorithmicAnalysis() {
+    console.log('🔍 updateAlgorithmicAnalysis() called');
+    console.log('📊 Total trades:', trades.length);
+    console.log('🧠 Psychology data entries:', Object.keys(psychologyData).length);
+
     // Update Hero Dashboard first
     if (typeof updateHeroDashboard === 'function') {
         updateHeroDashboard();
@@ -1152,17 +1172,27 @@ function updateAlgorithmicAnalysis() {
     generateAIInsights();
 
     // NEW: Phase 1 - Core AI Analysis Modules
+    console.log('🔗 Rendering correlation matrix...');
     renderCorrelationMatrix();
+    console.log('⏰ Rendering temporal patterns...');
     renderTemporalPatterns();
+    console.log('📊 Rendering cluster analysis...');
     renderClusterAnalysis();
 
     // Phase 2: Advanced algorithmic analysis modules
+    console.log('📈 Rendering multi-factor attribution...');
     renderMultiFactorAttribution();
+    console.log('⚠️ Rendering predictive risk score...');
     renderPredictiveRiskScore();
+    console.log('🎭 Rendering behavioral patterns...');
     renderBehavioralPatterns();
+    console.log('🌐 Rendering market intelligence...');
     renderMarketIntelligence();
+    console.log('📉 Rendering statistical edge...');
     renderStatisticalEdge();
+    console.log('💡 Rendering adaptive recommendations...');
     renderAdaptiveRecommendations();
+    console.log('✅ updateAlgorithmicAnalysis() completed');
 }
 
 /**

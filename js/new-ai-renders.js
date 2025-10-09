@@ -5,10 +5,15 @@
  * Displays correlation analysis between psychological and performance variables
  */
 function renderCorrelationMatrix() {
+    console.log('🔗 renderCorrelationMatrix() called from new-ai-renders.js');
     const container = document.getElementById('correlationMatrixContent');
-    if (!container) return;
+    if (!container) {
+        console.error('❌ correlationMatrixContent container not found!');
+        return;
+    }
 
     const analysis = analyzeMultivariateCorrelations();
+    console.log('📊 Correlation analysis result:', analysis);
 
     if (!analysis || analysis.correlations.length === 0) {
         container.innerHTML = `
@@ -101,10 +106,15 @@ function renderCorrelationMatrix() {
  * Displays time-based trading patterns
  */
 function renderTemporalPatterns() {
+    console.log('⏰ renderTemporalPatterns() called from new-ai-renders.js');
     const container = document.getElementById('temporalPatternContent');
-    if (!container) return;
+    if (!container) {
+        console.error('❌ temporalPatternContent container not found!');
+        return;
+    }
 
     const analysis = detectTemporalPatterns();
+    console.log('📊 Temporal patterns analysis result:', analysis);
 
     if (!analysis || analysis.patterns.length === 0) {
         container.innerHTML = `
@@ -230,10 +240,15 @@ function renderTemporalPatterns() {
  * Displays trade clustering by holding time
  */
 function renderClusterAnalysis() {
+    console.log('📊 renderClusterAnalysis() called from new-ai-renders.js');
     const container = document.getElementById('clusterAnalysisContent');
-    if (!container) return;
+    if (!container) {
+        console.error('❌ clusterAnalysisContent container not found!');
+        return;
+    }
 
     const analysis = performTradeClustering();
+    console.log('📊 Cluster analysis result:', analysis);
 
     if (!analysis) {
         container.innerHTML = `
