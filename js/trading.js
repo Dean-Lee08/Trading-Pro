@@ -1239,9 +1239,10 @@ function checkDailyLimits(tradeDate) {
     const psyData = psychologyData[tradeDate];
     const dailyTarget = parseFloat(psyData.dailyTarget) || 0;
     const maxDailyLoss = parseFloat(psyData.maxDailyLoss) || 0;
+    const maxTradeCount = parseInt(psyData.maxTradeCount) || 0;
 
     // 한도가 설정되지 않았으면 체크하지 않음
-    if (dailyTarget === 0 && maxDailyLoss === 0) {
+    if (dailyTarget === 0 && maxDailyLoss === 0 && maxTradeCount === 0) {
         return;
     }
 
@@ -1249,6 +1250,15 @@ function checkDailyLimits(tradeDate) {
     const dayTrades = trades.filter(trade => trade.date === tradeDate);
 
     if (dayTrades.length === 0) {
+        return;
+    }
+
+    // 거래횟수 제한 체크 (가장 우선순위)
+    if (maxTradeCount > 0 && dayTrades.length > maxTradeCount) {
+        showLimitWarning('tradeCount', {
+            currentCount: dayTrades.length,
+            limit: maxTradeCount
+        });
         return;
     }
 
@@ -1303,6 +1313,9 @@ function showLimitWarning(type, data) {
         if (type === 'profit') {
             // 목표 달성: 높은 톤 (성공음)
             oscillator.frequency.value = 800;
+        } else if (type === 'tradeCount') {
+            // 거래횟수 초과: 중간 톤 (경고음)
+            oscillator.frequency.value = 600;
         } else {
             // 손실 한도: 낮은 톤 (경고음)
             oscillator.frequency.value = 400;
@@ -1335,6 +1348,26 @@ function showLimitWarning(type, data) {
                 <div style="text-align: right;">
                     <div style="font-size: 12px; color: #94a3b8; margin-bottom: 4px;">${translations[currentLanguage]['limit-warning-target'] || 'Daily Target'}</div>
                     <div style="font-size: 20px; font-weight: 600; color: #10b981;">$${data.target.toFixed(2)}</div>
+                </div>
+            </div>
+        `;
+    } else if (type === 'tradeCount') {
+        // 거래횟수 한도 초과 (주황색 테마)
+        icon.textContent = '⚠️';
+        title.textContent = translations[currentLanguage]['limit-warning-tradecount-title'] || 'Trade Count Limit Exceeded!';
+        message.textContent = translations[currentLanguage]['limit-warning-tradecount-message'] || 'You have exceeded your daily trade count limit. Consider taking a break.';
+        content.classList.remove('success');
+        content.classList.add('warning');
+
+        stats.innerHTML = `
+            <div style="display: flex; justify-content: space-between; padding: 12px; background: rgba(245, 158, 11, 0.1); border-radius: 8px; margin-top: 16px;">
+                <div>
+                    <div style="font-size: 12px; color: #94a3b8; margin-bottom: 4px;">${translations[currentLanguage]['limit-warning-current-count'] || 'Current Trades'}</div>
+                    <div style="font-size: 20px; font-weight: 600; color: #f59e0b;">${data.currentCount}</div>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-size: 12px; color: #94a3b8; margin-bottom: 4px;">${translations[currentLanguage]['limit-warning-count-limit'] || 'Limit'}</div>
+                    <div style="font-size: 20px; font-weight: 600; color: #f59e0b;">${data.limit}</div>
                 </div>
             </div>
         `;
