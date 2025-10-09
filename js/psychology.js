@@ -266,29 +266,10 @@ function updateSliderDisplay(sliderId, displayId) {
 /**
  * 목표 비율 업데이트
  */
+// updateTargetPercentages - 이제 principles.js로 이동됨
 function updateTargetPercentages() {
-    const balanceEl = document.getElementById('accountBalance');
-    const targetEl = document.getElementById('dailyTarget');
-    const maxLossEl = document.getElementById('maxDailyLoss');
-    
-    const balance = balanceEl ? parseFloat(balanceEl.value) || 0 : 0;
-    const target = targetEl ? parseFloat(targetEl.value) || 0 : 0;
-    const maxLoss = maxLossEl ? parseFloat(maxLossEl.value) || 0 : 0;
-    
-    const targetPercentEl = document.getElementById('dailyTargetPercent');
-    const lossPercentEl = document.getElementById('maxLossPercent');
-    
-    if (balance > 0) {
-        const targetPercent = (target / balance * 100).toFixed(1);
-        const lossPercent = (maxLoss / balance * 100).toFixed(1);
-        
-        if (targetPercentEl) targetPercentEl.textContent = `${targetPercent}%`;
-        if (lossPercentEl) lossPercentEl.textContent = `${lossPercent}%`;
-    } else {
-        if (targetPercentEl) targetPercentEl.textContent = '0%';
-        if (lossPercentEl) lossPercentEl.textContent = '0%';
-    }
-    updateVisualCards();
+    // This function has been moved to principles.js
+    // Keeping empty function to prevent errors from HTML oninput calls
 }
 
 /**
@@ -393,36 +374,10 @@ function updateEmotionalCard() {
 }
 
 /**
- * 리스크 카드 업데이트
+ * 리스크 카드 업데이트 - 제거됨 (원칙 섹션으로 이동)
  */
 function updateRiskCard() {
-    const balance = parseFloat(document.getElementById('accountBalance').value) || 0;
-    const target = parseFloat(document.getElementById('dailyTarget').value) || 0;
-    const maxLoss = parseFloat(document.getElementById('maxDailyLoss').value) || 0;
-    
-    if (balance > 0) {
-        const targetPercent = (target / balance * 100);
-        const lossPercent = (maxLoss / balance * 100);
-        
-        document.getElementById('targetRiskPercent').textContent = `${targetPercent.toFixed(1)}%`;
-        document.getElementById('maxLossRiskPercent').textContent = `${lossPercent.toFixed(1)}%`;
-        
-        document.getElementById('targetRiskBar').style.width = `${Math.min(targetPercent * 10, 100)}%`;
-        document.getElementById('maxLossRiskBar').style.width = `${Math.min(lossPercent * 10, 100)}%`;
-        
-        let status = 'Conservative';
-        if (targetPercent > 5 || lossPercent > 10) status = 'High risk';
-        else if (targetPercent > 3 || lossPercent > 5) status = 'Moderate risk';
-        else if (targetPercent > 1 || lossPercent > 2) status = 'Low risk';
-        
-        document.getElementById('riskStatus').textContent = status;
-    } else {
-        document.getElementById('targetRiskPercent').textContent = '0%';
-        document.getElementById('maxLossRiskPercent').textContent = '0%';
-        document.getElementById('targetRiskBar').style.width = '0%';
-        document.getElementById('maxLossRiskBar').style.width = '0%';
-        document.getElementById('riskStatus').textContent = 'No data';
-    }
+    // This function is now deprecated as risk fields moved to principles section
 }
 
 // ==================== Psychology Chart ====================
