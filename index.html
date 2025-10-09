@@ -1621,12 +1621,16 @@
                                         <span id="dailyTargetPercent" style="color: #64748b; font-size: 12px; min-width: 40px;">0%</span>
                                     </div>
                                 </div>
-                                <div>
+                                <div style="margin-bottom: 16px;">
                                     <label data-lang="max-daily-loss" style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;">Max Daily Loss ($)</label>
                                     <div style="display: flex; gap: 8px; align-items: center;">
                                         <input id="maxDailyLoss" oninput="updateTargetPercentages()" placeholder="500" style="flex: 1; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;" type="number"/>
                                         <span id="maxLossPercent" style="color: #64748b; font-size: 12px; min-width: 40px;">0%</span>
                                     </div>
+                                </div>
+                                <div>
+                                    <label data-lang="max-trade-count" style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;">Trade Count Limit</label>
+                                    <input id="maxTradeCount" min="0" placeholder="20" style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;" type="number"/>
                                 </div>
                             </div>
                         </div>
