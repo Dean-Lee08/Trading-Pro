@@ -2306,8 +2306,7 @@ async function updateMarketDataAnalysisCards(filteredTrades) {
             updateEntryExitTiming(filteredTrades),
             updateGapTradingPerformance(filteredTrades),
             updateSectorRotationCard(filteredTrades),
-            updatePriceLevelPsychology(filteredTrades),
-            updateATRCorrelation(filteredTrades)
+            updatePriceLevelPsychology(filteredTrades)
         ];
 
         // 모든 분석이 완료될 때까지 대기 (에러 발생 시에도 계속 진행)
@@ -2915,43 +2914,317 @@ async function updatePriceLevelPsychology(filteredTrades) {
     }
 }
 
-/**
- * ATR Correlation 카드 업데이트
- */
-async function updateATRCorrelation(filteredTrades) {
-    try {
-        const analysis = await analyzeATRCorrelation(filteredTrades);
-
-        if (!analysis) {
-            document.getElementById('detailHighVolWinRate').textContent = 'N/A';
-            document.getElementById('detailLowVolWinRate').textContent = 'N/A';
-            document.getElementById('detailMedianVolatility').textContent = 'N/A';
-            return;
-        }
-
-        // High Volatility Win Rate
-        document.getElementById('detailHighVolWinRate').textContent = `${analysis.highVolWinRate}%`;
-        const highVolEl = document.getElementById('detailHighVolWinRate');
-        highVolEl.className = parseFloat(analysis.highVolWinRate) >= 50 ? 'detail-value positive' : 'detail-value negative';
-
-        // Low Volatility Win Rate
-        document.getElementById('detailLowVolWinRate').textContent = `${analysis.lowVolWinRate}%`;
-        const lowVolEl = document.getElementById('detailLowVolWinRate');
-        lowVolEl.className = parseFloat(analysis.lowVolWinRate) >= 50 ? 'detail-value positive' : 'detail-value negative';
-
-        // Median Volatility
-        document.getElementById('detailMedianVolatility').textContent = `${analysis.medianVolatility}%`;
-
-    } catch (error) {
-        console.error('ATR correlation analysis failed:', error);
-        const errorMsg = error.code === 'RATE_LIMIT' ? 'API Limit' : 'Error';
-        document.getElementById('detailHighVolWinRate').textContent = errorMsg;
-        document.getElementById('detailLowVolWinRate').textContent = errorMsg;
-        document.getElementById('detailMedianVolatility').textContent = errorMsg;
-    }
-}
 
 // ==================== Advanced Algorithmic Analysis Functions ====================
+
+/**
+ * Correlation Matrix Analysis
+ * Analyzes correlations between different psychology factors and performance
+ */
+function renderCorrelationMatrix() {
+    const element = document.getElementById('correlationMatrixContent');
+    if (!element) return;
+
+    const correlations = calculateCorrelationMatrix();
+
+    if (!correlations || correlations.length === 0) {
+        element.innerHTML = `
+            <div style="background: rgba(15, 23, 42, 0.5); text-align: center; padding: 30px; border-radius: 10px; border: 1px solid rgba(100, 116, 139, 0.2);">
+                <div style="color: #64748b; font-size: 14px;">
+                    Insufficient data for correlation analysis. Need at least 10 trades with psychology data.
+                </div>
+            </div>
+        `;
+        return;
+    }
+
+    const html = correlations.map(corr => {
+        const strength = Math.abs(corr.value);
+        const color = corr.value > 0 ? '#10b981' : '#ef4444';
+        const barWidth = strength * 100;
+        const sign = corr.value > 0 ? '+' : '';
+
+        return `
+            <div class="glass-card hover-lift" style="background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(100, 116, 139, 0.2); padding: 20px; margin-bottom: 16px; border-radius: 10px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <div>
+                        <div style="color: #e4e4e7; font-size: 14px; font-weight: 600;">${corr.factor1} ↔ ${corr.factor2}</div>
+                        <div style="color: #64748b; font-size: 12px; margin-top: 4px;">${corr.description || 'Correlation'}</div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <span style="color: ${color}; font-size: 18px; font-weight: 700;">${sign}${(corr.value * 100).toFixed(0)}%</span>
+                    </div>
+                </div>
+                <div style="background: rgba(15, 23, 42, 0.6); height: 10px; border-radius: 6px; overflow: hidden;">
+                    <div style="width: ${barWidth}%; height: 100%; background: linear-gradient(90deg, ${color}, ${color}aa); border-radius: 6px;"></div>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    element.innerHTML = html;
+}
+
+/**
+ * Calculate correlation matrix between psychology factors and performance
+ */
+function calculateCorrelationMatrix() {
+    const correlations = [];
+    const minSampleSize = 10;
+
+    // Group trades by date and calculate daily performance
+    const dailyData = {};
+    trades.forEach(trade => {
+        if (!dailyData[trade.date]) {
+            dailyData[trade.date] = { trades: [], totalPnL: 0, winRate: 0 };
+        }
+        dailyData[trade.date].trades.push(trade);
+        dailyData[trade.date].totalPnL += trade.pnl;
+    });
+
+    // Calculate win rates
+    Object.keys(dailyData).forEach(date => {
+        const dayTrades = dailyData[date].trades;
+        dailyData[date].winRate = (dayTrades.filter(t => t.pnl > 0).length / dayTrades.length) * 100;
+    });
+
+    // Sleep vs Performance
+    const sleepData = [];
+    Object.entries(psychologyData).forEach(([date, psych]) => {
+        if (psych.sleepHours && dailyData[date]) {
+            sleepData.push({ x: psych.sleepHours, y: dailyData[date].winRate });
+        }
+    });
+    if (sleepData.length >= minSampleSize) {
+        const corr = calculatePearsonCorrelation(sleepData);
+        if (corr !== null) {
+            correlations.push({
+                factor1: 'Sleep Hours',
+                factor2: 'Win Rate',
+                value: corr,
+                description: corr > 0 ? 'Better sleep improves performance' : 'Review sleep patterns'
+            });
+        }
+    }
+
+    // Stress vs Performance
+    const stressData = [];
+    Object.entries(psychologyData).forEach(([date, psych]) => {
+        if (psych.stress && dailyData[date]) {
+            stressData.push({ x: psych.stress, y: dailyData[date].winRate });
+        }
+    });
+    if (stressData.length >= minSampleSize) {
+        const corr = calculatePearsonCorrelation(stressData);
+        if (corr !== null) {
+            correlations.push({
+                factor1: 'Stress Level',
+                factor2: 'Win Rate',
+                value: -corr,
+                description: corr < 0 ? 'Lower stress improves performance' : 'Stress impact detected'
+            });
+        }
+    }
+
+    // Focus vs Performance
+    const focusData = [];
+    Object.entries(psychologyData).forEach(([date, psych]) => {
+        if (psych.focus && dailyData[date]) {
+            focusData.push({ x: psych.focus, y: dailyData[date].winRate });
+        }
+    });
+    if (focusData.length >= minSampleSize) {
+        const corr = calculatePearsonCorrelation(focusData);
+        if (corr !== null) {
+            correlations.push({
+                factor1: 'Focus Level',
+                factor2: 'Win Rate',
+                value: corr,
+                description: corr > 0 ? 'Higher focus improves accuracy' : 'Review focus patterns'
+            });
+        }
+    }
+
+    return correlations;
+}
+
+/**
+ * Temporal Pattern Recognition
+ * Identifies patterns based on time and sequence
+ */
+function renderTemporalPatterns() {
+    const element = document.getElementById('temporalPatternContent');
+    if (!element) return;
+
+    const patterns = analyzeTemporalPatterns();
+
+    if (!patterns || patterns.length === 0) {
+        element.innerHTML = `
+            <div style="background: rgba(15, 23, 42, 0.5); text-align: center; padding: 30px; border-radius: 10px; border: 1px solid rgba(100, 116, 139, 0.2);">
+                <div style="color: #64748b; font-size: 14px;">
+                    Insufficient data for temporal analysis. Need more historical trading data.
+                </div>
+            </div>
+        `;
+        return;
+    }
+
+    const html = patterns.map(pattern => {
+        const color = pattern.performance > 50 ? '#10b981' : '#ef4444';
+
+        return `
+            <div class="glass-card hover-lift" style="background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(100, 116, 139, 0.2); padding: 20px; margin-bottom: 16px; border-radius: 10px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="flex: 1;">
+                        <div style="color: #e4e4e7; font-size: 14px; font-weight: 600; margin-bottom: 8px;">${pattern.name}</div>
+                        <div style="color: #64748b; font-size: 12px;">${pattern.description}</div>
+                        <div style="color: #94a3b8; font-size: 11px; margin-top: 4px;">Sample: ${pattern.sampleSize} occurrences</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="color: ${color}; font-size: 24px; font-weight: 700;">${pattern.performance.toFixed(0)}%</div>
+                        <div style="color: #64748b; font-size: 11px;">Win Rate</div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    element.innerHTML = html;
+}
+
+/**
+ * Analyze temporal patterns
+ */
+function analyzeTemporalPatterns() {
+    const patterns = [];
+
+    // Day of week analysis
+    const dayPerformance = {};
+    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+    trades.forEach(trade => {
+        const date = new Date(trade.date + 'T12:00:00');
+        const day = date.getDay();
+
+        if (!dayPerformance[day]) {
+            dayPerformance[day] = { wins: 0, total: 0 };
+        }
+        dayPerformance[day].total++;
+        if (trade.pnl > 0) dayPerformance[day].wins++;
+    });
+
+    Object.entries(dayPerformance).forEach(([day, data]) => {
+        if (data.total >= 3) {
+            const winRate = (data.wins / data.total) * 100;
+            patterns.push({
+                name: `${dayNames[day]} Performance`,
+                description: `Trading pattern on ${dayNames[day]}s`,
+                performance: winRate,
+                sampleSize: data.total
+            });
+        }
+    });
+
+    return patterns.sort((a, b) => b.performance - a.performance).slice(0, 5);
+}
+
+/**
+ * Cluster Analysis
+ * Groups similar trading patterns
+ */
+function renderClusterAnalysis() {
+    const element = document.getElementById('clusterAnalysisContent');
+    if (!element) return;
+
+    const clusters = performClusterAnalysis();
+
+    if (!clusters || clusters.length === 0) {
+        element.innerHTML = `
+            <div style="background: rgba(15, 23, 42, 0.5); text-align: center; padding: 30px; border-radius: 10px; border: 1px solid rgba(100, 116, 139, 0.2);">
+                <div style="color: #64748b; font-size: 14px;">
+                    Insufficient data for cluster analysis. Need at least 20 trades.
+                </div>
+            </div>
+        `;
+        return;
+    }
+
+    const html = clusters.map((cluster, idx) => {
+        const color = cluster.avgPnL > 0 ? '#10b981' : '#ef4444';
+
+        return `
+            <div class="glass-card hover-lift" style="background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(100, 116, 139, 0.2); padding: 20px; margin-bottom: 16px; border-radius: 10px;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                    <div style="flex: 1;">
+                        <div style="color: #e4e4e7; font-size: 14px; font-weight: 600; margin-bottom: 4px;">Cluster ${idx + 1}: ${cluster.name}</div>
+                        <div style="color: #64748b; font-size: 12px; line-height: 1.5;">${cluster.characteristics}</div>
+                    </div>
+                    <div style="background: ${color}20; border: 1px solid ${color}40; padding: 4px 8px; border-radius: 6px;">
+                        <span style="color: ${color}; font-size: 11px; font-weight: 600;">${cluster.count} trades</span>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+                    <div>
+                        <div style="color: #64748b; font-size: 11px;">Avg P&L</div>
+                        <div style="color: ${color}; font-size: 16px; font-weight: 700;">$${cluster.avgPnL.toFixed(2)}</div>
+                    </div>
+                    <div>
+                        <div style="color: #64748b; font-size: 11px;">Win Rate</div>
+                        <div style="color: ${color}; font-size: 16px; font-weight: 700;">${cluster.winRate.toFixed(0)}%</div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    element.innerHTML = html;
+}
+
+/**
+ * Perform simple cluster analysis on trades
+ */
+function performClusterAnalysis() {
+    if (trades.length < 20) return null;
+
+    const clusters = [];
+
+    // Cluster by holding time
+    const shortTrades = trades.filter(t => t.holdingMinutes && t.holdingMinutes < 30);
+    const mediumTrades = trades.filter(t => t.holdingMinutes && t.holdingMinutes >= 30 && t.holdingMinutes < 120);
+    const longTrades = trades.filter(t => t.holdingMinutes && t.holdingMinutes >= 120);
+
+    if (shortTrades.length >= 5) {
+        clusters.push({
+            name: 'Scalping Style',
+            characteristics: 'Quick trades under 30 minutes',
+            count: shortTrades.length,
+            avgPnL: shortTrades.reduce((sum, t) => sum + t.pnl, 0) / shortTrades.length,
+            winRate: (shortTrades.filter(t => t.pnl > 0).length / shortTrades.length) * 100
+        });
+    }
+
+    if (mediumTrades.length >= 5) {
+        clusters.push({
+            name: 'Swing Trading',
+            characteristics: 'Trades held 30-120 minutes',
+            count: mediumTrades.length,
+            avgPnL: mediumTrades.reduce((sum, t) => sum + t.pnl, 0) / mediumTrades.length,
+            winRate: (mediumTrades.filter(t => t.pnl > 0).length / mediumTrades.length) * 100
+        });
+    }
+
+    if (longTrades.length >= 5) {
+        clusters.push({
+            name: 'Position Trading',
+            characteristics: 'Trades held over 2 hours',
+            count: longTrades.length,
+            avgPnL: longTrades.reduce((sum, t) => sum + t.pnl, 0) / longTrades.length,
+            winRate: (longTrades.filter(t => t.pnl > 0).length / longTrades.length) * 100
+        });
+    }
+
+    return clusters.sort((a, b) => b.avgPnL - a.avgPnL);
+}
 
 /**
  * Multi-Factor Performance Attribution
