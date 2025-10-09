@@ -232,14 +232,4 @@ function resetPrinciplesData() {
     }
 }
 
-// Show toast notification (if not already defined)
-function showToast(message) {
-    const toast = document.getElementById('toastNotification');
-    if (toast) {
-        toast.textContent = message;
-        toast.classList.add('show');
-        setTimeout(() => {
-            toast.classList.remove('show');
-        }, 3000);
-    }
-}
+// showToast function is defined in utils.js
