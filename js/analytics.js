@@ -1161,11 +1161,6 @@ function updateAlgorithmicAnalysis() {
     console.log('📊 Total trades:', trades.length);
     console.log('🧠 Psychology data entries:', Object.keys(psychologyData).length);
 
-    // Update Hero Dashboard first
-    if (typeof updateHeroDashboard === 'function') {
-        updateHeroDashboard();
-    }
-
     // Original pattern insights (preserved)
     analyzeTimeBasedPerformance();
     analyzeConsecutiveTradesPattern();
