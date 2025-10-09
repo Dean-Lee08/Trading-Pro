@@ -32,6 +32,8 @@ function showPage(pageId, clickedElement) {
         renderCalendar();
     } else if (pageId === 'analysis') {
         updateDetailedAnalytics();
+    } else if (pageId === 'principles') {
+        initPrinciplesPage();
     } else if (pageId === 'psychology') {
         updatePsychologyDisplay();
     }
@@ -411,6 +413,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Load all data
     loadTrades();
     loadNotes();
+    loadPrinciplesData();
     loadPsychologyData();
     updateStats();
     renderCalendar();
