@@ -278,10 +278,8 @@ function updateTargetPercentages() {
 function updateVisualCards() {
     try {
         updateSleepCard();
-        updateEnvironmentCard();
         updateEmotionalCard();
-        updateRiskCard();
-        
+
         // 차트 업데이트 (딜레이를 주어 DOM 업데이트 후 실행)
         setTimeout(() => {
             createPsychologyChart();
