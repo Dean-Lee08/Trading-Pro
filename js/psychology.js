@@ -338,12 +338,7 @@ function updateSleepCard() {
     }
 }
 
-/**
- * 환경 카드 업데이트 - 제거됨 (원칙 섹션으로 이동)
- */
-function updateEnvironmentCard() {
-    // This function is now deprecated as environment fields moved to principles section
-}
+// updateEnvironmentCard - 원칙 섹션으로 이동됨 (principles.js)
 
 /**
  * 감정 상태 카드 업데이트
@@ -371,12 +366,7 @@ function updateEmotionalCard() {
     document.getElementById('emotionalStatus').textContent = status;
 }
 
-/**
- * 리스크 카드 업데이트 - 제거됨 (원칙 섹션으로 이동)
- */
-function updateRiskCard() {
-    // This function is now deprecated as risk fields moved to principles section
-}
+// updateRiskCard - 원칙 섹션으로 이동됨 (principles.js)
 
 // ==================== Psychology Chart ====================
 
