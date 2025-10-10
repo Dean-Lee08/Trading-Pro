@@ -3671,6 +3671,16 @@ function calculateFeatureImportance() {
 }
 
 /**
+ * Calculate volatility (standard deviation of returns)
+ */
+function calculateVolatility(returns) {
+    if (returns.length === 0) return 0;
+    const mean = returns.reduce((a, b) => a + b, 0) / returns.length;
+    const variance = returns.reduce((sum, r) => sum + Math.pow(r - mean, 2), 0) / returns.length;
+    return Math.sqrt(variance);
+}
+
+/**
  * Render Behavioral Patterns Detection
  */
 function renderBehavioralPatterns() {

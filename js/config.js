@@ -534,8 +534,6 @@ const translations = {
         // Algorithmic Analysis translations
         'multi-factor-attribution': 'Multi-Factor Performance Attribution',
         'feature-importance': 'Feature Importance Analysis',
-        'predictive-risk-score': 'Predictive Risk Score',
-        'risk-score': 'Risk Score',
         'psychological-state': 'Psychological State',
         'market-conditions': 'Market Conditions',
         'performance-trend': 'Recent Performance Trend',
@@ -1143,8 +1141,6 @@ const translations = {
         // Algorithmic Analysis translations
         'multi-factor-attribution': '다중 요인 성과 분석',
         'feature-importance': '특성 중요도 분석',
-        'predictive-risk-score': '예측 리스크 점수',
-        'risk-score': '리스크 점수',
         'psychological-state': '심리 상태',
         'market-conditions': '시장 상황',
         'performance-trend': '최근 성과 추세',
