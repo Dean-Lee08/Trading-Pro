@@ -259,3 +259,190 @@ function resetPrinciplesData() {
 }
 
 // showToast function is defined in utils.js
+
+// ============================================
+// Warning Triggers System
+// ============================================
+
+/**
+ * Check and update all warning triggers for a date
+ */
+function checkAndUpdateWarnings(date) {
+    const principles = principlesData[date];
+    if (!principles) {
+        // No principles set for this date, show zeros
+        updateWarningTriggersDisplay(0, 0, 0, 0);
+        return;
+    }
+
+    // Initialize warning counters
+    let consecutiveLossCount = 0;
+    let singleLossCount = 0;
+    let positionSizeCount = 0;
+    let riskRewardCount = 0;
+
+    // Get trades for this date
+    const dateTrades = trades.filter(t => t.date === date).sort((a, b) => {
+        // Sort by entry time
+        const timeA = a.entryTime || '00:00';
+        const timeB = b.entryTime || '00:00';
+        return timeA.localeCompare(timeB);
+    });
+
+    if (dateTrades.length === 0) {
+        updateWarningTriggersDisplay(0, 0, 0, 0);
+        return;
+    }
+
+    // 1. Check consecutive losses
+    if (principles.consecutiveLossLimit > 0) {
+        consecutiveLossCount = checkConsecutiveLosses(dateTrades, principles.consecutiveLossLimit);
+    }
+
+    // 2. Check single loss limit
+    if (principles.maxSingleLoss > 0) {
+        singleLossCount = dateTrades.filter(t => t.pnl < -Math.abs(principles.maxSingleLoss)).length;
+    }
+
+    // 3. Check position size limit
+    if (principles.maxPositionSize > 0) {
+        positionSizeCount = dateTrades.filter(t => t.amount > principles.maxPositionSize).length;
+    }
+
+    // 4. Check risk/reward ratio
+    if (principles.minRiskReward > 0) {
+        riskRewardCount = checkRiskRewardViolations(dateTrades, principles.minRiskReward);
+    }
+
+    // Update principles data with warning counts
+    if (!principles.warningTriggers) {
+        principles.warningTriggers = {};
+    }
+    principles.warningTriggers.consecutiveLoss = consecutiveLossCount;
+    principles.warningTriggers.singleLoss = singleLossCount;
+    principles.warningTriggers.positionSize = positionSizeCount;
+    principles.warningTriggers.riskReward = riskRewardCount;
+
+    // Save updated data
+    savePrinciplesDataToStorage();
+
+    // Update display
+    updateWarningTriggersDisplay(consecutiveLossCount, singleLossCount, positionSizeCount, riskRewardCount);
+}
+
+/**
+ * Check consecutive losses
+ */
+function checkConsecutiveLosses(trades, limit) {
+    let maxConsecutive = 0;
+    let currentConsecutive = 0;
+    let violationCount = 0;
+
+    for (let trade of trades) {
+        if (trade.pnl < 0) {
+            currentConsecutive++;
+            if (currentConsecutive > maxConsecutive) {
+                maxConsecutive = currentConsecutive;
+            }
+            // Trigger warning when limit is reached or exceeded
+            if (currentConsecutive === limit) {
+                violationCount++;
+            }
+        } else {
+            currentConsecutive = 0;
+        }
+    }
+
+    return violationCount;
+}
+
+/**
+ * Check risk/reward ratio violations
+ */
+function checkRiskRewardViolations(trades, minRatio) {
+    let count = 0;
+
+    for (let trade of trades) {
+        if (trade.pnl > 0) {
+            // For winning trades, check if profit meets minimum ratio
+            const profit = trade.pnl;
+            const entry = trade.amount;
+            const actualRatio = profit / (entry * 0.01); // Assuming 1% risk base
+
+            if (actualRatio < minRatio && actualRatio > 0) {
+                count++;
+            }
+        }
+    }
+
+    return count;
+}
+
+/**
+ * Update warning triggers display
+ */
+function updateWarningTriggersDisplay(consecutiveLoss, singleLoss, positionSize, riskReward) {
+    const elements = {
+        consecutiveLoss: document.getElementById('warningConsecutiveLoss'),
+        singleLoss: document.getElementById('warningSingleLoss'),
+        positionSize: document.getElementById('warningPositionSize'),
+        riskReward: document.getElementById('warningRiskReward')
+    };
+
+    const values = { consecutiveLoss, singleLoss, positionSize, riskReward };
+
+    for (let [key, element] of Object.entries(elements)) {
+        if (element) {
+            const count = values[key];
+            element.textContent = count;
+
+            // Color coding based on count
+            if (count === 0) {
+                element.style.color = '#10b981'; // Green
+            } else if (count <= 2) {
+                element.style.color = '#f59e0b'; // Yellow
+            } else {
+                element.style.color = '#ef4444'; // Red
+            }
+
+            // Animate on change
+            element.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                element.style.transform = 'scale(1)';
+            }, 200);
+        }
+    }
+}
+
+/**
+ * Check trade against principles (called from trading.js)
+ */
+function checkTradeAgainstPrinciples(trade) {
+    const principles = principlesData[trade.date];
+    if (!principles) return;
+
+    let violations = [];
+
+    // Check single loss
+    if (principles.maxSingleLoss > 0 && trade.pnl < -Math.abs(principles.maxSingleLoss)) {
+        violations.push(currentLanguage === 'en'
+            ? `Single loss exceeded: $${Math.abs(trade.pnl).toFixed(2)} > $${principles.maxSingleLoss}`
+            : `단일 손실 초과: $${Math.abs(trade.pnl).toFixed(2)} > $${principles.maxSingleLoss}`);
+    }
+
+    // Check position size
+    if (principles.maxPositionSize > 0 && trade.amount > principles.maxPositionSize) {
+        violations.push(currentLanguage === 'en'
+            ? `Position size exceeded: $${trade.amount.toFixed(2)} > $${principles.maxPositionSize}`
+            : `포지션 크기 초과: $${trade.amount.toFixed(2)} > $${principles.maxPositionSize}`);
+    }
+
+    // Show violations if any
+    if (violations.length > 0) {
+        const message = violations.join('\n');
+        showToast('⚠️ ' + message);
+    }
+
+    // Re-check all warnings for the date
+    checkAndUpdateWarnings(trade.date);
+}
