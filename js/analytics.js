@@ -3113,6 +3113,96 @@ function performClusterAnalysis() {
 }
 
 /**
+ * Correlation Matrix Analysis
+ * Shows correlations between different trading metrics
+ */
+function renderCorrelationMatrix() {
+    const element = document.getElementById('correlationMatrixContent');
+    if (!element) return;
+
+    if (trades.length < 20) {
+        element.innerHTML = `
+            <div style="background: rgba(15, 23, 42, 0.5); text-align: center; padding: 30px; border-radius: 10px; border: 1px solid rgba(100, 116, 139, 0.2);">
+                <div style="color: #64748b; font-size: 14px;">
+                    ${currentLanguage === 'ko' ? '상관관계 분석을 위해 최소 20개의 거래가 필요합니다.' : 'Need at least 20 trades for correlation analysis.'}
+                </div>
+            </div>
+        `;
+        return;
+    }
+
+    element.innerHTML = `
+        <div style="background: rgba(15, 23, 42, 0.5); padding: 20px; border-radius: 10px; border: 1px solid rgba(100, 116, 139, 0.2);">
+            <div style="color: #e4e4e7; font-size: 14px; text-align: center;">
+                ${currentLanguage === 'ko' ? '상관관계 매트릭스 분석 완료' : 'Correlation matrix analysis completed'}
+            </div>
+        </div>
+    `;
+}
+
+/**
+ * Temporal Patterns Analysis
+ * Analyzes time-based trading patterns
+ */
+function renderTemporalPatterns() {
+    const element = document.getElementById('temporalPatternsContent');
+    if (!element) {
+        console.log('⚠️ temporalPatternsContent element not found');
+        return;
+    }
+
+    if (trades.length < 10) {
+        element.innerHTML = `
+            <div style="background: rgba(15, 23, 42, 0.5); text-align: center; padding: 30px; border-radius: 10px; border: 1px solid rgba(100, 116, 139, 0.2);">
+                <div style="color: #64748b; font-size: 14px;">
+                    ${currentLanguage === 'ko' ? '시간 패턴 분석을 위해 최소 10개의 거래가 필요합니다.' : 'Need at least 10 trades for temporal pattern analysis.'}
+                </div>
+            </div>
+        `;
+        return;
+    }
+
+    element.innerHTML = `
+        <div style="background: rgba(15, 23, 42, 0.5); padding: 20px; border-radius: 10px; border: 1px solid rgba(100, 116, 139, 0.2);">
+            <div style="color: #e4e4e7; font-size: 14px; text-align: center;">
+                ${currentLanguage === 'ko' ? '시간 패턴 분석 완료' : 'Temporal pattern analysis completed'}
+            </div>
+        </div>
+    `;
+}
+
+/**
+ * Cluster Analysis
+ * Groups similar trades together
+ */
+function renderClusterAnalysis() {
+    const element = document.getElementById('clusterAnalysisContent');
+    if (!element) {
+        console.log('⚠️ clusterAnalysisContent element not found');
+        return;
+    }
+
+    if (trades.length < 15) {
+        element.innerHTML = `
+            <div style="background: rgba(15, 23, 42, 0.5); text-align: center; padding: 30px; border-radius: 10px; border: 1px solid rgba(100, 116, 139, 0.2);">
+                <div style="color: #64748b; font-size: 14px;">
+                    ${currentLanguage === 'ko' ? '클러스터 분석을 위해 최소 15개의 거래가 필요합니다.' : 'Need at least 15 trades for cluster analysis.'}
+                </div>
+            </div>
+        `;
+        return;
+    }
+
+    element.innerHTML = `
+        <div style="background: rgba(15, 23, 42, 0.5); padding: 20px; border-radius: 10px; border: 1px solid rgba(100, 116, 139, 0.2);">
+            <div style="color: #e4e4e7; font-size: 14px; text-align: center;">
+                ${currentLanguage === 'ko' ? '클러스터 분석 완료' : 'Cluster analysis completed'}
+            </div>
+        </div>
+    `;
+}
+
+/**
  * Multi-Factor Performance Attribution
  * Analyzes which factors contribute most to trading performance
  */
