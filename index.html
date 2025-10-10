@@ -2094,11 +2094,53 @@
         </main>
     </div>
     
+    <!-- Broker Import Preview Modal -->
+    <div class="modal" id="brokerImportPreviewModal" style="display: none; z-index: 10000;">
+        <div style="background: #1e293b; border-radius: 12px; max-width: 900px; width: 90%; max-height: 90vh; overflow-y: auto; padding: 24px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);">
+            <h2 style="margin: 0 0 20px 0; color: #f8fafc; display: flex; align-items: center; gap: 10px;">
+                <span>📊</span>
+                <span data-lang="import-preview-title">Import Preview</span>
+            </h2>
+
+            <div id="brokerImportSummary"></div>
+            <div id="brokerImportErrors"></div>
+
+            <div style="overflow-x: auto; margin-bottom: 20px;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                    <thead>
+                        <tr style="background: #0f172a; border-bottom: 2px solid #334155;">
+                            <th style="padding: 10px; text-align: left; color: #94a3b8; font-weight: 600;"><span data-lang="date">Date</span></th>
+                            <th style="padding: 10px; text-align: left; color: #94a3b8; font-weight: 600;"><span data-lang="symbol">Symbol</span></th>
+                            <th style="padding: 10px; text-align: left; color: #94a3b8; font-weight: 600;"><span data-lang="shares">Shares</span></th>
+                            <th style="padding: 10px; text-align: left; color: #94a3b8; font-weight: 600;"><span data-lang="buy-price">Buy</span></th>
+                            <th style="padding: 10px; text-align: left; color: #94a3b8; font-weight: 600;"><span data-lang="sell-price">Sell</span></th>
+                            <th style="padding: 10px; text-align: left; color: #94a3b8; font-weight: 600;"><span data-lang="entry-time">Entry</span></th>
+                            <th style="padding: 10px; text-align: left; color: #94a3b8; font-weight: 600;"><span data-lang="exit-time">Exit</span></th>
+                            <th style="padding: 10px; text-align: left; color: #94a3b8; font-weight: 600;"><span data-lang="pnl">P&L</span></th>
+                        </tr>
+                    </thead>
+                    <tbody id="brokerImportPreviewBody"></tbody>
+                </table>
+            </div>
+
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button onclick="closeBrokerImportPreview()" style="padding: 10px 20px; background: #334155; color: #f8fafc; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">
+                    <span data-lang="cancel">Cancel</span>
+                </button>
+                <button onclick="confirmBrokerImport()" style="padding: 10px 20px; background: #10b981; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">
+                    <span data-lang="confirm-import">✓ Confirm Import</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Chart.js 라이브러리 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
+
     <!-- JavaScript 파일들 (순서 중요!) -->
     <script src="js/config.js"></script>
+    <script src="js/csv-parser.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/market-data.js"></script>
     <script src="js/trading.js"></script>
