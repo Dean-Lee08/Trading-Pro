@@ -44,7 +44,9 @@ JavaScript files must load in this exact order (defined in index.html):
     ├── analytics.js    # Performance statistics and chart rendering
     ├── calendar.js     # Calendar view and date range selection
     ├── notes.js        # Trading notes management
-    └── psychology.js   # Trading psychology tracking and analysis
+    ├── psychology.js   # Trading psychology tracking and analysis
+    ├── principles.js   # Trading principles and rules tracking
+    └── market-data.js  # Alpha Vantage API integration for real-time quotes
 ```
 
 ### Core Architecture Patterns
@@ -69,8 +71,10 @@ JavaScript files must load in this exact order (defined in index.html):
   - `tradingPlatformTrades`
   - `tradingPlatformNotes`
   - `tradingPlatformPsychologyData`
+  - `tradingPlatformPrinciplesData`
   - `tradingPlatformDailyFees`
   - `tradingPlatformLanguage`
+  - Market data cache (stored temporarily)
 - Export/import feature uses JSON format
 
 **Localization**
