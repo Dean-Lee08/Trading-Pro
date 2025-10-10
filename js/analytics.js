@@ -2641,7 +2641,7 @@ async function refreshMarketQuotes() {
 // ==================== Market Data Analysis for Detail Cards ====================
 
 /**
- * 시장 데이터 분석 카드 전체 업데이트
+ * 시장 데이터 분석 카드 전체 업데이트 (Enhanced with progress indicator)
  */
 async function updateMarketDataAnalysisCards(filteredTrades) {
     if (filteredTrades.length === 0) {
@@ -2649,10 +2649,26 @@ async function updateMarketDataAnalysisCards(filteredTrades) {
         return;
     }
 
+    // Check if API key is available
+    if (!alphaVantageApiKey || alphaVantageApiKey === '') {
+        console.warn('Alpha Vantage API key not set. Skipping market data analysis.');
+        const notSetMsg = '<span style="color: #f59e0b; font-size: 11px;">API Key Not Set</span>';
+        document.getElementById('detailAvgFloat').innerHTML = notSetMsg;
+        document.getElementById('detailAvgMarketCap').innerHTML = notSetMsg;
+        document.getElementById('detailAvgBeta').innerHTML = notSetMsg;
+        document.getElementById('detailHighVolumeWinRate').innerHTML = notSetMsg;
+        document.getElementById('detailLowVolumeWinRate').innerHTML = notSetMsg;
+        document.getElementById('detailMedianVolume').innerHTML = notSetMsg;
+        return;
+    }
+
     // 로딩 상태 표시
     showMarketDataCardsLoading();
 
     try {
+        // Show progress notification
+        console.log('🔄 Starting market data analysis...');
+
         // 병렬로 분석 실행 (await 없이 Promise 수집)
         const analysisPromises = [
             updateMarketCharacteristics(filteredTrades),
