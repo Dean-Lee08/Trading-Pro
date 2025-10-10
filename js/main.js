@@ -229,20 +229,24 @@ function importData() {
     document.getElementById('importFileInput').click();
 }
 
+function importBrokerData() {
+    document.getElementById('brokerFileInput').click();
+}
+
 function handleFileImport() {
     const file = document.getElementById('importFileInput').files[0];
     if (!file) return;
-    
+
     const reader = new FileReader();
     reader.onload = function(e) {
         try {
             const data = JSON.parse(e.target.result);
-            
+
             if (data.trades) {
                 trades = data.trades;
                 saveTrades();
             }
-            
+
             if (data.dailyFees) {
                 dailyFees = data.dailyFees;
                 try {
@@ -265,7 +269,7 @@ function handleFileImport() {
                     console.error('Error saving psychology data:', error);
                 }
             }
-            
+
             updateStats();
             updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
             updateAllTradesList();
@@ -273,15 +277,161 @@ function handleFileImport() {
             renderCalendar();
             updateDetailedAnalytics();
             loadDailyFees();
-            
+
             showToast(currentLanguage === 'ko' ? '데이터가 가져오기되었습니다' : 'Data imported successfully');
         } catch (error) {
             alert(currentLanguage === 'ko' ? '파일을 읽는 중 오류가 발생했습니다.' : 'Error reading file. Please check the file format.');
             console.error('Import error:', error);
         }
     };
-    
+
     reader.readAsText(file);
+}
+
+function handleBrokerFileImport() {
+    const file = document.getElementById('brokerFileInput').files[0];
+    if (!file) return;
+
+    const fileExtension = file.name.split('.').pop().toLowerCase();
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            let parseResult;
+
+            if (fileExtension === 'csv') {
+                parseResult = parseBrokerCSV(e.target.result);
+            } else if (fileExtension === 'json') {
+                parseResult = parseBrokerJSON(e.target.result);
+            } else {
+                alert(currentLanguage === 'ko' ?
+                    '지원하지 않는 파일 형식입니다. CSV 또는 JSON 파일을 업로드하세요.' :
+                    'Unsupported file format. Please upload CSV or JSON file.');
+                return;
+            }
+
+            if (!parseResult.success) {
+                let errorMsg = currentLanguage === 'ko' ?
+                    '파일 파싱 중 오류가 발생했습니다:\n\n' :
+                    'Error parsing file:\n\n';
+                errorMsg += parseResult.errors.join('\n');
+                alert(errorMsg);
+                return;
+            }
+
+            // Show import preview modal
+            showBrokerImportPreview(parseResult);
+
+        } catch (error) {
+            alert(currentLanguage === 'ko' ?
+                '파일을 읽는 중 오류가 발생했습니다: ' + error.message :
+                'Error reading file: ' + error.message);
+            console.error('Broker import error:', error);
+        }
+    };
+
+    reader.readAsText(file);
+}
+
+function showBrokerImportPreview(parseResult) {
+    const modal = document.getElementById('brokerImportPreviewModal');
+    if (!modal) {
+        console.error('Broker import preview modal not found');
+        return;
+    }
+
+    const previewBody = document.getElementById('brokerImportPreviewBody');
+    const summaryEl = document.getElementById('brokerImportSummary');
+    const errorsEl = document.getElementById('brokerImportErrors');
+
+    // Display summary
+    summaryEl.innerHTML = `
+        <div style="display: flex; gap: 20px; margin-bottom: 15px;">
+            <div>
+                <strong>${currentLanguage === 'ko' ? '총 행' : 'Total Rows'}:</strong> ${parseResult.totalRows}
+            </div>
+            <div>
+                <strong>${currentLanguage === 'ko' ? '파싱 성공' : 'Parsed Successfully'}:</strong>
+                <span style="color: #10b981;">${parseResult.parsedRows}</span>
+            </div>
+            <div>
+                <strong>${currentLanguage === 'ko' ? '오류' : 'Errors'}:</strong>
+                <span style="color: ${parseResult.errors.length > 0 ? '#ef4444' : '#64748b'};">${parseResult.errors.length}</span>
+            </div>
+        </div>
+    `;
+
+    // Display errors if any
+    if (parseResult.errors.length > 0) {
+        errorsEl.innerHTML = `
+            <div style="background: rgba(239, 68, 68, 0.1); border-left: 3px solid #ef4444; padding: 12px; border-radius: 6px; margin-bottom: 15px;">
+                <div style="font-weight: 600; margin-bottom: 8px; color: #ef4444;">
+                    ${currentLanguage === 'ko' ? '파싱 경고' : 'Parsing Warnings'}:
+                </div>
+                <div style="font-size: 12px; color: #94a3b8; max-height: 100px; overflow-y: auto;">
+                    ${parseResult.errors.slice(0, 10).join('<br>')}
+                    ${parseResult.errors.length > 10 ? '<br>...' + (parseResult.errors.length - 10) + ' more' : ''}
+                </div>
+            </div>
+        `;
+    } else {
+        errorsEl.innerHTML = '';
+    }
+
+    // Display preview table (first 10 trades)
+    const previewTrades = parseResult.trades.slice(0, 10);
+    previewBody.innerHTML = previewTrades.map(trade => `
+        <tr>
+            <td>${trade.date}</td>
+            <td><strong>${trade.symbol}</strong></td>
+            <td>${trade.shares}</td>
+            <td>${trade.buyPrice.toFixed(4)}</td>
+            <td>${trade.sellPrice.toFixed(4)}</td>
+            <td>${trade.entryTime || 'N/A'}</td>
+            <td>${trade.exitTime || 'N/A'}</td>
+            <td class="${trade.pnl >= 0 ? 'positive' : 'negative'}">$${trade.pnl.toFixed(2)}</td>
+        </tr>
+    `).join('');
+
+    // Store parse result for confirmation
+    window.pendingBrokerImport = parseResult;
+
+    modal.style.display = 'flex';
+}
+
+function closeBrokerImportPreview() {
+    const modal = document.getElementById('brokerImportPreviewModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+    window.pendingBrokerImport = null;
+}
+
+function confirmBrokerImport() {
+    if (!window.pendingBrokerImport || !window.pendingBrokerImport.trades) {
+        return;
+    }
+
+    const parseResult = window.pendingBrokerImport;
+
+    // Add imported trades to existing trades
+    trades = trades.concat(parseResult.trades);
+    saveTrades();
+
+    // Update UI
+    updateStats();
+    updateTradesTable(getFilteredDashboardTrades(), 'tradesTableBody');
+    updateAllTradesList();
+    renderCalendar();
+    updateDetailedAnalytics();
+
+    closeBrokerImportPreview();
+
+    const successMsg = currentLanguage === 'ko' ?
+        `${parseResult.parsedRows}개의 거래가 성공적으로 가져와졌습니다` :
+        `${parseResult.parsedRows} trades imported successfully`;
+
+    showToast(successMsg);
 }
 
 function clearAllData() {
