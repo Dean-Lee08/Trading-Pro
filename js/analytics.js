@@ -3475,100 +3475,133 @@ function renderClusterAnalysis() {
 
     const { clusters, bestCluster, worstCluster } = clusteringResult;
 
-    // Cluster 1: Quick Scalpers (holding time < 30 min)
-    const quickScalpers = trades.filter(t => t.holdingMinutes && t.holdingMinutes < 30);
-    const quickStats = {
-        count: quickScalpers.length,
-        avgPnL: quickScalpers.length > 0 ? quickScalpers.reduce((sum, t) => sum + t.pnl, 0) / quickScalpers.length : 0,
-        winRate: quickScalpers.length > 0 ? (quickScalpers.filter(t => t.pnl > 0).length / quickScalpers.length) * 100 : 0
-    };
-
-    // Cluster 2: Day Traders (holding time 30-240 min / 4 hours)
-    const dayTraders = trades.filter(t => t.holdingMinutes && t.holdingMinutes >= 30 && t.holdingMinutes < 240);
-    const dayStats = {
-        count: dayTraders.length,
-        avgPnL: dayTraders.length > 0 ? dayTraders.reduce((sum, t) => sum + t.pnl, 0) / dayTraders.length : 0,
-        winRate: dayTraders.length > 0 ? (dayTraders.filter(t => t.pnl > 0).length / dayTraders.length) * 100 : 0
-    };
-
-    // Cluster 3: Swing Traders (holding time >= 240 min)
-    const swingTraders = trades.filter(t => t.holdingMinutes && t.holdingMinutes >= 240);
-    const swingStats = {
-        count: swingTraders.length,
-        avgPnL: swingTraders.length > 0 ? swingTraders.reduce((sum, t) => sum + t.pnl, 0) / swingTraders.length : 0,
-        winRate: swingTraders.length > 0 ? (swingTraders.filter(t => t.pnl > 0).length / swingTraders.length) * 100 : 0
-    };
-
-    // Cluster 4: Large Position Trades (top 25% by amount)
-    const sortedByAmount = [...trades].sort((a, b) => b.amount - a.amount);
-    const largePositions = sortedByAmount.slice(0, Math.ceil(trades.length * 0.25));
-    const largeStats = {
-        count: largePositions.length,
-        avgPnL: largePositions.reduce((sum, t) => sum + t.pnl, 0) / largePositions.length,
-        winRate: (largePositions.filter(t => t.pnl > 0).length / largePositions.length) * 100,
-        avgAmount: largePositions.reduce((sum, t) => sum + t.amount, 0) / largePositions.length
-    };
-
-    // Cluster 5: Small Position Trades (bottom 25% by amount)
-    const smallPositions = sortedByAmount.slice(-Math.ceil(trades.length * 0.25));
-    const smallStats = {
-        count: smallPositions.length,
-        avgPnL: smallPositions.reduce((sum, t) => sum + t.pnl, 0) / smallPositions.length,
-        winRate: (smallPositions.filter(t => t.pnl > 0).length / smallPositions.length) * 100,
-        avgAmount: smallPositions.reduce((sum, t) => sum + t.amount, 0) / smallPositions.length
-    };
-
-    const clusters = [
-        { name: currentLanguage === 'ko' ? '빠른 스캘핑' : 'Quick Scalping', desc: '< 30min', ...quickStats, icon: '⚡' },
-        { name: currentLanguage === 'ko' ? '데이 트레이딩' : 'Day Trading', desc: '30min - 4hrs', ...dayStats, icon: '📈' },
-        { name: currentLanguage === 'ko' ? '스윙 트레이딩' : 'Swing Trading', desc: '> 4hrs', ...swingStats, icon: '🌊' },
-        { name: currentLanguage === 'ko' ? '큰 포지션' : 'Large Position', desc: `~$${largeStats.avgAmount.toFixed(0)}`, ...largeStats, icon: '💎' },
-        { name: currentLanguage === 'ko' ? '작은 포지션' : 'Small Position', desc: `~$${smallStats.avgAmount.toFixed(0)}`, ...smallStats, icon: '🔸' }
-    ].filter(c => c.count > 0);
-
+    // Display Best and Worst Cluster Highlights
     element.innerHTML = `
-        <div style="display: grid; gap: 12px;">
-            ${clusters.map(cluster => `
-                <div style="background: rgba(15, 23, 42, 0.8); padding: 16px; border-radius: 8px; border: 1px solid rgba(100, 116, 139, 0.3);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <span style="font-size: 20px;">${cluster.icon}</span>
-                            <div>
-                                <div style="color: #e4e4e7; font-weight: 600; font-size: 14px;">${cluster.name}</div>
-                                <div style="color: #64748b; font-size: 12px;">${cluster.desc}</div>
-                            </div>
-                        </div>
-                        <div style="background: rgba(100, 116, 139, 0.2); padding: 4px 10px; border-radius: 12px;">
-                            <span style="color: #94a3b8; font-size: 12px;">${cluster.count} ${currentLanguage === 'ko' ? '거래' : 'trades'}</span>
-                        </div>
+        <div style="margin-bottom: 20px; padding: 16px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(59, 130, 246, 0.15)); border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.3);">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                <span style="font-size: 24px;">🏆</span>
+                <div>
+                    <div style="color: #10b981; font-weight: 700; font-size: 16px;">
+                        ${currentLanguage === 'ko' ? '최고 성과 클러스터' : 'Best Trade Cluster'}
                     </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                        <div>
-                            <div style="color: #64748b; font-size: 11px; margin-bottom: 4px;">${currentLanguage === 'ko' ? '승률' : 'Win Rate'}</div>
-                            <div style="display: flex; align-items: center; gap: 6px;">
-                                <div style="flex: 1; background: rgba(100, 116, 139, 0.2); height: 6px; border-radius: 3px; overflow: hidden;">
-                                    <div style="width: ${cluster.winRate}%; height: 100%; background: ${cluster.winRate >= 50 ? '#10b981' : '#ef4444'};"></div>
-                                </div>
-                                <span style="color: ${cluster.winRate >= 50 ? '#10b981' : '#ef4444'}; font-size: 13px; font-weight: 600;">${cluster.winRate.toFixed(0)}%</span>
-                            </div>
-                        </div>
-                        <div>
-                            <div style="color: #64748b; font-size: 11px; margin-bottom: 4px;">${currentLanguage === 'ko' ? '평균 P&L' : 'Avg P&L'}</div>
-                            <div style="color: ${cluster.avgPnL >= 0 ? '#10b981' : '#ef4444'}; font-size: 16px; font-weight: 600;">
-                                $${cluster.avgPnL.toFixed(2)}
-                            </div>
-                        </div>
+                    <div style="color: #64748b; font-size: 12px; margin-top: 2px;">
+                        ${describeClusterCharacteristics(bestCluster)}
                     </div>
-                </div>
-            `).join('')}
-        </div>
-        ${clusters.length === 0 ? `
-            <div style="background: rgba(15, 23, 42, 0.5); text-align: center; padding: 30px; border-radius: 10px; border: 1px solid rgba(100, 116, 139, 0.2);">
-                <div style="color: #64748b; font-size: 14px;">
-                    ${currentLanguage === 'ko' ? '클러스터를 형성할 충분한 데이터가 없습니다.' : 'Insufficient data to form clusters.'}
                 </div>
             </div>
-        ` : ''}
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px;">
+                <div>
+                    <div style="color: #94a3b8; font-size: 11px; margin-bottom: 4px;">${currentLanguage === 'ko' ? '거래 수' : 'Trades'}</div>
+                    <div style="color: #e4e4e7; font-size: 18px; font-weight: 600;">${bestCluster.count}</div>
+                </div>
+                <div>
+                    <div style="color: #94a3b8; font-size: 11px; margin-bottom: 4px;">${currentLanguage === 'ko' ? '평균 P&L' : 'Avg P&L'}</div>
+                    <div style="color: #10b981; font-size: 18px; font-weight: 600;">$${bestCluster.avgPnl.toFixed(2)}</div>
+                </div>
+                <div>
+                    <div style="color: #94a3b8; font-size: 11px; margin-bottom: 4px;">${currentLanguage === 'ko' ? '승률' : 'Win Rate'}</div>
+                    <div style="color: #10b981; font-size: 18px; font-weight: 600;">${bestCluster.winRate.toFixed(0)}%</div>
+                </div>
+                <div>
+                    <div style="color: #94a3b8; font-size: 11px; margin-bottom: 4px;">${currentLanguage === 'ko' ? '평균 진입 시간' : 'Avg Entry'}</div>
+                    <div style="color: #e4e4e7; font-size: 18px; font-weight: 600;">${bestCluster.avgEntryTime}</div>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 20px; padding: 16px; background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(251, 146, 60, 0.15)); border-radius: 12px; border: 1px solid rgba(239, 68, 68, 0.3);">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                <span style="font-size: 24px;">⚠️</span>
+                <div>
+                    <div style="color: #ef4444; font-weight: 700; font-size: 16px;">
+                        ${currentLanguage === 'ko' ? '최악 성과 클러스터' : 'Worst Trade Cluster'}
+                    </div>
+                    <div style="color: #64748b; font-size: 12px; margin-top: 2px;">
+                        ${describeClusterCharacteristics(worstCluster)}
+                    </div>
+                </div>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px;">
+                <div>
+                    <div style="color: #94a3b8; font-size: 11px; margin-bottom: 4px;">${currentLanguage === 'ko' ? '거래 수' : 'Trades'}</div>
+                    <div style="color: #e4e4e7; font-size: 18px; font-weight: 600;">${worstCluster.count}</div>
+                </div>
+                <div>
+                    <div style="color: #94a3b8; font-size: 11px; margin-bottom: 4px;">${currentLanguage === 'ko' ? '평균 P&L' : 'Avg P&L'}</div>
+                    <div style="color: #ef4444; font-size: 18px; font-weight: 600;">$${worstCluster.avgPnl.toFixed(2)}</div>
+                </div>
+                <div>
+                    <div style="color: #94a3b8; font-size: 11px; margin-bottom: 4px;">${currentLanguage === 'ko' ? '승률' : 'Win Rate'}</div>
+                    <div style="color: #ef4444; font-size: 18px; font-weight: 600;">${worstCluster.winRate.toFixed(0)}%</div>
+                </div>
+                <div>
+                    <div style="color: #94a3b8; font-size: 11px; margin-bottom: 4px;">${currentLanguage === 'ko' ? '평균 진입 시간' : 'Avg Entry'}</div>
+                    <div style="color: #e4e4e7; font-size: 18px; font-weight: 600;">${worstCluster.avgEntryTime}</div>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 16px;">
+            <div style="color: #94a3b8; font-size: 13px; font-weight: 600; margin-bottom: 12px;">
+                ${currentLanguage === 'ko' ? '모든 클러스터 상세' : 'All Clusters Detail'}
+            </div>
+            <div style="display: grid; gap: 12px;">
+                ${clusters.map((cluster, index) => {
+                    const hours = Math.floor(cluster.avgHoldingTime / 60);
+                    const minutes = Math.floor(cluster.avgHoldingTime % 60);
+                    const isWinning = cluster.avgPnl >= 0;
+
+                    return `
+                        <div style="background: rgba(15, 23, 42, 0.8); padding: 16px; border-radius: 8px; border-left: 3px solid ${isWinning ? '#10b981' : '#ef4444'};">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                <div>
+                                    <div style="color: #e4e4e7; font-weight: 600; font-size: 14px;">
+                                        ${currentLanguage === 'ko' ? '클러스터' : 'Cluster'} ${index + 1}
+                                        ${cluster.id === bestCluster.id ? ' 🏆' : ''}
+                                        ${cluster.id === worstCluster.id ? ' ⚠️' : ''}
+                                    </div>
+                                    <div style="color: #64748b; font-size: 12px; margin-top: 4px;">
+                                        ${hours}h ${minutes}m ${currentLanguage === 'ko' ? '평균 보유' : 'avg hold'} • ${currentLanguage === 'ko' ? '진입' : 'Entry'} ${cluster.avgEntryTime}
+                                    </div>
+                                </div>
+                                <div style="background: rgba(100, 116, 139, 0.2); padding: 4px 10px; border-radius: 12px;">
+                                    <span style="color: #94a3b8; font-size: 12px;">${cluster.count} ${currentLanguage === 'ko' ? '거래' : 'trades'}</span>
+                                </div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                <div>
+                                    <div style="color: #64748b; font-size: 11px; margin-bottom: 4px;">${currentLanguage === 'ko' ? '승률' : 'Win Rate'}</div>
+                                    <div style="display: flex; align-items: center; gap: 6px;">
+                                        <div style="flex: 1; background: rgba(100, 116, 139, 0.2); height: 6px; border-radius: 3px; overflow: hidden;">
+                                            <div style="width: ${cluster.winRate}%; height: 100%; background: ${cluster.winRate >= 50 ? '#10b981' : '#ef4444'};"></div>
+                                        </div>
+                                        <span style="color: ${cluster.winRate >= 50 ? '#10b981' : '#ef4444'}; font-size: 13px; font-weight: 600;">${cluster.winRate.toFixed(0)}%</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div style="color: #64748b; font-size: 11px; margin-bottom: 4px;">${currentLanguage === 'ko' ? '평균 P&L' : 'Avg P&L'}</div>
+                                    <div style="color: ${cluster.avgPnl >= 0 ? '#10b981' : '#ef4444'}; font-size: 16px; font-weight: 600;">
+                                        $${cluster.avgPnl.toFixed(2)}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        </div>
+
+        <div style="margin-top: 16px; padding: 12px; background: rgba(59, 130, 246, 0.1); border-radius: 8px; border: 1px solid rgba(59, 130, 246, 0.3);">
+            <div style="color: #3b82f6; font-size: 12px; display: flex; align-items: center; gap: 8px;">
+                <span>ℹ️</span>
+                <span>
+                    ${currentLanguage === 'ko' ?
+                        `K-means 알고리즘으로 ${clusteringResult.totalTrades}개 거래를 ${clusters.length}개 클러스터로 분류 (${clusteringResult.iterations}회 반복)` :
+                        `K-means algorithm clustered ${clusteringResult.totalTrades} trades into ${clusters.length} groups (${clusteringResult.iterations} iterations)`
+                    }
+                </span>
+            </div>
+        </div>
     `;
 }
 
