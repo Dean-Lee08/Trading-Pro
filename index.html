@@ -1678,64 +1678,53 @@
                         </div>
                     </div>
 
-                    <!-- Warning Triggers Section -->
-                    <div style="background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 24px; margin-bottom: 32px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                            <div>
-                                <h2 data-lang="warning-triggers" style="color: #ef4444; font-size: 18px; font-weight: 700; margin-bottom: 4px;">Warning Triggers</h2>
-                                <p data-lang="warning-triggers-subtitle" style="color: #94a3b8; font-size: 13px;">Track rule violations and warnings</p>
+                    <!-- Warning Triggers Section (Analytics Style) -->
+                    <h2 class="principles-header" data-lang="warning-triggers" style="color: #ef4444; margin-bottom: 16px; margin-top: 32px;">⚠️ Warning Triggers</h2>
+                    <div class="detail-grid" style="margin-bottom: 32px;">
+                        <!-- Trade Details Warnings -->
+                        <div class="detail-card">
+                            <div class="detail-card-header" data-lang="trade-details" onclick="toggleDetailCard(this)">
+                                Trade Details
+                                <span class="collapse-icon">▼</span>
                             </div>
-                            <div style="width: 50px; height: 50px; background: rgba(239, 68, 68, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                                <span style="font-size: 24px;">⚠️</span>
+                            <div class="detail-card-content">
+                                <div class="detail-item">
+                                    <span class="detail-label" data-lang="consecutive-loss-warning">Consecutive Loss</span>
+                                    <span class="detail-value" id="warningConsecutiveLoss">0 <span style="font-size: 12px; color: #64748b;" data-lang="times-triggered">times</span></span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label" data-lang="single-loss-warning">Single Loss Exceed</span>
+                                    <span class="detail-value" id="warningSingleLoss">0 <span style="font-size: 12px; color: #64748b;" data-lang="times-triggered">times</span></span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label" data-lang="position-size-warning">Position Size Exceed</span>
+                                    <span class="detail-value" id="warningPositionSize">0 <span style="font-size: 12px; color: #64748b;" data-lang="times-triggered">times</span></span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label" data-lang="risk-reward-warning">Risk/Reward Below Min</span>
+                                    <span class="detail-value" id="warningRiskReward">0 <span style="font-size: 12px; color: #64748b;" data-lang="times-triggered">times</span></span>
+                                </div>
                             </div>
                         </div>
 
-                        <div id="warningTriggersContent" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
-                            <!-- Consecutive Loss Warning -->
-                            <div class="warning-card" style="background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 16px; transition: all 0.3s ease;">
-                                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-                                    <span style="font-size: 20px;">🔴</span>
-                                    <h4 data-lang="consecutive-loss-warning" style="color: #e4e4e7; font-size: 14px; font-weight: 600;">Consecutive Loss</h4>
-                                </div>
-                                <div style="display: flex; align-items: baseline; gap: 6px;">
-                                    <span id="warningConsecutiveLoss" style="color: #10b981; font-size: 28px; font-weight: 700;">0</span>
-                                    <span data-lang="times-triggered" style="color: #64748b; font-size: 12px;">times</span>
-                                </div>
+                        <!-- Account Rules Warnings -->
+                        <div class="detail-card">
+                            <div class="detail-card-header" data-lang="account-rules" onclick="toggleDetailCard(this)">
+                                Account Rules
+                                <span class="collapse-icon">▼</span>
                             </div>
-
-                            <!-- Single Loss Warning -->
-                            <div class="warning-card" style="background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 16px; transition: all 0.3s ease;">
-                                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-                                    <span style="font-size: 20px;">💰</span>
-                                    <h4 data-lang="single-loss-warning" style="color: #e4e4e7; font-size: 14px; font-weight: 600;">Single Loss Exceed</h4>
+                            <div class="detail-card-content">
+                                <div class="detail-item">
+                                    <span class="detail-label" data-lang="daily-target-warning">Daily Target Hit</span>
+                                    <span class="detail-value positive" id="warningDailyTarget">0 <span style="font-size: 12px; color: #64748b;" data-lang="times-triggered">times</span></span>
                                 </div>
-                                <div style="display: flex; align-items: baseline; gap: 6px;">
-                                    <span id="warningSingleLoss" style="color: #10b981; font-size: 28px; font-weight: 700;">0</span>
-                                    <span data-lang="times-triggered" style="color: #64748b; font-size: 12px;">times</span>
+                                <div class="detail-item">
+                                    <span class="detail-label" data-lang="max-loss-warning">Max Daily Loss Hit</span>
+                                    <span class="detail-value negative" id="warningMaxLoss">0 <span style="font-size: 12px; color: #64748b;" data-lang="times-triggered">times</span></span>
                                 </div>
-                            </div>
-
-                            <!-- Position Size Warning -->
-                            <div class="warning-card" style="background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 16px; transition: all 0.3s ease;">
-                                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-                                    <span style="font-size: 20px;">📊</span>
-                                    <h4 data-lang="position-size-warning" style="color: #e4e4e7; font-size: 14px; font-weight: 600;">Position Size Exceed</h4>
-                                </div>
-                                <div style="display: flex; align-items: baseline; gap: 6px;">
-                                    <span id="warningPositionSize" style="color: #10b981; font-size: 28px; font-weight: 700;">0</span>
-                                    <span data-lang="times-triggered" style="color: #64748b; font-size: 12px;">times</span>
-                                </div>
-                            </div>
-
-                            <!-- Risk/Reward Warning -->
-                            <div class="warning-card" style="background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 16px; transition: all 0.3s ease;">
-                                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-                                    <span style="font-size: 20px;">⚖️</span>
-                                    <h4 data-lang="risk-reward-warning" style="color: #e4e4e7; font-size: 14px; font-weight: 600;">Risk/Reward Below Min</h4>
-                                </div>
-                                <div style="display: flex; align-items: baseline; gap: 6px;">
-                                    <span id="warningRiskReward" style="color: #10b981; font-size: 28px; font-weight: 700;">0</span>
-                                    <span data-lang="times-triggered" style="color: #64748b; font-size: 12px;">times</span>
+                                <div class="detail-item">
+                                    <span class="detail-label" data-lang="trade-count-warning">Trade Count Limit Hit</span>
+                                    <span class="detail-value" id="warningTradeCount">0 <span style="font-size: 12px; color: #64748b;" data-lang="times-triggered">times</span></span>
                                 </div>
                             </div>
                         </div>
