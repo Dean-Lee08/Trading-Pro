@@ -463,35 +463,79 @@ function checkRiskRewardViolations(trades, minRatio) {
 /**
  * Update warning triggers display
  */
-function updateWarningTriggersDisplay(consecutiveLoss, singleLoss, positionSize, riskReward) {
+function updateWarningTriggersDisplay(consecutiveLoss, singleLoss, positionSize, riskReward, dailyTarget, maxLoss, tradeCount) {
     const elements = {
         consecutiveLoss: document.getElementById('warningConsecutiveLoss'),
         singleLoss: document.getElementById('warningSingleLoss'),
         positionSize: document.getElementById('warningPositionSize'),
-        riskReward: document.getElementById('warningRiskReward')
+        riskReward: document.getElementById('warningRiskReward'),
+        dailyTarget: document.getElementById('warningDailyTarget'),
+        maxLoss: document.getElementById('warningMaxLoss'),
+        tradeCount: document.getElementById('warningTradeCount')
     };
 
-    const values = { consecutiveLoss, singleLoss, positionSize, riskReward };
+    const values = {
+        consecutiveLoss,
+        singleLoss,
+        positionSize,
+        riskReward,
+        dailyTarget,
+        maxLoss,
+        tradeCount
+    };
 
     for (let [key, element] of Object.entries(elements)) {
         if (element) {
             const count = values[key];
-            element.textContent = count;
 
-            // Color coding based on count
-            if (count === 0) {
-                element.style.color = '#10b981'; // Green
-            } else if (count <= 2) {
-                element.style.color = '#f59e0b'; // Yellow
+            // Update text - just the number
+            const timesText = element.querySelector('span[data-lang="times-triggered"]');
+            if (timesText) {
+                element.childNodes[0].textContent = count + ' ';
             } else {
-                element.style.color = '#ef4444'; // Red
+                element.textContent = count;
             }
 
-            // Animate on change
-            element.style.transform = 'scale(1.2)';
-            setTimeout(() => {
-                element.style.transform = 'scale(1)';
-            }, 200);
+            // Get parent detail-value for color coding
+            let valueElement = element;
+            if (element.classList.contains('detail-value')) {
+                valueElement = element;
+            } else if (element.parentElement && element.parentElement.classList.contains('detail-value')) {
+                valueElement = element.parentElement;
+            }
+
+            // Color coding based on count and type
+            if (key === 'dailyTarget') {
+                // Daily target is positive
+                if (count > 0) {
+                    valueElement.classList.remove('negative', 'neutral');
+                    valueElement.classList.add('positive');
+                } else {
+                    valueElement.classList.remove('positive', 'negative');
+                    valueElement.classList.add('neutral');
+                }
+            } else if (key === 'maxLoss') {
+                // Max loss is negative
+                if (count > 0) {
+                    valueElement.classList.remove('positive', 'neutral');
+                    valueElement.classList.add('negative');
+                } else {
+                    valueElement.classList.remove('positive', 'negative');
+                    valueElement.classList.add('neutral');
+                }
+            } else {
+                // Other warnings
+                if (count === 0) {
+                    valueElement.classList.remove('positive', 'negative');
+                    valueElement.classList.add('neutral');
+                } else if (count <= 2) {
+                    valueElement.classList.remove('positive', 'negative', 'neutral');
+                    valueElement.style.color = '#f59e0b'; // Yellow warning
+                } else {
+                    valueElement.classList.remove('positive', 'neutral');
+                    valueElement.classList.add('negative');
+                }
+            }
         }
     }
 }
