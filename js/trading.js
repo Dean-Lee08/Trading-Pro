@@ -819,18 +819,32 @@ function deleteSelectedTradesList() {
     
     if (confirm(confirmMessage)) {
         const tradesToDelete = Array.from(selectedTradesList);
+        const affectedDates = new Set();
+
+        // Collect affected dates
+        trades.forEach(trade => {
+            if (selectedTradesList.has(trade.id)) {
+                affectedDates.add(trade.date);
+            }
+        });
+
         trades = trades.filter(trade => !selectedTradesList.has(trade.id));
         selectedTradesList.clear();
-        
+
         saveTrades();
         updateStats();
         renderCalendar();
         updateAllTradesList();
         updateDetailedAnalytics();
-        
-        showToast(currentLanguage === 'ko' ? 
-            `${tradesToDelete.length}개의 거래가 삭제되었습니다` : 
+
+        showToast(currentLanguage === 'ko' ?
+            `${tradesToDelete.length}개의 거래가 삭제되었습니다` :
             `${tradesToDelete.length} trades deleted`);
+
+        // Principles 경고 재계산 (영향받은 모든 날짜)
+        if (typeof checkAndUpdateWarnings === 'function') {
+            affectedDates.forEach(date => checkAndUpdateWarnings(date));
+        }
     }
 }
 
