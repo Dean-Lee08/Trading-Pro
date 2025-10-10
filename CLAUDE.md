@@ -124,6 +124,17 @@ JavaScript files must load in this exact order (defined in index.html):
 - Bulk selection and deletion
 - Edit modal for individual trades
 
+**Principles (principles.js)**
+- Daily tracking of trading principles and rules
+- Date-based navigation
+- Save/load functionality for daily principle compliance
+
+**Market Data (market-data.js)**
+- Alpha Vantage API integration for real-time stock quotes
+- API rate limiting (5 calls/minute, 25 calls/day)
+- Market context analysis: entry/exit positioning, gap analysis, sector performance
+- Caching mechanism to reduce API calls
+
 ## Data Model
 
 ### Trade Object
@@ -247,7 +258,9 @@ Call `updateTradesTable(filteredTrades, tableBodyId)` with:
 - Trades: `saveTrades()` writes to localStorage
 - Notes: `saveNotes()` writes to localStorage
 - Psychology: `localStorage.setItem('tradingPlatformPsychologyData', JSON.stringify(psychologyData))` saves to localStorage
+- Principles: `savePrinciplesDataToStorage()` writes to localStorage
 - Daily fees: stored in `dailyFees` object, saved inline when changed
+- Market data: Cached temporarily, managed by market-data.js with rate limiting
 
 ### Language Updates
 - Change `currentLanguage` variable ('en' or 'ko')
