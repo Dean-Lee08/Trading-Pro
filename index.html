@@ -1586,6 +1586,27 @@
                                 <input id="principlesMaxTradeCount" min="0" placeholder="20" style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;" type="number"/>
                             </div>
                         </div>
+
+                        <!-- Trade Details -->
+                        <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 20px;">
+                            <h3 data-lang="trade-details" style="color: #f8fafc; font-size: 16px; margin-bottom: 16px;">Trade Details</h3>
+                            <div style="margin-bottom: 16px;">
+                                <label data-lang="consecutive-loss-limit" style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;">Consecutive Loss Limit</label>
+                                <input id="principlesConsecutiveLossLimit" min="1" placeholder="3" style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;" type="number"/>
+                            </div>
+                            <div style="margin-bottom: 16px;">
+                                <label data-lang="max-single-loss" style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;">Max Single Loss ($)</label>
+                                <input id="principlesMaxSingleLoss" min="0" placeholder="100" step="0.01" style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;" type="number"/>
+                            </div>
+                            <div style="margin-bottom: 16px;">
+                                <label data-lang="max-position-size" style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;">Max Position Size ($)</label>
+                                <input id="principlesMaxPositionSize" min="0" placeholder="5000" step="0.01" style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;" type="number"/>
+                            </div>
+                            <div>
+                                <label data-lang="min-risk-reward" style="display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px;">Min Risk/Reward Ratio</label>
+                                <input id="principlesMinRiskReward" min="0" placeholder="1.5" step="0.1" style="width: 100%; background: #1e293b; border: 1px solid #334155; color: #e4e4e7; padding: 8px 10px; border-radius: 6px;" type="number"/>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Action Buttons -->
