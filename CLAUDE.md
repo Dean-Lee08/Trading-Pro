@@ -19,12 +19,14 @@ This is a **client-side trading journal web application** called "Trading Platfo
 JavaScript files must load in this exact order (defined in index.html):
 1. `config.js` - Global state and translations (must load first)
 2. `utils.js` - Utility functions used by other modules
-3. `trading.js` - Trade calculations and management
-4. `analytics.js` - Charts and statistics
-5. `calendar.js` - Calendar view rendering
-6. `notes.js` - Notes management
+3. `market-data.js` - Alpha Vantage API integration for market data
+4. `trading.js` - Trade calculations and management
+5. `analytics.js` - Charts and statistics
+6. `principles.js` - Trading principles tracking
 7. `psychology.js` - Psychology tracking
-8. `main.js` - Initialization and page navigation (must load last)
+8. `calendar.js` - Calendar view rendering
+9. `notes.js` - Notes management
+10. `main.js` - Initialization and page navigation (must load last)
 
 ## Architecture
 
