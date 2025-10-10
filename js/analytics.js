@@ -3131,10 +3131,92 @@ function renderCorrelationMatrix() {
         return;
     }
 
+    // Calculate correlations between different metrics
+    const winTrades = trades.filter(t => t.pnl > 0);
+    const lossTrades = trades.filter(t => t.pnl < 0);
+
+    const avgWinAmount = winTrades.length > 0 ? winTrades.reduce((sum, t) => sum + t.amount, 0) / winTrades.length : 0;
+    const avgLossAmount = lossTrades.length > 0 ? lossTrades.reduce((sum, t) => sum + t.amount, 0) / lossTrades.length : 0;
+
+    const avgWinHoldTime = winTrades.filter(t => t.holdingMinutes).length > 0 ?
+        winTrades.filter(t => t.holdingMinutes).reduce((sum, t) => sum + t.holdingMinutes, 0) / winTrades.filter(t => t.holdingMinutes).length : 0;
+    const avgLossHoldTime = lossTrades.filter(t => t.holdingMinutes).length > 0 ?
+        lossTrades.filter(t => t.holdingMinutes).reduce((sum, t) => sum + t.holdingMinutes, 0) / lossTrades.filter(t => t.holdingMinutes).length : 0;
+
+    // Symbol performance correlation
+    const symbolStats = {};
+    trades.forEach(t => {
+        if (!symbolStats[t.symbol]) {
+            symbolStats[t.symbol] = { wins: 0, losses: 0, totalPnL: 0 };
+        }
+        if (t.pnl > 0) symbolStats[t.symbol].wins++;
+        else symbolStats[t.symbol].losses++;
+        symbolStats[t.symbol].totalPnL += t.pnl;
+    });
+
+    const topSymbols = Object.entries(symbolStats)
+        .map(([symbol, stats]) => ({
+            symbol,
+            winRate: (stats.wins / (stats.wins + stats.losses)) * 100,
+            totalPnL: stats.totalPnL,
+            trades: stats.wins + stats.losses
+        }))
+        .sort((a, b) => b.totalPnL - a.totalPnL)
+        .slice(0, 5);
+
     element.innerHTML = `
-        <div style="background: rgba(15, 23, 42, 0.5); padding: 20px; border-radius: 10px; border: 1px solid rgba(100, 116, 139, 0.2);">
-            <div style="color: #e4e4e7; font-size: 14px; text-align: center;">
-                ${currentLanguage === 'ko' ? '상관관계 매트릭스 분석 완료' : 'Correlation matrix analysis completed'}
+        <div style="display: grid; gap: 16px;">
+            <!-- Position Size vs Win Rate -->
+            <div style="background: rgba(15, 23, 42, 0.8); padding: 16px; border-radius: 8px; border: 1px solid rgba(100, 116, 139, 0.3);">
+                <div style="color: #94a3b8; font-size: 13px; margin-bottom: 8px;">${currentLanguage === 'ko' ? '포지션 크기 vs 수익률' : 'Position Size vs Win Rate'}</div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div style="color: #10b981; font-size: 16px; font-weight: 600;">$${avgWinAmount.toFixed(2)}</div>
+                        <div style="color: #64748b; font-size: 12px;">${currentLanguage === 'ko' ? '평균 승리 포지션' : 'Avg Win Position'}</div>
+                    </div>
+                    <div style="color: #64748b; font-size: 20px;">⟷</div>
+                    <div>
+                        <div style="color: #ef4444; font-size: 16px; font-weight: 600;">$${avgLossAmount.toFixed(2)}</div>
+                        <div style="color: #64748b; font-size: 12px;">${currentLanguage === 'ko' ? '평균 손실 포지션' : 'Avg Loss Position'}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Holding Time Correlation -->
+            <div style="background: rgba(15, 23, 42, 0.8); padding: 16px; border-radius: 8px; border: 1px solid rgba(100, 116, 139, 0.3);">
+                <div style="color: #94a3b8; font-size: 13px; margin-bottom: 8px;">${currentLanguage === 'ko' ? '보유 시간 상관관계' : 'Holding Time Correlation'}</div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div style="color: #10b981; font-size: 16px; font-weight: 600;">${avgWinHoldTime.toFixed(0)}${currentLanguage === 'ko' ? '분' : 'min'}</div>
+                        <div style="color: #64748b; font-size: 12px;">${currentLanguage === 'ko' ? '승리 거래' : 'Win Trades'}</div>
+                    </div>
+                    <div style="color: ${avgLossHoldTime > avgWinHoldTime ? '#ef4444' : '#10b981'}; font-size: 14px;">
+                        ${avgLossHoldTime > avgWinHoldTime ? '⚠️' : '✓'} ${((avgLossHoldTime - avgWinHoldTime) / avgWinHoldTime * 100).toFixed(0)}%
+                    </div>
+                    <div>
+                        <div style="color: #ef4444; font-size: 16px; font-weight: 600;">${avgLossHoldTime.toFixed(0)}${currentLanguage === 'ko' ? '분' : 'min'}</div>
+                        <div style="color: #64748b; font-size: 12px;">${currentLanguage === 'ko' ? '손실 거래' : 'Loss Trades'}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Symbol Performance -->
+            <div style="background: rgba(15, 23, 42, 0.8); padding: 16px; border-radius: 8px; border: 1px solid rgba(100, 116, 139, 0.3);">
+                <div style="color: #94a3b8; font-size: 13px; margin-bottom: 12px;">${currentLanguage === 'ko' ? '심볼별 성과 상관관계' : 'Symbol Performance Correlation'}</div>
+                ${topSymbols.map(s => `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <div style="flex: 1;">
+                            <span style="color: #e4e4e7; font-weight: 500;">${s.symbol}</span>
+                            <span style="color: #64748b; font-size: 12px; margin-left: 8px;">${s.trades} ${currentLanguage === 'ko' ? '거래' : 'trades'}</span>
+                        </div>
+                        <div style="flex: 1; text-align: center;">
+                            <span style="color: ${s.winRate >= 50 ? '#10b981' : '#ef4444'}; font-size: 14px;">${s.winRate.toFixed(1)}%</span>
+                        </div>
+                        <div style="flex: 1; text-align: right;">
+                            <span style="color: ${s.totalPnL >= 0 ? '#10b981' : '#ef4444'}; font-weight: 600;">$${s.totalPnL.toFixed(2)}</span>
+                        </div>
+                    </div>
+                `).join('')}
             </div>
         </div>
     `;
@@ -3162,10 +3244,102 @@ function renderTemporalPatterns() {
         return;
     }
 
+    // Analyze hourly patterns
+    const hourlyStats = {};
+    trades.forEach(t => {
+        if (t.entryTime) {
+            const hour = parseInt(t.entryTime.split(':')[0]);
+            if (!hourlyStats[hour]) {
+                hourlyStats[hour] = { wins: 0, losses: 0, totalPnL: 0, count: 0 };
+            }
+            hourlyStats[hour].count++;
+            hourlyStats[hour].totalPnL += t.pnl;
+            if (t.pnl > 0) hourlyStats[hour].wins++;
+            else hourlyStats[hour].losses++;
+        }
+    });
+
+    const hourlyData = Object.entries(hourlyStats)
+        .map(([hour, stats]) => ({
+            hour: parseInt(hour),
+            avgPnL: stats.totalPnL / stats.count,
+            winRate: (stats.wins / stats.count) * 100,
+            count: stats.count
+        }))
+        .sort((a, b) => b.avgPnL - a.avgPnL);
+
+    // Analyze day-of-week patterns
+    const dayStats = {};
+    trades.forEach(t => {
+        const date = new Date(t.date + 'T12:00:00');
+        const day = date.getDay(); // 0 = Sunday, 6 = Saturday
+        if (!dayStats[day]) {
+            dayStats[day] = { wins: 0, losses: 0, totalPnL: 0, count: 0 };
+        }
+        dayStats[day].count++;
+        dayStats[day].totalPnL += t.pnl;
+        if (t.pnl > 0) dayStats[day].wins++;
+        else dayStats[day].losses++;
+    });
+
+    const dayNames = currentLanguage === 'ko'
+        ? ['일', '월', '화', '수', '목', '금', '토']
+        : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+    const dayData = Object.entries(dayStats)
+        .map(([day, stats]) => ({
+            day: parseInt(day),
+            name: dayNames[day],
+            avgPnL: stats.totalPnL / stats.count,
+            winRate: (stats.wins / stats.count) * 100,
+            count: stats.count
+        }))
+        .sort((a, b) => b.avgPnL - a.avgPnL);
+
     element.innerHTML = `
-        <div style="background: rgba(15, 23, 42, 0.5); padding: 20px; border-radius: 10px; border: 1px solid rgba(100, 116, 139, 0.2);">
-            <div style="color: #e4e4e7; font-size: 14px; text-align: center;">
-                ${currentLanguage === 'ko' ? '시간 패턴 분석 완료' : 'Temporal pattern analysis completed'}
+        <div style="display: grid; gap: 16px;">
+            <!-- Best Trading Hours -->
+            <div style="background: rgba(15, 23, 42, 0.8); padding: 16px; border-radius: 8px; border: 1px solid rgba(100, 116, 139, 0.3);">
+                <div style="color: #94a3b8; font-size: 13px; margin-bottom: 12px;">${currentLanguage === 'ko' ? '최적 거래 시간대' : 'Best Trading Hours'}</div>
+                ${hourlyData.slice(0, 5).map(h => `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <div style="flex: 1;">
+                            <span style="color: #e4e4e7; font-weight: 500;">${h.hour}:00</span>
+                            <span style="color: #64748b; font-size: 12px; margin-left: 8px;">${h.count} ${currentLanguage === 'ko' ? '거래' : 'trades'}</span>
+                        </div>
+                        <div style="flex: 1; text-align: center;">
+                            <div style="background: ${h.winRate >= 50 ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)'};
+                                        border: 1px solid ${h.winRate >= 50 ? '#10b981' : '#ef4444'};
+                                        padding: 4px 8px; border-radius: 4px; display: inline-block;">
+                                <span style="color: ${h.winRate >= 50 ? '#10b981' : '#ef4444'}; font-size: 13px;">${h.winRate.toFixed(0)}%</span>
+                            </div>
+                        </div>
+                        <div style="flex: 1; text-align: right;">
+                            <span style="color: ${h.avgPnL >= 0 ? '#10b981' : '#ef4444'}; font-weight: 600;">$${h.avgPnL.toFixed(2)}</span>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+
+            <!-- Best Trading Days -->
+            <div style="background: rgba(15, 23, 42, 0.8); padding: 16px; border-radius: 8px; border: 1px solid rgba(100, 116, 139, 0.3);">
+                <div style="color: #94a3b8; font-size: 13px; margin-bottom: 12px;">${currentLanguage === 'ko' ? '요일별 성과' : 'Day of Week Performance'}</div>
+                ${dayData.map(d => `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <div style="flex: 1;">
+                            <span style="color: #e4e4e7; font-weight: 500;">${d.name}</span>
+                            <span style="color: #64748b; font-size: 12px; margin-left: 8px;">${d.count} ${currentLanguage === 'ko' ? '거래' : 'trades'}</span>
+                        </div>
+                        <div style="flex: 1; text-align: center;">
+                            <div style="width: 100%; background: rgba(100, 116, 139, 0.2); height: 6px; border-radius: 3px; overflow: hidden;">
+                                <div style="width: ${d.winRate}%; height: 100%; background: ${d.winRate >= 50 ? '#10b981' : '#ef4444'};"></div>
+                            </div>
+                        </div>
+                        <div style="flex: 1; text-align: right;">
+                            <span style="color: ${d.avgPnL >= 0 ? '#10b981' : '#ef4444'}; font-weight: 600;">$${d.avgPnL.toFixed(2)}</span>
+                        </div>
+                    </div>
+                `).join('')}
             </div>
         </div>
     `;
@@ -3193,12 +3367,100 @@ function renderClusterAnalysis() {
         return;
     }
 
+    // Cluster 1: Quick Scalpers (holding time < 30 min)
+    const quickScalpers = trades.filter(t => t.holdingMinutes && t.holdingMinutes < 30);
+    const quickStats = {
+        count: quickScalpers.length,
+        avgPnL: quickScalpers.length > 0 ? quickScalpers.reduce((sum, t) => sum + t.pnl, 0) / quickScalpers.length : 0,
+        winRate: quickScalpers.length > 0 ? (quickScalpers.filter(t => t.pnl > 0).length / quickScalpers.length) * 100 : 0
+    };
+
+    // Cluster 2: Day Traders (holding time 30-240 min / 4 hours)
+    const dayTraders = trades.filter(t => t.holdingMinutes && t.holdingMinutes >= 30 && t.holdingMinutes < 240);
+    const dayStats = {
+        count: dayTraders.length,
+        avgPnL: dayTraders.length > 0 ? dayTraders.reduce((sum, t) => sum + t.pnl, 0) / dayTraders.length : 0,
+        winRate: dayTraders.length > 0 ? (dayTraders.filter(t => t.pnl > 0).length / dayTraders.length) * 100 : 0
+    };
+
+    // Cluster 3: Swing Traders (holding time >= 240 min)
+    const swingTraders = trades.filter(t => t.holdingMinutes && t.holdingMinutes >= 240);
+    const swingStats = {
+        count: swingTraders.length,
+        avgPnL: swingTraders.length > 0 ? swingTraders.reduce((sum, t) => sum + t.pnl, 0) / swingTraders.length : 0,
+        winRate: swingTraders.length > 0 ? (swingTraders.filter(t => t.pnl > 0).length / swingTraders.length) * 100 : 0
+    };
+
+    // Cluster 4: Large Position Trades (top 25% by amount)
+    const sortedByAmount = [...trades].sort((a, b) => b.amount - a.amount);
+    const largePositions = sortedByAmount.slice(0, Math.ceil(trades.length * 0.25));
+    const largeStats = {
+        count: largePositions.length,
+        avgPnL: largePositions.reduce((sum, t) => sum + t.pnl, 0) / largePositions.length,
+        winRate: (largePositions.filter(t => t.pnl > 0).length / largePositions.length) * 100,
+        avgAmount: largePositions.reduce((sum, t) => sum + t.amount, 0) / largePositions.length
+    };
+
+    // Cluster 5: Small Position Trades (bottom 25% by amount)
+    const smallPositions = sortedByAmount.slice(-Math.ceil(trades.length * 0.25));
+    const smallStats = {
+        count: smallPositions.length,
+        avgPnL: smallPositions.reduce((sum, t) => sum + t.pnl, 0) / smallPositions.length,
+        winRate: (smallPositions.filter(t => t.pnl > 0).length / smallPositions.length) * 100,
+        avgAmount: smallPositions.reduce((sum, t) => sum + t.amount, 0) / smallPositions.length
+    };
+
+    const clusters = [
+        { name: currentLanguage === 'ko' ? '빠른 스캘핑' : 'Quick Scalping', desc: '< 30min', ...quickStats, icon: '⚡' },
+        { name: currentLanguage === 'ko' ? '데이 트레이딩' : 'Day Trading', desc: '30min - 4hrs', ...dayStats, icon: '📈' },
+        { name: currentLanguage === 'ko' ? '스윙 트레이딩' : 'Swing Trading', desc: '> 4hrs', ...swingStats, icon: '🌊' },
+        { name: currentLanguage === 'ko' ? '큰 포지션' : 'Large Position', desc: `~$${largeStats.avgAmount.toFixed(0)}`, ...largeStats, icon: '💎' },
+        { name: currentLanguage === 'ko' ? '작은 포지션' : 'Small Position', desc: `~$${smallStats.avgAmount.toFixed(0)}`, ...smallStats, icon: '🔸' }
+    ].filter(c => c.count > 0);
+
     element.innerHTML = `
-        <div style="background: rgba(15, 23, 42, 0.5); padding: 20px; border-radius: 10px; border: 1px solid rgba(100, 116, 139, 0.2);">
-            <div style="color: #e4e4e7; font-size: 14px; text-align: center;">
-                ${currentLanguage === 'ko' ? '클러스터 분석 완료' : 'Cluster analysis completed'}
-            </div>
+        <div style="display: grid; gap: 12px;">
+            ${clusters.map(cluster => `
+                <div style="background: rgba(15, 23, 42, 0.8); padding: 16px; border-radius: 8px; border: 1px solid rgba(100, 116, 139, 0.3);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 20px;">${cluster.icon}</span>
+                            <div>
+                                <div style="color: #e4e4e7; font-weight: 600; font-size: 14px;">${cluster.name}</div>
+                                <div style="color: #64748b; font-size: 12px;">${cluster.desc}</div>
+                            </div>
+                        </div>
+                        <div style="background: rgba(100, 116, 139, 0.2); padding: 4px 10px; border-radius: 12px;">
+                            <span style="color: #94a3b8; font-size: 12px;">${cluster.count} ${currentLanguage === 'ko' ? '거래' : 'trades'}</span>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <div>
+                            <div style="color: #64748b; font-size: 11px; margin-bottom: 4px;">${currentLanguage === 'ko' ? '승률' : 'Win Rate'}</div>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <div style="flex: 1; background: rgba(100, 116, 139, 0.2); height: 6px; border-radius: 3px; overflow: hidden;">
+                                    <div style="width: ${cluster.winRate}%; height: 100%; background: ${cluster.winRate >= 50 ? '#10b981' : '#ef4444'};"></div>
+                                </div>
+                                <span style="color: ${cluster.winRate >= 50 ? '#10b981' : '#ef4444'}; font-size: 13px; font-weight: 600;">${cluster.winRate.toFixed(0)}%</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="color: #64748b; font-size: 11px; margin-bottom: 4px;">${currentLanguage === 'ko' ? '평균 P&L' : 'Avg P&L'}</div>
+                            <div style="color: ${cluster.avgPnL >= 0 ? '#10b981' : '#ef4444'}; font-size: 16px; font-weight: 600;">
+                                $${cluster.avgPnL.toFixed(2)}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('')}
         </div>
+        ${clusters.length === 0 ? `
+            <div style="background: rgba(15, 23, 42, 0.5); text-align: center; padding: 30px; border-radius: 10px; border: 1px solid rgba(100, 116, 139, 0.2);">
+                <div style="color: #64748b; font-size: 14px;">
+                    ${currentLanguage === 'ko' ? '클러스터를 형성할 충분한 데이터가 없습니다.' : 'Insufficient data to form clusters.'}
+                </div>
+            </div>
+        ` : ''}
     `;
 }
 
