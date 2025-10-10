@@ -282,15 +282,22 @@ function resetForm() {
 function deleteTrade(tradeId) {
     if (confirm('Are you sure you want to delete this trade?')) {
         const tradeToDelete = trades.find(trade => trade.id === tradeId);
+        const tradeDate = tradeToDelete ? tradeToDelete.date : null;
+
         trades = trades.filter(trade => trade.id !== tradeId);
         saveTrades();
         updateStats();
         renderCalendar();
         updateAllTradesList();
         updateDetailedAnalytics();
-        
+
         if (tradeToDelete) {
             showToast(`${tradeToDelete.symbol} deleted`);
+        }
+
+        // Principles 경고 재계산
+        if (tradeDate && typeof checkAndUpdateWarnings === 'function') {
+            checkAndUpdateWarnings(tradeDate);
         }
     }
 }
@@ -694,18 +701,32 @@ function deleteSelectedTrades() {
     
     if (confirm(confirmMessage)) {
         const tradesToDelete = Array.from(selectedTrades);
+        const affectedDates = new Set();
+
+        // Collect affected dates
+        trades.forEach(trade => {
+            if (selectedTrades.has(trade.id)) {
+                affectedDates.add(trade.date);
+            }
+        });
+
         trades = trades.filter(trade => !selectedTrades.has(trade.id));
         selectedTrades.clear();
-        
+
         saveTrades();
         updateStats();
         renderCalendar();
         updateAllTradesList();
         updateDetailedAnalytics();
-        
-        showToast(currentLanguage === 'ko' ? 
-            `${tradesToDelete.length}개의 거래가 삭제되었습니다` : 
+
+        showToast(currentLanguage === 'ko' ?
+            `${tradesToDelete.length}개의 거래가 삭제되었습니다` :
             `${tradesToDelete.length} trades deleted`);
+
+        // Principles 경고 재계산 (영향받은 모든 날짜)
+        if (typeof checkAndUpdateWarnings === 'function') {
+            affectedDates.forEach(date => checkAndUpdateWarnings(date));
+        }
     }
 }
 
