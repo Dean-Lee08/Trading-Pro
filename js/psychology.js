@@ -844,3 +844,204 @@ function generatePsychologyInsights() {
         </div>
     `).join('');
 }
+
+// ==================== Psychology-Performance Correlation Analysis ====================
+
+/**
+ * Pearson 상관계수 계산
+ * @param {Array} xArray - X 값 배열
+ * @param {Array} yArray - Y 값 배열
+ * @returns {number} - 상관계수 (-1 ~ 1)
+ */
+function calculateCorrelation(xArray, yArray) {
+    if (!xArray || !yArray || xArray.length === 0 || yArray.length === 0) {
+        return 0;
+    }
+
+    if (xArray.length !== yArray.length) {
+        console.error('Arrays must have equal length for correlation');
+        return 0;
+    }
+
+    const n = xArray.length;
+
+    if (n < 3) {
+        return 0; // Need at least 3 data points for meaningful correlation
+    }
+
+    // Calculate means
+    const xMean = xArray.reduce((sum, val) => sum + val, 0) / n;
+    const yMean = yArray.reduce((sum, val) => sum + val, 0) / n;
+
+    // Calculate standard deviations and covariance
+    let numerator = 0;
+    let xVariance = 0;
+    let yVariance = 0;
+
+    for (let i = 0; i < n; i++) {
+        const xDiff = xArray[i] - xMean;
+        const yDiff = yArray[i] - yMean;
+
+        numerator += xDiff * yDiff;
+        xVariance += xDiff * xDiff;
+        yVariance += yDiff * yDiff;
+    }
+
+    const denominator = Math.sqrt(xVariance * yVariance);
+
+    if (denominator === 0) {
+        return 0; // No variance in one or both variables
+    }
+
+    const correlation = numerator / denominator;
+
+    // Clamp to [-1, 1] to handle floating point errors
+    return Math.max(-1, Math.min(1, correlation));
+}
+
+/**
+ * 상관계수 강도 해석
+ */
+function interpretCorrelationStrength(correlation) {
+    const abs = Math.abs(correlation);
+    const isPositive = correlation > 0;
+
+    if (abs >= 0.7) {
+        return {
+            strength: currentLanguage === 'ko' ? '강한' : 'Strong',
+            direction: isPositive ? (currentLanguage === 'ko' ? '양의' : 'Positive') : (currentLanguage === 'ko' ? '음의' : 'Negative'),
+            color: isPositive ? '#10b981' : '#ef4444',
+            description: currentLanguage === 'ko' ? '매우 강한 상관관계' : 'Very strong correlation'
+        };
+    } else if (abs >= 0.4) {
+        return {
+            strength: currentLanguage === 'ko' ? '보통' : 'Moderate',
+            direction: isPositive ? (currentLanguage === 'ko' ? '양의' : 'Positive') : (currentLanguage === 'ko' ? '음의' : 'Negative'),
+            color: isPositive ? '#3b82f6' : '#f59e0b',
+            description: currentLanguage === 'ko' ? '보통 상관관계' : 'Moderate correlation'
+        };
+    } else if (abs >= 0.2) {
+        return {
+            strength: currentLanguage === 'ko' ? '약한' : 'Weak',
+            direction: isPositive ? (currentLanguage === 'ko' ? '양의' : 'Positive') : (currentLanguage === 'ko' ? '음의' : 'Negative'),
+            color: '#64748b',
+            description: currentLanguage === 'ko' ? '약한 상관관계' : 'Weak correlation'
+        };
+    } else {
+        return {
+            strength: currentLanguage === 'ko' ? '거의 없음' : 'Negligible',
+            direction: '',
+            color: '#64748b',
+            description: currentLanguage === 'ko' ? '상관관계 거의 없음' : 'Negligible correlation'
+        };
+    }
+}
+
+/**
+ * 심리-성과 상관관계 분석
+ */
+function analyzePsychologyPerformanceCorrelation() {
+    // Collect all dates with both psychology data and trade data
+    const correlationData = [];
+
+    for (const date in psychologyData) {
+        const psych = psychologyData[date];
+        const dayTrades = trades.filter(t => t.date === date);
+
+        if (dayTrades.length === 0) continue;
+
+        // Calculate daily performance metrics
+        const totalPnl = dayTrades.reduce((sum, t) => sum + (t.pnl || 0), 0);
+        const wins = dayTrades.filter(t => t.pnl > 0);
+        const winRate = (wins.length / dayTrades.length) * 100;
+        const avgPnl = totalPnl / dayTrades.length;
+
+        correlationData.push({
+            date: date,
+            // Psychology factors
+            sleepHours: parseFloat(psych.sleepHours) || 0,
+            sleepQuality: parseFloat(psych.sleepQuality) || 0,
+            caffeineIntake: parseFloat(psych.caffeineIntake) || 0,
+            energyLevel: parseFloat(psych.energyLevel) || 0,
+            stressLevel: parseFloat(psych.stress) || 0,
+            confidenceLevel: parseFloat(psych.confidence) || 0,
+            focusLevel: parseFloat(psych.focus) || 0,
+            mood: parseFloat(psych.preMood) || 0,
+            pressureLevel: parseFloat(psych.pressureLevel) || 0,
+            // Performance metrics
+            totalPnl: totalPnl,
+            winRate: winRate,
+            avgPnl: avgPnl,
+            tradeCount: dayTrades.length
+        });
+    }
+
+    if (correlationData.length < 5) {
+        return {
+            success: false,
+            error: currentLanguage === 'ko' ?
+                '상관관계 분석을 위해 최소 5일의 심리+거래 데이터가 필요합니다.' :
+                'Need at least 5 days of psychology + trade data for correlation analysis.'
+        };
+    }
+
+    // Calculate correlations for different psychology factors
+    const correlations = [
+        {
+            name: currentLanguage === 'ko' ? '수면 시간' : 'Sleep Hours',
+            xLabel: currentLanguage === 'ko' ? '수면 (시간)' : 'Sleep (hours)',
+            yLabel: currentLanguage === 'ko' ? '평균 P&L ($)' : 'Avg P&L ($)',
+            xData: correlationData.map(d => d.sleepHours),
+            yData: correlationData.map(d => d.avgPnl),
+            correlation: 0
+        },
+        {
+            name: currentLanguage === 'ko' ? '스트레스 수준' : 'Stress Level',
+            xLabel: currentLanguage === 'ko' ? '스트레스 (1-5)' : 'Stress (1-5)',
+            yLabel: currentLanguage === 'ko' ? '승률 (%)' : 'Win Rate (%)',
+            xData: correlationData.map(d => d.stressLevel),
+            yData: correlationData.map(d => d.winRate),
+            correlation: 0
+        },
+        {
+            name: currentLanguage === 'ko' ? '자신감 수준' : 'Confidence Level',
+            xLabel: currentLanguage === 'ko' ? '자신감 (1-5)' : 'Confidence (1-5)',
+            yLabel: currentLanguage === 'ko' ? '평균 P&L ($)' : 'Avg P&L ($)',
+            xData: correlationData.map(d => d.confidenceLevel),
+            yData: correlationData.map(d => d.avgPnl),
+            correlation: 0
+        },
+        {
+            name: currentLanguage === 'ko' ? '집중력' : 'Focus Level',
+            xLabel: currentLanguage === 'ko' ? '집중력 (1-5)' : 'Focus (1-5)',
+            yLabel: currentLanguage === 'ko' ? '승률 (%)' : 'Win Rate (%)',
+            xData: correlationData.map(d => d.focusLevel),
+            yData: correlationData.map(d => d.winRate),
+            correlation: 0
+        },
+        {
+            name: currentLanguage === 'ko' ? '에너지 수준' : 'Energy Level',
+            xLabel: currentLanguage === 'ko' ? '에너지 (1-5)' : 'Energy (1-5)',
+            yLabel: currentLanguage === 'ko' ? '평균 P&L ($)' : 'Avg P&L ($)',
+            xData: correlationData.map(d => d.energyLevel),
+            yData: correlationData.map(d => d.avgPnl),
+            correlation: 0
+        }
+    ];
+
+    // Calculate correlations
+    correlations.forEach(corr => {
+        corr.correlation = calculateCorrelation(corr.xData, corr.yData);
+        corr.interpretation = interpretCorrelationStrength(corr.correlation);
+    });
+
+    // Sort by absolute correlation strength
+    correlations.sort((a, b) => Math.abs(b.correlation) - Math.abs(a.correlation));
+
+    return {
+        success: true,
+        correlations: correlations,
+        sampleSize: correlationData.length,
+        rawData: correlationData
+    };
+}
