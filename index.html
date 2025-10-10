@@ -2069,7 +2069,21 @@
                     <button class="settings-btn" data-lang="export-data" onclick="exportData()">Export Data</button>
                     <button class="settings-btn" data-lang="import-data" onclick="importData()">Import Data</button>
                     <input accept=".json" id="importFileInput" onchange="handleFileImport()" style="display: none;" type="file"/>
-                    <button class="settings-btn" data-lang="clear-market-cache" onclick="clearMarketCache()" style="margin-top: 8px;">Clear Market Data Cache</button>
+
+                    <div style="margin-top: 16px; padding: 12px; background: rgba(59, 130, 246, 0.1); border-left: 3px solid #3b82f6; border-radius: 6px;">
+                        <div style="font-weight: 600; margin-bottom: 8px; color: #3b82f6;">
+                            <span data-lang="import-broker-data">Import Broker Data</span> 📊
+                        </div>
+                        <div style="font-size: 13px; color: #94a3b8; margin-bottom: 12px;">
+                            <span data-lang="import-broker-description">Upload trade history from your broker (CSV or JSON format)</span>
+                        </div>
+                        <button class="settings-btn" onclick="importBrokerData()" style="background: #3b82f6; border-color: #3b82f6;">
+                            <span data-lang="import-broker-button">📥 Import Broker CSV/JSON</span>
+                        </button>
+                        <input accept=".csv,.json" id="brokerFileInput" onchange="handleBrokerFileImport()" style="display: none;" type="file"/>
+                    </div>
+
+                    <button class="settings-btn" data-lang="clear-market-cache" onclick="clearMarketCache()" style="margin-top: 16px;">Clear Market Data Cache</button>
                 </div>
 
                 <div class="settings-section">
