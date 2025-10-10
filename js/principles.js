@@ -82,15 +82,24 @@ function loadPrinciplesDataForDate(date) {
     document.getElementById('principlesEndTime').value = data.endTime || '';
     document.getElementById('principlesEnvironmentType').value = data.environmentType || 'home';
 
-    // Load economic pressure data
+    // Load account rules data
     document.getElementById('principlesAccountBalance').value = data.accountBalance || '';
     document.getElementById('principlesDailyTarget').value = data.dailyTarget || '';
     document.getElementById('principlesMaxDailyLoss').value = data.maxDailyLoss || '';
     document.getElementById('principlesMaxTradeCount').value = data.maxTradeCount || '';
 
+    // Load trade details data
+    document.getElementById('principlesConsecutiveLossLimit').value = data.consecutiveLossLimit || '';
+    document.getElementById('principlesMaxSingleLoss').value = data.maxSingleLoss || '';
+    document.getElementById('principlesMaxPositionSize').value = data.maxPositionSize || '';
+    document.getElementById('principlesMinRiskReward').value = data.minRiskReward || '';
+
     // Update percentages and visual cards
     updatePrinciplesTargetPercentages();
     updatePrinciplesVisualCards();
+
+    // Check and update warnings
+    checkAndUpdateWarnings(date);
 }
 
 // Update target percentages
