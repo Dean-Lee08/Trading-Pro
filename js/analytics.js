@@ -3824,45 +3824,141 @@ function calculateVolatility(returns) {
 }
 
 /**
- * Render Behavioral Patterns Detection
+ * Render Behavioral Patterns Detection with Psychology Correlation
  */
 function renderBehavioralPatterns() {
     const element = document.getElementById('behavioralPatterns');
     if (!element) return;
 
-    const patterns = detectAdvancedBehavioralPatterns();
+    let html = '';
 
-    if (patterns.length === 0) {
-        element.innerHTML = `
-            <div style="color: #64748b; text-align: center; padding: 20px;">
-                No significant behavioral patterns detected yet. Continue trading to build pattern data.
-            </div>
-        `;
-        return;
-    }
+    // Part 1: Psychology-Performance Correlation Analysis
+    const correlationAnalysis = analyzePsychologyPerformanceCorrelation();
 
-    const html = patterns.map(pattern => {
-        const iconColor = pattern.severity === 'danger' ? '#ef4444' :
-                         pattern.severity === 'warning' ? '#f59e0b' :
-                         pattern.severity === 'good' ? '#10b981' : '#3b82f6';
+    if (correlationAnalysis.success) {
+        html += `
+            <div style="margin-bottom: 24px; padding: 16px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1)); border-radius: 12px; border: 1px solid rgba(59, 130, 246, 0.3);">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+                    <span style="font-size: 24px;">🧠</span>
+                    <div>
+                        <div style="color: #3b82f6; font-weight: 700; font-size: 16px;">
+                            ${currentLanguage === 'ko' ? '심리-성과 상관관계 분석' : 'Psychology vs Performance Correlation'}
+                        </div>
+                        <div style="color: #64748b; font-size: 12px; margin-top: 2px;">
+                            ${currentLanguage === 'ko' ?
+                                `${correlationAnalysis.sampleSize}일의 데이터 기반 분석` :
+                                `Based on ${correlationAnalysis.sampleSize} days of data`
+                            }
+                        </div>
+                    </div>
+                </div>
 
-        const icon = pattern.severity === 'danger' ? '⚠️' :
-                    pattern.severity === 'warning' ? '⚡' :
-                    pattern.severity === 'good' ? '✓' : 'ℹ️';
+                <div style="display: grid; gap: 12px;">
+                    ${correlationAnalysis.correlations.map((corr, index) => {
+                        const absCorr = Math.abs(corr.correlation);
+                        const interpretation = corr.interpretation;
 
-        return `
-            <div style="padding: 14px; background: #0f172a; border-radius: 8px; border-left: 4px solid ${iconColor}; margin-bottom: 12px;">
-                <div style="display: flex; align-items: start; gap: 12px;">
-                    <span style="font-size: 20px;">${icon}</span>
-                    <div style="flex: 1;">
-                        <div style="color: #e4e4e7; font-size: 14px; font-weight: 500; margin-bottom: 6px;">${pattern.title}</div>
-                        <div style="color: #94a3b8; font-size: 12px; line-height: 1.6;">${pattern.description}</div>
-                        ${pattern.actionable ? `<div style="color: ${iconColor}; font-size: 12px; margin-top: 8px; font-weight: 500;">→ ${pattern.actionable}</div>` : ''}
+                        return `
+                            <div style="background: rgba(15, 23, 42, 0.6); padding: 14px; border-radius: 8px; border-left: 3px solid ${interpretation.color};">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                    <div>
+                                        <div style="color: #e4e4e7; font-weight: 600; font-size: 14px;">
+                                            ${index === 0 ? '🏆 ' : ''}${corr.name}
+                                        </div>
+                                        <div style="color: #64748b; font-size: 11px; margin-top: 2px;">
+                                            ${corr.xLabel} → ${corr.yLabel}
+                                        </div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="color: ${interpretation.color}; font-size: 18px; font-weight: 700;">
+                                            ${corr.correlation.toFixed(3)}
+                                        </div>
+                                        <div style="color: #64748b; font-size: 10px;">
+                                            ${interpretation.description}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <div style="flex: 1; background: rgba(100, 116, 139, 0.2); height: 8px; border-radius: 4px; overflow: hidden;">
+                                        <div style="width: ${absCorr * 100}%; height: 100%; background: ${interpretation.color};"></div>
+                                    </div>
+                                    <span style="color: ${interpretation.color}; font-size: 11px; font-weight: 600; min-width: 60px;">
+                                        ${interpretation.direction} ${interpretation.strength}
+                                    </span>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+
+                <div style="margin-top: 12px; padding: 10px; background: rgba(59, 130, 246, 0.1); border-radius: 6px; border: 1px solid rgba(59, 130, 246, 0.2);">
+                    <div style="color: #3b82f6; font-size: 11px; display: flex; align-items: center; gap: 6px;">
+                        <span>💡</span>
+                        <span>
+                            ${currentLanguage === 'ko' ?
+                                `가장 강한 상관관계: ${correlationAnalysis.correlations[0].name} (${correlationAnalysis.correlations[0].correlation.toFixed(3)})` :
+                                `Strongest correlation: ${correlationAnalysis.correlations[0].name} (${correlationAnalysis.correlations[0].correlation.toFixed(3)})`
+                            }
+                        </span>
                     </div>
                 </div>
             </div>
         `;
-    }).join('');
+    } else {
+        html += `
+            <div style="margin-bottom: 24px; padding: 16px; background: rgba(100, 116, 139, 0.1); border-radius: 12px; border: 1px solid rgba(100, 116, 139, 0.3); text-align: center;">
+                <div style="color: #64748b; font-size: 13px;">
+                    ${correlationAnalysis.error}
+                </div>
+            </div>
+        `;
+    }
+
+    // Part 2: Traditional Behavioral Patterns
+    const patterns = detectAdvancedBehavioralPatterns();
+
+    if (patterns.length > 0) {
+        html += `
+            <div style="margin-bottom: 12px;">
+                <div style="color: #94a3b8; font-size: 13px; font-weight: 600; margin-bottom: 12px;">
+                    ${currentLanguage === 'ko' ? '거래 행동 패턴 감지' : 'Detected Trading Patterns'}
+                </div>
+            </div>
+        `;
+
+        html += patterns.map(pattern => {
+            const iconColor = pattern.severity === 'danger' ? '#ef4444' :
+                             pattern.severity === 'warning' ? '#f59e0b' :
+                             pattern.severity === 'good' ? '#10b981' : '#3b82f6';
+
+            const icon = pattern.severity === 'danger' ? '⚠️' :
+                        pattern.severity === 'warning' ? '⚡' :
+                        pattern.severity === 'good' ? '✓' : 'ℹ️';
+
+            return `
+                <div style="padding: 14px; background: #0f172a; border-radius: 8px; border-left: 4px solid ${iconColor}; margin-bottom: 12px;">
+                    <div style="display: flex; align-items: start; gap: 12px;">
+                        <span style="font-size: 20px;">${icon}</span>
+                        <div style="flex: 1;">
+                            <div style="color: #e4e4e7; font-size: 14px; font-weight: 500; margin-bottom: 6px;">${pattern.title}</div>
+                            <div style="color: #94a3b8; font-size: 12px; line-height: 1.6;">${pattern.description}</div>
+                            ${pattern.actionable ? `<div style="color: ${iconColor}; font-size: 12px; margin-top: 8px; font-weight: 500;">→ ${pattern.actionable}</div>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    } else if (!correlationAnalysis.success) {
+        html += `
+            <div style="color: #64748b; text-align: center; padding: 20px;">
+                ${currentLanguage === 'ko' ?
+                    '행동 패턴을 감지할 데이터가 부족합니다. 거래와 심리 데이터를 더 축적해주세요.' :
+                    'Not enough data to detect behavioral patterns. Continue trading and logging psychology data.'
+                }
+            </div>
+        `;
+    }
 
     element.innerHTML = html;
 }
