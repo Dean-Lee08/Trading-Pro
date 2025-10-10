@@ -1177,8 +1177,6 @@ function updateAlgorithmicAnalysis() {
     // Phase 2: Advanced algorithmic analysis modules
     console.log('📈 Rendering multi-factor attribution...');
     renderMultiFactorAttribution();
-    console.log('⚠️ Rendering predictive risk score...');
-    renderPredictiveRiskScore();
     console.log('🎭 Rendering behavioral patterns...');
     renderBehavioralPatterns();
     console.log('🌐 Rendering market intelligence...');
