@@ -314,7 +314,7 @@ function checkAndUpdateWarnings(date) {
     const principles = principlesData[date];
     if (!principles) {
         // No principles set for this date, show zeros
-        updateWarningTriggersDisplay(0, 0, 0, 0);
+        updateWarningTriggersDisplay(0, 0, 0, 0, 0, 0, 0);
         return;
     }
 
@@ -323,6 +323,9 @@ function checkAndUpdateWarnings(date) {
     let singleLossCount = 0;
     let positionSizeCount = 0;
     let riskRewardCount = 0;
+    let dailyTargetCount = 0;
+    let maxLossCount = 0;
+    let tradeCountExceeded = 0;
 
     // Get trades for this date
     const dateTrades = trades.filter(t => t.date === date).sort((a, b) => {
@@ -333,10 +336,11 @@ function checkAndUpdateWarnings(date) {
     });
 
     if (dateTrades.length === 0) {
-        updateWarningTriggersDisplay(0, 0, 0, 0);
+        updateWarningTriggersDisplay(0, 0, 0, 0, 0, 0, 0);
         return;
     }
 
+    // Trade Details Warnings
     // 1. Check consecutive losses
     if (principles.consecutiveLossLimit > 0) {
         consecutiveLossCount = checkConsecutiveLosses(dateTrades, principles.consecutiveLossLimit);
@@ -357,6 +361,30 @@ function checkAndUpdateWarnings(date) {
         riskRewardCount = checkRiskRewardViolations(dateTrades, principles.minRiskReward);
     }
 
+    // Account Rules Warnings
+    // 5. Check daily target hit
+    if (principles.dailyTarget > 0) {
+        const totalPnL = dateTrades.reduce((sum, t) => sum + t.pnl, 0);
+        if (totalPnL >= principles.dailyTarget) {
+            dailyTargetCount = 1;
+        }
+    }
+
+    // 6. Check max daily loss
+    if (principles.maxDailyLoss > 0) {
+        const totalPnL = dateTrades.reduce((sum, t) => sum + t.pnl, 0);
+        if (totalPnL <= -Math.abs(principles.maxDailyLoss)) {
+            maxLossCount = 1;
+        }
+    }
+
+    // 7. Check trade count limit
+    if (principles.maxTradeCount > 0) {
+        if (dateTrades.length >= principles.maxTradeCount) {
+            tradeCountExceeded = 1;
+        }
+    }
+
     // Update principles data with warning counts
     if (!principles.warningTriggers) {
         principles.warningTriggers = {};
@@ -365,12 +393,23 @@ function checkAndUpdateWarnings(date) {
     principles.warningTriggers.singleLoss = singleLossCount;
     principles.warningTriggers.positionSize = positionSizeCount;
     principles.warningTriggers.riskReward = riskRewardCount;
+    principles.warningTriggers.dailyTarget = dailyTargetCount;
+    principles.warningTriggers.maxLoss = maxLossCount;
+    principles.warningTriggers.tradeCount = tradeCountExceeded;
 
     // Save updated data
     savePrinciplesDataToStorage();
 
     // Update display
-    updateWarningTriggersDisplay(consecutiveLossCount, singleLossCount, positionSizeCount, riskRewardCount);
+    updateWarningTriggersDisplay(
+        consecutiveLossCount,
+        singleLossCount,
+        positionSizeCount,
+        riskRewardCount,
+        dailyTargetCount,
+        maxLossCount,
+        tradeCountExceeded
+    );
 }
 
 /**
