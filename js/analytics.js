@@ -1175,8 +1175,6 @@ function updateAlgorithmicAnalysis() {
     renderClusterAnalysis();
 
     // Phase 2: Advanced algorithmic analysis modules
-    console.log('📈 Rendering multi-factor attribution...');
-    renderMultiFactorAttribution();
     console.log('🎭 Rendering behavioral patterns...');
     renderBehavioralPatterns();
     console.log('🌐 Rendering market intelligence...');
