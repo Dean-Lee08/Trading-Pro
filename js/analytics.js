@@ -3145,9 +3145,9 @@ function renderCorrelationMatrix() {
  * Analyzes time-based trading patterns
  */
 function renderTemporalPatterns() {
-    const element = document.getElementById('temporalPatternsContent');
+    const element = document.getElementById('temporalPatternContent');
     if (!element) {
-        console.log('⚠️ temporalPatternsContent element not found');
+        console.log('⚠️ temporalPatternContent element not found');
         return;
     }
 
