@@ -1301,6 +1301,100 @@ function analyzeConsecutiveTradesPattern() {
 function generateAIInsights() {
     const allInsights = [];
 
+    // 0. Principles Warning Insights (최우선 순위)
+    if (typeof principlesData !== 'undefined') {
+        const today = formatTradingDate(new Date());
+        const todayPrinciples = principlesData[today];
+
+        if (todayPrinciples && todayPrinciples.warningTriggers) {
+            const warnings = todayPrinciples.warningTriggers;
+
+            // 최대 일일 손실 도달 (가장 중요)
+            if (warnings.maxLoss > 0) {
+                allInsights.push({
+                    priority: 0,
+                    type: 'danger',
+                    category: 'rules',
+                    text: currentLanguage === 'ko' ?
+                        '🛑 최대 일일 손실 도달! 오늘은 더 이상 거래하지 마세요.' :
+                        '🛑 Max Daily Loss Reached! Stop trading for today.'
+                });
+            }
+
+            // 연속 손실 경고
+            if (warnings.consecutiveLoss > 0) {
+                allInsights.push({
+                    priority: 1,
+                    type: 'danger',
+                    category: 'rules',
+                    text: currentLanguage === 'ko' ?
+                        `⚠️ 연속 손실 제한 위반: ${warnings.consecutiveLoss}회 발생. 감정적 거래를 멈추고 휴식을 취하세요.` :
+                        `⚠️ Consecutive Loss Limit Violated: ${warnings.consecutiveLoss} times. Stop emotional trading and take a break.`
+                });
+            }
+
+            // 단일 손실 초과
+            if (warnings.singleLoss > 0) {
+                allInsights.push({
+                    priority: 1,
+                    type: 'danger',
+                    category: 'rules',
+                    text: currentLanguage === 'ko' ?
+                        `⚠️ 단일 손실 한도 초과: ${warnings.singleLoss}회. 리스크 관리 규칙을 재확인하세요.` :
+                        `⚠️ Single Loss Limit Exceeded: ${warnings.singleLoss} times. Review your risk management rules.`
+                });
+            }
+
+            // 포지션 크기 초과
+            if (warnings.positionSize > 0) {
+                allInsights.push({
+                    priority: 1,
+                    type: 'danger',
+                    category: 'rules',
+                    text: currentLanguage === 'ko' ?
+                        `⚠️ 포지션 크기 제한 초과: ${warnings.positionSize}회. 자금 관리 원칙을 준수하세요.` :
+                        `⚠️ Position Size Limit Exceeded: ${warnings.positionSize} times. Stick to your money management principles.`
+                });
+            }
+
+            // 리스크/보상 비율 미달
+            if (warnings.riskReward > 0) {
+                allInsights.push({
+                    priority: 1,
+                    type: 'warning',
+                    category: 'rules',
+                    text: currentLanguage === 'ko' ?
+                        `⚠️ 리스크/보상 비율 미달: ${warnings.riskReward}회. 더 나은 진입점을 기다리세요.` :
+                        `⚠️ Risk/Reward Below Minimum: ${warnings.riskReward} times. Wait for better entry points.`
+                });
+            }
+
+            // 거래 횟수 제한 도달
+            if (warnings.tradeCount > 0) {
+                allInsights.push({
+                    priority: 1,
+                    type: 'warning',
+                    category: 'rules',
+                    text: currentLanguage === 'ko' ?
+                        '⚠️ 거래 횟수 제한 도달. 과도거래를 피하고 품질에 집중하세요.' :
+                        '⚠️ Trade Count Limit Reached. Avoid overtrading and focus on quality.'
+                });
+            }
+
+            // 일일 목표 달성 (긍정적)
+            if (warnings.dailyTarget > 0) {
+                allInsights.push({
+                    priority: 2,
+                    type: 'good',
+                    category: 'rules',
+                    text: currentLanguage === 'ko' ?
+                        '✅ 일일 목표 달성! 이익을 보호하고 추가 위험을 피하세요.' :
+                        '✅ Daily Target Achieved! Protect your profits and avoid additional risk.'
+                });
+            }
+        }
+    }
+
     // 1. 감정적 거래 패턴 분석 (Critical)
     const emotionalPatterns = detectEmotionalTradingPatterns();
 
