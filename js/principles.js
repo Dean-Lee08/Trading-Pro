@@ -213,15 +213,32 @@ function savePrinciplesData() {
         endTime: document.getElementById('principlesEndTime').value || '',
         environmentType: document.getElementById('principlesEnvironmentType').value || 'home',
 
-        // Economic pressure
+        // Account rules
         accountBalance: parseFloat(document.getElementById('principlesAccountBalance').value) || 0,
         dailyTarget: parseFloat(document.getElementById('principlesDailyTarget').value) || 0,
         maxDailyLoss: parseFloat(document.getElementById('principlesMaxDailyLoss').value) || 0,
-        maxTradeCount: parseInt(document.getElementById('principlesMaxTradeCount').value) || 0
+        maxTradeCount: parseInt(document.getElementById('principlesMaxTradeCount').value) || 0,
+
+        // Trade details
+        consecutiveLossLimit: parseInt(document.getElementById('principlesConsecutiveLossLimit').value) || 0,
+        maxSingleLoss: parseFloat(document.getElementById('principlesMaxSingleLoss').value) || 0,
+        maxPositionSize: parseFloat(document.getElementById('principlesMaxPositionSize').value) || 0,
+        minRiskReward: parseFloat(document.getElementById('principlesMinRiskReward').value) || 0,
+
+        // Warning triggers (preserve existing or initialize)
+        warningTriggers: principlesData[currentPrinciplesDate]?.warningTriggers || {
+            consecutiveLoss: 0,
+            singleLoss: 0,
+            positionSize: 0,
+            riskReward: 0
+        }
     };
 
     principlesData[currentPrinciplesDate] = data;
     savePrinciplesDataToStorage();
+
+    // Re-check warnings after saving
+    checkAndUpdateWarnings(currentPrinciplesDate);
 
     // Show toast notification
     showToast(currentLanguage === 'en' ? 'Principles data saved!' : '원칙 데이터가 저장되었습니다!');
