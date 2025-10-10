@@ -377,6 +377,11 @@ function handleEditTradeSubmit(event) {
 
     // 일일 손익 한도 체크
     checkDailyLimits(updatedTrade.date);
+
+    // Principles 규칙 체크
+    if (typeof checkTradeAgainstPrinciples === 'function') {
+        checkTradeAgainstPrinciples(updatedTrade);
+    }
 }
 
 // ==================== Trade Statistics ====================
