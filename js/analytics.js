@@ -3436,8 +3436,8 @@ function renderTemporalPatterns() {
 }
 
 /**
- * Cluster Analysis
- * Groups similar trades together
+ * Cluster Analysis using K-means algorithm
+ * Groups similar trades together based on multiple features
  */
 function renderClusterAnalysis() {
     const element = document.getElementById('clusterAnalysisContent');
@@ -3446,16 +3446,34 @@ function renderClusterAnalysis() {
         return;
     }
 
-    if (trades.length < 15) {
+    const filteredTrades = getFilteredTradesForAnalytics();
+
+    if (filteredTrades.length < 10) {
         element.innerHTML = `
             <div style="background: rgba(15, 23, 42, 0.5); text-align: center; padding: 30px; border-radius: 10px; border: 1px solid rgba(100, 116, 139, 0.2);">
                 <div style="color: #64748b; font-size: 14px;">
-                    ${currentLanguage === 'ko' ? '클러스터 분석을 위해 최소 15개의 거래가 필요합니다.' : 'Need at least 15 trades for cluster analysis.'}
+                    ${currentLanguage === 'ko' ? 'K-means 클러스터 분석을 위해 최소 10개의 거래가 필요합니다.' : 'Need at least 10 trades for K-means cluster analysis.'}
                 </div>
             </div>
         `;
         return;
     }
+
+    // Perform K-means clustering
+    const clusteringResult = performTradeClustering(filteredTrades);
+
+    if (!clusteringResult.success) {
+        element.innerHTML = `
+            <div style="background: rgba(239, 68, 68, 0.1); text-align: center; padding: 30px; border-radius: 10px; border: 1px solid rgba(239, 68, 68, 0.3);">
+                <div style="color: #ef4444; font-size: 14px;">
+                    ${clusteringResult.error || 'Clustering analysis failed'}
+                </div>
+            </div>
+        `;
+        return;
+    }
+
+    const { clusters, bestCluster, worstCluster } = clusteringResult;
 
     // Cluster 1: Quick Scalpers (holding time < 30 min)
     const quickScalpers = trades.filter(t => t.holdingMinutes && t.holdingMinutes < 30);
