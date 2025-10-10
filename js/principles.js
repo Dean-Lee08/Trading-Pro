@@ -200,9 +200,49 @@ function updatePrinciplesVisualCards() {
     try {
         updatePrinciplesEnvironmentCard();
         updatePrinciplesRiskCard();
+        updatePrinciplesTradeDetailsCard();
     } catch (error) {
         console.error('Error updating principles visual cards:', error);
     }
+}
+
+// Update Trade Details Score Card
+function updatePrinciplesTradeDetailsCard() {
+    const consecutiveLossLimit = parseInt(document.getElementById('principlesConsecutiveLossLimit').value) || 0;
+    const maxSingleLoss = parseFloat(document.getElementById('principlesMaxSingleLoss').value) || 0;
+    const maxPositionSize = parseFloat(document.getElementById('principlesMaxPositionSize').value) || 0;
+    const minRiskReward = parseFloat(document.getElementById('principlesMinRiskReward').value) || 0;
+
+    const scoreEl = document.getElementById('principlesTradeDetailsScore');
+    const complianceEl = document.getElementById('principlesTradeDetailsCompliance');
+    const circleEl = document.getElementById('principlesTradeDetailsCircle');
+    const statusEl = document.getElementById('principlesTradeDetailsStatus');
+
+    // Calculate score based on how many rules are set
+    let rulesSet = 0;
+    if (consecutiveLossLimit > 0) rulesSet++;
+    if (maxSingleLoss > 0) rulesSet++;
+    if (maxPositionSize > 0) rulesSet++;
+    if (minRiskReward > 0) rulesSet++;
+
+    const totalScore = (rulesSet / 4) * 100;
+
+    if (scoreEl) scoreEl.textContent = Math.round(totalScore);
+    if (complianceEl) complianceEl.textContent = `${rulesSet}/4 Rules`;
+
+    if (circleEl) {
+        const circumference = 157;
+        const offset = circumference - (totalScore / 100) * circumference;
+        circleEl.style.strokeDashoffset = offset;
+    }
+
+    let status = 'No rules';
+    if (totalScore >= 100) status = 'Full coverage';
+    else if (totalScore >= 75) status = 'Good coverage';
+    else if (totalScore >= 50) status = 'Partial coverage';
+    else if (totalScore > 0) status = 'Minimal coverage';
+
+    if (statusEl) statusEl.textContent = status;
 }
 
 // Save principles data
@@ -230,7 +270,10 @@ function savePrinciplesData() {
             consecutiveLoss: 0,
             singleLoss: 0,
             positionSize: 0,
-            riskReward: 0
+            riskReward: 0,
+            dailyTarget: 0,
+            maxLoss: 0,
+            tradeCount: 0
         }
     };
 
