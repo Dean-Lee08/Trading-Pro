@@ -283,9 +283,26 @@ Call `updateTradesTable(filteredTrades, tableBodyId)` with:
 ## Initialization Flow
 
 On page load (DOMContentLoaded in main.js):
-1. Load all data from localStorage
+1. Load all data from localStorage (trades, notes, psychology, principles, fees)
 2. Set `currentTradingDate` to today (formatted as "YYYY-MM-DD")
 3. Initialize date range filters to last 7 days
 4. Render initial dashboard view
 5. Update statistics and tables
 6. Attach global event listeners
+7. Load market data API key if saved
+
+## API Integration
+
+### Alpha Vantage Market Data
+- API key stored in localStorage or hardcoded default
+- Rate limiting enforced: 5 calls/minute, 25 calls/day
+- Endpoints used:
+  - `GLOBAL_QUOTE` - Real-time quote data
+  - `OVERVIEW` - Company fundamentals (market cap, beta, float)
+  - `TIME_SERIES_INTRADAY` - Intraday price data
+- Error handling for API limits and missing data
+- Cache mechanism to minimize API calls
+- Functions in market-data.js:
+  - `fetchQuoteData(symbol)` - Get real-time quote
+  - `fetchCompanyOverview(symbol)` - Get fundamentals
+  - `analyzeMarketCharacteristics()` - Analyze winning trade patterns
