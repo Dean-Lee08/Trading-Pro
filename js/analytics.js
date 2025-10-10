@@ -622,6 +622,250 @@ function resetDetailedAnalyticsDisplay() {
     document.getElementById('detailBestSymbolReturn').textContent = '-';
 }
 
+// ==================== Chart Creation Helpers with Zoom/Pan ====================
+
+/**
+ * Create basic chart with zoom/pan capabilities
+ */
+function createBasicChart(chartId, type, data, options = {}) {
+    const canvas = document.getElementById(chartId);
+    if (!canvas) return null;
+
+    const ctx = canvas.getContext('2d');
+
+    // Destroy existing chart
+    if (basicCharts[chartId]) {
+        basicCharts[chartId].destroy();
+    }
+
+    // Configure default options with zoom/pan for line and bar charts
+    const defaultOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                labels: {
+                    color: '#94a3b8'
+                }
+            },
+            tooltip: {
+                backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                titleColor: '#f8fafc',
+                bodyColor: '#e4e4e7',
+                borderColor: '#334155',
+                borderWidth: 1,
+                padding: 12,
+                displayColors: true,
+                callbacks: {
+                    label: function(context) {
+                        let label = context.dataset.label || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        if (context.parsed.y !== null) {
+                            label += '$' + context.parsed.y.toFixed(2);
+                        }
+                        return label;
+                    }
+                }
+            }
+        },
+        scales: (type === 'line' || type === 'bar') ? {
+            x: {
+                ticks: { color: '#94a3b8' },
+                grid: { color: 'rgba(100, 116, 139, 0.1)' }
+            },
+            y: {
+                ticks: { color: '#94a3b8' },
+                grid: { color: 'rgba(100, 116, 139, 0.1)' }
+            }
+        } : {}
+    };
+
+    // Add zoom/pan for line and bar charts only
+    if ((type === 'line' || type === 'bar') && typeof Chart !== 'undefined' && Chart.register) {
+        defaultOptions.plugins.zoom = {
+            zoom: {
+                wheel: {
+                    enabled: true,
+                    speed: 0.1
+                },
+                pinch: {
+                    enabled: true
+                },
+                mode: 'xy'
+            },
+            pan: {
+                enabled: true,
+                mode: 'xy'
+            },
+            limits: {
+                x: {min: 'original', max: 'original'},
+                y: {min: 'original', max: 'original'}
+            }
+        };
+    }
+
+    // Merge custom options
+    const mergedOptions = { ...defaultOptions, ...options };
+
+    basicCharts[chartId] = new Chart(ctx, {
+        type: type,
+        data: data,
+        options: mergedOptions
+    });
+
+    return basicCharts[chartId];
+}
+
+/**
+ * Create advanced chart with enhanced zoom/pan and tooltips
+ */
+function createAdvancedChart(chartId, type, data, options = {}) {
+    const canvas = document.getElementById(chartId);
+    if (!canvas) return null;
+
+    const ctx = canvas.getContext('2d');
+
+    // Destroy existing chart
+    if (advancedCharts[chartId]) {
+        advancedCharts[chartId].destroy();
+    }
+
+    // Enhanced options with zoom/pan and detailed tooltips
+    const defaultOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                labels: {
+                    color: '#94a3b8',
+                    font: {
+                        size: 12
+                    }
+                }
+            },
+            tooltip: {
+                backgroundColor: 'rgba(15, 23, 42, 0.98)',
+                titleColor: '#f8fafc',
+                titleFont: {
+                    size: 14,
+                    weight: 'bold'
+                },
+                bodyColor: '#e4e4e7',
+                bodyFont: {
+                    size: 13
+                },
+                borderColor: '#3b82f6',
+                borderWidth: 2,
+                padding: 16,
+                displayColors: true,
+                callbacks: {
+                    title: function(context) {
+                        if (context[0].label) {
+                            return context[0].label;
+                        }
+                        return '';
+                    },
+                    label: function(context) {
+                        let label = context.dataset.label || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        if (context.parsed.y !== null) {
+                            const value = context.parsed.y;
+                            if (Math.abs(value) >= 1000) {
+                                label += '$' + (value / 1000).toFixed(2) + 'K';
+                            } else {
+                                label += '$' + value.toFixed(2);
+                            }
+                        }
+                        return label;
+                    },
+                    afterLabel: function(context) {
+                        // Add additional context info for specific charts
+                        if (chartId === 'equityCurveChart') {
+                            return 'Double-click to reset zoom';
+                        }
+                        return '';
+                    }
+                }
+            }
+        },
+        scales: (type === 'line' || type === 'bar') ? {
+            x: {
+                ticks: {
+                    color: '#94a3b8',
+                    font: { size: 11 }
+                },
+                grid: {
+                    color: 'rgba(100, 116, 139, 0.1)',
+                    drawBorder: false
+                }
+            },
+            y: {
+                ticks: {
+                    color: '#94a3b8',
+                    font: { size: 11 },
+                    callback: function(value) {
+                        if (Math.abs(value) >= 1000) {
+                            return '$' + (value / 1000).toFixed(1) + 'K';
+                        }
+                        return '$' + value.toFixed(0);
+                    }
+                },
+                grid: {
+                    color: 'rgba(100, 116, 139, 0.1)',
+                    drawBorder: false
+                }
+            }
+        } : {}
+    };
+
+    // Add zoom/pan capabilities for line and bar charts
+    if ((type === 'line' || type === 'bar') && typeof Chart !== 'undefined' && Chart.register) {
+        defaultOptions.plugins.zoom = {
+            zoom: {
+                wheel: {
+                    enabled: true,
+                    speed: 0.1
+                },
+                pinch: {
+                    enabled: true
+                },
+                mode: 'xy'
+            },
+            pan: {
+                enabled: true,
+                mode: 'xy',
+                modifierKey: 'ctrl' // Hold ctrl to pan, or just drag
+            },
+            limits: {
+                x: {min: 'original', max: 'original'},
+                y: {min: 'original', max: 'original'}
+            }
+        };
+
+        // Add double-click to reset zoom
+        defaultOptions.onClick = function(evt, activeElements, chart) {
+            if (evt.type === 'dblclick') {
+                chart.resetZoom();
+            }
+        };
+    }
+
+    // Merge custom options
+    const mergedOptions = { ...defaultOptions, ...options };
+
+    advancedCharts[chartId] = new Chart(ctx, {
+        type: type,
+        data: data,
+        options: mergedOptions
+    });
+
+    return advancedCharts[chartId];
+}
+
 // ==================== Basic Charts (Detail Section) ====================
 
 /**
