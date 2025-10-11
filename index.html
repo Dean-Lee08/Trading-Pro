@@ -1353,7 +1353,184 @@
                                 <p style="color: #94a3b8; font-size: 14px; margin: 0;" data-lang="analytics-subtitle">Comprehensive trading pattern analysis and insights</p>
                             </div>
 
-                            <!-- Time-Based Performance Analysis -->
+                            <!-- ==================== TIER 1: TOP 3 ACTIONABLE INSIGHTS ==================== -->
+                            <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(59, 130, 246, 0.1)); border: 2px solid #10b981; border-radius: 12px; padding: 24px; margin-bottom: 32px;">
+                                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                                    <span style="font-size: 32px;">💡</span>
+                                    <div>
+                                        <h2 style="color: #10b981; font-size: 18px; font-weight: 700; margin: 0 0 4px 0; letter-spacing: -0.01em;" data-lang="top-3-insights">Top 3 Actionable Insights</h2>
+                                        <p style="color: #94a3b8; font-size: 13px; margin: 0;">Priority-ranked recommendations based on your data</p>
+                                    </div>
+                                </div>
+                                <div id="top3InsightsContainer" style="display: grid; gap: 16px;">
+                                    <!-- Dynamically populated by renderAdaptiveRecommendations() -->
+                                    <div style="background: rgba(15, 23, 42, 0.6); padding: 16px; border-radius: 8px; border-left: 4px solid #10b981;">
+                                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                            <span style="background: #10b981; color: #0f172a; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700;" data-lang="insight-optimize">OPTIMIZE</span>
+                                            <span style="color: #e4e4e7; font-size: 14px; font-weight: 600;" data-lang="generating-recs">Analyzing your trading patterns...</span>
+                                        </div>
+                                        <div style="color: #94a3b8; font-size: 13px; line-height: 1.6;">
+                                            Collecting data to generate personalized insights. Keep trading to unlock recommendations.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ==================== TIER 2: CORE PERFORMANCE & RISK METRICS ==================== -->
+                            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 24px; margin-bottom: 24px;">
+                                <h2 style="color: #f8fafc; font-size: 18px; font-weight: 600; margin: 0 0 6px 0; letter-spacing: -0.01em;" data-lang="core-metrics">Core Performance & Risk Metrics</h2>
+                                <p style="color: #94a3b8; font-size: 13px; margin: 0 0 20px 0;">Key statistical indicators with tooltips</p>
+
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
+                                    <!-- Maximum Drawdown (MDD) -->
+                                    <div class="metric-card-tooltip" style="background: rgba(15, 23, 42, 0.5); border: 1px solid #334155; border-radius: 6px; padding: 18px; position: relative; cursor: help;">
+                                        <div style="color: #cbd5e1; font-size: 13px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                                            <span data-lang="maximum-drawdown">Maximum Drawdown (MDD)</span>
+                                            <span class="tooltip-icon" style="color: #64748b; font-size: 12px;">ⓘ</span>
+                                        </div>
+                                        <div id="mddValue" style="color: #ef4444; font-size: 26px; font-weight: 700; margin-bottom: 4px;">$0.00</div>
+                                        <div id="mddPercent" style="color: #64748b; font-size: 12px;">0% of capital</div>
+                                        <div class="tooltip-content" style="display: none; position: absolute; background: #1e293b; border: 1px solid #475569; border-radius: 6px; padding: 10px; width: 250px; z-index: 10; top: 100%; left: 0; margin-top: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                                            <div style="color: #e4e4e7; font-size: 12px; margin-bottom: 4px; font-weight: 600;" data-lang="mdd-tooltip">Maximum peak-to-trough decline in capital.</div>
+                                            <div style="color: #94a3b8; font-size: 11px;">Measures worst-case scenario risk. Lower is better.</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Sortino Ratio -->
+                                    <div class="metric-card-tooltip" style="background: rgba(15, 23, 42, 0.5); border: 1px solid #334155; border-radius: 6px; padding: 18px; position: relative; cursor: help;">
+                                        <div style="color: #cbd5e1; font-size: 13px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                                            <span data-lang="sortino-ratio">Sortino Ratio</span>
+                                            <span class="tooltip-icon" style="color: #64748b; font-size: 12px;">ⓘ</span>
+                                        </div>
+                                        <div id="sortinoValue" style="color: #f8fafc; font-size: 26px; font-weight: 700; margin-bottom: 4px;">0.00</div>
+                                        <div id="sortinoLabel" style="color: #64748b; font-size: 12px;">Neutral</div>
+                                        <div class="tooltip-content" style="display: none; position: absolute; background: #1e293b; border: 1px solid #475569; border-radius: 6px; padding: 10px; width: 250px; z-index: 10; top: 100%; left: 0; margin-top: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                                            <div style="color: #e4e4e7; font-size: 12px; margin-bottom: 4px; font-weight: 600;" data-lang="sortino-tooltip">Risk-adjusted return considering only downside volatility.</div>
+                                            <div style="color: #94a3b8; font-size: 11px;">Higher is better (>2 is excellent).</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Kelly Criterion % -->
+                                    <div class="metric-card-tooltip" style="background: rgba(15, 23, 42, 0.5); border: 1px solid #334155; border-radius: 6px; padding: 18px; position: relative; cursor: help;">
+                                        <div style="color: #cbd5e1; font-size: 13px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                                            <span data-lang="kelly-percentage">Kelly Criterion %</span>
+                                            <span class="tooltip-icon" style="color: #64748b; font-size: 12px;">ⓘ</span>
+                                        </div>
+                                        <div id="kellyValue" style="color: #3b82f6; font-size: 26px; font-weight: 700; margin-bottom: 4px;">0%</div>
+                                        <div id="kellyRecommendation" style="color: #64748b; font-size: 12px;">Use 10-25% of Kelly</div>
+                                        <div class="tooltip-content" style="display: none; position: absolute; background: #1e293b; border: 1px solid #475569; border-radius: 6px; padding: 10px; width: 250px; z-index: 10; top: 100%; left: 0; margin-top: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                                            <div style="color: #e4e4e7; font-size: 12px; margin-bottom: 4px; font-weight: 600;" data-lang="kelly-tooltip">Optimal position size based on win rate and risk/reward ratio.</div>
+                                            <div style="color: #94a3b8; font-size: 11px;">Recommended: use 10-25% of Kelly.</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Sharpe Ratio -->
+                                    <div class="metric-card-tooltip" style="background: rgba(15, 23, 42, 0.5); border: 1px solid #334155; border-radius: 6px; padding: 18px; position: relative; cursor: help;">
+                                        <div style="color: #cbd5e1; font-size: 13px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                                            <span data-lang="sharpe-ratio">Sharpe Ratio</span>
+                                            <span class="tooltip-icon" style="color: #64748b; font-size: 12px;">ⓘ</span>
+                                        </div>
+                                        <div id="sharpeValue" style="color: #f8fafc; font-size: 26px; font-weight: 700; margin-bottom: 4px;">0.00</div>
+                                        <div id="sharpeLabel" style="color: #64748b; font-size: 12px;">Neutral</div>
+                                        <div class="tooltip-content" style="display: none; position: absolute; background: #1e293b; border: 1px solid #475569; border-radius: 6px; padding: 10px; width: 250px; z-index: 10; top: 100%; left: 0; margin-top: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+                                            <div style="color: #e4e4e7; font-size: 12px; margin-bottom: 4px; font-weight: 600;" data-lang="sharpe-tooltip">Risk-adjusted return metric.</div>
+                                            <div style="color: #94a3b8; font-size: 11px;">Formula: (Avg Return - Risk-Free Rate) / Std Dev. >1 good, >2 excellent.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ==================== TIER 3: BEHAVIORAL & PSYCHOLOGY ANALYSIS ==================== -->
+                            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 24px; margin-bottom: 24px;">
+                                <h2 style="color: #f8fafc; font-size: 18px; font-weight: 600; margin: 0 0 6px 0; letter-spacing: -0.01em;">🧠 Behavioral & Psychology Analysis</h2>
+                                <p style="color: #94a3b8; font-size: 13px; margin: 0 0 20px 0;">Understanding your trading psychology and patterns</p>
+
+                                <!-- Stress Heatmap -->
+                                <div style="margin-bottom: 24px;">
+                                    <div id="stressHeatmapContainer">
+                                        <div style="padding: 24px; text-align: center; color: #64748b; font-size: 13px;">
+                                            Loading stress analysis...
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Consecutive Trading Patterns -->
+                                <div style="margin-bottom: 20px;">
+                                    <h3 data-lang="consecutive-pattern" style="color: #f8fafc; font-size: 16px; font-weight: 600; margin: 0 0 16px 0; letter-spacing: -0.01em;">Consecutive trading patterns</h3>
+                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                                        <!-- Performance After Losses -->
+                                        <div style="background: rgba(15, 23, 42, 0.5); border: 1px solid #334155; border-radius: 6px; padding: 18px;">
+                                            <div data-lang="after-losses" style="color: #cbd5e1; font-size: 14px; margin-bottom: 14px; font-weight: 500;">After consecutive losses</div>
+                                            <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(51, 65, 85, 0.5);">
+                                                    <span data-lang="after-1-loss" style="color: #94a3b8; font-size: 13px;">1 loss</span>
+                                                    <span id="after1Loss" style="font-weight: 600; font-size: 14px; color: #ef4444;">--%</span>
+                                                </div>
+                                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(51, 65, 85, 0.5);">
+                                                    <span data-lang="after-2-losses" style="color: #94a3b8; font-size: 13px;">2 losses</span>
+                                                    <span id="after2Losses" style="font-weight: 600; font-size: 14px; color: #ef4444;">--%</span>
+                                                </div>
+                                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0;">
+                                                    <span data-lang="after-3-losses" style="color: #94a3b8; font-size: 13px;">3+ losses</span>
+                                                    <span id="after3Losses" style="font-weight: 600; font-size: 14px; color: #ef4444;">--%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Performance After Wins -->
+                                        <div style="background: rgba(15, 23, 42, 0.5); border: 1px solid #334155; border-radius: 6px; padding: 18px;">
+                                            <div data-lang="after-wins" style="color: #cbd5e1; font-size: 14px; margin-bottom: 14px; font-weight: 500;">After consecutive wins</div>
+                                            <div style="display: flex; flex-direction: column; gap: 10px;">
+                                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(51, 65, 85, 0.5);">
+                                                    <span data-lang="after-1-win" style="color: #94a3b8; font-size: 13px;">1 win</span>
+                                                    <span id="after1Win" style="font-weight: 600; font-size: 14px; color: #1ec426;">--%</span>
+                                                </div>
+                                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(51, 65, 85, 0.5);">
+                                                    <span data-lang="after-2-wins" style="color: #94a3b8; font-size: 13px;">2 wins</span>
+                                                    <span id="after2Wins" style="font-weight: 600; font-size: 14px; color: #1ec426;">--%</span>
+                                                </div>
+                                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0;">
+                                                    <span data-lang="after-3-wins" style="color: #94a3b8; font-size: 13px;">3+ wins</span>
+                                                    <span id="after3Wins" style="font-weight: 600; font-size: 14px; color: #1ec426;">--%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Behavioral Patterns -->
+                                <div>
+                                    <h3 data-lang="behavioral-patterns" style="color: #f8fafc; font-size: 16px; font-weight: 600; margin: 0 0 16px 0; letter-spacing: -0.01em;">Behavioral pattern recognition</h3>
+                                    <div id="behavioralPatterns">
+                                        <div style="background: rgba(15, 23, 42, 0.5); text-align: center; padding: 24px; border-radius: 6px; border: 1px solid #334155;">
+                                            <span data-lang="analyzing-patterns" style="color: #64748b; font-size: 13px;">Analyzing trading patterns...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ==================== TIER 4: CONTEXT & EXECUTION ANALYSIS ==================== -->
+                            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 24px; margin-bottom: 24px;">
+                                <h2 style="color: #f8fafc; font-size: 18px; font-weight: 600; margin: 0 0 6px 0; letter-spacing: -0.01em;">⏱️ Context & Execution Analysis</h2>
+                                <p style="color: #94a3b8; font-size: 13px; margin: 0 0 20px 0;">Market conditions, timing, and execution quality</p>
+
+                                <!-- Scatter Plots -->
+                                <div style="margin-bottom: 24px;">
+                                    <h3 style="color: #f8fafc; font-size: 16px; font-weight: 600; margin: 0 0 16px 0; letter-spacing: -0.01em;">📊 Correlation Analysis</h3>
+                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px;">
+                                        <!-- Position Size vs Return -->
+                                        <div style="background: rgba(15, 23, 42, 0.5); border: 1px solid #334155; border-radius: 6px; padding: 16px;">
+                                            <div style="color: #cbd5e1; font-size: 13px; margin-bottom: 12px; font-weight: 600;" data-lang="position-vs-return">Position Size vs Return</div>
+                                            <canvas id="positionReturnScatterChart" style="max-height: 250px;"></canvas>
+                                        </div>
+                                        <!-- Holding Time vs Return -->
+                                        <div style="background: rgba(15, 23, 42, 0.5); border: 1px solid #334155; border-radius: 6px; padding: 16px;">
+                                            <div style="color: #cbd5e1; font-size: 13px; margin-bottom: 12px; font-weight: 600;" data-lang="holding-vs-return">Holding Time vs Return</div>
+                                            <canvas id="holdingReturnScatterChart" style="max-height: 250px;"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Time-Based Performance Analysis -->
                             <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 24px; margin-bottom: 20px;">
                                 <h3 data-lang="time-based-performance" style="color: #f8fafc; font-size: 16px; font-weight: 600; margin: 0 0 20px 0; letter-spacing: -0.01em;">Time-based performance</h3>
                                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
