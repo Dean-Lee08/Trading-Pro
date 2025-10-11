@@ -2223,9 +2223,9 @@ function getInsightColor(type) {
 function analyzeSleepPerformance() {
     const dataPoints = [];
 
-    Object.values(psychologyData).forEach(dayData => {
+    Object.entries(principlesData).forEach(([date, dayData]) => {
         if (dayData.sleepHours) {
-            const dayTrades = trades.filter(trade => trade.date === dayData.date);
+            const dayTrades = trades.filter(trade => trade.date === date);
             if (dayTrades.length > 0) {
                 const dayPnL = dayTrades.reduce((sum, trade) => sum + trade.pnl, 0);
                 dataPoints.push({ sleep: dayData.sleepHours, performance: dayPnL });
@@ -2255,13 +2255,8 @@ function analyzeSleepPerformance() {
  * 과도거래 감지
  */
 function detectOvertrading() {
-    let currentPsychologyDate = formatTradingDate(new Date());
-    const todayData = psychologyData[currentPsychologyDate];
-
-    if (!todayData || !todayData.plannedTrades) return 0;
-
-    const actualTrades = trades.filter(trade => trade.date === currentPsychologyDate).length;
-    return ((actualTrades - todayData.plannedTrades) / todayData.plannedTrades) * 100;
+    // Psychology data no longer available - return 0
+    return 0;
 }
 
 /**
