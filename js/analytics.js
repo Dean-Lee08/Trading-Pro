@@ -4467,6 +4467,174 @@ function calculateVolatility(returns) {
 }
 
 /**
+ * Analyze Psychology-Performance Correlation
+ * Calculates Pearson correlation between psychology factors and trading performance
+ */
+function analyzePsychologyPerformanceCorrelation() {
+    const filteredTrades = getFilteredTradesForAnalytics();
+
+    // Filter trades that have psychology data
+    const tradesWithPsych = filteredTrades.filter(t => psychologyData[t.date]);
+
+    if (tradesWithPsych.length < 10) {
+        return {
+            success: false,
+            error: currentLanguage === 'ko' ?
+                '심리-성과 상관관계 분석을 위해 최소 10개의 심리 데이터가 필요합니다.' :
+                'Need at least 10 psychology entries for correlation analysis.'
+        };
+    }
+
+    // Calculate correlations for each psychology factor
+    const correlations = [];
+
+    // Sleep Hours vs P&L
+    const sleepCorr = calculatePsychologyCorrelation(tradesWithPsych, 'sleepHours', 'pnl');
+    if (sleepCorr !== null) {
+        correlations.push({
+            name: currentLanguage === 'ko' ? '수면 시간 ↔ 수익' : 'Sleep Hours ↔ P&L',
+            xLabel: currentLanguage === 'ko' ? '수면 시간' : 'Sleep Hours',
+            yLabel: currentLanguage === 'ko' ? '수익' : 'P&L',
+            correlation: sleepCorr,
+            interpretation: interpretCorrelation(sleepCorr)
+        });
+    }
+
+    // Confidence vs Win Rate
+    const confData = tradesWithPsych.map(t => ({
+        x: psychologyData[t.date].confidence || 3,
+        y: t.pnl > 0 ? 1 : 0
+    }));
+    const confCorr = pearsonCorrelation(confData);
+    if (confCorr !== null) {
+        correlations.push({
+            name: currentLanguage === 'ko' ? '자신감 ↔ 승률' : 'Confidence ↔ Win Rate',
+            xLabel: currentLanguage === 'ko' ? '자신감' : 'Confidence',
+            yLabel: currentLanguage === 'ko' ? '승률' : 'Win Rate',
+            correlation: confCorr,
+            interpretation: interpretCorrelation(confCorr)
+        });
+    }
+
+    // Stress vs P&L
+    const stressCorr = calculatePsychologyCorrelation(tradesWithPsych, 'stress', 'pnl');
+    if (stressCorr !== null) {
+        correlations.push({
+            name: currentLanguage === 'ko' ? '스트레스 ↔ 수익' : 'Stress ↔ P&L',
+            xLabel: currentLanguage === 'ko' ? '스트레스' : 'Stress',
+            yLabel: currentLanguage === 'ko' ? '수익' : 'P&L',
+            correlation: stressCorr * -1, // Inverse (high stress = bad)
+            interpretation: interpretCorrelation(stressCorr * -1)
+        });
+    }
+
+    // Focus vs Return %
+    const focusCorr = calculatePsychologyCorrelation(tradesWithPsych, 'focus', 'returnPct');
+    if (focusCorr !== null) {
+        correlations.push({
+            name: currentLanguage === 'ko' ? '집중력 ↔ 수익률' : 'Focus ↔ Return %',
+            xLabel: currentLanguage === 'ko' ? '집중력' : 'Focus',
+            yLabel: currentLanguage === 'ko' ? '수익률' : 'Return %',
+            correlation: focusCorr,
+            interpretation: interpretCorrelation(focusCorr)
+        });
+    }
+
+    // Energy Level vs P&L
+    const energyCorr = calculatePsychologyCorrelation(tradesWithPsych, 'energyLevel', 'pnl');
+    if (energyCorr !== null) {
+        correlations.push({
+            name: currentLanguage === 'ko' ? '에너지 레벨 ↔ 수익' : 'Energy Level ↔ P&L',
+            xLabel: currentLanguage === 'ko' ? '에너지' : 'Energy',
+            yLabel: currentLanguage === 'ko' ? '수익' : 'P&L',
+            correlation: energyCorr,
+            interpretation: interpretCorrelation(energyCorr)
+        });
+    }
+
+    // Sort by absolute correlation strength
+    correlations.sort((a, b) => Math.abs(b.correlation) - Math.abs(a.correlation));
+
+    return {
+        success: true,
+        correlations: correlations.slice(0, 5), // Top 5
+        sampleSize: tradesWithPsych.length
+    };
+}
+
+/**
+ * Calculate correlation between psychology factor and trade metric
+ */
+function calculatePsychologyCorrelation(tradesWithPsych, psychFactor, tradeMetric) {
+    const data = tradesWithPsych
+        .filter(t => psychologyData[t.date] && psychologyData[t.date][psychFactor] != null)
+        .map(t => ({
+            x: psychologyData[t.date][psychFactor],
+            y: t[tradeMetric]
+        }));
+
+    if (data.length < 5) return null;
+
+    return pearsonCorrelation(data);
+}
+
+/**
+ * Pearson Correlation Coefficient
+ */
+function pearsonCorrelation(data) {
+    if (data.length < 2) return null;
+
+    const n = data.length;
+    const sumX = data.reduce((sum, d) => sum + d.x, 0);
+    const sumY = data.reduce((sum, d) => sum + d.y, 0);
+    const sumXY = data.reduce((sum, d) => sum + d.x * d.y, 0);
+    const sumX2 = data.reduce((sum, d) => sum + d.x * d.x, 0);
+    const sumY2 = data.reduce((sum, d) => sum + d.y * d.y, 0);
+
+    const numerator = (n * sumXY) - (sumX * sumY);
+    const denominator = Math.sqrt(((n * sumX2) - (sumX * sumX)) * ((n * sumY2) - (sumY * sumY)));
+
+    if (denominator === 0) return null;
+
+    return numerator / denominator;
+}
+
+/**
+ * Interpret correlation coefficient
+ */
+function interpretCorrelation(corr) {
+    const abs = Math.abs(corr);
+    const direction = corr > 0 ? (currentLanguage === 'ko' ? '양의' : 'Positive') : (currentLanguage === 'ko' ? '음의' : 'Negative');
+
+    let strength, description, color;
+
+    if (abs >= 0.7) {
+        strength = currentLanguage === 'ko' ? '강함' : 'Strong';
+        description = currentLanguage === 'ko' ? '매우 강한 상관관계' : 'Very Strong';
+        color = '#10b981';
+    } else if (abs >= 0.5) {
+        strength = currentLanguage === 'ko' ? '보통' : 'Moderate';
+        description = currentLanguage === 'ko' ? '보통 상관관계' : 'Moderate';
+        color = '#3b82f6';
+    } else if (abs >= 0.3) {
+        strength = currentLanguage === 'ko' ? '약함' : 'Weak';
+        description = currentLanguage === 'ko' ? '약한 상관관계' : 'Weak';
+        color = '#f59e0b';
+    } else {
+        strength = currentLanguage === 'ko' ? '매우 약함' : 'Very Weak';
+        description = currentLanguage === 'ko' ? '상관관계 미약' : 'Very Weak';
+        color = '#64748b';
+    }
+
+    return {
+        direction,
+        strength,
+        description,
+        color
+    };
+}
+
+/**
  * Render Behavioral Patterns Detection with Psychology Correlation
  */
 function renderBehavioralPatterns() {
@@ -5383,40 +5551,152 @@ function analyzeTimingConsistency() {
 }
 
 /**
- * Render Market Intelligence
+ * Render Market Intelligence (Enhanced with market-data.js integration)
  */
-function renderMarketIntelligence() {
+async function renderMarketIntelligence() {
     const element = document.getElementById('marketIntelligence');
     if (!element) return;
 
-    const intelligence = analyzeMarketContext();
-
+    // Show loading state
     element.innerHTML = `
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
-                <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;">Current Volatility Regime</div>
-                <div style="color: ${intelligence.regime.color}; font-size: 18px; font-weight: 700; margin-bottom: 4px;">${intelligence.regime.name}</div>
-                <div style="color: #64748b; font-size: 11px;">Win Rate: ${intelligence.regime.winRate}%</div>
-            </div>
-
-            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
-                <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;">Best Performing Regime</div>
-                <div style="color: #10b981; font-size: 18px; font-weight: 700; margin-bottom: 4px;">${intelligence.bestRegime.name}</div>
-                <div style="color: #64748b; font-size: 11px;">Avg P/L: $${intelligence.bestRegime.avgPnL.toFixed(2)}</div>
-            </div>
-
-            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
-                <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;">Market Correlation</div>
-                <div style="color: ${intelligence.correlation.color}; font-size: 18px; font-weight: 700; margin-bottom: 4px;">${intelligence.correlation.strength}</div>
-                <div style="color: #64748b; font-size: 11px;">${intelligence.correlation.description}</div>
-            </div>
-
-            <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
-                <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;">Recommendation</div>
-                <div style="color: #e4e4e7; font-size: 13px; line-height: 1.5;">${intelligence.recommendation}</div>
-            </div>
+        <div style="text-align: center; padding: 30px; color: #94a3b8;">
+            <div style="margin-bottom: 10px;">📊</div>
+            <div>${currentLanguage === 'ko' ? '시장 데이터 분석 중...' : 'Analyzing market data...'}</div>
         </div>
     `;
+
+    const filteredTrades = getFilteredTradesForAnalytics();
+
+    if (filteredTrades.length < 5) {
+        element.innerHTML = `
+            <div style="background: rgba(15, 23, 42, 0.5); text-align: center; padding: 24px; border-radius: 8px; border: 1px solid #334155;">
+                <span style="color: #64748b; font-size: 13px;">
+                    ${currentLanguage === 'ko' ? '시장 분석을 위해 최소 5개의 거래가 필요합니다.' : 'Need at least 5 trades for market analysis.'}
+                </span>
+            </div>
+        `;
+        return;
+    }
+
+    try {
+        // Call advanced market analysis functions from market-data.js
+        const [sectorPerf, spyCorr, entryExit, volatilityPerf] = await Promise.all([
+            typeof analyzeSectorPerformance !== 'undefined' ? analyzeSectorPerformance(filteredTrades).catch(e => { console.warn('Sector analysis failed:', e); return null; }) : Promise.resolve(null),
+            typeof analyzeSPYCorrelation !== 'undefined' ? analyzeSPYCorrelation(filteredTrades).catch(e => { console.warn('SPY correlation failed:', e); return null; }) : Promise.resolve(null),
+            typeof analyzeEntryExitQuality !== 'undefined' ? analyzeEntryExitQuality(filteredTrades).catch(e => { console.warn('Entry/Exit analysis failed:', e); return null; }) : Promise.resolve(null),
+            typeof analyzeVolatilityPerformance !== 'undefined' ? analyzeVolatilityPerformance(filteredTrades).catch(e => { console.warn('Volatility analysis failed:', e); return null; }) : Promise.resolve(null)
+        ]);
+
+        console.log('Market Intelligence Data:', { sectorPerf, spyCorr, entryExit, volatilityPerf });
+
+        // Build HTML
+        let html = '<div style="display: grid; gap: 16px;">';
+
+        // Sector Performance
+        if (sectorPerf && Object.keys(sectorPerf).length > 0) {
+            const topSector = Object.entries(sectorPerf)[0];
+            html += `
+                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
+                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;">${currentLanguage === 'ko' ? '최고 수익 섹터' : 'Top Performing Sector'}</div>
+                    <div style="color: #10b981; font-size: 18px; font-weight: 700; margin-bottom: 4px;">${topSector[0]}</div>
+                    <div style="color: #64748b; font-size: 11px;">
+                        ${currentLanguage === 'ko' ? '승률' : 'Win Rate'}: ${topSector[1].winRate.toFixed(1)}% |
+                        ${currentLanguage === 'ko' ? '평균 수익' : 'Avg P&L'}: $${topSector[1].avgPnl.toFixed(2)}
+                    </div>
+                    <div style="color: #64748b; font-size: 11px; margin-top: 4px;">
+                        ${topSector[1].count} ${currentLanguage === 'ko' ? '거래' : 'trades'} |
+                        ${currentLanguage === 'ko' ? '총 수익' : 'Total'}: $${topSector[1].totalPnl.toFixed(2)}
+                    </div>
+                </div>
+            `;
+        }
+
+        // SPY Correlation
+        if (spyCorr) {
+            const upDayPerf = spyCorr.upDays.winRate > spyCorr.downDays.winRate ? spyCorr.upDays : spyCorr.downDays;
+            const upDayBetter = spyCorr.upDays.winRate > spyCorr.downDays.winRate;
+            html += `
+                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
+                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;">${currentLanguage === 'ko' ? 'SPY 상관관계' : 'SPY Correlation'}</div>
+                    <div style="color: ${upDayBetter ? '#10b981' : '#ef4444'}; font-size: 18px; font-weight: 700; margin-bottom: 4px;">
+                        ${upDayBetter ? (currentLanguage === 'ko' ? 'SPY 상승일에 강함' : 'Strong on UP days') : (currentLanguage === 'ko' ? 'SPY 하락일에 강함' : 'Strong on DOWN days')}
+                    </div>
+                    <div style="color: #64748b; font-size: 11px;">
+                        ${currentLanguage === 'ko' ? '상승일' : 'Up days'}: ${spyCorr.upDays.winRate.toFixed(1)}% (${spyCorr.upDays.count}) |
+                        ${currentLanguage === 'ko' ? '하락일' : 'Down days'}: ${spyCorr.downDays.winRate.toFixed(1)}% (${spyCorr.downDays.count})
+                    </div>
+                </div>
+            `;
+        }
+
+        // Entry/Exit Quality
+        if (entryExit) {
+            html += `
+                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
+                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;">${currentLanguage === 'ko' ? '진입/청산 품질' : 'Entry/Exit Quality'}</div>
+                    <div style="color: #3b82f6; font-size: 18px; font-weight: 700; margin-bottom: 4px;">
+                        ${currentLanguage === 'ko' ? '타이밍 점수' : 'Timing Score'}: ${entryExit.timingScore}/10
+                    </div>
+                    <div style="color: #64748b; font-size: 11px;">
+                        ${currentLanguage === 'ko' ? '평균 진입' : 'Avg Entry'}: ${entryExit.avgEntryPosition}% |
+                        ${currentLanguage === 'ko' ? '평균 청산' : 'Avg Exit'}: ${entryExit.avgExitPosition}%
+                    </div>
+                    <div style="color: #64748b; font-size: 11px; margin-top: 4px;">
+                        ${currentLanguage === 'ko' ? '조기 진입률' : 'Early Entry'}: ${entryExit.earlyEntryRate}% |
+                        ${currentLanguage === 'ko' ? '고가 청산률' : 'Profit Taking'}: ${entryExit.profitTakingRate}%
+                    </div>
+                </div>
+            `;
+        }
+
+        // Volatility Performance
+        if (volatilityPerf) {
+            const bestVol = volatilityPerf.highVolatilityWinRate > volatilityPerf.mediumVolatilityWinRate && volatilityPerf.highVolatilityWinRate > volatilityPerf.lowVolatilityWinRate ? 'High' :
+                           volatilityPerf.lowVolatilityWinRate > volatilityPerf.mediumVolatilityWinRate ? 'Low' : 'Medium';
+            html += `
+                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
+                    <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;">${currentLanguage === 'ko' ? '최적 변동성' : 'Optimal Volatility'}</div>
+                    <div style="color: #f59e0b; font-size: 18px; font-weight: 700; margin-bottom: 4px;">
+                        ${bestVol} ${currentLanguage === 'ko' ? '변동성' : 'Volatility'}
+                    </div>
+                    <div style="color: #64748b; font-size: 11px;">
+                        ${currentLanguage === 'ko' ? '고변동성' : 'High'}: ${volatilityPerf.highVolatilityWinRate.toFixed(1)}% (${volatilityPerf.highVolatilityCount}) |
+                        ${currentLanguage === 'ko' ? '저변동성' : 'Low'}: ${volatilityPerf.lowVolatilityWinRate.toFixed(1)}% (${volatilityPerf.lowVolatilityCount})
+                    </div>
+                </div>
+            `;
+        }
+
+        // Fallback if no data
+        if (!sectorPerf && !spyCorr && !entryExit && !volatilityPerf) {
+            html = `
+                <div style="background: rgba(15, 23, 42, 0.5); text-align: center; padding: 24px; border-radius: 8px; border: 1px solid #334155;">
+                    <div style="color: #94a3b8; font-size: 13px; margin-bottom: 8px;">
+                        ${currentLanguage === 'ko' ? '시장 데이터를 분석하는 중 오류가 발생했습니다.' : 'Error analyzing market data.'}
+                    </div>
+                    <div style="color: #64748b; font-size: 12px;">
+                        ${currentLanguage === 'ko' ? 'API 제한이나 네트워크 문제일 수 있습니다.' : 'This may be due to API limits or network issues.'}
+                    </div>
+                </div>
+            `;
+        }
+
+        html += '</div>';
+        element.innerHTML = html;
+
+    } catch (error) {
+        console.error('Market Intelligence rendering error:', error);
+        element.innerHTML = `
+            <div style="background: rgba(239, 68, 68, 0.1); text-align: center; padding: 24px; border-radius: 8px; border: 1px solid #ef4444;">
+                <div style="color: #ef4444; font-size: 13px;">
+                    ${currentLanguage === 'ko' ? '시장 분석 중 오류 발생' : 'Error in market analysis'}
+                </div>
+                <div style="color: #64748b; font-size: 11px; margin-top: 4px;">
+                    ${error.message}
+                </div>
+            </div>
+        `;
+    }
 }
 
 /**
