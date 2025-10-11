@@ -3951,7 +3951,9 @@ function renderTemporalPatterns() {
         return;
     }
 
-    if (trades.length < 10) {
+    const filteredTrades = getFilteredTradesForAnalytics();
+
+    if (filteredTrades.length < 10) {
         element.innerHTML = `
             <div style="background: rgba(15, 23, 42, 0.5); text-align: center; padding: 30px; border-radius: 10px; border: 1px solid rgba(100, 116, 139, 0.2);">
                 <div style="color: #64748b; font-size: 14px;">
@@ -3964,7 +3966,7 @@ function renderTemporalPatterns() {
 
     // Analyze hourly patterns
     const hourlyStats = {};
-    trades.forEach(t => {
+    filteredTrades.forEach(t => {
         if (t.entryTime) {
             const hour = parseInt(t.entryTime.split(':')[0]);
             if (!hourlyStats[hour]) {
@@ -3988,7 +3990,7 @@ function renderTemporalPatterns() {
 
     // Analyze day-of-week patterns
     const dayStats = {};
-    trades.forEach(t => {
+    filteredTrades.forEach(t => {
         const date = new Date(t.date + 'T12:00:00');
         const day = date.getDay(); // 0 = Sunday, 6 = Saturday
         if (!dayStats[day]) {
