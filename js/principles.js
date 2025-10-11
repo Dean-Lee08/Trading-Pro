@@ -600,3 +600,55 @@ function checkTradeAgainstPrinciples(trade) {
     // Re-check all warnings for the date
     checkAndUpdateWarnings(trade.date);
 }
+
+// ============================================
+// Data Migration from Psychology to Principles
+// ============================================
+
+/**
+ * Migrate sleep hours data from psychologyData to principlesData
+ * This function should be called once when the app loads
+ */
+function migratePsychologyDataToPrinciples() {
+    try {
+        // Load psychology data from localStorage
+        const psychologyDataStr = localStorage.getItem('tradingPlatformPsychologyData');
+        if (!psychologyDataStr) {
+            console.log('No psychology data to migrate');
+            return;
+        }
+
+        const psychologyData = JSON.parse(psychologyDataStr);
+        let migratedCount = 0;
+
+        // Iterate through each date in psychology data
+        for (const date in psychologyData) {
+            const psyData = psychologyData[date];
+
+            // Check if there's sleep hours data to migrate
+            if (psyData && psyData.sleepHours && psyData.sleepHours > 0) {
+                // Get existing principles data for this date or create new
+                if (!principlesData[date]) {
+                    principlesData[date] = {};
+                }
+
+                // Only migrate if principles doesn't already have sleep hours
+                if (!principlesData[date].sleepHours || principlesData[date].sleepHours === 0) {
+                    principlesData[date].sleepHours = psyData.sleepHours;
+                    migratedCount++;
+                }
+            }
+        }
+
+        // Save migrated data
+        if (migratedCount > 0) {
+            savePrinciplesDataToStorage();
+            console.log(`Migrated sleep hours data for ${migratedCount} dates from psychology to principles`);
+        } else {
+            console.log('No new sleep hours data to migrate');
+        }
+
+    } catch (error) {
+        console.error('Error migrating psychology data to principles:', error);
+    }
+}
