@@ -3836,7 +3836,9 @@ function renderCorrelationMatrix() {
     const element = document.getElementById('correlationMatrixContent');
     if (!element) return;
 
-    if (trades.length < 20) {
+    const filteredTrades = getFilteredTradesForAnalytics();
+
+    if (filteredTrades.length < 20) {
         element.innerHTML = `
             <div style="background: rgba(15, 23, 42, 0.5); text-align: center; padding: 30px; border-radius: 10px; border: 1px solid rgba(100, 116, 139, 0.2);">
                 <div style="color: #64748b; font-size: 14px;">
@@ -3848,8 +3850,8 @@ function renderCorrelationMatrix() {
     }
 
     // Calculate correlations between different metrics
-    const winTrades = trades.filter(t => t.pnl > 0);
-    const lossTrades = trades.filter(t => t.pnl < 0);
+    const winTrades = filteredTrades.filter(t => t.pnl > 0);
+    const lossTrades = filteredTrades.filter(t => t.pnl < 0);
 
     const avgWinAmount = winTrades.length > 0 ? winTrades.reduce((sum, t) => sum + t.amount, 0) / winTrades.length : 0;
     const avgLossAmount = lossTrades.length > 0 ? lossTrades.reduce((sum, t) => sum + t.amount, 0) / lossTrades.length : 0;
