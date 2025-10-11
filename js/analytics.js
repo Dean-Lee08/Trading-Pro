@@ -4685,6 +4685,280 @@ function renderStressHeatmap() {
     container.innerHTML = html;
 }
 
+// ==================== NEW: Scatter Plot Visualizations ====================
+
+/**
+ * 포지션 크기 vs 수익률 산점도 렌더링
+ * 승리/손실 거래를 다른 색상으로 표시하고 추세선 추가
+ */
+function renderPositionVsReturnScatter() {
+    const canvasId = 'positionReturnScatterChart';
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+
+    // 기존 차트 파괴
+    if (window[canvasId + 'Instance']) {
+        window[canvasId + 'Instance'].destroy();
+    }
+
+    if (trades.length === 0) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#64748b';
+        ctx.font = '14px Inter';
+        ctx.textAlign = 'center';
+        ctx.fillText(currentLanguage === 'ko' ? '데이터 없음' : 'No data', canvas.width / 2, canvas.height / 2);
+        return;
+    }
+
+    // 데이터 준비
+    const winners = trades.filter(t => t.pnl > 0);
+    const losers = trades.filter(t => t.pnl <= 0);
+
+    const winnerData = winners.map(t => ({ x: t.amount, y: t.returnPct }));
+    const loserData = losers.map(t => ({ x: t.amount, y: t.returnPct }));
+
+    // 추세선 계산 (선형 회귀)
+    const allData = trades.map(t => ({ x: t.amount, y: t.returnPct }));
+    const regression = calculateLinearRegression(allData);
+
+    const minX = Math.min(...allData.map(d => d.x));
+    const maxX = Math.max(...allData.map(d => d.x));
+    const regressionLine = [
+        { x: minX, y: regression.slope * minX + regression.intercept },
+        { x: maxX, y: regression.slope * maxX + regression.intercept }
+    ];
+
+    // Chart.js 산점도 생성
+    window[canvasId + 'Instance'] = new Chart(ctx, {
+        type: 'scatter',
+        data: {
+            datasets: [
+                {
+                    label: currentLanguage === 'ko' ? '수익 거래' : 'Winners',
+                    data: winnerData,
+                    backgroundColor: 'rgba(16, 185, 129, 0.6)',
+                    borderColor: '#10b981',
+                    borderWidth: 1,
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                },
+                {
+                    label: currentLanguage === 'ko' ? '손실 거래' : 'Losers',
+                    data: loserData,
+                    backgroundColor: 'rgba(239, 68, 68, 0.6)',
+                    borderColor: '#ef4444',
+                    borderWidth: 1,
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                },
+                {
+                    label: currentLanguage === 'ko' ? '추세선' : 'Trend Line',
+                    data: regressionLine,
+                    type: 'line',
+                    borderColor: '#3b82f6',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    fill: false,
+                    pointRadius: 0
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    labels: { color: '#94a3b8', font: { size: 11 } }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.dataset.label}: $${context.parsed.x.toFixed(0)} → ${context.parsed.y.toFixed(2)}%`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: currentLanguage === 'ko' ? '포지션 크기 ($)' : 'Position Size ($)',
+                        color: '#94a3b8'
+                    },
+                    ticks: { color: '#64748b' },
+                    grid: { color: 'rgba(148, 163, 184, 0.1)' }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: currentLanguage === 'ko' ? '수익률 (%)' : 'Return (%)',
+                        color: '#94a3b8'
+                    },
+                    ticks: { color: '#64748b' },
+                    grid: { color: 'rgba(148, 163, 184, 0.1)' }
+                }
+            }
+        }
+    });
+}
+
+/**
+ * 보유 시간 vs 수익률 산점도 렌더링
+ */
+function renderHoldingVsReturnScatter() {
+    const canvasId = 'holdingReturnScatterChart';
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+
+    // 기존 차트 파괴
+    if (window[canvasId + 'Instance']) {
+        window[canvasId + 'Instance'].destroy();
+    }
+
+    const tradesWithTime = trades.filter(t => t.holdingMinutes && t.holdingMinutes > 0);
+
+    if (tradesWithTime.length === 0) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#64748b';
+        ctx.font = '14px Inter';
+        ctx.textAlign = 'center';
+        ctx.fillText(currentLanguage === 'ko' ? '데이터 없음' : 'No data', canvas.width / 2, canvas.height / 2);
+        return;
+    }
+
+    // 데이터 준비
+    const winners = tradesWithTime.filter(t => t.pnl > 0);
+    const losers = tradesWithTime.filter(t => t.pnl <= 0);
+
+    const winnerData = winners.map(t => ({ x: t.holdingMinutes, y: t.returnPct }));
+    const loserData = losers.map(t => ({ x: t.holdingMinutes, y: t.returnPct }));
+
+    // 추세선 계산
+    const allData = tradesWithTime.map(t => ({ x: t.holdingMinutes, y: t.returnPct }));
+    const regression = calculateLinearRegression(allData);
+
+    const minX = Math.min(...allData.map(d => d.x));
+    const maxX = Math.max(...allData.map(d => d.x));
+    const regressionLine = [
+        { x: minX, y: regression.slope * minX + regression.intercept },
+        { x: maxX, y: regression.slope * maxX + regression.intercept }
+    ];
+
+    // Chart.js 산점도 생성
+    window[canvasId + 'Instance'] = new Chart(ctx, {
+        type: 'scatter',
+        data: {
+            datasets: [
+                {
+                    label: currentLanguage === 'ko' ? '수익 거래' : 'Winners',
+                    data: winnerData,
+                    backgroundColor: 'rgba(16, 185, 129, 0.6)',
+                    borderColor: '#10b981',
+                    borderWidth: 1,
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                },
+                {
+                    label: currentLanguage === 'ko' ? '손실 거래' : 'Losers',
+                    data: loserData,
+                    backgroundColor: 'rgba(239, 68, 68, 0.6)',
+                    borderColor: '#ef4444',
+                    borderWidth: 1,
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                },
+                {
+                    label: currentLanguage === 'ko' ? '추세선' : 'Trend Line',
+                    data: regressionLine,
+                    type: 'line',
+                    borderColor: '#3b82f6',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    fill: false,
+                    pointRadius: 0
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    labels: { color: '#94a3b8', font: { size: 11 } }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const minutes = Math.floor(context.parsed.x);
+                            const hours = Math.floor(minutes / 60);
+                            const mins = minutes % 60;
+                            return `${context.dataset.label}: ${hours}h ${mins}m → ${context.parsed.y.toFixed(2)}%`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: currentLanguage === 'ko' ? '보유 시간 (분)' : 'Holding Time (minutes)',
+                        color: '#94a3b8'
+                    },
+                    ticks: { color: '#64748b' },
+                    grid: { color: 'rgba(148, 163, 184, 0.1)' }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: currentLanguage === 'ko' ? '수익률 (%)' : 'Return (%)',
+                        color: '#94a3b8'
+                    },
+                    ticks: { color: '#64748b' },
+                    grid: { color: 'rgba(148, 163, 184, 0.1)' }
+                }
+            }
+        }
+    });
+}
+
+/**
+ * 선형 회귀 계산 (최소제곱법)
+ * @param {Array} data - [{x, y}, ...] 형태의 데이터
+ * @returns {Object} - { slope, intercept, r2 }
+ */
+function calculateLinearRegression(data) {
+    if (!data || data.length === 0) {
+        return { slope: 0, intercept: 0, r2: 0 };
+    }
+
+    const n = data.length;
+    const sumX = data.reduce((sum, point) => sum + point.x, 0);
+    const sumY = data.reduce((sum, point) => sum + point.y, 0);
+    const sumXY = data.reduce((sum, point) => sum + point.x * point.y, 0);
+    const sumX2 = data.reduce((sum, point) => sum + point.x * point.x, 0);
+    const sumY2 = data.reduce((sum, point) => sum + point.y * point.y, 0);
+
+    const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+    const intercept = (sumY - slope * sumX) / n;
+
+    // R² 계산
+    const yMean = sumY / n;
+    const ssTotal = data.reduce((sum, point) => sum + Math.pow(point.y - yMean, 2), 0);
+    const ssResidual = data.reduce((sum, point) => {
+        const yPred = slope * point.x + intercept;
+        return sum + Math.pow(point.y - yPred, 2);
+    }, 0);
+    const r2 = 1 - (ssResidual / ssTotal);
+
+    return { slope, intercept, r2 };
+}
+
 /**
  * Detect advanced behavioral patterns
  */
