@@ -4973,6 +4973,107 @@ function calculateLinearRegression(data) {
 }
 
 /**
+ * 클러스터 2D 맵 렌더링 (Bubble Chart)
+ * X축: 평균 보유 시간, Y축: 평균 P&L, 크기: 거래 수
+ */
+function renderCluster2DMap(clusters) {
+    const canvasId = 'cluster2DMapChart';
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+
+    // 기존 차트 파괴
+    if (window[canvasId + 'Instance']) {
+        window[canvasId + 'Instance'].destroy();
+    }
+
+    if (!clusters || clusters.length === 0) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#64748b';
+        ctx.font = '14px Inter';
+        ctx.textAlign = 'center';
+        ctx.fillText(currentLanguage === 'ko' ? '데이터 없음' : 'No data', canvas.width / 2, canvas.height / 2);
+        return;
+    }
+
+    // 클러스터 색상 배열
+    const clusterColors = [
+        { bg: 'rgba(16, 185, 129, 0.6)', border: '#10b981' },  // 녹색 - 최고 성과
+        { bg: 'rgba(59, 130, 246, 0.6)', border: '#3b82f6' },  // 파랑 - 중간
+        { bg: 'rgba(239, 68, 68, 0.6)', border: '#ef4444' }    // 빨강 - 최악 성과
+    ];
+
+    // 데이터셋 준비
+    const datasets = clusters.map((cluster, index) => {
+        const color = clusterColors[Math.min(index, clusterColors.length - 1)];
+        return {
+            label: `${currentLanguage === 'ko' ? '클러스터' : 'Cluster'} ${index + 1}`,
+            data: [{
+                x: cluster.avgHoldingTime,
+                y: cluster.avgPnl,
+                r: Math.sqrt(cluster.count) * 3  // 반지름은 거래 수에 비례
+            }],
+            backgroundColor: color.bg,
+            borderColor: color.border,
+            borderWidth: 2
+        };
+    });
+
+    // Chart.js Bubble Chart 생성
+    window[canvasId + 'Instance'] = new Chart(ctx, {
+        type: 'bubble',
+        data: { datasets },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    labels: { color: '#94a3b8', font: { size: 11 } }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const cluster = clusters[context.datasetIndex];
+                            const hours = Math.floor(cluster.avgHoldingTime / 60);
+                            const mins = Math.floor(cluster.avgHoldingTime % 60);
+                            return [
+                                `${context.dataset.label}`,
+                                `${currentLanguage === 'ko' ? '거래 수' : 'Trades'}: ${cluster.count}`,
+                                `${currentLanguage === 'ko' ? '보유 시간' : 'Hold time'}: ${hours}h ${mins}m`,
+                                `P&L: $${cluster.avgPnl.toFixed(2)}`,
+                                `${currentLanguage === 'ko' ? '승률' : 'Win rate'}: ${cluster.winRate.toFixed(0)}%`
+                            ];
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: currentLanguage === 'ko' ? '평균 보유 시간 (분)' : 'Avg Holding Time (minutes)',
+                        color: '#94a3b8'
+                    },
+                    ticks: { color: '#64748b' },
+                    grid: { color: 'rgba(148, 163, 184, 0.1)' }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: currentLanguage === 'ko' ? '평균 P&L ($)' : 'Avg P&L ($)',
+                        color: '#94a3b8'
+                    },
+                    ticks: { color: '#64748b' },
+                    grid: { color: 'rgba(148, 163, 184, 0.1)' }
+                }
+            }
+        }
+    });
+}
+
+/**
  * Detect advanced behavioral patterns
  */
 function detectAdvancedBehavioralPatterns() {
