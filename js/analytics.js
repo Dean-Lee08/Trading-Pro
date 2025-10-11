@@ -4812,7 +4812,9 @@ function renderPositionVsReturnScatter() {
         window[canvasId + 'Instance'].destroy();
     }
 
-    if (trades.length === 0) {
+    const filteredTrades = getFilteredTradesForAnalytics();
+
+    if (filteredTrades.length === 0) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = '#64748b';
         ctx.font = '14px Inter';
@@ -4822,14 +4824,14 @@ function renderPositionVsReturnScatter() {
     }
 
     // 데이터 준비
-    const winners = trades.filter(t => t.pnl > 0);
-    const losers = trades.filter(t => t.pnl <= 0);
+    const winners = filteredTrades.filter(t => t.pnl > 0);
+    const losers = filteredTrades.filter(t => t.pnl <= 0);
 
     const winnerData = winners.map(t => ({ x: t.amount, y: t.returnPct }));
     const loserData = losers.map(t => ({ x: t.amount, y: t.returnPct }));
 
     // 추세선 계산 (선형 회귀)
-    const allData = trades.map(t => ({ x: t.amount, y: t.returnPct }));
+    const allData = filteredTrades.map(t => ({ x: t.amount, y: t.returnPct }));
     const regression = calculateLinearRegression(allData);
 
     const minX = Math.min(...allData.map(d => d.x));
