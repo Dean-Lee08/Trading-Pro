@@ -774,8 +774,23 @@ const translations = {
 
         // NEW: Core Metrics Section
         'core-metrics': 'Core Performance & Risk Metrics',
+        'core-metrics-subtitle': 'Key statistical indicators with tooltips',
         'statistical-edge-metrics': 'Statistical Edge Analysis',
-        'risk-adjusted-metrics': 'Risk-Adjusted Metrics'
+        'risk-adjusted-metrics': 'Risk-Adjusted Metrics',
+        'mdd-of-capital': 'of capital',
+        'sortino-label-poor': 'Poor',
+        'sortino-label-neutral': 'Neutral',
+        'sortino-label-good': 'Good',
+        'sortino-label-excellent': 'Excellent',
+        'kelly-recommendation': 'Use 10-25% of Kelly',
+        'top-3-subtitle': 'Priority-ranked recommendations based on your data',
+        'insights-collecting': 'Collecting data to generate personalized insights. Keep trading to unlock recommendations.',
+        'mdd-tooltip-secondary': 'Measures worst-case scenario risk. Lower is better.',
+        'sortino-tooltip-secondary': 'Higher is better (>2 is excellent).',
+        'kelly-tooltip-secondary': 'Recommended: use 10-25% of Kelly.',
+        'sharpe-tooltip-secondary': 'Formula: (Avg Return - Risk-Free Rate) / Std Dev. >1 good, >2 excellent.',
+        'performance-analytics': 'Performance Analytics',
+        'analytics-subtitle': 'Comprehensive trading pattern analysis and insights'
     },
     ko: {
         'dashboard': '대시보드',
@@ -1472,8 +1487,23 @@ const translations = {
 
         // NEW: 핵심 지표 섹션
         'core-metrics': '핵심 성과 및 위험 지표',
+        'core-metrics-subtitle': '툴팁이 포함된 주요 통계 지표',
         'statistical-edge-metrics': '통계적 우위 분석',
-        'risk-adjusted-metrics': '위험 조정 지표'
+        'risk-adjusted-metrics': '위험 조정 지표',
+        'mdd-of-capital': '자본 대비',
+        'sortino-label-poor': '낮음',
+        'sortino-label-neutral': '보통',
+        'sortino-label-good': '양호',
+        'sortino-label-excellent': '우수',
+        'kelly-recommendation': '켈리의 10-25% 사용',
+        'top-3-subtitle': '데이터 기반 우선순위별 권장사항',
+        'insights-collecting': '맞춤 인사이트를 생성하기 위해 데이터를 수집 중입니다. 계속 거래하여 권장사항을 잠금 해제하세요.',
+        'mdd-tooltip-secondary': '최악의 시나리오 위험을 측정합니다. 낮을수록 좋습니다.',
+        'sortino-tooltip-secondary': '높을수록 좋습니다 (>2는 우수).',
+        'kelly-tooltip-secondary': '권장: 켈리의 10-25% 사용',
+        'sharpe-tooltip-secondary': '공식: (평균 수익률 - 무위험 수익률) / 표준편차. >1 양호, >2 우수',
+        'performance-analytics': '성과 분석',
+        'analytics-subtitle': '포괄적인 거래 패턴 분석 및 인사이트'
     }
 };
 
