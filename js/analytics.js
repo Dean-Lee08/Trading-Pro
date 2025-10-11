@@ -5541,17 +5541,30 @@ function renderStatisticalEdge() {
  * Calculate statistical edge with significance testing
  */
 function calculateStatisticalEdge() {
-    const n = trades.length;
-    const wins = trades.filter(t => t.pnl > 0).length;
+    const filteredTrades = getFilteredTradesForAnalytics();
+    const n = filteredTrades.length;
+
+    if (n === 0) {
+        return {
+            winRate: 0,
+            expectedValue: 0,
+            sharpe: 0,
+            pValue: 1,
+            confidenceLow: 0,
+            confidenceHigh: 0
+        };
+    }
+
+    const wins = filteredTrades.filter(t => t.pnl > 0).length;
     const winRate = (wins / n) * 100;
 
     // Expected value per trade
-    const avgWin = trades.filter(t => t.pnl > 0).reduce((sum, t) => sum + t.pnl, 0) / Math.max(wins, 1);
-    const avgLoss = Math.abs(trades.filter(t => t.pnl < 0).reduce((sum, t) => sum + t.pnl, 0) / Math.max(n - wins, 1));
+    const avgWin = filteredTrades.filter(t => t.pnl > 0).reduce((sum, t) => sum + t.pnl, 0) / Math.max(wins, 1);
+    const avgLoss = Math.abs(filteredTrades.filter(t => t.pnl < 0).reduce((sum, t) => sum + t.pnl, 0) / Math.max(n - wins, 1));
     const expectedValue = (winRate / 100) * avgWin - ((100 - winRate) / 100) * avgLoss;
 
     // Sharpe Ratio
-    const returns = trades.map(t => t.pnl);
+    const returns = filteredTrades.map(t => t.pnl);
     const avgReturn = returns.reduce((a, b) => a + b, 0) / n;
     const stdDev = Math.sqrt(returns.reduce((sum, r) => sum + Math.pow(r - avgReturn, 2), 0) / n);
     const sharpe = stdDev === 0 ? 0 : avgReturn / stdDev;
