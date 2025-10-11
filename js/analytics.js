@@ -3001,18 +3001,6 @@ async function refreshMarketQuotes() {
 
 // Market data analysis functions removed - API integration disabled
 
-// ==================== Advanced Algorithmic Analysis Functions ====================
-
-/**
- * Calculate correlation matrix between psychology factors and performance
- * Note: renderCorrelationMatrix() is defined in new-ai-renders.js
- */
-function calculateCorrelationMatrix() {
-    if (filteredTrades.length === 0) {
-        resetMarketDataCards();
-        return;
-    }
-
     // Check if API key is available
     if (!alphaVantageApiKey || alphaVantageApiKey === '') {
         console.warn('Alpha Vantage API key not set. Skipping market data analysis.');
