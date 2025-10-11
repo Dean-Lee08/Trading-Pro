@@ -4931,7 +4931,8 @@ function renderHoldingVsReturnScatter() {
         window[canvasId + 'Instance'].destroy();
     }
 
-    const tradesWithTime = trades.filter(t => t.holdingMinutes && t.holdingMinutes > 0);
+    const filteredTrades = getFilteredTradesForAnalytics();
+    const tradesWithTime = filteredTrades.filter(t => t.holdingMinutes && t.holdingMinutes > 0);
 
     if (tradesWithTime.length === 0) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
