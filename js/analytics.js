@@ -1710,48 +1710,32 @@ async function updateAdvancedCharts() {
  * 알고리즘 분석 업데이트 (Palantir-style comprehensive analysis)
  */
 function updateAlgorithmicAnalysis() {
-    console.log('🔍 updateAlgorithmicAnalysis() called');
-    console.log('📊 Total trades:', trades.length);
-    console.log('🧠 Psychology data entries:', Object.keys(psychologyData).length);
-
     // Original pattern insights (preserved)
     analyzeTimeBasedPerformance();
     analyzeConsecutiveTradesPattern();
     generateAIInsights();
 
-    // NEW: Phase 1 - Core AI Analysis Modules
-    console.log('🔗 Rendering correlation matrix...');
+    // Phase 1 - Core AI Analysis Modules
     renderCorrelationMatrix();
-    console.log('⏰ Rendering temporal patterns...');
     renderTemporalPatterns();
-    console.log('📊 Rendering cluster analysis...');
     renderClusterAnalysis();
 
     // Phase 2: Advanced algorithmic analysis modules
-    console.log('🎭 Rendering behavioral patterns...');
     renderBehavioralPatterns();
-    console.log('🌐 Rendering market intelligence...');
     renderMarketIntelligence();
-    console.log('📉 Rendering statistical edge...');
     renderStatisticalEdge();
-    console.log('💡 Rendering adaptive recommendations...');
     renderAdaptiveRecommendations();
 
-    // NEW: Phase 3 - Enhanced Visualizations
-    console.log('📈 Rendering scatter plots...');
+    // Phase 3 - Enhanced Visualizations
     setTimeout(() => {
         renderPositionVsReturnScatter();
         renderHoldingVsReturnScatter();
     }, 200);
 
-    console.log('🔥 Rendering stress heatmap...');
     setTimeout(() => renderStressHeatmap(), 300);
 
-    // NEW: Phase 4 - Update Core Risk Metrics
-    console.log('📊 Updating core risk metrics...');
+    // Phase 4 - Update Core Risk Metrics
     setTimeout(() => updateCoreRiskMetrics(), 400);
-
-    console.log('✅ updateAlgorithmicAnalysis() completed');
 }
 
 /**
@@ -1815,9 +1799,11 @@ function updatePatternInsights() {
  * 시간 기반 성과 분석
  */
 function analyzeTimeBasedPerformance() {
+    // 필터링된 거래 데이터 사용
+    const filteredTrades = getFilteredTradesForAnalytics();
     const hourlyPerformance = {};
 
-    trades.forEach(trade => {
+    filteredTrades.forEach(trade => {
         if (trade.entryTime) {
             const hour = parseInt(trade.entryTime.split(':')[0]);
             if (!hourlyPerformance[hour]) {
@@ -1847,16 +1833,26 @@ function analyzeTimeBasedPerformance() {
         }
     });
 
+    // 최고 시간대 업데이트
+    const bestTradingHourEl = document.getElementById('bestTradingHour');
+    const bestWinRateEl = document.getElementById('bestHourWinRate');
     if (bestHour) {
-        document.getElementById('bestTradingHour').textContent = `${bestHour}:00`;
-        const bestWinRateEl = document.getElementById('bestHourWinRate');
+        if (bestTradingHourEl) bestTradingHourEl.textContent = `${bestHour}:00`;
         if (bestWinRateEl) bestWinRateEl.textContent = `${bestWinRate.toFixed(0)}%`;
+    } else {
+        if (bestTradingHourEl) bestTradingHourEl.textContent = '--:--';
+        if (bestWinRateEl) bestWinRateEl.textContent = '--%';
     }
 
+    // 최악 시간대 업데이트
+    const worstTradingHourEl = document.getElementById('worstTradingHour');
+    const worstWinRateEl = document.getElementById('worstHourWinRate');
     if (worstHour) {
-        document.getElementById('worstTradingHour').textContent = `${worstHour}:00`;
-        const worstWinRateEl = document.getElementById('worstHourWinRate');
+        if (worstTradingHourEl) worstTradingHourEl.textContent = `${worstHour}:00`;
         if (worstWinRateEl) worstWinRateEl.textContent = `${worstWinRate.toFixed(0)}%`;
+    } else {
+        if (worstTradingHourEl) worstTradingHourEl.textContent = '--:--';
+        if (worstWinRateEl) worstWinRateEl.textContent = '--%';
     }
 }
 
@@ -1864,8 +1860,9 @@ function analyzeTimeBasedPerformance() {
  * 연속 거래 패턴 분석
  */
 function analyzeConsecutiveTradesPattern() {
-    // 연속 거래 패턴 분석
-    const sortedTrades = [...trades].sort((a, b) => new Date(a.date + ' ' + (a.entryTime || '00:00')) - new Date(b.date + ' ' + (b.entryTime || '00:00')));
+    // 연속 거래 패턴 분석 - 필터링된 거래 데이터 사용
+    const filteredTrades = getFilteredTradesForAnalytics();
+    const sortedTrades = [...filteredTrades].sort((a, b) => new Date(a.date + ' ' + (a.entryTime || '00:00')) - new Date(b.date + ' ' + (b.entryTime || '00:00')));
 
     const patterns = {
         after1Loss: [], after2Losses: [], after3Losses: [],
@@ -1901,13 +1898,17 @@ function analyzeConsecutiveTradesPattern() {
 
     // 패턴 결과 업데이트
     Object.entries(patterns).forEach(([key, values]) => {
-        if (values.length > 0) {
-            const winRate = (values.reduce((sum, val) => sum + val, 0) / values.length) * 100;
-            const elementId = key.charAt(0).toLowerCase() + key.slice(1);
-            const element = document.getElementById(elementId);
-            if (element) {
+        const elementId = key.charAt(0).toLowerCase() + key.slice(1);
+        const element = document.getElementById(elementId);
+        if (element) {
+            if (values.length > 0) {
+                const winRate = (values.reduce((sum, val) => sum + val, 0) / values.length) * 100;
                 element.textContent = `${winRate.toFixed(0)}%`;
                 element.style.color = winRate >= 50 ? '#1ec426' : '#ef4444';
+            } else {
+                // 데이터가 없을 때 기본값 표시
+                element.textContent = '--%';
+                element.style.color = '#64748b';
             }
         }
     });
