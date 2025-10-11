@@ -414,24 +414,26 @@ function checkAndUpdateWarnings(date) {
 
 /**
  * Check consecutive losses
+ * Counts each time consecutive losses reach or exceed the limit
  */
 function checkConsecutiveLosses(trades, limit) {
-    let maxConsecutive = 0;
     let currentConsecutive = 0;
     let violationCount = 0;
+    let inViolation = false; // Track if we're currently in a violation streak
 
     for (let trade of trades) {
         if (trade.pnl < 0) {
             currentConsecutive++;
-            if (currentConsecutive > maxConsecutive) {
-                maxConsecutive = currentConsecutive;
-            }
-            // Trigger warning when limit is reached or exceeded
-            if (currentConsecutive === limit) {
+
+            // Trigger warning when limit is first reached
+            if (currentConsecutive >= limit && !inViolation) {
                 violationCount++;
+                inViolation = true; // Mark that we're in a violation streak
             }
         } else {
+            // Reset on winning trade
             currentConsecutive = 0;
+            inViolation = false;
         }
     }
 
