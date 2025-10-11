@@ -39,11 +39,6 @@ let currentViewingNoteId = null;
 let currentTextColor = '#e4e4e7';
 let currentFont = "'Inter', sans-serif";
 
-// Psychology State
-let psychologyData = {};
-let currentPsychologySection = 'input';
-let currentPsychologyDate = null;
-
 // Principles State
 let principlesData = {};
 let currentPrinciplesDate = null;
@@ -64,11 +59,6 @@ let selectedKellyMultiplier = 0.1;
 // Chart instances
 let basicCharts = {};
 let advancedCharts = {};
-
-// Window-level chart instance for psychology
-if (typeof window !== 'undefined') {
-    window.psychologyChart = null;
-}
 
 // Market Data State
 let marketDataEnabled = true;
