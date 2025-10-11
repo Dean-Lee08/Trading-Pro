@@ -5774,13 +5774,22 @@ function analyzeMarketContext() {
 }
 
 /**
- * Render Statistical Edge Analysis
+ * Render Statistical Edge Analysis (Enhanced with advanced market analysis)
  */
-function renderStatisticalEdge() {
+async function renderStatisticalEdge() {
     const element = document.getElementById('statisticalEdge');
     if (!element) return;
 
+    // Show loading
+    element.innerHTML = `
+        <div style="text-align: center; padding: 30px; color: #94a3b8;">
+            <div style="margin-bottom: 10px;">📈</div>
+            <div>${currentLanguage === 'ko' ? '통계적 우위 계산 중...' : 'Computing statistical edge...'}</div>
+        </div>
+    `;
+
     const edge = calculateStatisticalEdge();
+    const filteredTrades = getFilteredTradesForAnalytics();
 
     const significanceColor = edge.pValue < 0.01 ? '#10b981' :
                               edge.pValue < 0.05 ? '#f59e0b' : '#ef4444';
@@ -5789,7 +5798,7 @@ function renderStatisticalEdge() {
                              edge.pValue < 0.05 ? (currentLanguage === 'ko' ? '유의함' : 'Significant') :
                              (currentLanguage === 'ko' ? '유의하지 않음' : 'Not Significant');
 
-    element.innerHTML = `
+    let html = `
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 20px;">
             <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center;">
                 <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;">Win Rate</div>
@@ -5816,7 +5825,7 @@ function renderStatisticalEdge() {
             </div>
         </div>
 
-        <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
+        <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
             <div style="color: #94a3b8; font-size: 12px; margin-bottom: 12px;">95% Confidence Interval</div>
             <div style="display: flex; align-items: center; gap: 12px;">
                 <div style="color: #e4e4e7; font-size: 14px; font-weight: 600;">${edge.confidenceLow.toFixed(1)}%</div>
@@ -5828,6 +5837,89 @@ function renderStatisticalEdge() {
             <div style="color: #64748b; font-size: 11px; margin-top: 8px; text-align: center;">Expected win rate range with 95% confidence</div>
         </div>
     `;
+
+    // Advanced market-based edge analysis
+    if (filteredTrades.length >= 10) {
+        try {
+            const [intradayPerf, gapTrading, priceLevel] = await Promise.all([
+                typeof analyzeIntradayPerformance !== 'undefined' ? analyzeIntradayPerformance(filteredTrades).catch(e => { console.warn('Intraday analysis failed:', e); return null; }) : Promise.resolve(null),
+                typeof analyzeGapTradingPerformance !== 'undefined' ? analyzeGapTradingPerformance(filteredTrades).catch(e => { console.warn('Gap trading analysis failed:', e); return null; }) : Promise.resolve(null),
+                typeof analyzePriceLevelPsychology !== 'undefined' ? analyzePriceLevelPsychology(filteredTrades).catch(e => { console.warn('Price level analysis failed:', e); return null; }) : Promise.resolve(null)
+            ]);
+
+            console.log('Advanced Edge Analysis:', { intradayPerf, gapTrading, priceLevel });
+
+            html += '<div style="display: grid; gap: 16px;">';
+
+            // Intraday Performance Edge
+            if (intradayPerf) {
+                const best = Object.entries(intradayPerf)
+                    .filter(([key, val]) => val.count >= 3)
+                    .sort((a, b) => b[1].winRate - a[1].winRate)[0];
+
+                if (best) {
+                    html += `
+                        <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
+                            <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;">
+                                ${currentLanguage === 'ko' ? '인트라데이 상승률 우위' : 'Intraday Gain Edge'}
+                            </div>
+                            <div style="color: #10b981; font-size: 16px; font-weight: 700; margin-bottom: 4px;">
+                                ${best[0]} ${currentLanguage === 'ko' ? '상승 후 진입' : 'Gain Entry'}
+                            </div>
+                            <div style="color: #64748b; font-size: 11px;">
+                                ${currentLanguage === 'ko' ? '승률' : 'Win Rate'}: ${best[1].winRate.toFixed(1)}% |
+                                ${currentLanguage === 'ko' ? '평균 수익' : 'Avg P&L'}: $${best[1].avgPnl.toFixed(2)} (${best[1].count} ${currentLanguage === 'ko' ? '거래' : 'trades'})
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+
+            // Gap Trading Edge
+            if (gapTrading) {
+                html += `
+                    <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
+                        <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;">
+                            ${currentLanguage === 'ko' ? '갭 트레이딩 우위' : 'Gap Trading Edge'}
+                        </div>
+                        <div style="color: #3b82f6; font-size: 16px; font-weight: 700; margin-bottom: 4px;">
+                            ${currentLanguage === 'ko' ? '최적 갭 범위' : 'Optimal Gap'}: ${gapTrading.bestGapRange}
+                        </div>
+                        <div style="color: #64748b; font-size: 11px;">
+                            ${currentLanguage === 'ko' ? '갭 상승' : 'Gap Up'}: ${gapTrading.gapUpWinRate}% |
+                            ${currentLanguage === 'ko' ? '갭 하락' : 'Gap Down'}: ${gapTrading.gapDownWinRate}% |
+                            ${currentLanguage === 'ko' ? '대형 갭' : 'Large Gap'}: ${gapTrading.largeGapWinRate}%
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Price Level Edge
+            if (priceLevel) {
+                html += `
+                    <div style="background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px;">
+                        <div style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;">
+                            ${currentLanguage === 'ko' ? '가격대별 우위' : 'Price Level Edge'}
+                        </div>
+                        <div style="color: #f59e0b; font-size: 16px; font-weight: 700; margin-bottom: 4px;">
+                            ${currentLanguage === 'ko' ? '최적 가격대' : 'Optimal Range'}: ${priceLevel.optimalPriceRange}
+                        </div>
+                        <div style="color: #64748b; font-size: 11px;">
+                            Under $5: ${priceLevel.under5WinRate}% |
+                            $5-$20: ${priceLevel.range5to20WinRate}% |
+                            Over $20: ${priceLevel.over20WinRate}%
+                        </div>
+                    </div>
+                `;
+            }
+
+            html += '</div>';
+        } catch (error) {
+            console.error('Advanced edge analysis error:', error);
+        }
+    }
+
+    element.innerHTML = html;
 }
 
 /**
