@@ -126,10 +126,12 @@ function changeFont() {
 
 function changeTextColor(color) {
     currentTextColor = color;
+
+    // 모든 색상 옵션에서 active 클래스 제거
     document.querySelectorAll('.color-option').forEach(option => {
         option.classList.remove('active');
     });
-    
+
     // 색상 매핑 객체를 사용한 올바른 활성화
     const colorMap = {
         '#e4e4e7': 'rgb(228, 228, 231)',
@@ -139,23 +141,31 @@ function changeTextColor(color) {
         '#f59e0b': 'rgb(245, 158, 11)',
         '#8b5cf6': 'rgb(139, 92, 246)'
     };
-    
-    document.querySelectorAll('.color-option').forEach(option => {
-        if (colorMap[color] === option.style.backgroundColor) {
-            option.classList.add('active');
-        }
-    });
 
+    // RGB로 변환하여 비교 (브라우저가 반환하는 형식과 매칭)
+    const rgbValue = colorMap[color];
+    if (rgbValue) {
+        document.querySelectorAll('.color-option').forEach(option => {
+            const optionBgColor = option.style.backgroundColor;
+            // 공백 제거하여 비교
+            if (optionBgColor.replace(/\s/g, '') === rgbValue.replace(/\s/g, '')) {
+                option.classList.add('active');
+            }
+        });
+    }
+
+    // 선택된 텍스트가 있으면 해당 텍스트만 색상 변경
     const selection = window.getSelection();
-    
     if (selection.rangeCount > 0 && selection.toString().trim().length > 0) {
         document.execCommand('styleWithCSS', false, true);
         document.execCommand('foreColor', false, color);
-        return;
+    } else {
+        // 선택된 텍스트가 없으면 에디터 전체 색상 변경
+        const editor = document.getElementById('noteContentEditor');
+        if (editor) {
+            editor.style.color = color;
+        }
     }
-    
-    const editor = document.getElementById('noteContentEditor');
-    editor.style.color = color;
 }
 
 // ============================================
@@ -165,91 +175,126 @@ function changeTextColor(color) {
 function showNoteEditor() {
     // 기존 내용이 있는지 확인
     const noteEditor = document.getElementById('noteEditor');
-    const isCurrentlyEditing = noteEditor.style.display === 'block';
-    
+    const isCurrentlyEditing = noteEditor && noteEditor.style.display === 'block';
+
     if (isCurrentlyEditing) {
         const title = document.getElementById('noteTitle').value.trim();
         const content = document.getElementById('noteContentEditor').innerHTML.trim();
-        
+
         if (title || content) {
-            const confirmMessage = currentLanguage === 'ko' ? 
-                '작성 중인 노트가 있습니다. 새 노트를 시작하시겠습니까?' : 
+            const confirmMessage = currentLanguage === 'ko' ?
+                '작성 중인 노트가 있습니다. 새 노트를 시작하시겠습니까?' :
                 'You have unsaved content. Start a new note?';
-            
+
             if (!confirm(confirmMessage)) {
                 return;
             }
         }
     }
 
+    // 상태 초기화
     editingNoteId = null;
     currentFont = "'Inter', sans-serif";
     currentTextColor = '#e4e4e7';
-    
-    document.getElementById('noteTitle').value = '';
-    document.getElementById('noteContentEditor').innerHTML = '';
-    document.getElementById('noteContentEditor').style.fontFamily = currentFont;
-    document.getElementById('noteContentEditor').style.color = currentTextColor;
-    document.getElementById('fontSelector').value = currentFont;
-    
-    // 색상 옵션 초기화
+
+    // 에디터 초기화
+    const titleInput = document.getElementById('noteTitle');
+    const contentEditor = document.getElementById('noteContentEditor');
+    const fontSelector = document.getElementById('fontSelector');
+
+    if (titleInput) titleInput.value = '';
+    if (contentEditor) {
+        contentEditor.innerHTML = '';
+        contentEditor.style.fontFamily = currentFont;
+        contentEditor.style.color = currentTextColor;
+    }
+    if (fontSelector) fontSelector.value = currentFont;
+
+    // 색상 옵션 초기화 (기본 색상 활성화)
     document.querySelectorAll('.color-option').forEach(option => {
         option.classList.remove('active');
+        const bgColor = option.style.backgroundColor;
+        // 기본 색상(회색) 찾기
+        if (bgColor && bgColor.includes('228')) {
+            option.classList.add('active');
+        }
     });
-    const defaultColorOption = document.querySelector('.color-option[style*="228, 228, 231"]');
-    if (defaultColorOption) {
-        defaultColorOption.classList.add('active');
-    }
-    
-    document.getElementById('noteEditor').style.display = 'block';
-    document.getElementById('noteViewMode').style.display = 'none';
+
+    // 화면 전환
+    if (noteEditor) noteEditor.style.display = 'block';
+    const viewMode = document.getElementById('noteViewMode');
+    if (viewMode) viewMode.style.display = 'none';
+
     document.querySelectorAll('.note-section').forEach(section => {
         section.style.display = 'none';
     });
-    document.getElementById('noteTitle').focus();
+
+    if (titleInput) titleInput.focus();
 }
 
 function editNote(noteId) {
     const note = notes.find(n => n.id === noteId);
-    if (note) {
-        editingNoteId = noteId;
-        currentTextColor = note.textColor || '#e4e4e7';
-        currentFont = note.font || "'Inter', sans-serif";
-        
-        document.getElementById('noteTitle').value = note.title;
-        document.getElementById('noteContentEditor').innerHTML = note.content;
-        document.getElementById('noteContentEditor').style.fontFamily = currentFont;
-        document.getElementById('noteContentEditor').style.color = currentTextColor;
-        document.getElementById('fontSelector').value = currentFont;
-        
-        // 색상 옵션 업데이트
+    if (!note) {
+        console.error('Note not found:', noteId);
+        return;
+    }
+
+    // 상태 설정
+    editingNoteId = noteId;
+    currentTextColor = note.textColor || '#e4e4e7';
+    currentFont = note.font || "'Inter', sans-serif";
+
+    // 에디터 내용 설정
+    const titleInput = document.getElementById('noteTitle');
+    const contentEditor = document.getElementById('noteContentEditor');
+    const fontSelector = document.getElementById('fontSelector');
+
+    if (titleInput) titleInput.value = note.title || '';
+    if (contentEditor) {
+        contentEditor.innerHTML = note.content || '';
+        contentEditor.style.fontFamily = currentFont;
+        contentEditor.style.color = currentTextColor;
+    }
+    if (fontSelector) fontSelector.value = currentFont;
+
+    // 색상 옵션 업데이트
+    document.querySelectorAll('.color-option').forEach(option => {
+        option.classList.remove('active');
+    });
+
+    // 현재 색상에 맞는 옵션 선택
+    const colorMap = {
+        '#e4e4e7': 'rgb(228, 228, 231)',
+        '#10b981': 'rgb(16, 185, 129)',
+        '#ef4444': 'rgb(239, 68, 68)',
+        '#3b82f6': 'rgb(59, 130, 246)',
+        '#f59e0b': 'rgb(245, 158, 11)',
+        '#8b5cf6': 'rgb(139, 92, 246)'
+    };
+
+    const rgbValue = colorMap[currentTextColor];
+    if (rgbValue) {
         document.querySelectorAll('.color-option').forEach(option => {
-            option.classList.remove('active');
-        });
-        
-        // 현재 색상에 맞는 옵션 선택
-        const colorMap = {
-            '#e4e4e7': 'rgb(228, 228, 231)',
-            '#10b981': 'rgb(16, 185, 129)',
-            '#ef4444': 'rgb(239, 68, 68)',
-            '#3b82f6': 'rgb(59, 130, 246)',
-            '#f59e0b': 'rgb(245, 158, 11)',
-            '#8b5cf6': 'rgb(139, 92, 246)'
-        };
-        
-        document.querySelectorAll('.color-option').forEach(option => {
-            if (colorMap[currentTextColor] === option.style.backgroundColor) {
+            const optionBgColor = option.style.backgroundColor;
+            // 공백 제거하여 비교
+            if (optionBgColor && optionBgColor.replace(/\s/g, '') === rgbValue.replace(/\s/g, '')) {
                 option.classList.add('active');
             }
         });
-        
-        document.getElementById('noteEditor').style.display = 'block';
-        document.getElementById('noteViewMode').style.display = 'none';
-        document.querySelectorAll('.note-section').forEach(section => {
-            section.style.display = 'none';
-        });
-        document.getElementById('noteTitle').focus();
     }
+
+    // 화면 전환
+    const noteEditor = document.getElementById('noteEditor');
+    const viewMode = document.getElementById('noteViewMode');
+
+    if (noteEditor) noteEditor.style.display = 'block';
+    if (viewMode) viewMode.style.display = 'none';
+
+    document.querySelectorAll('.note-section').forEach(section => {
+        section.style.display = 'none';
+    });
+
+    if (titleInput) titleInput.focus();
 }
 
 function deleteNote(noteId) {
@@ -262,16 +307,25 @@ function deleteNote(noteId) {
 }
 
 function saveNote() {
-    const title = document.getElementById('noteTitle').value.trim();
-    const content = document.getElementById('noteContentEditor').innerHTML.trim();
-    
+    const titleInput = document.getElementById('noteTitle');
+    const contentEditor = document.getElementById('noteContentEditor');
+
+    if (!titleInput || !contentEditor) {
+        console.error('Editor elements not found');
+        return;
+    }
+
+    const title = titleInput.value.trim();
+    const content = contentEditor.innerHTML.trim();
+
     if (!title || !content) {
         alert(currentLanguage === 'ko' ? '제목과 내용을 모두 입력해주세요.' : 'Please enter both title and content.');
         return;
     }
 
     const now = new Date();
-    
+    const savedEditingNoteId = editingNoteId; // 메시지용으로 저장
+
     if (editingNoteId) {
         // Update existing note
         const noteIndex = notes.findIndex(n => n.id === editingNoteId);
@@ -280,8 +334,8 @@ function saveNote() {
                 ...notes[noteIndex],
                 title: title,
                 content: content,
-                font: currentFont,
-                textColor: currentTextColor,
+                font: currentFont || "'Inter', sans-serif",
+                textColor: currentTextColor || '#e4e4e7',
                 updatedAt: now.toISOString()
             };
         }
@@ -292,8 +346,8 @@ function saveNote() {
             id: Date.now(),
             title: title,
             content: content,
-            font: currentFont,
-            textColor: currentTextColor,
+            font: currentFont || "'Inter', sans-serif",
+            textColor: currentTextColor || '#e4e4e7',
             category: actualCategory,
             pinned: false,
             createdAt: now.toISOString(),
@@ -302,13 +356,24 @@ function saveNote() {
         notes.unshift(newNote);
     }
 
+    // 저장 전에 데이터 저장
     saveNotes();
+
+    // 상태 초기화 및 화면 전환
     cancelNote();
+
+    // 노트 목록 새로고침
     renderAllNotesSections();
-    showToast(editingNoteId ? 
+
+    // 성공 메시지
+    const message = savedEditingNoteId ?
         (currentLanguage === 'ko' ? '노트가 업데이트되었습니다' : 'Note updated') :
-        (currentLanguage === 'ko' ? '노트가 저장되었습니다' : 'Note saved')
-    );
+        (currentLanguage === 'ko' ? '노트가 저장되었습니다' : 'Note saved');
+    showToast(message);
+
+    // 전역 상태 초기화 (중요!)
+    currentFont = "'Inter', sans-serif";
+    currentTextColor = '#e4e4e7';
 }
 
 function cancelNote() {
