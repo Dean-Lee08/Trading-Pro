@@ -5240,8 +5240,11 @@ function detectAdvancedBehavioralPatterns() {
  * Detect revenge trading pattern
  */
 function detectRevengeTrading() {
-    const sorted = [...trades].sort((a, b) => new Date(a.date + ' ' + (a.entryTime || '00:00')) - new Date(b.date + ' ' + (b.entryTime || '00:00')));
-    const avgAmount = trades.map(t => t.amount).reduce((a, b) => a + b, 0) / trades.length;
+    const filteredTrades = getFilteredTradesForAnalytics();
+    if (filteredTrades.length === 0) return null;
+
+    const sorted = [...filteredTrades].sort((a, b) => new Date(a.date + ' ' + (a.entryTime || '00:00')) - new Date(b.date + ' ' + (b.entryTime || '00:00')));
+    const avgAmount = filteredTrades.map(t => t.amount).reduce((a, b) => a + b, 0) / filteredTrades.length;
 
     let revengeCount = 0;
     let totalIncrease = 0;
@@ -5266,7 +5269,10 @@ function detectRevengeTrading() {
  * Detect overconfidence pattern
  */
 function detectOverconfidencePattern() {
-    const sorted = [...trades].sort((a, b) => new Date(a.date + ' ' + (a.entryTime || '00:00')) - new Date(b.date + ' ' + (b.entryTime || '00:00')));
+    const filteredTrades = getFilteredTradesForAnalytics();
+    if (filteredTrades.length === 0) return null;
+
+    const sorted = [...filteredTrades].sort((a, b) => new Date(a.date + ' ' + (a.entryTime || '00:00')) - new Date(b.date + ' ' + (b.entryTime || '00:00')));
 
     let afterWins = [];
     let normalWinRate = 0;
