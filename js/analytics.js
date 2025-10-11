@@ -62,10 +62,14 @@ function showAnalyticsSection(sectionName) {
 
     if (sectionName === 'detail') {
         document.getElementById('detailSection').classList.add('active');
-        setTimeout(async () => await updateBasicCharts(), 100);
+        setTimeout(() => {
+            updateBasicCharts().catch(err => console.error('Error updating basic charts:', err));
+        }, 100);
     } else if (sectionName === 'charts') {
         document.getElementById('chartSection').classList.add('active');
-        setTimeout(async () => await updateAdvancedCharts(), 100);
+        setTimeout(() => {
+            updateAdvancedCharts().catch(err => console.error('Error updating advanced charts:', err));
+        }, 100);
     } else if (sectionName === 'patterns') {
         const patternsSection = document.getElementById('patternsSection');
         if (patternsSection) {
@@ -213,7 +217,9 @@ function updateDetailedAnalytics() {
 
     // Update basic charts if in detail section
     if (currentAnalyticsSection === 'detail') {
-        setTimeout(async () => await updateBasicCharts(), 100);
+        setTimeout(() => {
+            updateBasicCharts().catch(err => console.error('Error updating basic charts:', err));
+        }, 100);
     }
 
     // Update algorithmic analysis if in patterns section
