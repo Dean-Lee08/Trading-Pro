@@ -280,6 +280,7 @@ function updatePrinciplesTradeDetailsCard() {
 function savePrinciplesData() {
     const data = {
         // Trading environment
+        sleepHours: parseFloat(document.getElementById('principlesSleepHours').value) || 0,
         startTime: document.getElementById('principlesStartTime').value || '',
         endTime: document.getElementById('principlesEndTime').value || '',
         environmentType: document.getElementById('principlesEnvironmentType').value || 'home',
