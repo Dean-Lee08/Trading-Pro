@@ -1714,7 +1714,61 @@ function updateAlgorithmicAnalysis() {
     console.log('🔥 Rendering stress heatmap...');
     setTimeout(() => renderStressHeatmap(), 300);
 
+    // NEW: Phase 4 - Update Core Risk Metrics
+    console.log('📊 Updating core risk metrics...');
+    setTimeout(() => updateCoreRiskMetrics(), 400);
+
     console.log('✅ updateAlgorithmicAnalysis() completed');
+}
+
+/**
+ * Update Core Risk Metrics (MDD, Sortino, Kelly, Sharpe)
+ */
+function updateCoreRiskMetrics() {
+    const filteredTrades = getFilteredTradesForAnalytics();
+
+    if (filteredTrades.length === 0) {
+        document.getElementById('mddValue').textContent = '$0.00';
+        document.getElementById('mddPercent').textContent = '0% of capital';
+        document.getElementById('sortinoValue').textContent = '0.00';
+        document.getElementById('sortinoLabel').textContent = 'Neutral';
+        document.getElementById('kellyValue').textContent = '0%';
+        document.getElementById('kellyRecommendation').textContent = 'Insufficient data';
+        document.getElementById('sharpeValue').textContent = '0.00';
+        document.getElementById('sharpeLabel').textContent = 'Neutral';
+        return;
+    }
+
+    // Calculate MDD
+    const initialCapital = 10000; // Default, or get from principlesData
+    const mddResult = calculateMaxDrawdown(filteredTrades, initialCapital);
+    document.getElementById('mddValue').textContent = `$${mddResult.mdd.toFixed(2)}`;
+    document.getElementById('mddPercent').textContent = `${mddResult.mddPercent.toFixed(2)}% of capital`;
+
+    // Calculate Sortino Ratio
+    const sortinoRatio = calculateSortinoRatio(filteredTrades);
+    document.getElementById('sortinoValue').textContent = sortinoRatio.toFixed(2);
+    const sortinoLabel = sortinoRatio > 2 ? (currentLanguage === 'ko' ? '우수' : 'Excellent') :
+                         sortinoRatio > 1 ? (currentLanguage === 'ko' ? '양호' : 'Good') :
+                         sortinoRatio > 0 ? (currentLanguage === 'ko' ? '보통' : 'Neutral') :
+                         (currentLanguage === 'ko' ? '낮음' : 'Poor');
+    document.getElementById('sortinoLabel').textContent = sortinoLabel;
+    document.getElementById('sortinoValue').style.color = sortinoRatio > 1 ? '#00CC99' : sortinoRatio > 0 ? '#f8fafc' : '#FF4455';
+
+    // Calculate Kelly Criterion
+    const kellyResult = calculateKellyCriterion(filteredTrades);
+    document.getElementById('kellyValue').textContent = `${kellyResult.kellyPercent.toFixed(1)}%`;
+    document.getElementById('kellyRecommendation').textContent = kellyResult.recommendation;
+
+    // Calculate Sharpe Ratio
+    const sharpeRatio = calculateSharpeRatio(filteredTrades);
+    document.getElementById('sharpeValue').textContent = sharpeRatio.toFixed(2);
+    const sharpeLabel = sharpeRatio > 2 ? (currentLanguage === 'ko' ? '우수' : 'Excellent') :
+                        sharpeRatio > 1 ? (currentLanguage === 'ko' ? '양호' : 'Good') :
+                        sharpeRatio > 0 ? (currentLanguage === 'ko' ? '보통' : 'Neutral') :
+                        (currentLanguage === 'ko' ? '낮음' : 'Poor');
+    document.getElementById('sharpeLabel').textContent = sharpeLabel;
+    document.getElementById('sharpeValue').style.color = sharpeRatio > 1 ? '#00CC99' : sharpeRatio > 0 ? '#f8fafc' : '#FF4455';
 }
 
 /**

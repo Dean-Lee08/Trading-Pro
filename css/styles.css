@@ -2790,5 +2790,306 @@
         .psychology-section.active {
             display: block;
         }
-  
+
+        /* ==================== NEW: Enhanced Analytics Styles ==================== */
+
+        /* Tooltip Styles */
+        .metric-card-tooltip:hover .tooltip-content {
+            display: block !important;
+            animation: tooltipFadeIn 0.2s ease;
+        }
+
+        @keyframes tooltipFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tooltip-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: rgba(100, 116, 139, 0.2);
+            cursor: help;
+            transition: all 0.2s ease;
+        }
+
+        .tooltip-icon:hover {
+            background: rgba(100, 116, 139, 0.4);
+            transform: scale(1.1);
+        }
+
+        .tooltip-content {
+            display: none;
+            position: absolute;
+            background: #1e293b;
+            border: 1px solid #475569;
+            border-radius: 6px;
+            padding: 10px;
+            width: 250px;
+            z-index: 10;
+            top: 100%;
+            left: 0;
+            margin-top: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        /* Enhanced Color System */
+        :root {
+            --color-positive: #00CC99;
+            --color-positive-hover: #00E6AD;
+            --color-positive-dim: rgba(0, 204, 153, 0.1);
+
+            --color-negative: #FF4455;
+            --color-negative-hover: #FF5566;
+            --color-negative-dim: rgba(255, 68, 85, 0.1);
+
+            --color-neutral: #64748b;
+            --color-warning: #fb923c;
+            --color-info: #3b82f6;
+        }
+
+        .positive {
+            color: var(--color-positive) !important;
+        }
+
+        .negative {
+            color: var(--color-negative) !important;
+        }
+
+        .bg-positive {
+            background-color: var(--color-positive-dim);
+            border-color: var(--color-positive);
+        }
+
+        .bg-negative {
+            background-color: var(--color-negative-dim);
+            border-color: var(--color-negative);
+        }
+
+        /* Heatmap Table Styles */
+        .heatmap-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .heatmap-cell {
+            padding: 8px;
+            text-align: center;
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .heatmap-cell:hover {
+            border-color: rgba(59, 130, 246, 0.8);
+            transform: scale(1.05);
+            z-index: 1;
+        }
+
+        /* Scatter Plot Container */
+        .scatter-container {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid #334155;
+            border-radius: 6px;
+            padding: 16px;
+        }
+
+        .scatter-container canvas {
+            max-height: 250px;
+        }
+
+        /* Metric Card Enhanced */
+        .metric-card-tooltip {
+            position: relative;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid #334155;
+            border-radius: 6px;
+            padding: 18px;
+            cursor: help;
+            transition: all 0.2s ease;
+        }
+
+        .metric-card-tooltip:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Insight Badge Styles */
+        .insight-badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .insight-badge.optimize {
+            background: var(--color-positive);
+            color: #0f172a;
+        }
+
+        .insight-badge.warning {
+            background: var(--color-warning);
+            color: #0f172a;
+        }
+
+        .insight-badge.danger {
+            background: var(--color-negative);
+            color: #ffffff;
+        }
+
+        /* Tier Section Styles */
+        .tier-section {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .tier-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .tier-icon {
+            font-size: 24px;
+        }
+
+        .tier-title {
+            color: #f8fafc;
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: -0.01em;
+        }
+
+        .tier-subtitle {
+            color: #94a3b8;
+            font-size: 13px;
+            margin: 0;
+        }
+
+        /* Responsive Grid for Charts */
+        @media (max-width: 1024px) {
+            .scatter-container {
+                grid-column: 1 / -1;
+            }
+        }
+
+        /* Animated Gradient Border for Top Insights */
+        .top-insights-container {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(59, 130, 246, 0.1));
+            border: 2px solid var(--color-positive);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .top-insights-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            to {
+                left: 100%;
+            }
+        }
+
+        /* Enhanced Table Styling for Heatmap */
+        .stress-heatmap-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 500px;
+        }
+
+        .stress-heatmap-table th {
+            padding: 8px;
+            color: #94a3b8;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .stress-heatmap-table td {
+            padding: 8px;
+            text-align: center;
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .stress-heatmap-table td:hover {
+            border-color: rgba(59, 130, 246, 0.8);
+            transform: scale(1.08);
+            z-index: 1;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        /* Color Legend Styles */
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-box {
+            width: 30px;
+            height: 15px;
+            border-radius: 2px;
+            border: 1px solid rgba(51, 65, 85, 0.5);
+        }
+
+        /* Loading State */
+        .analysis-loading {
+            padding: 24px;
+            text-align: center;
+            color: #64748b;
+            font-size: 13px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        /* Improved Chart Container */
+        .chart-container-enhanced {
+            background: rgba(15, 23, 42, 0.8);
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(51, 65, 85, 0.5);
+        }
+
+        .chart-title {
+            color: #cbd5e1;
+            font-size: 13px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
 
