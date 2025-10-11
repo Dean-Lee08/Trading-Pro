@@ -3000,10 +3000,6 @@ async function refreshMarketQuotes() {
 }
 
 // Market data analysis functions removed - API integration disabled
-        document.getElementById('detailOver20WinRate').textContent = errorMsg;
-    }
-}
-
 
 // ==================== Advanced Algorithmic Analysis Functions ====================
 
@@ -4942,17 +4938,17 @@ function analyzeTimingConsistency() {
 }
 
 /**
- * Render Market Intelligence (Enhanced with market-data.js integration)
+ * Render Market Intelligence (API integration disabled)
  */
 async function renderMarketIntelligence() {
     const element = document.getElementById('marketIntelligence');
     if (!element) return;
 
-    // Show loading state
     element.innerHTML = `
-        <div style="text-align: center; padding: 30px; color: #94a3b8;">
-            <div style="margin-bottom: 10px;">📊</div>
-            <div>${currentLanguage === 'ko' ? '시장 데이터 분석 중...' : 'Analyzing market data...'}</div>
+        <div style="background: rgba(15, 23, 42, 0.5); text-align: center; padding: 24px; border-radius: 8px; border: 1px solid #334155;">
+            <span style="color: #64748b; font-size: 13px;">
+                ${currentLanguage === 'ko' ? 'API 통합이 비활성화되었습니다.' : 'API integration disabled.'}
+            </span>
         </div>
     `;
 
