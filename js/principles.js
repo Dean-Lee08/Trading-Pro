@@ -464,6 +464,7 @@ function checkRiskRewardViolations(trades, minRatio) {
 
 /**
  * Update warning triggers display
+ * Preserves data-lang attributes and uses consistent color coding
  */
 function updateWarningTriggersDisplay(consecutiveLoss, singleLoss, positionSize, riskReward, dailyTarget, maxLoss, tradeCount) {
     const elements = {
@@ -487,56 +488,49 @@ function updateWarningTriggersDisplay(consecutiveLoss, singleLoss, positionSize,
     };
 
     for (let [key, element] of Object.entries(elements)) {
-        if (element) {
-            const count = values[key];
+        if (!element) continue;
 
-            // Update text - just the number
-            const timesText = element.querySelector('span[data-lang="times-triggered"]');
-            if (timesText) {
-                element.childNodes[0].textContent = count + ' ';
+        const count = values[key];
+
+        // Update only the count number, preserving the "times" text with data-lang
+        const timesSpan = element.querySelector('span[data-lang="times-triggered"]');
+        if (timesSpan) {
+            // Find the text node before the span (the count number)
+            const textNode = element.firstChild;
+            if (textNode && textNode.nodeType === Node.TEXT_NODE) {
+                textNode.textContent = count + ' ';
             } else {
-                element.textContent = count;
+                // If no text node exists, create one
+                const newTextNode = document.createTextNode(count + ' ');
+                element.insertBefore(newTextNode, timesSpan);
             }
+        } else {
+            // No timesSpan found, just update the element text
+            element.textContent = count;
+        }
 
-            // Get parent detail-value for color coding
-            let valueElement = element;
-            if (element.classList.contains('detail-value')) {
-                valueElement = element;
-            } else if (element.parentElement && element.parentElement.classList.contains('detail-value')) {
-                valueElement = element.parentElement;
-            }
+        // Apply color coding with CSS classes (consistent approach)
+        // Reset inline styles to let CSS classes control color
+        element.style.color = '';
 
-            // Color coding based on count and type
-            if (key === 'dailyTarget') {
-                // Daily target is positive
-                if (count > 0) {
-                    valueElement.classList.remove('negative', 'neutral');
-                    valueElement.classList.add('positive');
-                } else {
-                    valueElement.classList.remove('positive', 'negative');
-                    valueElement.classList.add('neutral');
-                }
-            } else if (key === 'maxLoss') {
-                // Max loss is negative
-                if (count > 0) {
-                    valueElement.classList.remove('positive', 'neutral');
-                    valueElement.classList.add('negative');
-                } else {
-                    valueElement.classList.remove('positive', 'negative');
-                    valueElement.classList.add('neutral');
-                }
+        // Remove all color classes first
+        element.classList.remove('positive', 'negative', 'neutral', 'warning');
+
+        // Apply appropriate class based on warning type and count
+        if (key === 'dailyTarget') {
+            // Daily target achievement is positive
+            element.classList.add(count > 0 ? 'positive' : 'neutral');
+        } else if (key === 'maxLoss') {
+            // Max loss hit is negative
+            element.classList.add(count > 0 ? 'negative' : 'neutral');
+        } else {
+            // Other warnings: 0 = neutral, 1-2 = warning, 3+ = negative
+            if (count === 0) {
+                element.classList.add('neutral');
+            } else if (count <= 2) {
+                element.classList.add('warning');
             } else {
-                // Other warnings
-                if (count === 0) {
-                    valueElement.classList.remove('positive', 'negative');
-                    valueElement.classList.add('neutral');
-                } else if (count <= 2) {
-                    valueElement.classList.remove('positive', 'negative', 'neutral');
-                    valueElement.style.color = '#f59e0b'; // Yellow warning
-                } else {
-                    valueElement.classList.remove('positive', 'neutral');
-                    valueElement.classList.add('negative');
-                }
+                element.classList.add('negative');
             }
         }
     }
