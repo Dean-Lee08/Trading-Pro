@@ -2999,12 +2999,15 @@ async function refreshMarketQuotes() {
     await loadSymbolQuotes(filteredTrades);
 }
 
-// ==================== Market Data Analysis for Detail Cards ====================
+// Market data analysis functions removed - API integration disabled
+
+// ==================== Advanced Algorithmic Analysis Functions ====================
 
 /**
- * 시장 데이터 분석 카드 전체 업데이트 (Enhanced with progress indicator)
+ * Calculate correlation matrix between psychology factors and performance
+ * Note: renderCorrelationMatrix() is defined in new-ai-renders.js
  */
-async function updateMarketDataAnalysisCards(filteredTrades) {
+function calculateCorrelationMatrix() {
     if (filteredTrades.length === 0) {
         resetMarketDataCards();
         return;
