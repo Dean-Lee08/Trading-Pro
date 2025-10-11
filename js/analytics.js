@@ -111,8 +111,6 @@ function clearAnalyticsRange() {
 function refreshAnalyticsData() {
     analyticsLoadedOnce = false;
     analyticsFilterState = null;
-    marketDataLoadedOnce = false;
-    marketDataFilterState = null;
     updateDetailedAnalytics();
     showToast(currentLanguage === 'ko' ? '분석 데이터 새로고침 완료' : 'Analytics data refreshed');
 }
