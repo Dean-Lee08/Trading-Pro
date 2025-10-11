@@ -5686,14 +5686,19 @@ function renderAdaptiveRecommendations() {
  */
 function generateAdaptiveRecommendations() {
     const recommendations = [];
+    const filteredTrades = getFilteredTradesForAnalytics();
+
+    if (filteredTrades.length === 0) {
+        return recommendations;
+    }
 
     // Analyze recent performance
-    const last10 = trades.slice(-10);
+    const last10 = filteredTrades.slice(-10);
     const last10WinRate = last10.length > 0 ? (last10.filter(t => t.pnl > 0).length / last10.length * 100) : 50;
 
     // Recommendation 1: Time-based optimization
     const hourlyPerf = {};
-    trades.forEach(trade => {
+    filteredTrades.forEach(trade => {
         if (trade.entryTime) {
             const hour = parseInt(trade.entryTime.split(':')[0]);
             if (!hourlyPerf[hour]) hourlyPerf[hour] = { wins: 0, total: 0 };
@@ -5736,7 +5741,7 @@ function generateAdaptiveRecommendations() {
     }
 
     // Recommendation 3: Position sizing
-    const avgAmount = trades.map(t => t.amount).reduce((a, b) => a + b, 0) / trades.length;
+    const avgAmount = filteredTrades.map(t => t.amount).reduce((a, b) => a + b, 0) / filteredTrades.length;
     const edge = calculateStatisticalEdge();
 
     if (edge.winRate > 55 && edge.sharpe > 1.2) {
