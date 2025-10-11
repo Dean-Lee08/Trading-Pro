@@ -711,7 +711,71 @@ const translations = {
         'optimal-psychology-state': 'Optimal Psychology State',
         'what-if-scenario': 'What-If Scenario Analysis',
         'expected-profit-range': 'Expected Profit Range',
-        'simulation-results': 'Simulation Results'
+        'simulation-results': 'Simulation Results',
+
+        // NEW: Advanced Risk Metrics
+        'maximum-drawdown': 'Maximum Drawdown (MDD)',
+        'sortino-ratio': 'Sortino Ratio',
+        'kelly-percentage': 'Kelly Criterion %',
+        'downside-deviation': 'Downside Deviation',
+        'current-mdd': 'Current MDD',
+        'mdd-tooltip': 'Maximum peak-to-trough decline in capital. Measures worst-case scenario risk.',
+        'sortino-tooltip': 'Risk-adjusted return considering only downside volatility. Higher is better (>2 is excellent).',
+        'kelly-tooltip': 'Optimal position size based on win rate and risk/reward ratio. Recommended: use 10-25% of Kelly.',
+
+        // NEW: Slippage Analysis
+        'slippage-analysis': 'Slippage Analysis',
+        'avg-slippage': 'Avg Slippage',
+        'slippage-by-time': 'Slippage by Time of Day',
+        'slippage-by-symbol': 'Slippage by Symbol',
+        'entry-slippage': 'Entry Slippage',
+        'exit-slippage': 'Exit Slippage',
+        'slippage-cost': 'Slippage Cost',
+        'slippage-tooltip': 'Difference between expected price and actual execution price. Lower is better.',
+
+        // NEW: Behavioral Heatmap
+        'stress-heatmap': 'Stress Level Heatmap',
+        'stress-heatmap-subtitle': 'High-stress trading frequency by time and day',
+        'heatmap-time': 'Time of Day',
+        'heatmap-day': 'Day of Week',
+        'high-risk-zone': 'High Risk Zone',
+        'safe-zone': 'Safe Zone',
+
+        // NEW: Scatter Plot Visualizations
+        'position-vs-return': 'Position Size vs Return',
+        'holding-vs-return': 'Holding Time vs Return',
+        'scatter-winners': 'Winners',
+        'scatter-losers': 'Losers',
+        'regression-line': 'Trend Line',
+        'scatter-tooltip': 'Each dot represents a trade. Green = profit, Red = loss.',
+
+        // NEW: Cluster Visualization
+        'cluster-2d-map': 'Trade Cluster Map',
+        'cluster-best': 'Best Performance Cluster',
+        'cluster-medium': 'Medium Performance Cluster',
+        'cluster-worst': 'Worst Performance Cluster',
+        'cluster-tooltip': 'Trades grouped by similar characteristics (holding time, P/L, entry time).',
+
+        // NEW: Actionable Insights Categories
+        'top-3-insights': 'Top 3 Actionable Insights',
+        'insight-optimize': 'OPTIMIZE',
+        'insight-warning': 'WARNING',
+        'insight-danger': 'STOP',
+        'action-required': 'Action Required',
+        'immediate-action': 'Take Action Now',
+
+        // NEW: Tooltip Definitions
+        'sharpe-tooltip': 'Risk-adjusted return metric. Formula: (Avg Return - Risk-Free Rate) / Standard Deviation. >1 is good, >2 is excellent.',
+        'expected-value-tooltip': 'Average profit/loss per trade based on historical data. Positive value indicates edge.',
+        'p-value-tooltip': 'Statistical significance test. <0.05 means results are statistically significant (not due to chance).',
+        'correlation-tooltip': 'Measures relationship between two variables. +1 = perfect positive, -1 = perfect negative, 0 = no relationship.',
+        'win-rate-tooltip': 'Percentage of profitable trades. Not the only metric - consider profit factor and expected value.',
+        'profit-factor-tooltip': 'Total wins / Total losses. >1.5 is good, >2 is excellent. Measures overall profitability.',
+
+        // NEW: Core Metrics Section
+        'core-metrics': 'Core Performance & Risk Metrics',
+        'statistical-edge-metrics': 'Statistical Edge Analysis',
+        'risk-adjusted-metrics': 'Risk-Adjusted Metrics'
     },
     ko: {
         'dashboard': '대시보드',
