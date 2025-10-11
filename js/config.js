@@ -64,8 +64,8 @@ let selectedKellyMultiplier = 0.1;
 let basicCharts = {};
 let advancedCharts = {};
 
-// Market Data State
-let marketDataEnabled = true;
+// Market Data State (disabled - API removed)
+let marketDataEnabled = false;
 let loadingMarketData = false;
 let marketDataQuotes = {};
 
