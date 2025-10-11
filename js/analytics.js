@@ -4477,6 +4477,7 @@ function renderBehavioralPatterns() {
 
     // Part 1: Psychology-Performance Correlation Analysis
     const correlationAnalysis = analyzePsychologyPerformanceCorrelation();
+    console.log('Correlation Analysis Result:', correlationAnalysis);
 
     if (correlationAnalysis.success) {
         html += `
