@@ -1409,7 +1409,71 @@ const translations = {
         'optimal-psychology-state': '최적 심리 상태',
         'what-if-scenario': '만약 ~라면 시나리오 분석',
         'expected-profit-range': '예상 수익 범위',
-        'simulation-results': '시뮬레이션 결과'
+        'simulation-results': '시뮬레이션 결과',
+
+        // NEW: 고급 위험 지표
+        'maximum-drawdown': '최대 손실 폭 (MDD)',
+        'sortino-ratio': '소르티노 비율',
+        'kelly-percentage': '켈리 기준 %',
+        'downside-deviation': '하방 편차',
+        'current-mdd': '현재 MDD',
+        'mdd-tooltip': '총자본 대비 최대 손실 폭. 최악의 시나리오 위험을 측정합니다.',
+        'sortino-tooltip': '하방 변동성만 고려한 위험 조정 수익률. 높을수록 좋음 (>2는 우수)',
+        'kelly-tooltip': '승률과 위험/보상 비율 기반 최적 포지션 크기. 권장: 켈리의 10-25% 사용',
+
+        // NEW: 슬리피지 분석
+        'slippage-analysis': '슬리피지 분석',
+        'avg-slippage': '평균 슬리피지',
+        'slippage-by-time': '시간대별 슬리피지',
+        'slippage-by-symbol': '종목별 슬리피지',
+        'entry-slippage': '진입 슬리피지',
+        'exit-slippage': '청산 슬리피지',
+        'slippage-cost': '슬리피지 비용',
+        'slippage-tooltip': '예상 가격과 실제 체결 가격의 차이. 낮을수록 좋습니다.',
+
+        // NEW: 행동 히트맵
+        'stress-heatmap': '스트레스 레벨 히트맵',
+        'stress-heatmap-subtitle': '시간 및 요일별 고스트레스 거래 빈도',
+        'heatmap-time': '시간대',
+        'heatmap-day': '요일',
+        'high-risk-zone': '고위험 구간',
+        'safe-zone': '안전 구간',
+
+        // NEW: 산점도 시각화
+        'position-vs-return': '포지션 크기 vs 수익률',
+        'holding-vs-return': '보유 시간 vs 수익률',
+        'scatter-winners': '수익 거래',
+        'scatter-losers': '손실 거래',
+        'regression-line': '추세선',
+        'scatter-tooltip': '각 점은 거래를 나타냅니다. 녹색 = 수익, 빨강 = 손실',
+
+        // NEW: 클러스터 시각화
+        'cluster-2d-map': '거래 클러스터 맵',
+        'cluster-best': '최고 성과 클러스터',
+        'cluster-medium': '중간 성과 클러스터',
+        'cluster-worst': '최악 성과 클러스터',
+        'cluster-tooltip': '유사한 특성(보유 시간, 손익, 진입 시간)으로 그룹화된 거래',
+
+        // NEW: 실행 가능 인사이트 카테고리
+        'top-3-insights': 'Top 3 실행 조치',
+        'insight-optimize': '최적화',
+        'insight-warning': '경고',
+        'insight-danger': '중단',
+        'action-required': '조치 필요',
+        'immediate-action': '즉시 조치하세요',
+
+        // NEW: 툴팁 정의
+        'sharpe-tooltip': '위험 조정 수익률 지표. 공식: (평균 수익률 - 무위험 수익률) / 표준편차. >1 양호, >2 우수',
+        'expected-value-tooltip': '과거 데이터 기반 거래당 평균 손익. 양수 값은 우위를 나타냅니다.',
+        'p-value-tooltip': '통계적 유의성 검정. <0.05는 결과가 통계적으로 유의함을 의미 (우연이 아님)',
+        'correlation-tooltip': '두 변수 간의 관계 측정. +1 = 완전 양의 상관, -1 = 완전 음의 상관, 0 = 무관',
+        'win-rate-tooltip': '수익 거래 비율. 유일한 지표가 아님 - 수익 팩터와 기댓값도 고려하세요.',
+        'profit-factor-tooltip': '총 수익 / 총 손실. >1.5 양호, >2 우수. 전반적인 수익성을 측정합니다.',
+
+        // NEW: 핵심 지표 섹션
+        'core-metrics': '핵심 성과 및 위험 지표',
+        'statistical-edge-metrics': '통계적 우위 분석',
+        'risk-adjusted-metrics': '위험 조정 지표'
     }
 };
 
