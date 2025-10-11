@@ -39,7 +39,6 @@ function switchAlgoTab(tabName) {
  * 분석 섹션 전환
  */
 function showAnalyticsSection(sectionName) {
-    console.log('📑 showAnalyticsSection called with:', sectionName);
     currentAnalyticsSection = sectionName;
 
     // Update tab states
@@ -68,16 +67,13 @@ function showAnalyticsSection(sectionName) {
         document.getElementById('chartSection').classList.add('active');
         setTimeout(async () => await updateAdvancedCharts(), 100);
     } else if (sectionName === 'patterns') {
-        console.log('🎯 Switching to patterns section...');
         const patternsSection = document.getElementById('patternsSection');
         if (patternsSection) {
             patternsSection.classList.add('active');
-            console.log('✅ patternsSection active class added');
         } else {
-            console.error('❌ patternsSection element not found!');
+            console.error('patternsSection element not found!');
         }
         setTimeout(() => {
-            console.log('⏰ Calling updatePatternInsights after timeout...');
             updatePatternInsights();
         }, 100);
     }
