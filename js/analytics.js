@@ -4614,8 +4614,10 @@ function renderStressHeatmap() {
     const container = document.getElementById('stressHeatmapContainer');
     if (!container) return;
 
+    const filteredTrades = getFilteredTradesForAnalytics();
+
     // 스트레스 데이터가 있는 거래만 필터링
-    const tradesWithStress = trades.filter(trade => {
+    const tradesWithStress = filteredTrades.filter(trade => {
         const psyData = psychologyData[trade.date];
         return psyData && psyData.stress !== undefined;
     });
