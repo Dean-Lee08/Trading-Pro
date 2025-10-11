@@ -36,8 +36,6 @@ function showPage(pageId, clickedElement) {
         updateDetailedAnalytics();
     } else if (pageId === 'principles') {
         initPrinciplesPage();
-    } else if (pageId === 'psychology') {
-        updatePsychologyDisplay();
     }
 }
 
@@ -566,7 +564,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     loadTrades();
     loadNotes();
     loadPrinciplesData();
-    loadPsychologyData();
+
+    // Migrate psychology data to principles (one-time operation)
+    migratePsychologyDataToPrinciples();
 
     updateStats();
     renderCalendar();
@@ -652,10 +652,3 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
 });
 
-/**
- * 심리 화면 표시 업데이트
- */
-function updatePsychologyDisplay() {
-    loadPsychologyData();
-    updateVisualCards();
-}
