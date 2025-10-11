@@ -78,6 +78,7 @@ function loadPrinciplesDataForDate(date) {
     const data = principlesData[date] || {};
 
     // Load trading environment data
+    document.getElementById('principlesSleepHours').value = data.sleepHours || '';
     document.getElementById('principlesStartTime').value = data.startTime || '';
     document.getElementById('principlesEndTime').value = data.endTime || '';
     document.getElementById('principlesEnvironmentType').value = data.environmentType || 'home';
