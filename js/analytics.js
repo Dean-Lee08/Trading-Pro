@@ -564,6 +564,195 @@ function updateRiskManagementDetails(filteredTrades) {
     document.getElementById('detailRiskRewardRatio').className = `detail-value ${riskRewardRatio >= 1 ? 'positive' : 'negative'}`;
 }
 
+// ==================== NEW: Advanced Risk Management Calculations ====================
+
+/**
+ * Maximum Drawdown (MDD) 계산 - 총자본 대비 최대 손실 폭
+ * @param {Array} trades - 거래 배열
+ * @param {number} initialCapital - 초기 자본 (기본값: 10000)
+ * @returns {Object} - { mdd: 금액, mddPercent: %, peak: 최고점, trough: 최저점 }
+ */
+function calculateMaxDrawdown(trades, initialCapital = 10000) {
+    if (!trades || trades.length === 0) {
+        return { mdd: 0, mddPercent: 0, peak: initialCapital, trough: initialCapital };
+    }
+
+    const sortedTrades = [...trades].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    let currentCapital = initialCapital;
+    let peak = initialCapital;
+    let maxDrawdown = 0;
+    let maxDrawdownPercent = 0;
+    let peakCapital = initialCapital;
+    let troughCapital = initialCapital;
+
+    sortedTrades.forEach(trade => {
+        currentCapital += trade.pnl;
+
+        if (currentCapital > peak) {
+            peak = currentCapital;
+        }
+
+        const drawdown = peak - currentCapital;
+        const drawdownPercent = peak > 0 ? (drawdown / peak) * 100 : 0;
+
+        if (drawdown > maxDrawdown) {
+            maxDrawdown = drawdown;
+            maxDrawdownPercent = drawdownPercent;
+            peakCapital = peak;
+            troughCapital = currentCapital;
+        }
+    });
+
+    return {
+        mdd: maxDrawdown,
+        mddPercent: maxDrawdownPercent,
+        peak: peakCapital,
+        trough: troughCapital,
+        currentCapital: currentCapital
+    };
+}
+
+/**
+ * Sortino Ratio 계산 - 하방 위험만 고려한 위험 조정 수익률
+ * @param {Array} trades - 거래 배열
+ * @param {number} riskFreeRate - 무위험 수익률 (연율 %, 기본값 0)
+ * @returns {number} - Sortino Ratio (>2 우수, >1 양호)
+ */
+function calculateSortinoRatio(trades, riskFreeRate = 0) {
+    if (!trades || trades.length === 0) {
+        return 0;
+    }
+
+    // 거래별 수익률 계산
+    const returns = trades.map(trade => trade.returnPct || 0);
+
+    // 평균 수익률
+    const avgReturn = returns.reduce((sum, r) => sum + r, 0) / returns.length;
+
+    // 하방 편차 (Downside Deviation) 계산 - 손실 거래만 고려
+    const negativeReturns = returns.filter(r => r < 0);
+
+    if (negativeReturns.length === 0) {
+        return avgReturn > 0 ? 999 : 0; // 손실이 없으면 매우 높은 값
+    }
+
+    const downsideVariance = negativeReturns.reduce((sum, r) => sum + (r * r), 0) / negativeReturns.length;
+    const downsideDeviation = Math.sqrt(downsideVariance);
+
+    if (downsideDeviation === 0) {
+        return avgReturn > 0 ? 999 : 0;
+    }
+
+    // Sortino Ratio = (평균 수익률 - 무위험 수익률) / 하방 편차
+    const sortinoRatio = (avgReturn - riskFreeRate) / downsideDeviation;
+
+    return sortinoRatio;
+}
+
+/**
+ * Kelly Criterion 계산 - 최적 포지션 크기 비율
+ * @param {Array} trades - 거래 배열
+ * @returns {Object} - { kellyPercent: %, halfKelly: %, quarterKelly: %, recommendation: 권장사항 }
+ */
+function calculateKellyCriterion(trades) {
+    if (!trades || trades.length === 0) {
+        return { kellyPercent: 0, halfKelly: 0, quarterKelly: 0, recommendation: 'Insufficient data' };
+    }
+
+    const wins = trades.filter(t => t.pnl > 0);
+    const losses = trades.filter(t => t.pnl < 0);
+
+    if (wins.length === 0 || losses.length === 0) {
+        return { kellyPercent: 0, halfKelly: 0, quarterKelly: 0, recommendation: 'Need both wins and losses' };
+    }
+
+    // 승률 (Win Rate)
+    const winRate = wins.length / trades.length;
+
+    // 평균 승리 금액
+    const avgWin = wins.reduce((sum, t) => sum + t.pnl, 0) / wins.length;
+
+    // 평균 손실 금액 (절댓값)
+    const avgLoss = Math.abs(losses.reduce((sum, t) => sum + t.pnl, 0) / losses.length);
+
+    if (avgLoss === 0) {
+        return { kellyPercent: 0, halfKelly: 0, quarterKelly: 0, recommendation: 'Invalid loss data' };
+    }
+
+    // Win/Loss Ratio
+    const winLossRatio = avgWin / avgLoss;
+
+    // Kelly % = W - [(1 - W) / R]
+    // W = 승률, R = Win/Loss Ratio
+    const kellyPercent = (winRate - ((1 - winRate) / winLossRatio)) * 100;
+
+    // 보수적 접근: Half Kelly, Quarter Kelly
+    const halfKelly = kellyPercent / 2;
+    const quarterKelly = kellyPercent / 4;
+
+    // 권장사항
+    let recommendation = '';
+    if (kellyPercent <= 0) {
+        recommendation = 'No edge detected - Do not trade';
+    } else if (kellyPercent > 0 && kellyPercent <= 5) {
+        recommendation = 'Use 25-50% of Kelly (conservative)';
+    } else if (kellyPercent > 5 && kellyPercent <= 15) {
+        recommendation = 'Use 10-25% of Kelly (moderate)';
+    } else {
+        recommendation = 'Use 10% of Kelly max (high risk)';
+    }
+
+    return {
+        kellyPercent: Math.max(0, kellyPercent),
+        halfKelly: Math.max(0, halfKelly),
+        quarterKelly: Math.max(0, quarterKelly),
+        tenthKelly: Math.max(0, kellyPercent / 10),
+        winRate: winRate * 100,
+        winLossRatio: winLossRatio,
+        recommendation: recommendation
+    };
+}
+
+/**
+ * Sharpe Ratio 계산 (기존 함수가 없다면 추가)
+ * @param {Array} trades - 거래 배열
+ * @param {number} riskFreeRate - 무위험 수익률 (연율 %, 기본값 0)
+ * @returns {number} - Sharpe Ratio
+ */
+function calculateSharpeRatio(trades, riskFreeRate = 0) {
+    if (!trades || trades.length === 0) {
+        return 0;
+    }
+
+    const returns = trades.map(trade => trade.returnPct || 0);
+    const avgReturn = returns.reduce((sum, r) => sum + r, 0) / returns.length;
+
+    // 표준편차 계산
+    const variance = returns.reduce((sum, r) => sum + Math.pow(r - avgReturn, 2), 0) / returns.length;
+    const stdDev = Math.sqrt(variance);
+
+    if (stdDev === 0) {
+        return avgReturn > 0 ? 999 : 0;
+    }
+
+    return (avgReturn - riskFreeRate) / stdDev;
+}
+
+/**
+ * Expected Value (기댓값) 계산
+ * @param {Array} trades - 거래 배열
+ * @returns {number} - 거래당 평균 기댓값 ($)
+ */
+function calculateExpectedValue(trades) {
+    if (!trades || trades.length === 0) {
+        return 0;
+    }
+
+    const totalPnL = trades.reduce((sum, trade) => sum + trade.pnl, 0);
+    return totalPnL / trades.length;
+}
+
 /**
  * 상세 분석 디스플레이 초기화
  */
