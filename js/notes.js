@@ -377,24 +377,38 @@ function saveNote() {
 }
 
 function cancelNote() {
+    // 상태 초기화
     editingNoteId = null;
     currentViewingNoteId = null;
-    
-    document.getElementById('noteEditor').style.display = 'none';
-    document.getElementById('noteViewMode').style.display = 'none';
-    
+    currentFont = "'Inter', sans-serif";
+    currentTextColor = '#e4e4e7';
+
+    // 에디터 내용 초기화
+    const titleInput = document.getElementById('noteTitle');
+    const contentEditor = document.getElementById('noteContentEditor');
+
+    if (titleInput) titleInput.value = '';
+    if (contentEditor) contentEditor.innerHTML = '';
+
+    // 화면 전환
+    const noteEditor = document.getElementById('noteEditor');
+    const viewMode = document.getElementById('noteViewMode');
+
+    if (noteEditor) noteEditor.style.display = 'none';
+    if (viewMode) viewMode.style.display = 'none';
+
     // 모든 섹션 숨기기 후 현재 카테고리만 표시
     document.querySelectorAll('.note-section').forEach(section => {
         section.style.display = 'none';
         section.classList.remove('active');
     });
-    
+
     const targetSection = document.getElementById(`${currentNotesSection}NotesSection`);
     if (targetSection) {
         targetSection.style.display = 'block';
         targetSection.classList.add('active');
     }
-    
+
     // 노트 목록 새로 렌더링
     setTimeout(() => {
         renderNotesList(currentNotesSection);
@@ -502,23 +516,33 @@ function renderNotesList(category) {
 }
 
 function toggleNotePreview(buttonElement) {
+    if (!buttonElement) return;
+
     const noteId = parseInt(buttonElement.getAttribute('data-note-id'));
     const category = buttonElement.getAttribute('data-category');
-    const uniqueId = `${noteId}_${category}`;
 
+    if (isNaN(noteId) || !category) {
+        console.error('Invalid note ID or category');
+        return;
+    }
+
+    const uniqueId = `${noteId}_${category}`;
     const previewElement = document.getElementById(`preview-${uniqueId}`);
     const note = notes.find(n => n.id === noteId);
 
-    if (!previewElement || !note) return;
+    if (!previewElement || !note) {
+        console.error('Preview element or note not found');
+        return;
+    }
 
     if (previewElement.classList.contains('expanded')) {
-        // Collapse - show truncated HTML preview
+        // Collapse - show truncated preview
         const sanitizedContent = sanitizeHTML(note.content);
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = sanitizedContent;
         const textContent = tempDiv.textContent || tempDiv.innerText || '';
 
-        // 150자까지만 표시하되, HTML 구조 유지
+        // 150자까지만 표시
         if (textContent.length > 150) {
             const truncated = textContent.substring(0, 150) + '...';
             previewElement.textContent = truncated;
@@ -531,8 +555,9 @@ function toggleNotePreview(buttonElement) {
         previewElement.classList.remove('expanded');
         buttonElement.textContent = currentLanguage === 'ko' ? '더보기' : 'Show more';
     } else {
-        // Expand - sanitize HTML before rendering
-        previewElement.innerHTML = sanitizeHTML(note.content);
+        // Expand - show full content with sanitization
+        const sanitizedContent = sanitizeHTML(note.content);
+        previewElement.innerHTML = sanitizedContent;
         previewElement.style.fontFamily = note.font || "'Inter', sans-serif";
         previewElement.style.color = note.textColor || '#94a3b8';
         previewElement.classList.add('expanded');
@@ -546,22 +571,33 @@ function toggleNotePreview(buttonElement) {
 
 function viewNote(noteId) {
     const note = notes.find(n => n.id === noteId);
-    if (!note) return;
+    if (!note) {
+        console.error('Note not found:', noteId);
+        return;
+    }
 
     currentViewingNoteId = noteId;
 
-    document.getElementById('noteViewTitle').textContent = note.title;
-    // Sanitize HTML before rendering
-    document.getElementById('noteViewContent').innerHTML = sanitizeHTML(note.content);
-
-    // 폰트와 색상 적용
+    const viewTitle = document.getElementById('noteViewTitle');
     const viewContent = document.getElementById('noteViewContent');
-    viewContent.style.fontFamily = note.font || "'Inter', sans-serif";
-    viewContent.style.color = note.textColor || '#e4e4e7';
+
+    if (viewTitle) viewTitle.textContent = note.title || '';
+
+    if (viewContent) {
+        // Sanitize HTML before rendering
+        viewContent.innerHTML = sanitizeHTML(note.content || '');
+        // 폰트와 색상 적용
+        viewContent.style.fontFamily = note.font || "'Inter', sans-serif";
+        viewContent.style.color = note.textColor || '#e4e4e7';
+    }
 
     // Show view mode, hide other sections
-    document.getElementById('noteViewMode').style.display = 'block';
-    document.getElementById('noteEditor').style.display = 'none';
+    const viewMode = document.getElementById('noteViewMode');
+    const noteEditor = document.getElementById('noteEditor');
+
+    if (viewMode) viewMode.style.display = 'block';
+    if (noteEditor) noteEditor.style.display = 'none';
+
     document.querySelectorAll('.note-section').forEach(section => {
         section.style.display = 'none';
     });
