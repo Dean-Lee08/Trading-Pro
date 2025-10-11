@@ -122,10 +122,13 @@ function updatePrinciplesTargetPercentages() {
 // Update Environment Score Card
 function updatePrinciplesEnvironmentCard() {
     const envTypeEl = document.getElementById('principlesEnvironmentType');
+    const sleepHoursEl = document.getElementById('principlesSleepHours');
     if (!envTypeEl) return;
 
     const envType = envTypeEl.value || 'home';
+    const sleepHours = sleepHoursEl ? parseFloat(sleepHoursEl.value) || 0 : 0;
 
+    // Environment type base scores
     const envScores = {
         'home': 85,
         'office': 70,
@@ -133,7 +136,28 @@ function updatePrinciplesEnvironmentCard() {
         'hotel': 40
     };
 
-    const baseScore = envScores[envType] || 50;
+    let baseScore = envScores[envType] || 50;
+
+    // Adjust score based on sleep hours (from psychology.js logic)
+    if (sleepHours > 0) {
+        if (sleepHours >= 7 && sleepHours <= 8) {
+            // Optimal sleep range - boost score
+            baseScore = Math.min(100, baseScore + 15);
+        } else if (sleepHours >= 6 && sleepHours < 7) {
+            // Adequate sleep - small boost
+            baseScore = Math.min(100, baseScore + 5);
+        } else if (sleepHours >= 5 && sleepHours < 6) {
+            // Below optimal - no change
+            baseScore = baseScore;
+        } else if (sleepHours < 5) {
+            // Sleep deprived - penalty
+            baseScore = Math.max(0, baseScore - 20);
+        } else if (sleepHours > 8) {
+            // Oversleep - small penalty
+            baseScore = Math.max(0, baseScore - 10);
+        }
+    }
+
     const totalScore = Math.max(0, Math.min(100, baseScore));
 
     const scoreEl = document.getElementById('principlesEnvironmentScore');
@@ -142,7 +166,13 @@ function updatePrinciplesEnvironmentCard() {
     const statusEl = document.getElementById('principlesEnvironmentStatus');
 
     if (scoreEl) scoreEl.textContent = Math.round(totalScore);
-    if (typeDisplayEl) typeDisplayEl.textContent = envType.charAt(0).toUpperCase() + envType.slice(1);
+
+    // Display both environment type and sleep hours
+    let displayText = envType.charAt(0).toUpperCase() + envType.slice(1);
+    if (sleepHours > 0) {
+        displayText += ` | ${sleepHours}h`;
+    }
+    if (typeDisplayEl) typeDisplayEl.textContent = displayText;
 
     if (circleEl) {
         const circumference = 157;
