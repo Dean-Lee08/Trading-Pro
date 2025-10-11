@@ -4138,7 +4138,20 @@ function renderClusterAnalysis() {
                 </span>
             </div>
         </div>
+
+        <!-- NEW: 2D Cluster Visualization Canvas -->
+        <div id="cluster2DVisualization" style="margin-top: 20px;">
+            <div style="color: #94a3b8; font-size: 13px; font-weight: 600; margin-bottom: 12px;">
+                ${currentLanguage === 'ko' ? '클러스터 2D 맵 (보유 시간 vs 평균 P&L)' : 'Cluster 2D Map (Holding Time vs Avg P&L)'}
+            </div>
+            <div style="background: rgba(15, 23, 42, 0.8); padding: 16px; border-radius: 8px; border: 1px solid rgba(51, 65, 85, 0.5);">
+                <canvas id="cluster2DMapChart" style="max-height: 300px;"></canvas>
+            </div>
+        </div>
     `;
+
+    // Render 2D cluster map
+    setTimeout(() => renderCluster2DMap(clusters), 100);
 }
 
 /**
