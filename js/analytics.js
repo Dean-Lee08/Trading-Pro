@@ -5300,11 +5300,14 @@ function detectOverconfidencePattern() {
  * Find optimal trading conditions
  */
 function findOptimalTradingConditions() {
+    const filteredTrades = getFilteredTradesForAnalytics();
+    if (filteredTrades.length === 0) return null;
+
     const conditions = {};
 
     // Group by psychology conditions
     Object.entries(psychologyData).forEach(([date, psych]) => {
-        const dayTrades = trades.filter(t => t.date === date);
+        const dayTrades = filteredTrades.filter(t => t.date === date);
         if (dayTrades.length > 0) {
             const key = `sleep_${Math.round(psych.sleepHours || 0)}_stress_${psych.stress || 0}_focus_${psych.focus || 0}`;
             if (!conditions[key]) {
