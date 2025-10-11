@@ -215,11 +215,6 @@ function updateDetailedAnalytics() {
     updateSymbolPerformanceDetails(filteredTrades);
     updateRiskManagementDetails(filteredTrades);
 
-    // Update market data analysis cards (async)
-    if (marketDataEnabled) {
-        setTimeout(() => updateMarketDataAnalysisCards(filteredTrades), 100);
-    }
-
     // Update basic charts if in detail section
     if (currentAnalyticsSection === 'detail') {
         setTimeout(async () => await updateBasicCharts(), 100);
