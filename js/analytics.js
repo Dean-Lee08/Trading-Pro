@@ -5561,6 +5561,7 @@ function normalCDF(x) {
  */
 function renderAdaptiveRecommendations() {
     const element = document.getElementById('adaptiveRecommendations');
+    const top3Element = document.getElementById('top3InsightsContainer');
     if (!element) return;
 
     const recommendations = generateAdaptiveRecommendations();
@@ -5571,6 +5572,13 @@ function renderAdaptiveRecommendations() {
                 Collecting data for personalized recommendations...
             </div>
         `;
+        if (top3Element) {
+            top3Element.innerHTML = `
+                <div style="background: rgba(15, 23, 42, 0.6); padding: 16px; border-radius: 8px; text-align: center;">
+                    <div style="color: #94a3b8; font-size: 13px;">${currentLanguage === 'ko' ? '더 많은 데이터를 수집하여 맞춤 인사이트를 생성하세요...' : 'Collect more data to generate personalized insights...'}</div>
+                </div>
+            `;
+        }
         return;
     }
 
@@ -5598,6 +5606,48 @@ function renderAdaptiveRecommendations() {
     }).join('');
 
     element.innerHTML = html;
+
+    // Populate TOP 3 Insights Container with enhanced styling
+    if (top3Element) {
+        const top3 = recommendations.slice(0, 3);
+
+        const top3Html = top3.map((rec, index) => {
+            const priorityIcons = {
+                'high': '🔴',
+                'medium': '🟡',
+                'low': '🟢'
+            };
+
+            const priorityLabels = {
+                'high': currentLanguage === 'ko' ? '최우선' : 'OPTIMIZE',
+                'medium': currentLanguage === 'ko' ? '최적화' : 'IMPROVE',
+                'low': currentLanguage === 'ko' ? '개선' : 'ENHANCE'
+            };
+
+            const priorityColors = {
+                'high': '#10b981',
+                'medium': '#3b82f6',
+                'low': '#8b5cf6'
+            };
+
+            const rankBadge = ['#1', '#2', '#3'][index];
+            const color = priorityColors[rec.priority];
+
+            return `
+                <div style="background: rgba(15, 23, 42, 0.6); padding: 18px; border-radius: 8px; border-left: 4px solid ${color}; position: relative;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
+                        <div style="background: ${color}; color: #0f172a; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; min-width: 32px; text-align: center;">${rankBadge}</div>
+                        <div style="background: ${color}; color: #0f172a; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700;">${priorityLabels[rec.priority]}</div>
+                        <div style="color: #94a3b8; font-size: 11px; margin-left: auto;">${rec.impact}</div>
+                    </div>
+                    <div style="color: #f8fafc; font-size: 15px; font-weight: 600; margin-bottom: 8px;">${priorityIcons[rec.priority]} ${rec.title}</div>
+                    <div style="color: #94a3b8; font-size: 13px; line-height: 1.6;">${rec.description}</div>
+                </div>
+            `;
+        }).join('');
+
+        top3Element.innerHTML = top3Html;
+    }
 }
 
 /**
