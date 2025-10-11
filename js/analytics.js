@@ -5721,39 +5721,6 @@ function generateAdaptiveRecommendations() {
         });
     }
 
-    // Recommendation 4: Symbol-specific
-    const symbolPerf = {};
-    trades.forEach(trade => {
-        if (!symbolPerf[trade.symbol]) {
-            symbolPerf[trade.symbol] = { wins: 0, total: 0, totalPnL: 0 };
-        }
-        symbolPerf[trade.symbol].total++;
-        symbolPerf[trade.symbol].totalPnL += trade.pnl;
-        if (trade.pnl > 0) symbolPerf[trade.symbol].wins++;
-    });
-
-    let bestSymbol = null, bestWinRate = 0;
-    Object.entries(symbolPerf).forEach(([symbol, stats]) => {
-        if (stats.total >= 5) {
-            const winRate = (stats.wins / stats.total) * 100;
-            if (winRate > bestWinRate) {
-                bestWinRate = winRate;
-                bestSymbol = symbol;
-            }
-        }
-    });
-
-    if (bestSymbol && bestWinRate > 65) {
-        recommendations.push({
-            priority: 'medium',
-            title: currentLanguage === 'ko' ? `${bestSymbol}에 집중` : `Focus on ${bestSymbol}`,
-            description: currentLanguage === 'ko' ?
-                `이 종목에서 ${bestWinRate.toFixed(0)}% 승률을 보입니다. 이 종목 거래 비중을 늘리세요.` :
-                `You have a ${bestWinRate.toFixed(0)}% win rate on this symbol. Consider increasing allocation.`,
-            impact: currentLanguage === 'ko' ? '승률 개선' : 'Win rate boost'
-        });
-    }
-
     // Sort by priority
     const priorityOrder = { high: 0, medium: 1, low: 2 };
     recommendations.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
