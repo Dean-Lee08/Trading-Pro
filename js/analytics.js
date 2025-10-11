@@ -3,6 +3,39 @@
 // ==================== Analytics Section Management ====================
 
 /**
+ * 알고리즘 분석 탭 전환
+ */
+function switchAlgoTab(tabName) {
+    console.log('📊 switchAlgoTab called with:', tabName);
+
+    // Update tab button states
+    document.querySelectorAll('.algo-analysis-tab').forEach(tab => {
+        tab.classList.remove('active');
+        tab.style.color = '#94a3b8';
+        tab.style.borderBottomColor = 'transparent';
+    });
+
+    const activeTab = document.querySelector(`.algo-analysis-tab[data-tab="${tabName}"]`);
+    if (activeTab) {
+        activeTab.classList.add('active');
+        activeTab.style.color = '#10b981';
+        activeTab.style.borderBottomColor = '#10b981';
+    }
+
+    // Show/hide tab content
+    document.querySelectorAll('.algo-tab-content').forEach(content => {
+        content.style.display = 'none';
+    });
+
+    const activeContent = document.getElementById(`algoTab${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`);
+    if (activeContent) {
+        activeContent.style.display = 'block';
+    }
+
+    console.log(`✅ Switched to ${tabName} tab`);
+}
+
+/**
  * 분석 섹션 전환
  */
 function showAnalyticsSection(sectionName) {
