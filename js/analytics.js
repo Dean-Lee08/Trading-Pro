@@ -3829,8 +3829,8 @@ function performClusterAnalysis() {
 }
 
 /**
- * Correlation Matrix Analysis
- * Shows correlations between different trading metrics
+ * Correlation Matrix Analysis (Enhanced with psychology integration)
+ * Shows correlations between different trading metrics including psychology
  */
 function renderCorrelationMatrix() {
     const element = document.getElementById('correlationMatrixContent');
@@ -3882,6 +3882,48 @@ function renderCorrelationMatrix() {
         .sort((a, b) => b.totalPnL - a.totalPnL)
         .slice(0, 5);
 
+    // Psychology correlation
+    const tradesWithPsych = filteredTrades.filter(t => psychologyData[t.date]);
+    let psychCorrelationHTML = '';
+
+    if (tradesWithPsych.length >= 10) {
+        // Calculate time of day vs performance
+        const dayStartTrades = tradesWithPsych.filter(t => {
+            const psych = psychologyData[t.date];
+            return psych && psych.marketDelay && psych.marketDelay <= 15;
+        });
+
+        const lateStartTrades = tradesWithPsych.filter(t => {
+            const psych = psychologyData[t.date];
+            return psych && psych.marketDelay && psych.marketDelay > 15;
+        });
+
+        if (dayStartTrades.length >= 3 && lateStartTrades.length >= 3) {
+            const earlyWinRate = (dayStartTrades.filter(t => t.pnl > 0).length / dayStartTrades.length) * 100;
+            const lateWinRate = (lateStartTrades.filter(t => t.pnl > 0).length / lateStartTrades.length) * 100;
+
+            psychCorrelationHTML = `
+                <div style="background: rgba(15, 23, 42, 0.8); padding: 16px; border-radius: 8px; border: 1px solid rgba(100, 116, 139, 0.3);">
+                    <div style="color: #94a3b8; font-size: 13px; margin-bottom: 8px;">${currentLanguage === 'ko' ? '시작 시간 vs 성과' : 'Start Time vs Performance'}</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="color: ${earlyWinRate > lateWinRate ? '#10b981' : '#f59e0b'}; font-size: 16px; font-weight: 600;">${earlyWinRate.toFixed(1)}%</div>
+                            <div style="color: #64748b; font-size: 12px;">${currentLanguage === 'ko' ? '장 시작 거래' : 'Market Open'}</div>
+                        </div>
+                        <div style="color: #64748b; font-size: 20px;">⟷</div>
+                        <div>
+                            <div style="color: ${lateWinRate > earlyWinRate ? '#10b981' : '#f59e0b'}; font-size: 16px; font-weight: 600;">${lateWinRate.toFixed(1)}%</div>
+                            <div style="color: #64748b; font-size: 12px;">${currentLanguage === 'ko' ? '늦은 시작' : 'Late Start'}</div>
+                        </div>
+                    </div>
+                    <div style="color: #64748b; font-size: 11px; margin-top: 8px; text-align: center;">
+                        ${Math.abs(earlyWinRate - lateWinRate).toFixed(1)}% ${currentLanguage === 'ko' ? '승률 차이' : 'win rate difference'}
+                    </div>
+                </div>
+            `;
+        }
+    }
+
     element.innerHTML = `
         <div style="display: grid; gap: 16px;">
             <!-- Position Size vs Win Rate -->
@@ -3917,6 +3959,8 @@ function renderCorrelationMatrix() {
                     </div>
                 </div>
             </div>
+
+            ${psychCorrelationHTML}
 
             <!-- Top Symbol Performance -->
             <div style="background: rgba(15, 23, 42, 0.8); padding: 16px; border-radius: 8px; border: 1px solid rgba(100, 116, 139, 0.3);">
