@@ -1703,6 +1703,17 @@ function updateAlgorithmicAnalysis() {
     renderStatisticalEdge();
     console.log('💡 Rendering adaptive recommendations...');
     renderAdaptiveRecommendations();
+
+    // NEW: Phase 3 - Enhanced Visualizations
+    console.log('📈 Rendering scatter plots...');
+    setTimeout(() => {
+        renderPositionVsReturnScatter();
+        renderHoldingVsReturnScatter();
+    }, 200);
+
+    console.log('🔥 Rendering stress heatmap...');
+    setTimeout(() => renderStressHeatmap(), 300);
+
     console.log('✅ updateAlgorithmicAnalysis() completed');
 }
 
