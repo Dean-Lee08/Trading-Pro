@@ -1353,6 +1353,46 @@
                                 <p style="color: #94a3b8; font-size: 14px; margin: 0;" data-lang="analytics-subtitle">Comprehensive trading pattern analysis and insights</p>
                             </div>
 
+                            <!-- ========== TAB NAVIGATION ========== -->
+                            <div style="display: flex; gap: 12px; margin-bottom: 24px; border-bottom: 2px solid #334155;">
+                                <button
+                                    class="algo-analysis-tab active"
+                                    data-tab="insights"
+                                    onclick="switchAlgoTab('insights')"
+                                    style="flex: 1; background: transparent; border: none; border-bottom: 3px solid transparent; color: #94a3b8; padding: 14px 20px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; white-space: nowrap;"
+                                >
+                                    <span style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                        <span style="font-size: 18px;">📊</span>
+                                        <span data-lang="algo-tab-insights">Insights & Risk</span>
+                                    </span>
+                                </button>
+                                <button
+                                    class="algo-analysis-tab"
+                                    data-tab="psychology"
+                                    onclick="switchAlgoTab('psychology')"
+                                    style="flex: 1; background: transparent; border: none; border-bottom: 3px solid transparent; color: #94a3b8; padding: 14px 20px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; white-space: nowrap;"
+                                >
+                                    <span style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                        <span style="font-size: 18px;">🧠</span>
+                                        <span data-lang="algo-tab-psychology">Psychology & Behavior</span>
+                                    </span>
+                                </button>
+                                <button
+                                    class="algo-analysis-tab"
+                                    data-tab="execution"
+                                    onclick="switchAlgoTab('execution')"
+                                    style="flex: 1; background: transparent; border: none; border-bottom: 3px solid transparent; color: #94a3b8; padding: 14px 20px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; white-space: nowrap;"
+                                >
+                                    <span style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                        <span style="font-size: 18px;">⏱️</span>
+                                        <span data-lang="algo-tab-execution">Execution Analysis</span>
+                                    </span>
+                                </button>
+                            </div>
+
+                            <!-- ========== TAB 1: INSIGHTS & RISK ========== -->
+                            <div class="algo-tab-content" id="algoTabInsights" style="display: block;">
+
                             <!-- ==================== TIER 1: TOP 3 ACTIONABLE INSIGHTS ==================== -->
                             <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(59, 130, 246, 0.1)); border: 2px solid #10b981; border-radius: 12px; padding: 24px; margin-bottom: 32px;">
                                 <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
