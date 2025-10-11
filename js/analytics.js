@@ -4500,6 +4500,192 @@ function renderBehavioralPatterns() {
 }
 
 /**
+ * 스트레스 레벨 히트맵 렌더링 - 시간대 및 요일별 고스트레스 거래 빈도
+ * 시간(X축) x 요일(Y축) 매트릭스로 표현
+ */
+function renderStressHeatmap() {
+    const container = document.getElementById('stressHeatmapContainer');
+    if (!container) return;
+
+    // 스트레스 데이터가 있는 거래만 필터링
+    const tradesWithStress = trades.filter(trade => {
+        const psyData = psychologyData[trade.date];
+        return psyData && psyData.stress !== undefined;
+    });
+
+    if (tradesWithStress.length === 0 || Object.keys(psychologyData).length < 3) {
+        container.innerHTML = `
+            <div style="padding: 24px; text-align: center; color: #64748b; font-size: 13px;">
+                ${currentLanguage === 'ko' ?
+                    '스트레스 히트맵 생성을 위한 데이터가 부족합니다. 최소 3일 이상의 심리 데이터가 필요합니다.' :
+                    'Insufficient data for stress heatmap. Need at least 3 days of psychology data.'}
+            </div>
+        `;
+        return;
+    }
+
+    // 히트맵 데이터 구조: [요일][시간] = { count: 거래수, avgStress: 평균 스트레스, totalPnL: 총 손익 }
+    const daysOfWeek = currentLanguage === 'ko' ?
+        ['일', '월', '화', '수', '목', '금', '토'] :
+        ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+    const heatmapData = {};
+    const hours = Array.from({length: 8}, (_, i) => i + 9); // 9:00 ~ 16:00
+
+    // 초기화
+    daysOfWeek.forEach((day, dayIdx) => {
+        heatmapData[dayIdx] = {};
+        hours.forEach(hour => {
+            heatmapData[dayIdx][hour] = { count: 0, highStressCount: 0, totalPnL: 0, avgStress: 0, stressSum: 0 };
+        });
+    });
+
+    // 데이터 집계
+    tradesWithStress.forEach(trade => {
+        const psyData = psychologyData[trade.date];
+        if (!psyData || !trade.entryTime) return;
+
+        const tradeDate = new Date(trade.date + 'T12:00:00');
+        const dayOfWeek = tradeDate.getDay();
+        const hour = parseInt(trade.entryTime.split(':')[0]);
+
+        if (hour >= 9 && hour <= 16) {
+            const cell = heatmapData[dayOfWeek][hour];
+            cell.count++;
+            cell.totalPnL += trade.pnl;
+            cell.stressSum += psyData.stress || 0;
+
+            // 고스트레스 정의: 스트레스 레벨 4 이상
+            if (psyData.stress >= 4) {
+                cell.highStressCount++;
+            }
+        }
+    });
+
+    // 평균 스트레스 계산
+    Object.keys(heatmapData).forEach(day => {
+        Object.keys(heatmapData[day]).forEach(hour => {
+            const cell = heatmapData[day][hour];
+            cell.avgStress = cell.count > 0 ? cell.stressSum / cell.count : 0;
+        });
+    });
+
+    // 최대값 찾기 (색상 정규화용)
+    let maxHighStressCount = 0;
+    Object.values(heatmapData).forEach(dayData => {
+        Object.values(dayData).forEach(cell => {
+            maxHighStressCount = Math.max(maxHighStressCount, cell.highStressCount);
+        });
+    });
+
+    // 히트맵 HTML 생성
+    let html = `
+        <div style="margin-bottom: 16px;">
+            <div style="color: #f8fafc; font-weight: 600; font-size: 14px; margin-bottom: 4px;">
+                ${currentLanguage === 'ko' ? '🔥 고스트레스 거래 히트맵' : '🔥 High-Stress Trading Heatmap'}
+            </div>
+            <div style="color: #64748b; font-size: 12px;">
+                ${currentLanguage === 'ko' ? '시간대 및 요일별 스트레스 레벨 4+ 거래 빈도' : 'Stress level 4+ trading frequency by time and day'}
+            </div>
+        </div>
+
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; min-width: 500px;">
+                <thead>
+                    <tr>
+                        <th style="padding: 8px; color: #94a3b8; font-size: 12px; font-weight: 600; text-align: left;">
+                            ${currentLanguage === 'ko' ? '요일' : 'Day'}
+                        </th>
+                        ${hours.map(hour => `
+                            <th style="padding: 8px; color: #94a3b8; font-size: 11px; font-weight: 600; text-align: center;">
+                                ${hour}:00
+                            </th>
+                        `).join('')}
+                    </tr>
+                </thead>
+                <tbody>
+                    ${daysOfWeek.map((day, dayIdx) => `
+                        <tr>
+                            <td style="padding: 8px; color: #e4e4e7; font-size: 12px; font-weight: 600;">
+                                ${day}
+                            </td>
+                            ${hours.map(hour => {
+                                const cell = heatmapData[dayIdx][hour];
+                                const intensity = maxHighStressCount > 0 ? cell.highStressCount / maxHighStressCount : 0;
+
+                                // 색상 그라데이션: 0 = 투명, 1 = 빨강
+                                const bgColor = intensity === 0 ? 'rgba(51, 65, 85, 0.3)' :
+                                                `rgba(239, 68, 68, ${0.2 + intensity * 0.8})`;
+
+                                const tooltip = `${day} ${hour}:00\\n` +
+                                              `${currentLanguage === 'ko' ? '총 거래' : 'Total trades'}: ${cell.count}\\n` +
+                                              `${currentLanguage === 'ko' ? '고스트레스 거래' : 'High-stress trades'}: ${cell.highStressCount}\\n` +
+                                              `${currentLanguage === 'ko' ? '평균 스트레스' : 'Avg stress'}: ${cell.avgStress.toFixed(1)}\\n` +
+                                              `P&L: $${cell.totalPnL.toFixed(0)}`;
+
+                                return `
+                                    <td style="padding: 8px; text-align: center; background: ${bgColor};
+                                               border: 1px solid rgba(51, 65, 85, 0.5); cursor: pointer;
+                                               transition: all 0.2s;"
+                                        title="${tooltip}">
+                                        <div style="color: ${intensity > 0.5 ? '#fff' : '#94a3b8'}; font-size: 11px; font-weight: 600;">
+                                            ${cell.highStressCount > 0 ? cell.highStressCount : '·'}
+                                        </div>
+                                        ${cell.count > 0 ? `
+                                            <div style="color: ${intensity > 0.5 ? 'rgba(255,255,255,0.6)' : '#64748b'}; font-size: 9px;">
+                                                (${cell.count})
+                                            </div>
+                                        ` : ''}
+                                    </td>
+                                `;
+                            }).join('')}
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
+
+        <div style="display: flex; gap: 16px; margin-top: 16px; padding: 12px; background: rgba(15, 23, 42, 0.5); border-radius: 6px;">
+            <div style="flex: 1;">
+                <div style="color: #64748b; font-size: 11px; margin-bottom: 4px;">
+                    ${currentLanguage === 'ko' ? '색상 범례' : 'Color Legend'}
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <div style="width: 30px; height: 15px; background: rgba(51, 65, 85, 0.3); border: 1px solid #334155; border-radius: 2px;"></div>
+                    <span style="color: #94a3b8; font-size: 10px;">${currentLanguage === 'ko' ? '안전' : 'Safe'}</span>
+                    <div style="width: 30px; height: 15px; background: rgba(239, 68, 68, 0.5); border: 1px solid #ef4444; border-radius: 2px; margin-left: 8px;"></div>
+                    <span style="color: #94a3b8; font-size: 10px;">${currentLanguage === 'ko' ? '보통' : 'Medium'}</span>
+                    <div style="width: 30px; height: 15px; background: rgba(239, 68, 68, 1); border: 1px solid #ef4444; border-radius: 2px; margin-left: 8px;"></div>
+                    <span style="color: #94a3b8; font-size: 10px;">${currentLanguage === 'ko' ? '위험' : 'High Risk'}</span>
+                </div>
+            </div>
+            <div style="flex: 1; text-align: right;">
+                <div style="color: #64748b; font-size: 11px; margin-bottom: 4px;">
+                    ${currentLanguage === 'ko' ? '최고 위험 시간대' : 'Highest Risk Time'}
+                </div>
+                <div style="color: #ef4444; font-size: 12px; font-weight: 600;">
+                    ${(() => {
+                        let maxCell = { day: 0, hour: 9, count: 0 };
+                        Object.keys(heatmapData).forEach(day => {
+                            Object.keys(heatmapData[day]).forEach(hour => {
+                                if (heatmapData[day][hour].highStressCount > maxCell.count) {
+                                    maxCell = { day: parseInt(day), hour: parseInt(hour), count: heatmapData[day][hour].highStressCount };
+                                }
+                            });
+                        });
+                        return maxCell.count > 0 ?
+                            `${daysOfWeek[maxCell.day]} ${maxCell.hour}:00 (${maxCell.count})` :
+                            (currentLanguage === 'ko' ? '데이터 없음' : 'No data');
+                    })()}
+                </div>
+            </div>
+        </div>
+    `;
+
+    container.innerHTML = html;
+}
+
+/**
  * Detect advanced behavioral patterns
  */
 function detectAdvancedBehavioralPatterns() {
