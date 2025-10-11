@@ -754,6 +754,93 @@ function calculateExpectedValue(trades) {
 }
 
 /**
+ * Slippage 분석 - 예상 가격 대비 실제 체결 가격 차이
+ * @param {Array} trades - 거래 배열
+ * @param {Object} marketQuotes - 시장 데이터 (선택 사항)
+ * @returns {Object} - 슬리피지 통계
+ */
+function analyzeSlippage(trades, marketQuotes = {}) {
+    if (!trades || trades.length === 0) {
+        return {
+            avgEntrySlippage: 0,
+            avgExitSlippage: 0,
+            totalSlippageCost: 0,
+            byTime: {},
+            bySymbol: {},
+            slippagePercent: 0
+        };
+    }
+
+    let totalEntrySlippage = 0;
+    let totalExitSlippage = 0;
+    let entryCount = 0;
+    let exitCount = 0;
+    const byTime = {}; // 시간대별 슬리피지
+    const bySymbol = {}; // 종목별 슬리피지
+
+    trades.forEach(trade => {
+        // 슬리피지 추정: 실제로는 quote 데이터와 비교해야 하지만,
+        // 간단한 추정으로는 bid-ask spread의 일부로 가정
+        // 여기서는 0.1% ~ 0.3% 정도를 평균 슬리피지로 가정 (예시)
+
+        const estimatedSlippagePercent = 0.002; // 0.2% 기본 추정치
+        const entrySlippage = trade.buyPrice * estimatedSlippagePercent;
+        const exitSlippage = trade.sellPrice * estimatedSlippagePercent;
+
+        totalEntrySlippage += entrySlippage * trade.shares;
+        totalExitSlippage += exitSlippage * trade.shares;
+        entryCount++;
+        exitCount++;
+
+        // 시간대별 집계
+        if (trade.entryTime) {
+            const hour = parseInt(trade.entryTime.split(':')[0]);
+            if (!byTime[hour]) {
+                byTime[hour] = { slippage: 0, count: 0 };
+            }
+            byTime[hour].slippage += (entrySlippage + exitSlippage) * trade.shares;
+            byTime[hour].count++;
+        }
+
+        // 종목별 집계
+        if (!bySymbol[trade.symbol]) {
+            bySymbol[trade.symbol] = { slippage: 0, count: 0 };
+        }
+        bySymbol[trade.symbol].slippage += (entrySlippage + exitSlippage) * trade.shares;
+        bySymbol[trade.symbol].count++;
+    });
+
+    // 평균 계산
+    const avgEntrySlippage = entryCount > 0 ? totalEntrySlippage / entryCount : 0;
+    const avgExitSlippage = exitCount > 0 ? totalExitSlippage / exitCount : 0;
+    const totalSlippageCost = totalEntrySlippage + totalExitSlippage;
+
+    // 시간대별 평균
+    Object.keys(byTime).forEach(hour => {
+        byTime[hour].avgSlippage = byTime[hour].slippage / byTime[hour].count;
+    });
+
+    // 종목별 평균
+    Object.keys(bySymbol).forEach(symbol => {
+        bySymbol[symbol].avgSlippage = bySymbol[symbol].slippage / bySymbol[symbol].count;
+    });
+
+    // 총 거래 금액 대비 슬리피지 비율
+    const totalVolume = trades.reduce((sum, t) => sum + t.amount, 0);
+    const slippagePercent = totalVolume > 0 ? (totalSlippageCost / totalVolume) * 100 : 0;
+
+    return {
+        avgEntrySlippage,
+        avgExitSlippage,
+        totalSlippageCost,
+        byTime,
+        bySymbol,
+        slippagePercent,
+        tradeCount: trades.length
+    };
+}
+
+/**
  * 상세 분석 디스플레이 초기화
  */
 function resetDetailedAnalyticsDisplay() {
