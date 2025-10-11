@@ -3863,7 +3863,7 @@ function renderCorrelationMatrix() {
 
     // Symbol performance correlation
     const symbolStats = {};
-    trades.forEach(t => {
+    filteredTrades.forEach(t => {
         if (!symbolStats[t.symbol]) {
             symbolStats[t.symbol] = { wins: 0, losses: 0, totalPnL: 0 };
         }
