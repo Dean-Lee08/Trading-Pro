@@ -43,6 +43,10 @@ let currentFont = "'Inter', sans-serif";
 let principlesData = {};
 let currentPrinciplesDate = null;
 
+// Psychology compatibility shim (data migrated to principles)
+// Empty object prevents errors in analytics.js
+let psychologyData = {};
+
 // Calendar State
 let selectedWeekPnl = null;
 let selectedMonthYear = null;
