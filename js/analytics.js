@@ -4951,7 +4951,12 @@ async function renderMarketIntelligence() {
             </span>
         </div>
     `;
+}
 
+/**
+ * Detect market regime based on win rate trends
+ */
+function detectMarketRegime() {
     const filteredTrades = getFilteredTradesForAnalytics();
 
     if (filteredTrades.length < 5) {
