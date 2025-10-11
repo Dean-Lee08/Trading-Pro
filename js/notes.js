@@ -604,18 +604,25 @@ function viewNote(noteId) {
 }
 
 function backToNotesList() {
+    // 상태 초기화
     currentViewingNoteId = null;
     editingNoteId = null;
-    
-    document.getElementById('noteViewMode').style.display = 'none';
-    document.getElementById('noteEditor').style.display = 'none';
-    
+    currentFont = "'Inter', sans-serif";
+    currentTextColor = '#e4e4e7';
+
+    // 화면 전환
+    const viewMode = document.getElementById('noteViewMode');
+    const noteEditor = document.getElementById('noteEditor');
+
+    if (viewMode) viewMode.style.display = 'none';
+    if (noteEditor) noteEditor.style.display = 'none';
+
     // 모든 섹션 숨기기
     document.querySelectorAll('.note-section').forEach(section => {
         section.style.display = 'none';
         section.classList.remove('active');
     });
-    
+
     // 현재 카테고리 섹션만 표시
     const targetSection = document.getElementById(`${currentNotesSection}NotesSection`);
     if (targetSection) {
