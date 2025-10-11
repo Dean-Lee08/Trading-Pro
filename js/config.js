@@ -790,7 +790,12 @@ const translations = {
         'kelly-tooltip-secondary': 'Recommended: use 10-25% of Kelly.',
         'sharpe-tooltip-secondary': 'Formula: (Avg Return - Risk-Free Rate) / Std Dev. >1 good, >2 excellent.',
         'performance-analytics': 'Performance Analytics',
-        'analytics-subtitle': 'Comprehensive trading pattern analysis and insights'
+        'analytics-subtitle': 'Comprehensive trading pattern analysis and insights',
+
+        // Algorithm Analysis Tabs
+        'algo-tab-insights': 'Insights & Risk',
+        'algo-tab-psychology': 'Psychology & Behavior',
+        'algo-tab-execution': 'Execution Analysis'
     },
     ko: {
         'dashboard': '대시보드',
@@ -1503,7 +1508,12 @@ const translations = {
         'kelly-tooltip-secondary': '권장: 켈리의 10-25% 사용',
         'sharpe-tooltip-secondary': '공식: (평균 수익률 - 무위험 수익률) / 표준편차. >1 양호, >2 우수',
         'performance-analytics': '성과 분석',
-        'analytics-subtitle': '포괄적인 거래 패턴 분석 및 인사이트'
+        'analytics-subtitle': '포괄적인 거래 패턴 분석 및 인사이트',
+
+        // 알고리즘 분석 탭
+        'algo-tab-insights': '인사이트 & 리스크',
+        'algo-tab-psychology': '심리 & 행동 패턴',
+        'algo-tab-execution': '실행 분석'
     }
 };
 
